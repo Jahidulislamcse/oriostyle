@@ -1,0 +1,13 @@
+---
+deployment:
+  tasks:
+    # 1. Target deployment path (update with your cPanel username and directory)
+    - export DEPLOYPATH=/home/username/public_html
+    
+    # 2. Copy files and built assets to the web root
+    - /bin/cp -R * $DEPLOYPATH
+    - /bin/cp -R .htaccess $DEPLOYPATH/.htaccess
+    
+    # 3. Ensure storage and bootstrap permissions
+    - /bin/chmod -R 775 $DEPLOYPATH/storage
+    - /bin/chmod -R 775 $DEPLOYPATH/bootstrap/cache

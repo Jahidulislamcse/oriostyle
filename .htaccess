@@ -1,0 +1,22 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Block access to hidden system and configuration files
+    <FilesMatch "^(\.env|\.git|composer\.(json|lock)|package\.(json|lock)|phpunit\.xml|\.cpanel\.yml)">
+        Order allow,deny
+        Deny from all
+    </FilesMatch>
+
+    # Block access to sensitive storage logs and framework directories
+    RewriteRule ^storage/logs/ - [F,L,NC]
+    RewriteRule ^storage/framework/ - [F,L,NC]
+    RewriteRule ^bootstrap/cache/ - [F,L,NC]
+
+    # Seamlessly forward all web traffic to the public directory
+    RewriteCond %{REQUEST_URI} !^/public/
+    RewriteRule ^(.*)$ public/$1 [L,QSA]
+</IfModule>
