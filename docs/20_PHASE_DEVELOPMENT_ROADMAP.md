@@ -282,17 +282,26 @@ flowchart TD
 
 ---
 
-### 🔹 PHASE 20: BUSINESS INTELLIGENCE, SYSTEM AUDIT TRAIL & PRODUCTION QA
-* **Objective:** Executive financial visibility, immutable audit logging, and production readiness.
+### 🔹 PHASE 20: DYNAMIC SETTINGS CMS (ZERO HARDCODING), BUSINESS INTELLIGENCE & PRODUCTION QA
+* **Objective:** Complete centralized dynamic content management (eliminating all hardcoded assets), executive financial visibility, immutable audit logging, and production readiness.
 * **Core Tasks:**
-  1. Build `BusinessAnalyticsService.php`:
+  1. **Dynamic Content & Settings CMS Engine (Zero Hardcoded Content):**
+     - **Site Identity:** Manage Site Name, Tagline, Main Logo, White Logo, Favicon, Copyright text.
+     - **Contact & Support:** Phone numbers, WhatsApp helpline, Support Email, Warehouse address, Google Maps embed URL.
+     - **Social Media:** Links for Facebook, Instagram, YouTube, TikTok, LinkedIn, Twitter/X.
+     - **Commerce Configs:** Default Currency Symbol/Code/Position, VAT/Tax rate %, Standard Delivery charge, Free Shipping threshold, Low-stock alert threshold.
+     - **Invoice Customization:** Legal Company Name, VAT/BIN registration number, invoice terms & footer notices.
+     - **Homepage Banner CMS:** Manage Hero slider items (images, headings, sub-titles, button URLs), Promo banners, and Announcement top ticker.
+     - **Dynamic Policy Pages:** Full WYSIWYG editor for About Us, Terms & Conditions, Privacy Policy, Return & Refund Policy, FAQ.
+     - **Global Shared Props:** Settings cached in Redis and shared via `HandleInertiaRequests.php` (`$page.props.settings`) with zero duplicate queries.
+  2. **Business Analytics BI:**
      - Gross/Net Sales, Real Profit Margins ($\text{Revenue} - \text{COGS}$), MoM/YoY growth rate comparisons.
      - Dead Stock Report (products unsold for 60+ days with locked capital).
      - Interactive ApexCharts on Admin Dashboard.
-  2. Create `activity_logs` migration and Eloquent observer recording before/after values on all admin mutations.
-  3. Build Store Settings manager (currency, VAT rate, contact details, shipping rules).
-  4. Create comprehensive `DatabaseSeeder.php` with realistic demo data.
+  3. **Audit Trail:** `activity_logs` migration and Eloquent observer recording before/after values on all admin mutations.
+  4. **Production QA:** Comprehensive `DatabaseSeeder.php` with realistic demo data.
 * **🧪 Verification Checkpoint:**
+  - Update Logo, Phone, Currency Symbol, and Hero Banner in Admin $\to$ verify instantaneous reflection across entire storefront header, footer, checkout, and invoices without any hardcoded text.
   - Run `php artisan test` $\to$ all automated tests pass.
   - Run `php artisan db:seed` $\to$ fully hydrates realistic store ready for client sign-off.
 

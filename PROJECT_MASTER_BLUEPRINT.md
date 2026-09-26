@@ -19,7 +19,7 @@
 
 ## 🛡️ 2. NON-NEGOTIABLE ARCHITECTURAL & PERFORMANCE RULES
 
-Every code modification in any phase/conversation **must adhere to these 5 rules**:
+Every code modification in any phase/conversation **must adhere to these 6 rules**:
 
 1. **Anti-N+1 Query Policy:**
    - Strict lazy loading is forbidden in development: `Model::preventLazyLoading(!app()->isProduction())`.
@@ -32,15 +32,19 @@ Every code modification in any phase/conversation **must adhere to these 5 rules
 4. **Real Cost-of-Goods-Sold (COGS) Profit Tracking:**
    - Every order line item must snapshot the product's unit cost price at purchase time so that Gross Profit is mathematically immutable:
      $$\text{Gross Profit} = (\text{Order Subtotal} - \text{Discount}) - \sum(\text{Unit Cost Price} \times \text{Quantity})$$
-5. **Standardized Directory Structure:**
+5. **Zero Hardcoded Content Policy (100% Dynamic Content Engine):**
+   - **NO hardcoded strings, logos, phones, emails, social links, currency symbols, or banners are allowed anywhere in the frontend or backend.**
+   - All brand identity assets (Site Name, Main Logo, White Logo, Favicon, Tagline, Copyright), Contact Info (Phone, WhatsApp, Support Email, Physical Address, Map URL), Commerce Configs (Currency Symbol, Currency Code, VAT %, Shipping Rates, Free Shipping Threshold), Social Media Links, Homepage Hero Sliders, Promo Banners, and Policy Pages (About Us, Terms, Privacy, FAQ) must be **100% editable from the Admin Settings & CMS Panels**.
+   - Settings must be cached in Redis with high performance and shared globally via `HandleInertiaRequests.php` (`$page.props.settings`) so every React component has instantaneous zero-query access.
+6. **Standardized Directory Structure:**
    ```
    app/
    ├── Actions/          # Single-purpose domain mutations (CreateOrderAction, AdjustStockAction)
-   ├── Services/         # Reusable engines (CartSessionManager, InvoicePdfGenerator, CouponService)
+   ├── Services/         # Reusable engines (CartSessionManager, InvoicePdfGenerator, CouponService, SettingService)
    ├── Http/
    │   ├── Controllers/  # Thin Inertia handlers (Admin/, Storefront/, Auth/)
-   │   ├── Middleware/   # EnsureAdminAccess, RoleMiddleware
-   │   └── Requests/     # Form validation (ProductStoreRequest, CheckoutRequest)
+   │   ├── Middleware/   # EnsureAdminAccess, HandleInertiaRequests (Shared Settings)
+   │   └── Requests/     # Form validation (ProductStoreRequest, CheckoutRequest, SettingUpdateRequest)
    ├── Models/           # Eloquent models with typed scopes and relations
    resources/
    ├── js/
@@ -219,10 +223,22 @@ flowchart TD
 
 ---
 
-### 🔹 PHASE 20: BUSINESS INTELLIGENCE, SYSTEM AUDIT TRAIL & PRODUCTION QA
-* **Scope:** `BusinessAnalyticsService` (Real-time Gross/Net Sales, Real Profit $\text{Sales} - \text{COGS}$, MoM/YoY growth curves, Dead Stock report, ApexCharts), `activity_logs` audit observer, store settings, `DatabaseSeeder.php`.
-* **Key Files:** `app/Services/Analytics/BusinessAnalyticsService.php`, `app/Observers/ActivityLogObserver.php`, `resources/js/Pages/Admin/Dashboard.jsx`, `database/seeders/DatabaseSeeder.php`.
-* **Testing:** Run `php artisan test` $\to$ 100% tests pass; run `php artisan db:seed` $\to$ full demo store hydrated in $<10$ seconds.
+### 🔹 PHASE 20: DYNAMIC SETTINGS CMS, BUSINESS INTELLIGENCE, AUDIT TRAIL & PRODUCTION QA
+* **Scope:** 
+  1. **Complete Dynamic Settings & CMS Engine (Zero Hardcoding):** 
+     - Manage Site Identity (Name, Logos, Favicon, Tagline, Copyright).
+     - Contact & Support (Phones, WhatsApp, Email, Store Address, Google Map).
+     - Social Links (Facebook, Instagram, YouTube, TikTok, X, LinkedIn).
+     - Commerce & Currency Settings (Currency Symbol, Code, Position, VAT %, Delivery Charges, Free Shipping Threshold).
+     - Invoice Config (Legal Company Name, VAT/BIN, Invoice Footers & Return Terms).
+     - Homepage Banners & Sliders (Hero slides, promo banners, announcement ticker).
+     - Dynamic Policy Pages (About Us, Terms, Privacy, FAQ).
+     - Cached in Redis and passed to all React components via `$page.props.settings`.
+  2. **Business Analytics:** Real-time Gross/Net Sales, Real Profit ($\text{Sales} - \text{COGS}$), MoM/YoY growth curves, Dead Stock report, ApexCharts.
+  3. **Audit Trail:** `activity_logs` observer tracking before/after values on all admin mutations.
+  4. **Production QA:** `DatabaseSeeder.php` hydrating realistic demo data in $<10$s.
+* **Key Files:** `app/Services/Settings/SettingService.php`, `app/Http/Controllers/Admin/SettingController.php`, `resources/js/Pages/Admin/Settings/*`, `app/Services/Analytics/BusinessAnalyticsService.php`, `app/Observers/ActivityLogObserver.php`, `resources/js/Pages/Admin/Dashboard.jsx`, `database/seeders/DatabaseSeeder.php`.
+* **Testing:** Update Site Logo, Phone, Currency Symbol, and Hero Banner in Admin $\to$ verify immediate reflection across storefront header, footer, checkout, and invoices without hardcoded strings; run `php artisan test` $\to$ 100% tests pass.
 
 ---
 
