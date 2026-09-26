@@ -20,7 +20,7 @@ export default function Register() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans selection:bg-orange-400 selection:text-white transition-colors duration-200">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans selection:bg-[#C8A844] selection:text-white transition-colors duration-200">
             <Head title="Create Account - ORIO STYLE" />
 
             {/* Top Right Theme Switcher */}
@@ -30,7 +30,7 @@ export default function Register() {
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
                 <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center shadow-md shadow-orange-500/20 group-hover:scale-105 transition">
+                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#C8A844] via-[#b29134] to-[#8e7127] flex items-center justify-center shadow-md shadow-[#C8A844]/20 group-hover:scale-105 transition">
                         <Sparkles className="w-6 h-6 text-white font-bold" />
                     </div>
                     <span className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">ORIO STYLE</span>
@@ -38,7 +38,7 @@ export default function Register() {
                 <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Create your customer account</h2>
                 <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
                     Already have an account?{' '}
-                    <Link href="/login" className="font-bold text-orange-600 dark:text-orange-400 hover:underline transition">
+                    <Link href="/login" className="font-bold text-[#8e7127] dark:text-[#deca94] hover:underline transition">
                         Sign in instead
                     </Link>
                 </p>
@@ -63,7 +63,7 @@ export default function Register() {
                                     autoComplete="name"
                                     required
                                     onChange={(e) => setData('name', e.target.value)}
-                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 text-sm transition"
+                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] text-sm transition"
                                     placeholder="John Doe"
                                 />
                             </div>
@@ -88,7 +88,7 @@ export default function Register() {
                                     autoComplete="username"
                                     required
                                     onChange={(e) => setData('email', e.target.value)}
-                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 text-sm transition"
+                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] text-sm transition"
                                     placeholder="you@example.com"
                                 />
                             </div>
@@ -112,7 +112,7 @@ export default function Register() {
                                     value={data.phone}
                                     autoComplete="tel"
                                     onChange={(e) => setData('phone', e.target.value)}
-                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 text-sm transition"
+                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] text-sm transition"
                                     placeholder="+880 1700 000000"
                                 />
                             </div>
@@ -137,7 +137,7 @@ export default function Register() {
                                     autoComplete="new-password"
                                     required
                                     onChange={(e) => setData('password', e.target.value)}
-                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 text-sm transition"
+                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] text-sm transition"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -162,7 +162,7 @@ export default function Register() {
                                     autoComplete="new-password"
                                     required
                                     onChange={(e) => setData('password_confirmation', e.target.value)}
-                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 text-sm transition"
+                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] text-sm transition"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -172,7 +172,7 @@ export default function Register() {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="w-full flex justify-center items-center gap-2 py-2.5 px-4 rounded-xl shadow-xs text-sm font-semibold text-white bg-orange-500 hover:bg-orange-600 active:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-400/30 disabled:opacity-50 transition duration-150 cursor-pointer"
+                                className="w-full flex justify-center items-center gap-2 py-2.5 px-4 rounded-xl shadow-xs text-sm font-semibold text-white bg-[#C8A844] hover:bg-[#b29134] active:bg-[#8e7127] focus:outline-none focus:ring-2 focus:ring-[#C8A844]/30 disabled:opacity-50 transition duration-150 cursor-pointer"
                             >
                                 <span>Create Account</span>
                                 <ArrowRight className="w-4 h-4" />

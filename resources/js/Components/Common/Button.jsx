@@ -13,12 +13,12 @@ export default function Button({
     ...props
 }) {
     const variants = {
-        primary: 'bg-orange-500 hover:bg-orange-600 active:bg-orange-700 text-white font-semibold shadow-xs hover:shadow-sm transition border border-orange-500/20',
+        primary: 'bg-[#C8A844] hover:bg-[#b29134] active:bg-[#8e7127] text-white font-semibold shadow-xs hover:shadow-sm transition border border-[#C8A844]/30',
         secondary: 'bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold shadow-2xs hover:border-slate-300 dark:hover:border-slate-600',
         danger: 'bg-rose-500 hover:bg-rose-600 active:bg-rose-700 text-white font-semibold shadow-xs border border-rose-500/20',
         success: 'bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold shadow-xs border border-emerald-600/20',
-        soft: 'bg-orange-50 hover:bg-orange-100 text-orange-700 dark:bg-orange-950/50 dark:hover:bg-orange-900/50 dark:text-orange-300 font-semibold border border-orange-200/80 dark:border-orange-800/60',
-        outline: 'bg-transparent hover:bg-orange-50/50 dark:hover:bg-slate-800 text-orange-600 dark:text-orange-400 border border-orange-300 dark:border-orange-500/60 font-semibold',
+        soft: 'bg-[#fbf9f2] hover:bg-[#f6f1df] text-[#8e7127] dark:bg-[#392a0f]/50 dark:hover:bg-[#392a0f]/80 dark:text-[#deca94] font-semibold border border-[#ece1be] dark:border-[#8e7127]/60',
+        outline: 'bg-transparent hover:bg-[#fbf9f2] dark:hover:bg-slate-800 text-[#C8A844] dark:text-[#deca94] border border-[#C8A844]/60 font-semibold',
         ghost: 'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800/70 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white border-transparent font-medium',
     };
 
@@ -32,7 +32,7 @@ export default function Button({
         <button
             type={type}
             disabled={disabled || processing}
-            className={`inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-orange-400/40 focus:ring-offset-1 dark:focus:ring-offset-slate-950 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`}
+            className={`inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/40 focus:ring-offset-1 dark:focus:ring-offset-slate-950 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`}
             {...props}
         >
             {processing ? (

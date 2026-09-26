@@ -246,7 +246,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
             label: 'Category Name',
             render: (_, row) => (
                 <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-orange-50 dark:bg-slate-800 border border-orange-200/80 dark:border-slate-700 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold shrink-0 shadow-2xs">
+                    <div className="w-9 h-9 rounded-xl bg-[#fbf9f2] dark:bg-slate-800 border border-[#ece1be] dark:border-slate-700 flex items-center justify-center text-[#8e7127] dark:text-[#deca94] font-bold shrink-0 shadow-2xs">
                         {row.parent_id ? <CornerDownRight className="w-4 h-4 text-slate-400" /> : <FolderTree className="w-4.5 h-4.5" />}
                     </div>
                     <div>
@@ -272,11 +272,11 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                 <div>
                     {row.parent ? (
                         <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
-                            <CornerDownRight className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" />
+                            <CornerDownRight className="w-3.5 h-3.5 text-[#C8A844] dark:text-[#deca94]" />
                             {row.parent.name}
                         </span>
                     ) : (
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-orange-50 text-orange-700 dark:bg-orange-950/40 dark:text-orange-300 border border-orange-200/80 dark:border-orange-800/50">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-[#fbf9f2] text-[#8e7127] dark:bg-[#392a0f]/40 dark:text-[#deca94] border border-[#ece1be] dark:border-[#8e7127]/50">
                             <Layers className="w-3.5 h-3.5" /> Root Level
                         </span>
                     )}
@@ -342,7 +342,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             type="button"
                             onClick={() => openCreateModal(row.id)}
                             title="Add subcategory inside this parent"
-                            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/50 transition cursor-pointer"
+                            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#8e7127] dark:hover:text-[#deca94] hover:bg-[#fbf9f2] dark:hover:bg-[#392a0f]/50 transition cursor-pointer"
                         >
                             <Plus className="w-4 h-4" />
                         </button>
@@ -375,13 +375,13 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                 <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2.5">
-                            <div className="p-2 rounded-xl bg-orange-50 text-orange-600 dark:bg-orange-950/50 dark:text-orange-300 border border-orange-200/80 dark:border-orange-800/50">
+                            <div className="p-2 rounded-xl bg-[#fbf9f2] text-[#8e7127] dark:bg-[#392a0f]/50 dark:text-[#deca94] border border-[#ece1be] dark:border-[#8e7127]/50">
                                 <FolderTree className="w-5 h-5" />
                             </div>
                             <h1 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                                 Category Hierarchy & Taxonomy Tree
                             </h1>
-                            <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-orange-50 text-orange-700 dark:bg-orange-950/50 dark:text-orange-300 border border-orange-200/80 dark:border-orange-800/50">
+                            <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full bg-[#fbf9f2] text-[#8e7127] dark:bg-[#392a0f]/50 dark:text-[#deca94] border border-[#ece1be] dark:border-[#8e7127]/50">
                                 Phase 4
                             </span>
                         </div>
@@ -398,7 +398,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 onClick={() => setViewMode('tree')}
                                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold transition cursor-pointer ${
                                     viewMode === 'tree'
-                                        ? 'bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 shadow-2xs'
+                                        ? 'bg-white dark:bg-slate-900 text-[#8e7127] dark:text-[#deca94] shadow-2xs'
                                         : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                                 }`}
                             >
@@ -409,7 +409,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 onClick={() => setViewMode('table')}
                                 className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-semibold transition cursor-pointer ${
                                     viewMode === 'table'
-                                        ? 'bg-white dark:bg-slate-900 text-orange-600 dark:text-orange-400 shadow-2xs'
+                                        ? 'bg-white dark:bg-slate-900 text-[#8e7127] dark:text-[#deca94] shadow-2xs'
                                         : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
                                 }`}
                             >
@@ -435,7 +435,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4.5 shadow-xs">
                         <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
                             <span className="text-xs font-bold uppercase tracking-wider">Total Categories</span>
-                            <FolderTree className="w-4.5 h-4.5 text-orange-600 dark:text-orange-400" />
+                            <FolderTree className="w-4.5 h-4.5 text-[#C8A844] dark:text-[#deca94]" />
                         </div>
                         <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
                             {stats.total ?? categories.length}
@@ -496,7 +496,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search by name, slug..."
-                                className="block w-full pl-9 pr-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition"
+                                className="block w-full pl-9 pr-3.5 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm text-slate-800 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] transition"
                             />
                         </div>
 
@@ -504,7 +504,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="w-full sm:w-40 py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition"
+                            className="w-full sm:w-40 py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] transition"
                         >
                             <option value="all">All Statuses</option>
                             <option value="active">Active Only</option>
@@ -515,7 +515,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         <select
                             value={parentFilter}
                             onChange={(e) => setParentFilter(e.target.value)}
-                            className="w-full sm:w-48 py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition"
+                            className="w-full sm:w-48 py-2 px-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] transition"
                         >
                             <option value="all">All Levels</option>
                             <option value="root">Root Categories Only</option>
@@ -588,14 +588,14 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                         className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200/80 dark:hover:bg-slate-800 transition cursor-pointer"
                                                     >
                                                         {isExpanded ? (
-                                                            <ChevronDown className="w-4.5 h-4.5 text-orange-600 dark:text-orange-400" />
+                                                            <ChevronDown className="w-4.5 h-4.5 text-[#C8A844] dark:text-[#deca94]" />
                                                         ) : (
                                                             <ChevronRight className="w-4.5 h-4.5" />
                                                         )}
                                                     </button>
 
                                                     {/* Category Icon / Badge */}
-                                                    <div className="w-10 h-10 rounded-xl bg-orange-50 text-orange-600 dark:bg-orange-950/50 dark:text-orange-300 border border-orange-200/80 dark:border-orange-800/50 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+                                                    <div className="w-10 h-10 rounded-xl bg-[#fbf9f2] text-[#8e7127] dark:bg-[#392a0f]/50 dark:text-[#deca94] border border-[#ece1be] dark:border-[#8e7127]/50 flex items-center justify-center font-bold shrink-0 shadow-2xs">
                                                         <FolderTree className="w-5 h-5" />
                                                     </div>
 
@@ -674,7 +674,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                             type="button"
                                                             onClick={() => openCreateModal(root.id)}
                                                             title="Add nested subcategory"
-                                                            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-950/50 transition cursor-pointer"
+                                                            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-[#8e7127] dark:hover:text-[#deca94] hover:bg-[#fbf9f2] dark:hover:bg-[#392a0f]/50 transition cursor-pointer"
                                                         >
                                                             <Plus className="w-4 h-4" />
                                                         </button>
@@ -705,10 +705,10 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                         children.map((sub) => (
                                                             <div
                                                                 key={sub.id}
-                                                                className="ml-4 sm:ml-8 pl-3 sm:pl-4 py-2.5 pr-3 rounded-xl border-l-2 border-orange-400 dark:border-orange-500/70 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-orange-50/20 dark:hover:bg-slate-800/80 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-y border-r border-slate-100 dark:border-slate-800"
+                                                                className="ml-4 sm:ml-8 pl-3 sm:pl-4 py-2.5 pr-3 rounded-xl border-l-2 border-[#C8A844] dark:border-[#deca94]/70 bg-slate-50/60 dark:bg-slate-800/40 hover:bg-[#fbf9f2]/30 dark:hover:bg-slate-800/80 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-y border-r border-slate-100 dark:border-slate-800"
                                                             >
                                                                 <div className="flex items-center gap-3">
-                                                                    <div className="w-8 h-8 rounded-lg bg-orange-50 dark:bg-slate-700/80 flex items-center justify-center text-orange-600 dark:text-orange-300 shrink-0">
+                                                                    <div className="w-8 h-8 rounded-lg bg-[#fbf9f2] dark:bg-slate-700/80 flex items-center justify-center text-[#8e7127] dark:text-[#deca94] shrink-0">
                                                                         <CornerDownRight className="w-4 h-4" />
                                                                     </div>
                                                                     <div>
@@ -786,7 +786,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                             <button
                                                                 type="button"
                                                                 onClick={() => openCreateModal(root.id)}
-                                                                className="text-orange-600 dark:text-orange-400 font-semibold hover:underline cursor-pointer inline-flex items-center gap-1 ml-1"
+                                                                className="text-[#8e7127] dark:text-[#deca94] font-semibold hover:underline cursor-pointer inline-flex items-center gap-1 ml-1"
                                                             >
                                                                 <Plus className="w-3 h-3" /> Add first subcategory
                                                             </button>
@@ -886,7 +886,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             value={data.description}
                             onChange={(e) => setData('description', e.target.value)}
                             placeholder="Brief description for SEO, catalog intros and navigation cards..."
-                            className="block w-full py-2.5 px-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition"
+                            className="block w-full py-2.5 px-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] transition"
                         />
                         {errors.description && <p className="mt-1 text-xs text-rose-500">{errors.description}</p>}
                     </div>
@@ -898,7 +898,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 type="checkbox"
                                 checked={data.is_active}
                                 onChange={(e) => setData('is_active', e.target.checked)}
-                                className="w-4 h-4 text-orange-500 rounded border-slate-300 focus:ring-orange-400 cursor-pointer"
+                                className="w-4 h-4 text-[#C8A844] rounded border-slate-300 focus:ring-[#C8A844] cursor-pointer"
                             />
                             <div>
                                 <span className="text-xs font-bold text-slate-900 dark:text-white block">Active Status</span>
@@ -1025,7 +1025,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             rows={3}
                             value={data.description}
                             onChange={(e) => setData('description', e.target.value)}
-                            className="block w-full py-2.5 px-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-orange-400/20 focus:border-orange-400 transition"
+                            className="block w-full py-2.5 px-3.5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700/80 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] transition"
                         />
                         {errors.description && <p className="mt-1 text-xs text-rose-500">{errors.description}</p>}
                     </div>
@@ -1037,7 +1037,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 type="checkbox"
                                 checked={data.is_active}
                                 onChange={(e) => setData('is_active', e.target.checked)}
-                                className="w-4 h-4 text-orange-500 rounded border-slate-300 focus:ring-orange-400 cursor-pointer"
+                                className="w-4 h-4 text-[#C8A844] rounded border-slate-300 focus:ring-[#C8A844] cursor-pointer"
                             />
                             <div>
                                 <span className="text-xs font-bold text-slate-900 dark:text-white block">Active Status</span>

@@ -31,8 +31,8 @@ export default function Dashboard({ user, metrics }) {
             growth: '+0.0% MoM',
             subText: 'Immutable COGS tracked',
             icon: TrendingUp,
-            color: 'text-orange-600 dark:text-orange-400',
-            iconBg: 'bg-orange-50 text-orange-600 dark:bg-orange-950/50 dark:text-orange-300 border border-orange-200/80 dark:border-orange-800/40',
+            color: 'text-[#8e7127] dark:text-[#deca94]',
+            iconBg: 'bg-[#fbf9f2] text-[#8e7127] dark:bg-[#392a0f]/50 dark:text-[#deca94] border border-[#ece1be] dark:border-[#8e7127]/40',
         },
         {
             title: 'Pending Orders',
@@ -71,7 +71,7 @@ export default function Dashboard({ user, metrics }) {
             icon: FolderTree,
             phase: 'Phase 4',
             badge: 'Live & Active',
-            color: 'text-orange-700 dark:text-orange-300 bg-orange-50/70 dark:bg-orange-950/40 border border-orange-200/80 dark:border-orange-800/50',
+            color: 'text-[#8e7127] dark:text-[#deca94] bg-[#fbf9f2] dark:bg-[#392a0f]/40 border border-[#ece1be] dark:border-[#8e7127]/50',
         },
         {
             name: 'Brands & WebP Hub',
@@ -105,11 +105,11 @@ export default function Dashboard({ user, metrics }) {
     return (
         <AdminLayout title="Dashboard">
             {/* Top Welcome Banner */}
-            <div className="rounded-2xl bg-gradient-to-r from-orange-50 via-amber-50/50 to-white dark:from-orange-950/30 dark:via-slate-900 dark:to-slate-900 border border-orange-200/80 dark:border-orange-900/40 p-6 sm:p-7 mb-7 shadow-xs relative overflow-hidden">
+            <div className="rounded-2xl bg-gradient-to-r from-[#fbf9f2] via-[#f6f1df]/60 to-white dark:from-[#392a0f]/30 dark:via-slate-900 dark:to-slate-900 border border-[#ece1be] dark:border-[#8e7127]/40 p-6 sm:p-7 mb-7 shadow-xs relative overflow-hidden">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
                     <div className="space-y-1.5">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-950/60 dark:text-orange-300 border border-orange-200 dark:border-orange-800/50 text-[11px] font-bold">
-                            <ShieldCheck className="w-3.5 h-3.5 text-orange-600 dark:text-orange-400" />
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#f6f1df] text-[#755b23] dark:bg-[#392a0f]/60 dark:text-[#deca94] border border-[#deca94] dark:border-[#8e7127]/50 text-[11px] font-bold">
+                            <ShieldCheck className="w-3.5 h-3.5 text-[#C8A844] dark:text-[#deca94]" />
                             <span>Enterprise Admin Control Tower</span>
                         </div>
                         <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
@@ -154,7 +154,7 @@ export default function Dashboard({ user, metrics }) {
                                 {card.value}
                             </div>
                             <div className="flex items-center justify-between text-xs font-medium pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                                <span className="text-orange-600 dark:text-orange-400 font-semibold">{card.growth}</span>
+                                <span className="text-[#8e7127] dark:text-[#deca94] font-semibold">{card.growth}</span>
                                 <span className="text-slate-400 dark:text-slate-500">{card.subText}</span>
                             </div>
                         </div>
@@ -246,7 +246,7 @@ export default function Dashboard({ user, metrics }) {
                         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
                             Dynamic Settings Cache
                         </span>
-                        <div className="flex items-center gap-1.5 text-orange-600 dark:text-orange-400 font-semibold text-xs">
+                        <div className="flex items-center gap-1.5 text-[#8e7127] dark:text-[#deca94] font-semibold text-xs">
                             <CheckCircle2 className="w-3.5 h-3.5" /> Redis / In-Memory Active
                         </div>
                     </div>
