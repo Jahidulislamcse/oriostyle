@@ -1,34 +1,42 @@
 {
-  "_arrow-right-DsUkoXtc.js": {
-    "file": "assets/arrow-right-DsUkoXtc.js",
+  "_ThemeToggle-Xi5h0Ge0.js": {
+    "file": "assets/ThemeToggle-Xi5h0Ge0.js",
+    "name": "ThemeToggle",
+    "imports": [
+      "resources/js/app.jsx",
+      "_sparkles-DUE8RhM4.js"
+    ]
+  },
+  "_arrow-right-Buru3Xw0.js": {
+    "file": "assets/arrow-right-Buru3Xw0.js",
     "name": "arrow-right",
     "imports": [
-      "_sparkles-CZ6pNlVm.js"
+      "_sparkles-DUE8RhM4.js"
     ]
   },
-  "_mail-BuIQtgse.js": {
-    "file": "assets/mail-BuIQtgse.js",
+  "_mail-Bwe0miTv.js": {
+    "file": "assets/mail-Bwe0miTv.js",
     "name": "mail",
     "imports": [
-      "_sparkles-CZ6pNlVm.js"
+      "_sparkles-DUE8RhM4.js"
     ]
   },
-  "_shield-check-Dzog_K5a.js": {
-    "file": "assets/shield-check-Dzog_K5a.js",
+  "_shield-check-wO2Is8qt.js": {
+    "file": "assets/shield-check-wO2Is8qt.js",
     "name": "shield-check",
     "imports": [
-      "_sparkles-CZ6pNlVm.js"
+      "_sparkles-DUE8RhM4.js"
     ]
   },
-  "_sparkles-CZ6pNlVm.js": {
-    "file": "assets/sparkles-CZ6pNlVm.js",
+  "_sparkles-DUE8RhM4.js": {
+    "file": "assets/sparkles-DUE8RhM4.js",
     "name": "sparkles",
     "imports": [
       "resources/js/app.jsx"
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-dzNGlFy7.css",
+    "file": "assets/app-DCPmI9gi.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -37,66 +45,68 @@
     ]
   },
   "resources/js/Pages/Admin/Dashboard.jsx": {
-    "file": "assets/Dashboard-I5SWIGSD.js",
+    "file": "assets/Dashboard-DX8wwhMp.js",
     "name": "Dashboard",
     "src": "resources/js/Pages/Admin/Dashboard.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-CZ6pNlVm.js",
-      "_shield-check-Dzog_K5a.js",
-      "_arrow-right-DsUkoXtc.js"
+      "_sparkles-DUE8RhM4.js",
+      "_shield-check-wO2Is8qt.js",
+      "_ThemeToggle-Xi5h0Ge0.js",
+      "_arrow-right-Buru3Xw0.js"
     ],
     "css": [
-      "assets/app-dzNGlFy7.css"
+      "assets/app-DCPmI9gi.css"
     ]
   },
   "resources/js/Pages/Auth/Login.jsx": {
-    "file": "assets/Login-qVJ6dCj-.js",
+    "file": "assets/Login-sPr93NEn.js",
     "name": "Login",
     "src": "resources/js/Pages/Auth/Login.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-CZ6pNlVm.js",
-      "_mail-BuIQtgse.js",
-      "_arrow-right-DsUkoXtc.js"
+      "_ThemeToggle-Xi5h0Ge0.js",
+      "_sparkles-DUE8RhM4.js",
+      "_mail-Bwe0miTv.js",
+      "_arrow-right-Buru3Xw0.js"
     ],
     "css": [
-      "assets/app-dzNGlFy7.css"
+      "assets/app-DCPmI9gi.css"
     ]
   },
   "resources/js/Pages/Auth/Register.jsx": {
-    "file": "assets/Register-_WVt-0XI.js",
+    "file": "assets/Register-CpIj0gso.js",
     "name": "Register",
     "src": "resources/js/Pages/Auth/Register.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-CZ6pNlVm.js",
-      "_mail-BuIQtgse.js",
-      "_arrow-right-DsUkoXtc.js"
+      "_sparkles-DUE8RhM4.js",
+      "_mail-Bwe0miTv.js",
+      "_arrow-right-Buru3Xw0.js"
     ],
     "css": [
-      "assets/app-dzNGlFy7.css"
+      "assets/app-DCPmI9gi.css"
     ]
   },
   "resources/js/Pages/Welcome.jsx": {
-    "file": "assets/Welcome-B9byQX_4.js",
+    "file": "assets/Welcome-B_FwSyuZ.js",
     "name": "Welcome",
     "src": "resources/js/Pages/Welcome.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-CZ6pNlVm.js",
-      "_shield-check-Dzog_K5a.js"
+      "_sparkles-DUE8RhM4.js",
+      "_shield-check-wO2Is8qt.js"
     ],
     "css": [
-      "assets/app-dzNGlFy7.css"
+      "assets/app-DCPmI9gi.css"
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-CCeP6-dL.js",
+    "file": "assets/app-bmDj-i27.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -107,7 +117,7 @@
       "resources/js/Pages/Welcome.jsx"
     ],
     "css": [
-      "assets/app-dzNGlFy7.css"
+      "assets/app-DCPmI9gi.css"
     ]
   }
 }

@@ -9,23 +9,23 @@ export default function Badge({
     ...props
 }) {
     const variants = {
-        success: 'bg-emerald-950/60 text-emerald-400 border-emerald-500/30',
-        warning: 'bg-amber-950/60 text-amber-400 border-amber-500/30',
-        danger: 'bg-rose-950/60 text-rose-400 border-rose-500/30',
-        info: 'bg-teal-950/60 text-teal-300 border-teal-500/30',
-        purple: 'bg-purple-950/60 text-purple-300 border-purple-500/30',
-        blue: 'bg-blue-950/60 text-blue-300 border-blue-500/30',
-        neutral: 'bg-slate-800 text-slate-300 border-slate-700',
+        success: 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-500/30',
+        warning: 'bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-500/30',
+        danger: 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/60 dark:text-rose-300 dark:border-rose-500/30',
+        info: 'bg-teal-50 text-teal-700 border-teal-200 dark:bg-teal-950/60 dark:text-teal-300 dark:border-teal-500/30',
+        purple: 'bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950/60 dark:text-purple-300 dark:border-purple-500/30',
+        blue: 'bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950/60 dark:text-blue-300 dark:border-blue-500/30',
+        neutral: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-700',
     };
 
     const dotColors = {
-        success: 'bg-emerald-400',
-        warning: 'bg-amber-400',
-        danger: 'bg-rose-400',
-        info: 'bg-teal-400',
-        purple: 'bg-purple-400',
-        blue: 'bg-blue-400',
-        neutral: 'bg-slate-400',
+        success: 'bg-emerald-500',
+        warning: 'bg-amber-500',
+        danger: 'bg-rose-500',
+        info: 'bg-teal-500',
+        purple: 'bg-purple-500',
+        blue: 'bg-blue-500',
+        neutral: 'bg-slate-500',
     };
 
     const sizes = {
@@ -36,7 +36,7 @@ export default function Badge({
 
     return (
         <span
-            className={`inline-flex items-center gap-1.5 font-semibold uppercase tracking-wider rounded-full border ${variants[variant] || variants.neutral} ${sizes[size] || sizes.md} ${className}`}
+            className={`inline-flex items-center gap-1.5 font-semibold uppercase tracking-wider rounded-full border shadow-2xs ${variants[variant] || variants.neutral} ${sizes[size] || sizes.md} ${className}`}
             {...props}
         >
             {dot && <span className={`w-1.5 h-1.5 rounded-full ${dotColors[variant] || dotColors.neutral} animate-pulse`} />}

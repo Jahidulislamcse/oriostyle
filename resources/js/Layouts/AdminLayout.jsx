@@ -19,12 +19,11 @@ import {
     Sparkles, 
     ExternalLink, 
     Search,
-    ShieldCheck,
-    User,
     Store
 } from 'lucide-react';
 import ToastContainer from '@/Components/Common/ToastContainer';
 import Badge from '@/Components/Common/Badge';
+import ThemeToggle from '@/Components/Common/ThemeToggle';
 
 export default function AdminLayout({ title = '', children }) {
     const { auth, settings } = usePage().props;
@@ -83,36 +82,36 @@ export default function AdminLayout({ title = '', children }) {
     const siteName = settings?.site_name || 'ORIO STYLE';
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-teal-500 selection:text-white flex flex-col">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 font-sans selection:bg-teal-500 selection:text-white flex flex-col transition-colors duration-200">
             <Head title={title ? `${title} - Admin Control Tower` : `${siteName} - Admin`} />
             <ToastContainer />
 
             {/* Mobile Drawer Backdrop */}
             {mobileOpen && (
                 <div
-                    className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-40 lg:hidden"
+                    className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs z-40 lg:hidden"
                     onClick={() => setMobileOpen(false)}
                 />
             )}
 
             {/* Sidebar (Desktop + Mobile Drawer) */}
             <aside
-                className={`fixed top-0 bottom-0 left-0 z-50 bg-slate-900 border-r border-slate-800 flex flex-col transition-all duration-300 ease-in-out ${
+                className={`fixed top-0 bottom-0 left-0 z-50 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 flex flex-col transition-all duration-300 ease-in-out shadow-xs ${
                     sidebarCollapsed ? 'w-20' : 'w-64'
                 } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
                 {/* Brand Header */}
-                <div className="h-16 px-4 border-b border-slate-800 flex items-center justify-between">
+                <div className="h-16 px-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
                     <Link href="/admin/dashboard" className="flex items-center gap-3 overflow-hidden">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-emerald-600 flex-shrink-0 flex items-center justify-center shadow-lg shadow-teal-500/20">
-                            <Sparkles className="w-5 h-5 text-slate-950 font-bold" />
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-500 to-emerald-600 flex-shrink-0 flex items-center justify-center shadow-md shadow-teal-500/20">
+                            <Sparkles className="w-5 h-5 text-white font-bold" />
                         </div>
                         {!sidebarCollapsed && (
                             <div className="flex flex-col truncate">
-                                <span className="text-sm font-bold tracking-tight text-white truncate">
+                                <span className="text-sm font-bold tracking-tight text-slate-900 dark:text-white truncate">
                                     {siteName}
                                 </span>
-                                <span className="text-[10px] font-semibold text-teal-400 uppercase tracking-widest">
+                                <span className="text-[10px] font-bold text-teal-600 dark:text-teal-400 uppercase tracking-widest">
                                     Admin Tower
                                 </span>
                             </div>
@@ -122,7 +121,7 @@ export default function AdminLayout({ title = '', children }) {
                     {/* Mobile Close Button */}
                     <button
                         onClick={() => setMobileOpen(false)}
-                        className="lg:hidden text-slate-400 hover:text-white p-1 rounded-lg"
+                        className="lg:hidden text-slate-400 hover:text-slate-700 dark:hover:text-white p-1 rounded-lg"
                     >
                         <X className="w-5 h-5" />
                     </button>
@@ -133,7 +132,7 @@ export default function AdminLayout({ title = '', children }) {
                     {navigation.map((group, groupIdx) => (
                         <div key={groupIdx}>
                             {!sidebarCollapsed && (
-                                <h4 className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-500 mb-2">
+                                <h4 className="px-3 text-[10px] font-extrabold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-2">
                                     {group.group}
                                 </h4>
                             )}
@@ -149,20 +148,20 @@ export default function AdminLayout({ title = '', children }) {
                                             title={sidebarCollapsed ? item.name : undefined}
                                             className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-semibold transition-all duration-150 group ${
                                                 isActive
-                                                    ? 'bg-teal-500/10 text-teal-300 border border-teal-500/30 shadow-sm'
-                                                    : 'text-slate-400 hover:text-white hover:bg-slate-800/60'
+                                                    ? 'bg-teal-50 text-teal-700 border border-teal-200 dark:bg-teal-500/10 dark:text-teal-300 dark:border-teal-500/30 shadow-2xs'
+                                                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/60'
                                             } ${sidebarCollapsed ? 'justify-center px-0' : ''}`}
                                         >
                                             <Icon
                                                 className={`w-4 h-4 flex-shrink-0 transition-transform duration-150 group-hover:scale-110 ${
-                                                    isActive ? 'text-teal-400' : 'text-slate-500 group-hover:text-slate-300'
+                                                    isActive ? 'text-teal-600 dark:text-teal-400' : 'text-slate-400 dark:text-slate-500 group-hover:text-slate-600 dark:group-hover:text-slate-300'
                                                 }`}
                                             />
                                             {!sidebarCollapsed && (
                                                 <div className="flex items-center justify-between flex-1 truncate">
                                                     <span className="truncate">{item.name}</span>
                                                     {item.badge && (
-                                                        <span className="text-[9px] px-1.5 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/60">
+                                                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700/60">
                                                             {item.badge}
                                                         </span>
                                                     )}
@@ -177,10 +176,10 @@ export default function AdminLayout({ title = '', children }) {
                 </div>
 
                 {/* Desktop Collapse Toggle */}
-                <div className="hidden lg:flex p-3 border-t border-slate-800 justify-end">
+                <div className="hidden lg:flex p-3 border-t border-slate-200 dark:border-slate-800 justify-end">
                     <button
                         onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                        className="w-full flex items-center justify-center p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer text-xs gap-2"
+                        className="w-full flex items-center justify-center p-2 rounded-xl text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer text-xs font-semibold gap-2"
                     >
                         {sidebarCollapsed ? (
                             <ChevronRight className="w-4 h-4" />
@@ -194,40 +193,43 @@ export default function AdminLayout({ title = '', children }) {
                 </div>
             </aside>
 
-            {/* Main Wrapper */}
+            {/* Main Content Wrapper */}
             <div
                 className={`flex-1 flex flex-col transition-all duration-300 ${
                     sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-64'
                 }`}
             >
                 {/* Topbar */}
-                <header className="h-16 border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-30 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+                <header className="h-16 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/80 backdrop-blur sticky top-0 z-30 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 shadow-2xs">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setMobileOpen(true)}
-                            className="lg:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition cursor-pointer"
+                            className="lg:hidden p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
                         >
                             <Menu className="w-5 h-5" />
                         </button>
 
-                        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-400 bg-slate-800/80 border border-slate-700/60 px-3 py-1.5 rounded-xl w-64">
-                            <Search className="w-3.5 h-3.5 text-slate-500" />
+                        <div className="hidden sm:flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/60 px-3 py-2 rounded-xl w-64 focus-within:ring-2 focus-within:ring-teal-500/40">
+                            <Search className="w-3.5 h-3.5 text-slate-400 dark:text-slate-500" />
                             <input
                                 type="text"
-                                placeholder="Search catalog, orders... (Ctrl+K)"
-                                className="bg-transparent text-xs text-white placeholder-slate-500 focus:outline-none w-full"
+                                placeholder="Quick search catalog... (Ctrl+K)"
+                                className="bg-transparent text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none w-full"
                             />
                         </div>
                     </div>
 
                     <div className="flex items-center gap-3">
+                        {/* Light / Dark Mode Toggle */}
+                        <ThemeToggle />
+
                         {/* Storefront Quick View Link */}
                         <Link
                             href="/"
                             target="_blank"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition"
+                            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-semibold transition shadow-2xs"
                         >
-                            <Store className="w-3.5 h-3.5 text-teal-400" />
+                            <Store className="w-3.5 h-3.5 text-teal-600 dark:text-teal-400" />
                             <span className="hidden sm:inline">Storefront</span>
                             <ExternalLink className="w-3 h-3 text-slate-400" />
                         </Link>
@@ -236,14 +238,14 @@ export default function AdminLayout({ title = '', children }) {
                         <div className="relative">
                             <button
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer"
+                                className="flex items-center gap-2 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/80 transition text-left cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-slate-700"
                             >
-                                <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/30 flex items-center justify-center font-bold text-xs">
+                                <div className="w-8 h-8 rounded-lg bg-teal-100 text-teal-800 dark:bg-teal-500/20 dark:text-teal-300 border border-teal-200 dark:border-teal-500/30 flex items-center justify-center font-bold text-xs shadow-2xs">
                                     {user?.name?.charAt(0) || 'A'}
                                 </div>
                                 <div className="hidden md:flex flex-col">
-                                    <span className="text-xs font-semibold text-white leading-tight">{user?.name}</span>
-                                    <span className="text-[10px] text-teal-400 capitalize">{user?.role?.replace('_', ' ')}</span>
+                                    <span className="text-xs font-bold text-slate-900 dark:text-white leading-tight">{user?.name}</span>
+                                    <span className="text-[10px] text-teal-700 dark:text-teal-400 font-semibold capitalize">{user?.role?.replace('_', ' ')}</span>
                                 </div>
                             </button>
 
@@ -251,10 +253,10 @@ export default function AdminLayout({ title = '', children }) {
                             {userMenuOpen && (
                                 <>
                                     <div className="fixed inset-0 z-30" onClick={() => setUserMenuOpen(false)} />
-                                    <div className="absolute right-0 mt-2 w-56 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl py-2 z-40">
-                                        <div className="px-4 py-2 border-b border-slate-800 mb-1">
-                                            <p className="text-xs font-semibold text-white truncate">{user?.name}</p>
-                                            <p className="text-[11px] text-slate-400 truncate">{user?.email}</p>
+                                    <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl py-2 z-40">
+                                        <div className="px-4 py-2 border-b border-slate-100 dark:border-slate-800 mb-1">
+                                            <p className="text-xs font-bold text-slate-900 dark:text-white truncate">{user?.name}</p>
+                                            <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate">{user?.email}</p>
                                             <div className="mt-1.5">
                                                 <Badge
                                                     variant={user?.role === 'super_admin' ? 'purple' : 'success'}
@@ -267,7 +269,7 @@ export default function AdminLayout({ title = '', children }) {
 
                                         <button
                                             onClick={handleLogout}
-                                            className="w-full px-4 py-2 text-xs font-semibold text-rose-400 hover:bg-rose-500/10 flex items-center gap-2 transition cursor-pointer text-left"
+                                            className="w-full px-4 py-2 text-xs font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 flex items-center gap-2 transition cursor-pointer text-left"
                                         >
                                             <LogOut className="w-4 h-4" />
                                             <span>Sign Out</span>

@@ -37,11 +37,15 @@ export default function ConfirmDialog({
             }
         >
             <div className="flex items-start gap-3">
-                <div className={`p-2.5 rounded-xl ${variant === 'danger' ? 'bg-rose-950/60 text-rose-400 border border-rose-500/30' : 'bg-amber-950/60 text-amber-400 border border-amber-500/30'}`}>
+                <div className={`p-2.5 rounded-xl ${
+                    variant === 'danger'
+                        ? 'bg-rose-100 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-200 dark:border-rose-500/30'
+                        : 'bg-amber-100 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 border border-amber-200 dark:border-amber-500/30'
+                }`}>
                     <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                    <p className="text-sm text-slate-300 leading-relaxed">{message}</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed">{message}</p>
                 </div>
             </div>
         </Modal>
