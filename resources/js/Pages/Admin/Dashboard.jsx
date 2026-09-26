@@ -66,11 +66,11 @@ export default function Dashboard({ user, metrics }) {
     const quickActions = [
         {
             name: 'Categories Hierarchy',
-            desc: 'Configure parent-child taxonomies and live slugs',
+            desc: 'Configure parent-child taxonomies, subcategories and live slugs',
             href: '/admin/categories',
             icon: FolderTree,
             phase: 'Phase 4',
-            badge: 'Next Sprint',
+            badge: 'Live & Active',
             color: 'text-teal-600 dark:text-teal-400 bg-teal-50 dark:bg-teal-950/60 border-teal-200 dark:border-teal-500/30',
         },
         {
@@ -79,7 +79,7 @@ export default function Dashboard({ user, metrics }) {
             href: '/admin/brands',
             icon: Tag,
             phase: 'Phase 5',
-            badge: 'Planned',
+            badge: 'Next Sprint',
             color: 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60 border-indigo-200 dark:border-indigo-500/30',
         },
         {
@@ -110,7 +110,7 @@ export default function Dashboard({ user, metrics }) {
                     <div>
                         <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-100 dark:bg-teal-500/20 border border-teal-300 dark:border-teal-500/30 text-teal-800 dark:text-teal-300 text-xs font-bold mb-3 shadow-2xs">
                             <ShieldCheck className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-                            <span>Phase 3: High-Contrast Admin Shell Kit Active</span>
+                            <span>Phase 4: Categories Hierarchy & Taxonomy Engine Active</span>
                         </div>
                         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
                             Welcome back, {user?.name}

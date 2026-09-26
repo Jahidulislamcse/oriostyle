@@ -1,0 +1,1121 @@
+import React, { useState, useMemo } from 'react';
+import { Head, useForm, router } from '@inertiajs/react';
+import AdminLayout from '@/Layouts/AdminLayout';
+import Button from '@/Components/Common/Button';
+import Badge from '@/Components/Common/Badge';
+import FormInput from '@/Components/Common/FormInput';
+import FormSelect from '@/Components/Common/FormSelect';
+import Modal from '@/Components/Common/Modal';
+import ConfirmDialog from '@/Components/Common/ConfirmDialog';
+import DataTable from '@/Components/Common/DataTable';
+import {
+    FolderTree,
+    Plus,
+    Edit3,
+    Trash2,
+    CheckCircle2,
+    XCircle,
+    Star,
+    Layers,
+    CornerDownRight,
+    Search,
+    Filter,
+    ChevronDown,
+    ChevronRight,
+    ExternalLink,
+    Image as ImageIcon,
+    Tag,
+    List,
+    Sparkles,
+    ShieldAlert,
+    RotateCcw
+} from 'lucide-react';
+
+export default function CategoryIndex({ categories = [], parentOptions = [], stats = {}, filters = {} }) {
+    const [viewMode, setViewMode] = useState('tree'); // 'tree' or 'table'
+    const [searchQuery, setSearchQuery] = useState(filters.search || '');
+    const [statusFilter, setStatusFilter] = useState(filters.status || 'all');
+    const [parentFilter, setParentFilter] = useState(filters.parent || 'all');
+    const [expandedRoots, setExpandedRoots] = useState(() => {
+        // Expand all roots by default
+        const init = {};
+        categories.forEach(c => {
+            if (!c.parent_id) init[c.id] = true;
+        });
+        return init;
+    });
+
+    // Modals state
+    const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [editingCategory, setEditingCategory] = useState(null);
+    const [deletingCategory, setDeletingCategory] = useState(null);
+    const [slugAutoSync, setSlugAutoSync] = useState(true);
+
+    // Inertia Form for Create/Edit
+    const {
+        data,
+        setData,
+        post,
+        put,
+        processing,
+        errors,
+        reset,
+        clearErrors
+    } = useForm({
+        name: '',
+        slug: '',
+        parent_id: '',
+        icon: '',
+        image: '',
+        description: '',
+        display_order: 0,
+        is_active: true,
+        is_featured: false,
+        meta_title: '',
+        meta_description: '',
+    });
+
+    // Helper to generate slug from name
+    const generateSlug = (name) => {
+        return name
+            .toLowerCase()
+            .trim()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/[\s_-]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    };
+
+    const handleNameChange = (e) => {
+        const val = e.target.value;
+        setData((prev) => ({
+            ...prev,
+            name: val,
+            slug: slugAutoSync ? generateSlug(val) : prev.slug,
+        }));
+    };
+
+    const handleSlugChange = (e) => {
+        setSlugAutoSync(false);
+        setData('slug', e.target.value);
+    };
+
+    const openCreateModal = (presetParentId = '') => {
+        reset();
+        clearErrors();
+        setSlugAutoSync(true);
+        setData({
+            name: '',
+            slug: '',
+            parent_id: presetParentId ? String(presetParentId) : '',
+            icon: '',
+            image: '',
+            description: '',
+            display_order: 0,
+            is_active: true,
+            is_featured: false,
+            meta_title: '',
+            meta_description: '',
+        });
+        setIsCreateModalOpen(true);
+    };
+
+    const openEditModal = (category) => {
+        reset();
+        clearErrors();
+        setSlugAutoSync(false);
+        setEditingCategory(category);
+        setData({
+            name: category.name || '',
+            slug: category.slug || '',
+            parent_id: category.parent_id ? String(category.parent_id) : '',
+            icon: category.icon || '',
+            image: category.image || '',
+            description: category.description || '',
+            display_order: category.display_order ?? 0,
+            is_active: Boolean(category.is_active),
+            is_featured: Boolean(category.is_featured),
+            meta_title: category.meta_title || '',
+            meta_description: category.meta_description || '',
+        });
+        setIsEditModalOpen(true);
+    };
+
+    const submitCreate = (e) => {
+        e.preventDefault();
+        post(route('admin.categories.store'), {
+            onSuccess: () => {
+                setIsCreateModalOpen(false);
+                reset();
+            },
+        });
+    };
+
+    const submitEdit = (e) => {
+        e.preventDefault();
+        if (!editingCategory) return;
+        put(route('admin.categories.update', editingCategory.id), {
+            onSuccess: () => {
+                setIsEditModalOpen(false);
+                setEditingCategory(null);
+                reset();
+            },
+        });
+    };
+
+    const submitDelete = () => {
+        if (!deletingCategory) return;
+        router.delete(route('admin.categories.destroy', deletingCategory.id), {
+            onSuccess: () => setDeletingCategory(null),
+        });
+    };
+
+    const toggleActive = (category) => {
+        router.patch(route('admin.categories.toggle-active', category.id), {}, { preserveScroll: true });
+    };
+
+    const toggleFeatured = (category) => {
+        router.patch(route('admin.categories.toggle-featured', category.id), {}, { preserveScroll: true });
+    };
+
+    const toggleRootExpand = (id) => {
+        setExpandedRoots((prev) => ({ ...prev, [id]: !prev[id] }));
+    };
+
+    const expandAll = () => {
+        const next = {};
+        categories.forEach((c) => {
+            next[c.id] = true;
+        });
+        setExpandedRoots(next);
+    };
+
+    const collapseAll = () => {
+        setExpandedRoots({});
+    };
+
+    // Client-side filtering
+    const filteredCategories = useMemo(() => {
+        return categories.filter((cat) => {
+            if (searchQuery.trim()) {
+                const q = searchQuery.toLowerCase();
+                const matches =
+                    cat.name.toLowerCase().includes(q) ||
+                    cat.slug.toLowerCase().includes(q) ||
+                    (cat.description && cat.description.toLowerCase().includes(q));
+                if (!matches) return false;
+            }
+
+            if (statusFilter === 'active' && !cat.is_active) return false;
+            if (statusFilter === 'inactive' && cat.is_active) return false;
+
+            if (parentFilter === 'root' && cat.parent_id !== null) return false;
+            if (parentFilter === 'sub' && cat.parent_id === null) return false;
+            if (parentFilter !== 'all' && parentFilter !== 'root' && parentFilter !== 'sub') {
+                if (String(cat.parent_id) !== String(parentFilter)) return false;
+            }
+
+            return true;
+        });
+    }, [categories, searchQuery, statusFilter, parentFilter]);
+
+    // Group into Root categories and subcategories map for tree view
+    const { rootCategories, subcategoriesMap } = useMemo(() => {
+        const roots = [];
+        const subMap = {};
+
+        categories.forEach((cat) => {
+            if (cat.parent_id === null) {
+                roots.push(cat);
+            } else {
+                if (!subMap[cat.parent_id]) {
+                    subMap[cat.parent_id] = [];
+                }
+                subMap[cat.parent_id].push(cat);
+            }
+        });
+
+        return { rootCategories: roots, subcategoriesMap: subMap };
+    }, [categories]);
+
+    // Prepare options for Parent Category dropdown in forms
+    const parentSelectOptions = useMemo(() => {
+        const opts = [{ value: '', label: 'None (Top-Level Root Category)' }];
+        parentOptions.forEach((p) => {
+            // In edit mode, don't allow selecting current category as parent
+            if (editingCategory && p.id === editingCategory.id) return;
+            opts.push({ value: String(p.id), label: p.label || p.name });
+        });
+        return opts;
+    }, [parentOptions, editingCategory]);
+
+    // Columns configuration for Table View
+    const tableColumns = [
+        {
+            key: 'name',
+            label: 'Category Name',
+            render: (_, row) => (
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 flex items-center justify-center text-teal-600 dark:text-teal-400 font-bold shrink-0 shadow-2xs">
+                        {row.parent_id ? <CornerDownRight className="w-4 h-4 text-slate-400" /> : <FolderTree className="w-4 h-4" />}
+                    </div>
+                    <div>
+                        <div className="flex items-center gap-2">
+                            <span className={`font-semibold ${row.parent_id ? 'text-slate-800 dark:text-slate-200' : 'text-slate-900 dark:text-white font-bold text-sm'}`}>
+                                {row.name}
+                            </span>
+                            {row.is_featured && (
+                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300 dark:border-amber-800/80">
+                                    <Star className="w-2.5 h-2.5 mr-0.5 fill-amber-500 text-amber-500" /> Featured
+                                </span>
+                            )}
+                        </div>
+                        <p className="text-[11px] font-mono text-slate-400 dark:text-slate-500">/{row.slug}</p>
+                    </div>
+                </div>
+            ),
+        },
+        {
+            key: 'parent',
+            label: 'Hierarchy Level',
+            render: (_, row) => (
+                <div>
+                    {row.parent ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+                            <CornerDownRight className="w-3 h-3 text-slate-400" />
+                            {row.parent.name}
+                        </span>
+                    ) : (
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-teal-50 text-teal-700 dark:bg-teal-950/50 dark:text-teal-300 border border-teal-200 dark:border-teal-800/60">
+                            <Layers className="w-3 h-3" /> Root Level
+                        </span>
+                    )}
+                </div>
+            ),
+        },
+        {
+            key: 'children_count',
+            label: 'Subcategories',
+            sortable: true,
+            render: (count) => (
+                <Badge variant={count > 0 ? 'info' : 'secondary'}>
+                    {count} {count === 1 ? 'Subcategory' : 'Subcategories'}
+                </Badge>
+            ),
+        },
+        {
+            key: 'display_order',
+            label: 'Order',
+            sortable: true,
+            render: (order) => (
+                <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
+                    #{order}
+                </span>
+            ),
+        },
+        {
+            key: 'is_active',
+            label: 'Status',
+            render: (isActive, row) => (
+                <button
+                    type="button"
+                    onClick={() => toggleActive(row)}
+                    title="Click to toggle status"
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition ${
+                        isActive
+                            ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80 hover:bg-emerald-100'
+                            : 'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200 dark:border-rose-800/80 hover:bg-rose-100'
+                    }`}
+                >
+                    {isActive ? (
+                        <>
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Active
+                        </>
+                    ) : (
+                        <>
+                            <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" /> Inactive
+                        </>
+                    )}
+                </button>
+            ),
+        },
+        {
+            key: 'actions',
+            label: 'Actions',
+            sortable: false,
+            className: 'text-right',
+            cellClassName: 'text-right',
+            render: (_, row) => (
+                <div className="flex items-center justify-end gap-1.5">
+                    {!row.parent_id && (
+                        <button
+                            type="button"
+                            onClick={() => openCreateModal(row.id)}
+                            title="Add subcategory inside this parent"
+                            className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/50 transition cursor-pointer"
+                        >
+                            <Plus className="w-4 h-4" />
+                        </button>
+                    )}
+                    <button
+                        type="button"
+                        onClick={() => openEditModal(row)}
+                        title="Edit category"
+                        className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition cursor-pointer"
+                    >
+                        <Edit3 className="w-4 h-4" />
+                    </button>
+                    <button
+                        type="button"
+                        onClick={() => setDeletingCategory(row)}
+                        title="Delete category"
+                        className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition cursor-pointer"
+                    >
+                        <Trash2 className="w-4 h-4" />
+                    </button>
+                </div>
+            ),
+        },
+    ];
+
+    return (
+        <AdminLayout title="Categories Taxonomy">
+            <div className="space-y-6">
+                {/* Header Title & Actions */}
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-xs">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2.5">
+                            <div className="p-2 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20">
+                                <FolderTree className="w-5 h-5" />
+                            </div>
+                            <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight">
+                                Category Hierarchy & Taxonomy Tree
+                            </h1>
+                            <span className="px-2 py-0.5 text-xs font-bold rounded-full bg-teal-100 text-teal-800 dark:bg-teal-950/80 dark:text-teal-300 border border-teal-300 dark:border-teal-800">
+                                Phase 4
+                            </span>
+                        </div>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 pl-10">
+                            Configure self-referencing parent categories, nested subcategories, display sequencing, and catalog taxonomy.
+                        </p>
+                    </div>
+
+                    <div className="flex items-center gap-3 self-start md:self-auto">
+                        {/* View Switcher */}
+                        <div className="flex items-center bg-slate-100 dark:bg-slate-800 p-1 rounded-xl border border-slate-200 dark:border-slate-700 text-xs">
+                            <button
+                                type="button"
+                                onClick={() => setViewMode('tree')}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                                    viewMode === 'tree'
+                                        ? 'bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-xs'
+                                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                                }`}
+                            >
+                                <FolderTree className="w-3.5 h-3.5" /> Tree View
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setViewMode('table')}
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
+                                    viewMode === 'table'
+                                        ? 'bg-white dark:bg-slate-900 text-teal-600 dark:text-teal-400 shadow-xs'
+                                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                                }`}
+                            >
+                                <List className="w-3.5 h-3.5" /> Table View
+                            </button>
+                        </div>
+
+                        {/* Add Category CTA */}
+                        <Button
+                            variant="primary"
+                            icon={Plus}
+                            onClick={() => openCreateModal()}
+                            className="shadow-sm shadow-teal-500/20"
+                        >
+                            Add Category
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Metric Summary Cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+                            <span className="text-xs font-bold uppercase tracking-wider">Total Categories</span>
+                            <FolderTree className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                        </div>
+                        <div className="text-2xl font-black text-slate-900 dark:text-white">
+                            {stats.total ?? categories.length}
+                        </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+                            <span className="text-xs font-bold uppercase tracking-wider">Root Categories</span>
+                            <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                        </div>
+                        <div className="text-2xl font-black text-indigo-600 dark:text-indigo-400">
+                            {stats.root_count ?? rootCategories.length}
+                        </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+                            <span className="text-xs font-bold uppercase tracking-wider">Subcategories</span>
+                            <CornerDownRight className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
+                        </div>
+                        <div className="text-2xl font-black text-cyan-600 dark:text-cyan-400">
+                            {stats.sub_count ?? (categories.length - rootCategories.length)}
+                        </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+                            <span className="text-xs font-bold uppercase tracking-wider">Active Status</span>
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                        </div>
+                        <div className="text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                            {stats.active_count ?? 0}
+                        </div>
+                    </div>
+
+                    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs col-span-2 sm:col-span-1">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
+                            <span className="text-xs font-bold uppercase tracking-wider">Featured Items</span>
+                            <Star className="w-4 h-4 text-amber-500" />
+                        </div>
+                        <div className="text-2xl font-black text-amber-500">
+                            {stats.featured_count ?? 0}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Filter & Search Bar */}
+                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
+                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                        {/* Search Input */}
+                        <div className="relative w-full sm:w-64">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                                <Search className="w-4 h-4" />
+                            </div>
+                            <input
+                                type="text"
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                placeholder="Search by name, slug..."
+                                className="block w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition"
+                            />
+                        </div>
+
+                        {/* Status Filter */}
+                        <select
+                            value={statusFilter}
+                            onChange={(e) => setStatusFilter(e.target.value)}
+                            className="w-full sm:w-40 py-2 px-3 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                        >
+                            <option value="all">All Statuses</option>
+                            <option value="active">Active Only</option>
+                            <option value="inactive">Inactive Only</option>
+                        </select>
+
+                        {/* Parent Filter */}
+                        <select
+                            value={parentFilter}
+                            onChange={(e) => setParentFilter(e.target.value)}
+                            className="w-full sm:w-48 py-2 px-3 bg-slate-50 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 rounded-xl text-xs text-slate-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                        >
+                            <option value="all">All Levels</option>
+                            <option value="root">Root Categories Only</option>
+                            <option value="sub">Subcategories Only</option>
+                            {rootCategories.map((r) => (
+                                <option key={r.id} value={r.id}>
+                                    Inside: {r.name}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Tree Expand/Collapse Controls (if Tree view) */}
+                    {viewMode === 'tree' && (
+                        <div className="flex items-center gap-2 self-end md:self-auto text-xs">
+                            <button
+                                type="button"
+                                onClick={expandAll}
+                                className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer font-medium"
+                            >
+                                Expand All
+                            </button>
+                            <button
+                                type="button"
+                                onClick={collapseAll}
+                                className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer font-medium"
+                            >
+                                Collapse All
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Main Content Area */}
+                {viewMode === 'table' ? (
+                    <DataTable
+                        columns={tableColumns}
+                        data={filteredCategories}
+                        searchable={false}
+                        emptyMessage="No categories match your filter criteria."
+                    />
+                ) : (
+                    /* Tree View Mode */
+                    <div className="space-y-3">
+                        {rootCategories.length > 0 ? (
+                            rootCategories
+                                .filter((root) => {
+                                    if (parentFilter === 'sub') return false;
+                                    if (parentFilter !== 'all' && parentFilter !== 'root' && String(parentFilter) !== String(root.id)) return false;
+                                    if (statusFilter === 'active' && !root.is_active) return false;
+                                    if (statusFilter === 'inactive' && root.is_active) return false;
+                                    return true;
+                                })
+                                .map((root) => {
+                                    const children = subcategoriesMap[root.id] || [];
+                                    const isExpanded = Boolean(expandedRoots[root.id]);
+
+                                    return (
+                                        <div
+                                            key={root.id}
+                                            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs transition duration-150"
+                                        >
+                                            {/* Root Category Row */}
+                                            <div className="p-4 bg-slate-50/70 dark:bg-slate-900/90 border-b border-slate-200/80 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                                                <div className="flex items-center gap-3">
+                                                    {/* Expand Toggle */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => toggleRootExpand(root.id)}
+                                                        className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800 transition cursor-pointer"
+                                                    >
+                                                        {isExpanded ? (
+                                                            <ChevronDown className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                                                        ) : (
+                                                            <ChevronRight className="w-4 h-4" />
+                                                        )}
+                                                    </button>
+
+                                                    {/* Category Icon / Badge */}
+                                                    <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 border border-teal-500/20 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+                                                        <FolderTree className="w-5 h-5" />
+                                                    </div>
+
+                                                    {/* Category Info */}
+                                                    <div>
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <span className="font-black text-slate-900 dark:text-white text-base">
+                                                                {root.name}
+                                                            </span>
+                                                            <span className="font-mono text-xs text-slate-400 dark:text-slate-500">
+                                                                /{root.slug}
+                                                            </span>
+                                                            {root.is_featured && (
+                                                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300 dark:border-amber-800">
+                                                                    <Star className="w-2.5 h-2.5 mr-1 fill-amber-500 text-amber-500" /> Featured
+                                                                </span>
+                                                            )}
+                                                        </div>
+                                                        <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-1">
+                                                            {root.description || 'No description provided.'}
+                                                        </p>
+                                                    </div>
+                                                </div>
+
+                                                {/* Meta & Quick Actions */}
+                                                <div className="flex items-center gap-3 pl-9 sm:pl-0 self-end sm:self-auto">
+                                                    {/* Order Badge */}
+                                                    <span className="text-[11px] font-mono px-2 py-1 rounded-md bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold">
+                                                        Order #{root.display_order}
+                                                    </span>
+
+                                                    {/* Subcategories count */}
+                                                    <Badge variant={children.length > 0 ? 'info' : 'secondary'}>
+                                                        {children.length} {children.length === 1 ? 'Subcategory' : 'Subcategories'}
+                                                    </Badge>
+
+                                                    {/* Active toggle */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => toggleActive(root)}
+                                                        title="Click to toggle status"
+                                                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold cursor-pointer transition ${
+                                                            root.is_active
+                                                                ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800/80'
+                                                                : 'bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border border-rose-200 dark:border-rose-800/80'
+                                                        }`}
+                                                    >
+                                                        {root.is_active ? (
+                                                            <>
+                                                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Active
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" /> Inactive
+                                                            </>
+                                                        )}
+                                                    </button>
+
+                                                    {/* Featured star toggle */}
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => toggleFeatured(root)}
+                                                        title={root.is_featured ? 'Remove from featured' : 'Mark as featured'}
+                                                        className={`p-1.5 rounded-lg border transition cursor-pointer ${
+                                                            root.is_featured
+                                                                ? 'bg-amber-50 text-amber-600 border-amber-300 dark:bg-amber-950/50 dark:border-amber-800'
+                                                                : 'text-slate-400 hover:text-amber-500 border-slate-200 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800'
+                                                        }`}
+                                                    >
+                                                        <Star className={`w-4 h-4 ${root.is_featured ? 'fill-amber-500 text-amber-500' : ''}`} />
+                                                    </button>
+
+                                                    {/* Quick Actions Buttons */}
+                                                    <div className="flex items-center gap-1 border-l border-slate-200 dark:border-slate-700 pl-2">
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => openCreateModal(root.id)}
+                                                            title="Add nested subcategory"
+                                                            className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-teal-600 dark:hover:text-teal-400 hover:bg-teal-50 dark:hover:bg-teal-950/50 transition cursor-pointer"
+                                                        >
+                                                            <Plus className="w-4 h-4" />
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => openEditModal(root)}
+                                                            title="Edit category"
+                                                            className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition cursor-pointer"
+                                                        >
+                                                            <Edit3 className="w-4 h-4" />
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setDeletingCategory(root)}
+                                                            title="Delete category"
+                                                            className="p-1.5 rounded-lg text-slate-600 dark:text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 transition cursor-pointer"
+                                                        >
+                                                            <Trash2 className="w-4 h-4" />
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Subcategories Nested List */}
+                                            {isExpanded && (
+                                                <div className="p-3 sm:p-4 space-y-2 bg-white dark:bg-slate-900/60">
+                                                    {children.length > 0 ? (
+                                                        children.map((sub) => (
+                                                            <div
+                                                                key={sub.id}
+                                                                className="ml-4 sm:ml-8 pl-3 sm:pl-4 py-2.5 pr-3 rounded-xl border-l-2 border-slate-300 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/40 hover:bg-slate-100/80 dark:hover:bg-slate-800/80 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3"
+                                                            >
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="w-8 h-8 rounded-lg bg-slate-200/80 dark:bg-slate-700/80 flex items-center justify-center text-slate-600 dark:text-slate-300 shrink-0">
+                                                                        <CornerDownRight className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                                                                    </div>
+                                                                    <div>
+                                                                        <div className="flex items-center gap-2">
+                                                                            <span className="font-bold text-slate-900 dark:text-white text-sm">
+                                                                                {sub.name}
+                                                                            </span>
+                                                                            <span className="font-mono text-[11px] text-slate-400 dark:text-slate-500">
+                                                                                /{sub.slug}
+                                                                            </span>
+                                                                            {sub.is_featured && (
+                                                                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300">
+                                                                                    <Star className="w-2.5 h-2.5 mr-0.5 fill-amber-500 text-amber-500" /> Featured
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                        {sub.description && (
+                                                                            <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-1">
+                                                                                {sub.description}
+                                                                            </p>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Subcategory actions */}
+                                                                <div className="flex items-center gap-2.5 pl-11 sm:pl-0 self-end sm:self-auto">
+                                                                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700/80 text-slate-700 dark:text-slate-300 font-semibold">
+                                                                        #{sub.display_order}
+                                                                    </span>
+
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => toggleActive(sub)}
+                                                                        className={`px-2 py-0.5 rounded-full text-[11px] font-semibold cursor-pointer transition ${
+                                                                            sub.is_active
+                                                                                ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300'
+                                                                                : 'bg-rose-100 text-rose-800 dark:bg-rose-950/80 dark:text-rose-300'
+                                                                        }`}
+                                                                    >
+                                                                        {sub.is_active ? 'Active' : 'Inactive'}
+                                                                    </button>
+
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => toggleFeatured(sub)}
+                                                                        className={`p-1 rounded-md transition cursor-pointer ${
+                                                                            sub.is_featured
+                                                                                ? 'text-amber-500'
+                                                                                : 'text-slate-400 hover:text-amber-500'
+                                                                        }`}
+                                                                    >
+                                                                        <Star className={`w-3.5 h-3.5 ${sub.is_featured ? 'fill-amber-500' : ''}`} />
+                                                                    </button>
+
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => openEditModal(sub)}
+                                                                        className="p-1 rounded-md text-slate-500 hover:text-indigo-600 dark:hover:text-indigo-400 transition cursor-pointer"
+                                                                    >
+                                                                        <Edit3 className="w-3.5 h-3.5" />
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => setDeletingCategory(sub)}
+                                                                        className="p-1 rounded-md text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 transition cursor-pointer"
+                                                                    >
+                                                                        <Trash2 className="w-3.5 h-3.5" />
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        ))
+                                                    ) : (
+                                                        <div className="py-4 text-center text-xs text-slate-400 dark:text-slate-500">
+                                                            No subcategories nested under {root.name} yet.{' '}
+                                                            <button
+                                                                type="button"
+                                                                onClick={() => openCreateModal(root.id)}
+                                                                className="text-teal-600 dark:text-teal-400 font-bold hover:underline cursor-pointer inline-flex items-center gap-1 ml-1"
+                                                            >
+                                                                <Plus className="w-3 h-3" /> Add first subcategory
+                                                            </button>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    );
+                                })
+                        ) : (
+                            <div className="p-12 text-center bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs space-y-3">
+                                <FolderTree className="w-12 h-12 text-slate-300 dark:text-slate-700 mx-auto" />
+                                <h3 className="text-base font-bold text-slate-800 dark:text-slate-200">No categories found</h3>
+                                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                                    No categories currently match your search and filter criteria. Try resetting filters or create a new category.
+                                </p>
+                                <Button variant="primary" icon={Plus} onClick={() => openCreateModal()}>
+                                    Create First Category
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                )}
+            </div>
+
+            {/* Create Category Modal */}
+            <Modal
+                isOpen={isCreateModalOpen}
+                onClose={() => setIsCreateModalOpen(false)}
+                title="Create New Category"
+                description="Define category identity, hierarchy nesting, and display parameters."
+                maxWidth="xl"
+            >
+                <form onSubmit={submitCreate} className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormInput
+                            id="create_name"
+                            label="Category Name"
+                            value={data.name}
+                            onChange={handleNameChange}
+                            placeholder="e.g. Men's Formal Shirts"
+                            required
+                            error={errors.name}
+                        />
+
+                        <FormInput
+                            id="create_slug"
+                            label="URL Slug"
+                            value={data.slug}
+                            onChange={handleSlugChange}
+                            placeholder="e.g. mens-formal-shirts"
+                            required
+                            error={errors.slug}
+                            helpText="Auto-generated from name. Used in URLs."
+                        />
+                    </div>
+
+                    <FormSelect
+                        id="create_parent_id"
+                        label="Parent Category (Hierarchy Level)"
+                        value={data.parent_id}
+                        onChange={(e) => setData('parent_id', e.target.value)}
+                        options={parentSelectOptions}
+                        error={errors.parent_id}
+                        helpText="Select parent to create a subcategory, or leave as Root level."
+                    />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormInput
+                            id="create_display_order"
+                            label="Display Sequence Order"
+                            type="number"
+                            value={data.display_order}
+                            onChange={(e) => setData('display_order', parseInt(e.target.value) || 0)}
+                            placeholder="0"
+                            error={errors.display_order}
+                            helpText="Lower numbers appear first in storefront menus."
+                        />
+
+                        <FormInput
+                            id="create_icon"
+                            label="Icon Identifier"
+                            value={data.icon}
+                            onChange={(e) => setData('icon', e.target.value)}
+                            placeholder="e.g. Shirt, Watch, Sparkles"
+                            error={errors.icon}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                            Category Description
+                        </label>
+                        <textarea
+                            rows={3}
+                            value={data.description}
+                            onChange={(e) => setData('description', e.target.value)}
+                            placeholder="Brief description for SEO, catalog intros and navigation cards..."
+                            className="block w-full py-2.5 px-3.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                        />
+                        {errors.description && <p className="mt-1 text-xs text-rose-500">{errors.description}</p>}
+                    </div>
+
+                    {/* Status Toggles */}
+                    <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/80 flex flex-wrap gap-6">
+                        <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                            <input
+                                type="checkbox"
+                                checked={data.is_active}
+                                onChange={(e) => setData('is_active', e.target.checked)}
+                                className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500"
+                            />
+                            <div>
+                                <span className="text-xs font-bold text-slate-900 dark:text-white block">Active Status</span>
+                                <span className="text-[11px] text-slate-500 dark:text-slate-400">Visible to customers in storefront</span>
+                            </div>
+                        </label>
+
+                        <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                            <input
+                                type="checkbox"
+                                checked={data.is_featured}
+                                onChange={(e) => setData('is_featured', e.target.checked)}
+                                className="w-4 h-4 text-amber-500 rounded border-slate-300 focus:ring-amber-500"
+                            />
+                            <div>
+                                <span className="text-xs font-bold text-slate-900 dark:text-white block">Featured Category</span>
+                                <span className="text-[11px] text-slate-500 dark:text-slate-400">Highlight in homepage sliders & cards</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    {/* SEO Meta Section */}
+                    <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-3">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            SEO Search Engine Metadata (Optional)
+                        </h4>
+                        <FormInput
+                            id="create_meta_title"
+                            label="Meta Page Title"
+                            value={data.meta_title}
+                            onChange={(e) => setData('meta_title', e.target.value)}
+                            placeholder="e.g. Premium Men's Formal Shirts Online | ORIO"
+                            error={errors.meta_title}
+                        />
+                        <FormInput
+                            id="create_meta_desc"
+                            label="Meta Description"
+                            value={data.meta_description}
+                            onChange={(e) => setData('meta_description', e.target.value)}
+                            placeholder="e.g. Shop the latest men's formal shirts crafted with Egyptian cotton..."
+                            error={errors.meta_description}
+                        />
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <Button variant="secondary" onClick={() => setIsCreateModalOpen(false)}>
+                            Cancel
+                        </Button>
+                        <Button variant="primary" type="submit" loading={processing}>
+                            Save Category
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
+
+            {/* Edit Category Modal */}
+            <Modal
+                isOpen={isEditModalOpen}
+                onClose={() => {
+                    setIsEditModalOpen(false);
+                    setEditingCategory(null);
+                }}
+                title={`Edit Category: ${editingCategory?.name || ''}`}
+                description="Update taxonomy details, parent relationship, and SEO tags."
+                maxWidth="xl"
+            >
+                <form onSubmit={submitEdit} className="space-y-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormInput
+                            id="edit_name"
+                            label="Category Name"
+                            value={data.name}
+                            onChange={(e) => setData('name', e.target.value)}
+                            required
+                            error={errors.name}
+                        />
+
+                        <FormInput
+                            id="edit_slug"
+                            label="URL Slug"
+                            value={data.slug}
+                            onChange={(e) => setData('slug', e.target.value)}
+                            required
+                            error={errors.slug}
+                            helpText="Unique URL identifier."
+                        />
+                    </div>
+
+                    <FormSelect
+                        id="edit_parent_id"
+                        label="Parent Category (Hierarchy Level)"
+                        value={data.parent_id}
+                        onChange={(e) => setData('parent_id', e.target.value)}
+                        options={parentSelectOptions}
+                        error={errors.parent_id}
+                        helpText="Cannot select this category or its subcategories as its parent."
+                    />
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <FormInput
+                            id="edit_display_order"
+                            label="Display Sequence Order"
+                            type="number"
+                            value={data.display_order}
+                            onChange={(e) => setData('display_order', parseInt(e.target.value) || 0)}
+                            error={errors.display_order}
+                        />
+
+                        <FormInput
+                            id="edit_icon"
+                            label="Icon Identifier"
+                            value={data.icon}
+                            onChange={(e) => setData('icon', e.target.value)}
+                            placeholder="e.g. Shirt, Watch, Sparkles"
+                            error={errors.icon}
+                        />
+                    </div>
+
+                    <div>
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                            Category Description
+                        </label>
+                        <textarea
+                            rows={3}
+                            value={data.description}
+                            onChange={(e) => setData('description', e.target.value)}
+                            className="block w-full py-2.5 px-3.5 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-800 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 transition"
+                        />
+                        {errors.description && <p className="mt-1 text-xs text-rose-500">{errors.description}</p>}
+                    </div>
+
+                    {/* Status Toggles */}
+                    <div className="p-4 bg-slate-50 dark:bg-slate-800/60 rounded-xl border border-slate-200 dark:border-slate-700/80 flex flex-wrap gap-6">
+                        <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                            <input
+                                type="checkbox"
+                                checked={data.is_active}
+                                onChange={(e) => setData('is_active', e.target.checked)}
+                                className="w-4 h-4 text-teal-600 rounded border-slate-300 focus:ring-teal-500"
+                            />
+                            <div>
+                                <span className="text-xs font-bold text-slate-900 dark:text-white block">Active Status</span>
+                                <span className="text-[11px] text-slate-500 dark:text-slate-400">Visible to customers in storefront</span>
+                            </div>
+                        </label>
+
+                        <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                            <input
+                                type="checkbox"
+                                checked={data.is_featured}
+                                onChange={(e) => setData('is_featured', e.target.checked)}
+                                className="w-4 h-4 text-amber-500 rounded border-slate-300 focus:ring-amber-500"
+                            />
+                            <div>
+                                <span className="text-xs font-bold text-slate-900 dark:text-white block">Featured Category</span>
+                                <span className="text-[11px] text-slate-500 dark:text-slate-400">Highlight in homepage sliders & cards</span>
+                            </div>
+                        </label>
+                    </div>
+
+                    {/* SEO Meta Section */}
+                    <div className="border-t border-slate-200 dark:border-slate-800 pt-4 space-y-3">
+                        <h4 className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                            SEO Search Engine Metadata (Optional)
+                        </h4>
+                        <FormInput
+                            id="edit_meta_title"
+                            label="Meta Page Title"
+                            value={data.meta_title}
+                            onChange={(e) => setData('meta_title', e.target.value)}
+                            error={errors.meta_title}
+                        />
+                        <FormInput
+                            id="edit_meta_desc"
+                            label="Meta Description"
+                            value={data.meta_description}
+                            onChange={(e) => setData('meta_description', e.target.value)}
+                            error={errors.meta_description}
+                        />
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100 dark:border-slate-800">
+                        <Button
+                            variant="secondary"
+                            onClick={() => {
+                                setIsEditModalOpen(false);
+                                setEditingCategory(null);
+                            }}
+                        >
+                            Cancel
+                        </Button>
+                        <Button variant="primary" type="submit" loading={processing}>
+                            Update Changes
+                        </Button>
+                    </div>
+                </form>
+            </Modal>
+
+            {/* Delete Confirmation Dialog */}
+            <ConfirmDialog
+                isOpen={Boolean(deletingCategory)}
+                onClose={() => setDeletingCategory(null)}
+                onConfirm={submitDelete}
+                title={`Delete '${deletingCategory?.name}'?`}
+                message={`Are you sure you want to delete this category? Any direct subcategories nested under it will automatically be preserved and shifted to top-level.`}
+                confirmText="Delete Category"
+                variant="danger"
+            />
+        </AdminLayout>
+    );
+}
