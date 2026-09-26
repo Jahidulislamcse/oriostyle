@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-50">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-slate-950 text-slate-100">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title inertia>{{ config('app.name', 'ORIO E-Commerce') }}</title>
+    <title inertia>{{ config('app.name', 'ORIO STYLE') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,7 +17,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.jsx'])
     @inertiaHead
 </head>
-<body class="h-full font-sans antialiased text-slate-900 selection:bg-teal-500 selection:text-white">
+<body class="h-full font-sans antialiased bg-slate-950 text-slate-100 selection:bg-teal-500 selection:text-white">
     @inertia
 </body>
 </html>
