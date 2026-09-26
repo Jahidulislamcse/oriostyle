@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Settings\SettingService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -35,9 +36,14 @@ class HandleInertiaRequests extends Middleware
      */
     public function share(Request $request): array
     {
+        /** @var SettingService $settingService */
+        $settingService = app(SettingService::class);
+        $settings = $settingService->getAllPublicCached();
+
         return [
             ...parent::share($request),
-            'appName' => config('app.name', 'ORIO E-Commerce'),
+            'appName' => $settings['site_name'] ?? config('app.name', 'ORIO STYLE'),
+            'settings' => $settings,
             'auth' => [
                 'user' => $request->user() ? [
                     'id' => $request->user()->id,

@@ -1,154 +1,188 @@
 import React from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
+import AdminLayout from '@/Layouts/AdminLayout';
+import Badge from '@/Components/Common/Badge';
+import Button from '@/Components/Common/Button';
+import DataTable from '@/Components/Common/DataTable';
 import { 
-    LogOut, 
-    ShieldCheck, 
-    ShoppingBag, 
-    Users, 
     TrendingUp, 
-    AlertTriangle,
-    Sparkles,
-    CheckCircle2
+    ShoppingBag, 
+    AlertTriangle, 
+    Users, 
+    ArrowUpRight, 
+    ShieldCheck, 
+    Sparkles, 
+    Package,
+    FolderTree,
+    ArrowRight
 } from 'lucide-react';
 
 export default function Dashboard({ user, metrics }) {
-    const { post } = useForm();
+    const { settings } = usePage().props;
+    const currency = settings?.currency_symbol || '৳';
 
-    const handleLogout = (e) => {
-        e.preventDefault();
-        post(route('logout'));
-    };
+    const metricCards = [
+        {
+            title: "Today's Gross Sales",
+            value: `${currency}0.00`,
+            subText: 'Real-time COGS synced',
+            icon: TrendingUp,
+            color: 'text-teal-400',
+            bg: 'bg-teal-500/10 border-teal-500/20',
+        },
+        {
+            title: 'Pending Orders',
+            value: metrics?.pendingOrders || '0',
+            subText: '0 awaiting confirmation',
+            icon: ShoppingBag,
+            color: 'text-indigo-400',
+            bg: 'bg-indigo-500/10 border-indigo-500/20',
+        },
+        {
+            title: 'Low-Stock Warnings',
+            value: metrics?.lowStockItems || '0',
+            subText: 'Warehouse inventory optimal',
+            icon: AlertTriangle,
+            color: 'text-amber-400',
+            bg: 'bg-amber-500/10 border-amber-500/20',
+        },
+        {
+            title: 'Active Administrators',
+            value: '2',
+            subText: 'Super Admin & Store Admin',
+            icon: Users,
+            color: 'text-purple-400',
+            bg: 'bg-purple-500/10 border-purple-500/20',
+        },
+    ];
 
-    const roleBadgeColors = {
-        super_admin: 'bg-purple-900/60 text-purple-300 border-purple-500/40',
-        admin: 'bg-emerald-900/60 text-emerald-300 border-emerald-500/40',
-        customer: 'bg-slate-800 text-slate-300 border-slate-700',
-    };
+    const upcomingPhases = [
+        {
+            phase: 'Phase 4',
+            title: 'Category Hierarchy Tree',
+            desc: 'Self-referencing parent-child categories, live slug generator, tree builder UI.',
+            link: '/admin/categories',
+            icon: FolderTree,
+            status: 'Next Up',
+            variant: 'info',
+        },
+        {
+            phase: 'Phase 5',
+            title: 'Brand Catalog & WebP Hub',
+            desc: 'Automated WebP media converter, dimension optimizer, brand directory.',
+            link: '/admin/brands',
+            icon: Package,
+            status: 'Sprint 1',
+            variant: 'purple',
+        },
+        {
+            phase: 'Phase 6',
+            title: 'Core Product Catalog',
+            desc: 'Product schema, unit cost (COGS), selling price, rich descriptions, stock alerts.',
+            link: '/admin/products',
+            icon: Package,
+            status: 'Sprint 2',
+            variant: 'neutral',
+        },
+    ];
 
     return (
-        <div className="min-h-screen bg-slate-950 text-slate-100 font-sans selection:bg-teal-500 selection:text-white">
-            <Head title="Admin Control Tower - ORIO STYLE" />
+        <AdminLayout title="Dashboard">
+            {/* Top Welcome Banner */}
+            <div className="rounded-2xl bg-gradient-to-r from-teal-950/60 via-slate-900 to-slate-900 border border-teal-500/30 p-6 sm:p-8 mb-8 shadow-xl">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 border border-teal-500/30 text-teal-300 text-xs font-medium mb-3">
+                            <ShieldCheck className="w-4 h-4 text-teal-400" />
+                            <span>Phase 3: Admin UI & Shell Kit Active</span>
+                        </div>
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                            Welcome back, {user?.name}
+                        </h1>
+                        <p className="text-sm text-slate-400 mt-1">
+                            Operational status: <span className="text-emerald-400 font-semibold">Healthy</span> • Connected to <strong className="text-white">{settings?.site_name || 'ORIO STYLE'}</strong> Control Tower.
+                        </p>
+                    </div>
 
-            {/* Topbar */}
-            <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur sticky top-0 z-50">
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <Link href="/" className="flex items-center gap-2">
-                            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-teal-400 to-emerald-600 flex items-center justify-center shadow-lg shadow-teal-500/20">
-                                <Sparkles className="w-5 h-5 text-slate-950 font-bold" />
-                            </div>
-                            <span className="text-xl font-bold tracking-tight text-white">ORIO STYLE</span>
+                        <Link href="/admin/settings">
+                            <Button variant="secondary" size="sm">
+                                Manage Settings
+                            </Button>
                         </Link>
-                        <span className="text-xs uppercase font-mono px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30">
-                            Admin Backoffice
-                        </span>
-                    </div>
-
-                    <div className="flex items-center gap-4">
-                        <div className="hidden sm:flex items-center gap-2 text-xs">
-                            <span className="text-slate-400">Logged in as:</span>
-                            <span className="font-semibold text-white">{user?.name}</span>
-                            <span className={`text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded-full border ${roleBadgeColors[user?.role] || 'bg-slate-800 text-slate-300'}`}>
-                                {user?.role?.replace('_', ' ')}
-                            </span>
-                        </div>
-
-                        <button
-                            onClick={handleLogout}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 text-xs font-semibold transition cursor-pointer"
-                        >
-                            <LogOut className="w-3.5 h-3.5" />
-                            <span>Logout</span>
-                        </button>
-                    </div>
-                </div>
-            </header>
-
-            {/* Main Admin Content */}
-            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                {/* Header Banner */}
-                <div className="rounded-2xl bg-gradient-to-r from-teal-950/60 via-slate-900 to-slate-900 border border-teal-500/30 p-6 sm:p-8 mb-8">
-                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div>
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 border border-teal-500/30 text-teal-300 text-xs font-medium mb-3">
-                                <ShieldCheck className="w-4 h-4 text-teal-400" />
-                                <span>Phase 2 RBAC Guard Active</span>
-                            </div>
-                            <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
-                                Welcome, {user?.name}
-                            </h1>
-                            <p className="text-sm text-slate-400 mt-1">
-                                You have authenticated with <strong className="text-teal-400 capitalize">{user?.role?.replace('_', ' ')}</strong> privileges.
-                            </p>
-                        </div>
-
-                        <Link
-                            href="/"
-                            className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-semibold transition"
-                        >
-                            View Storefront
+                        <Link href="/">
+                            <Button variant="primary" size="sm">
+                                View Store
+                            </Button>
                         </Link>
                     </div>
                 </div>
+            </div>
 
-                {/* Quick Metric Cards */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-                    <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs text-slate-400 font-medium">Today's Gross Sales</span>
-                            <div className="w-8 h-8 rounded-lg bg-teal-500/10 text-teal-400 flex items-center justify-center">
-                                <TrendingUp className="w-4 h-4" />
+            {/* KPI Metrics Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+                {metricCards.map((card, idx) => {
+                    const Icon = card.icon;
+                    return (
+                        <div
+                            key={idx}
+                            className="rounded-2xl bg-slate-900 border border-slate-800 p-5 shadow-lg hover:border-slate-700 transition"
+                        >
+                            <div className="flex items-center justify-between mb-3">
+                                <span className="text-xs text-slate-400 font-semibold uppercase tracking-wider">{card.title}</span>
+                                <div className={`w-9 h-9 rounded-xl flex items-center justify-center border ${card.bg}`}>
+                                    <Icon className={`w-4 h-4 ${card.color}`} />
+                                </div>
                             </div>
+                            <div className="text-2xl sm:text-3xl font-extrabold text-white mb-1">{card.value}</div>
+                            <span className="text-[11px] text-slate-400 font-medium">{card.subText}</span>
                         </div>
-                        <div className="text-2xl font-bold text-white">$0.00</div>
-                        <span className="text-[11px] text-teal-400 font-medium">Real-time synced</span>
-                    </div>
+                    );
+                })}
+            </div>
 
-                    <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs text-slate-400 font-medium">Pending Orders</span>
-                            <div className="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 flex items-center justify-center">
-                                <ShoppingBag className="w-4 h-4" />
-                            </div>
-                        </div>
-                        <div className="text-2xl font-bold text-white">0</div>
-                        <span className="text-[11px] text-slate-400 font-medium">0 requiring attention</span>
+            {/* Next Phases & Architectural Roadmap */}
+            <div className="rounded-2xl bg-slate-900 border border-slate-800 p-6 sm:p-8 shadow-xl">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between pb-6 border-b border-slate-800 mb-6 gap-2">
+                    <div>
+                        <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                            <Sparkles className="w-5 h-5 text-teal-400" />
+                            <span>Upcoming Sprint Modules</span>
+                        </h2>
+                        <p className="text-xs text-slate-400 mt-1">20-Phase Master Blueprint Development Tracker</p>
                     </div>
-
-                    <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs text-slate-400 font-medium">Low-Stock Warnings</span>
-                            <div className="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
-                                <AlertTriangle className="w-4 h-4" />
-                            </div>
-                        </div>
-                        <div className="text-2xl font-bold text-white">0</div>
-                        <span className="text-[11px] text-emerald-400 font-medium">Stock healthy</span>
-                    </div>
-
-                    <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs text-slate-400 font-medium">Administrators</span>
-                            <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
-                                <Users className="w-4 h-4" />
-                            </div>
-                        </div>
-                        <div className="text-2xl font-bold text-white">2</div>
-                        <span className="text-[11px] text-purple-400 font-medium">RBAC configured</span>
-                    </div>
+                    <Badge variant="info" size="sm">Sprint 1 In Progress</Badge>
                 </div>
 
-                {/* Next Sprints Preview */}
-                <div className="rounded-2xl bg-slate-900/40 border border-slate-800 p-6">
-                    <h2 className="text-lg font-bold text-white mb-2 flex items-center gap-2">
-                        <CheckCircle2 className="w-5 h-5 text-teal-400" />
-                        <span>Phase 2 RBAC & Auth Architecture Verified</span>
-                    </h2>
-                    <p className="text-sm text-slate-400 leading-relaxed">
-                        Configured with 3 streamlined roles: Super Admin, Store Admin, and Customer.
-                    </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {upcomingPhases.map((item, idx) => {
+                        const Icon = item.icon;
+                        return (
+                            <div
+                                key={idx}
+                                className="rounded-xl bg-slate-950/60 border border-slate-800/80 p-5 flex flex-col justify-between hover:border-teal-500/40 transition group"
+                            >
+                                <div>
+                                    <div className="flex items-center justify-between mb-3">
+                                        <span className="text-[11px] font-bold font-mono text-teal-400">{item.phase}</span>
+                                        <Badge variant={item.variant} size="sm">{item.status}</Badge>
+                                    </div>
+                                    <h3 className="text-sm font-bold text-white mb-1.5 flex items-center gap-2">
+                                        <Icon className="w-4 h-4 text-teal-400" />
+                                        <span>{item.title}</span>
+                                    </h3>
+                                    <p className="text-xs text-slate-400 leading-relaxed mb-4">{item.desc}</p>
+                                </div>
+
+                                <div className="pt-3 border-t border-slate-900 flex items-center justify-between text-xs text-teal-400 font-semibold group-hover:text-teal-300 transition">
+                                    <span>Blueprint Spec</span>
+                                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition" />
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
-            </main>
-        </div>
+            </div>
+        </AdminLayout>
     );
 }
