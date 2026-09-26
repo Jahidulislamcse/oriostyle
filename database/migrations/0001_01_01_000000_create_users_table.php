@@ -15,6 +15,12 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
+            $table->string('phone', 30)->nullable()->index();
+            $table->enum('role', ['super_admin', 'admin', 'manager', 'inventory_staff', 'customer'])
+                ->default('customer')
+                ->index();
+            $table->string('avatar', 255)->nullable();
+            $table->boolean('is_active')->default(true)->index();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

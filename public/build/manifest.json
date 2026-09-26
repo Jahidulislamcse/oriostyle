@@ -1,6 +1,27 @@
 {
+  "_mail-Bo9tE0ux.js": {
+    "file": "assets/mail-Bo9tE0ux.js",
+    "name": "mail",
+    "imports": [
+      "_sparkles-DBgGLVyI.js"
+    ]
+  },
+  "_shield-check-DnRCu8GZ.js": {
+    "file": "assets/shield-check-DnRCu8GZ.js",
+    "name": "shield-check",
+    "imports": [
+      "_sparkles-DBgGLVyI.js"
+    ]
+  },
+  "_sparkles-DBgGLVyI.js": {
+    "file": "assets/sparkles-DBgGLVyI.js",
+    "name": "sparkles",
+    "imports": [
+      "resources/js/app.jsx"
+    ]
+  },
   "resources/css/app.css": {
-    "file": "assets/app-CWqPfBIi.css",
+    "file": "assets/app-7CuN8GPo.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -8,28 +29,75 @@
       "app.css"
     ]
   },
+  "resources/js/Pages/Admin/Dashboard.jsx": {
+    "file": "assets/Dashboard-BHSgg0Y9.js",
+    "name": "Dashboard",
+    "src": "resources/js/Pages/Admin/Dashboard.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.jsx",
+      "_sparkles-DBgGLVyI.js",
+      "_shield-check-DnRCu8GZ.js"
+    ],
+    "css": [
+      "assets/app-7CuN8GPo.css"
+    ]
+  },
+  "resources/js/Pages/Auth/Login.jsx": {
+    "file": "assets/Login-v4cSo4WJ.js",
+    "name": "Login",
+    "src": "resources/js/Pages/Auth/Login.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.jsx",
+      "_sparkles-DBgGLVyI.js",
+      "_mail-Bo9tE0ux.js"
+    ],
+    "css": [
+      "assets/app-7CuN8GPo.css"
+    ]
+  },
+  "resources/js/Pages/Auth/Register.jsx": {
+    "file": "assets/Register-DGVhs7kr.js",
+    "name": "Register",
+    "src": "resources/js/Pages/Auth/Register.jsx",
+    "isDynamicEntry": true,
+    "imports": [
+      "resources/js/app.jsx",
+      "_sparkles-DBgGLVyI.js",
+      "_mail-Bo9tE0ux.js"
+    ],
+    "css": [
+      "assets/app-7CuN8GPo.css"
+    ]
+  },
   "resources/js/Pages/Welcome.jsx": {
-    "file": "assets/Welcome-DNhEIWMH.js",
+    "file": "assets/Welcome-BrarXNoH.js",
     "name": "Welcome",
     "src": "resources/js/Pages/Welcome.jsx",
     "isDynamicEntry": true,
     "imports": [
-      "resources/js/app.jsx"
+      "resources/js/app.jsx",
+      "_sparkles-DBgGLVyI.js",
+      "_shield-check-DnRCu8GZ.js"
     ],
     "css": [
-      "assets/app-CWqPfBIi.css"
+      "assets/app-7CuN8GPo.css"
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-CnLx4e_s.js",
+    "file": "assets/app-v4utuqaz.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
     "dynamicImports": [
+      "resources/js/Pages/Admin/Dashboard.jsx",
+      "resources/js/Pages/Auth/Login.jsx",
+      "resources/js/Pages/Auth/Register.jsx",
       "resources/js/Pages/Welcome.jsx"
     ],
     "css": [
-      "assets/app-CWqPfBIi.css"
+      "assets/app-7CuN8GPo.css"
     ]
   }
 }
