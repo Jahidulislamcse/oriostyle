@@ -102,17 +102,17 @@ export default function AdminLayout({ title = '', children }) {
                 } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
                 {/* Brand Header */}
-                <div className="h-16 lg:h-18 px-4.5 lg:px-5 border-b border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between">
+                <div className="h-16 px-4.5 lg:px-5 border-b border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between">
                     <Link href="/admin/dashboard" className="flex items-center gap-3 overflow-hidden group">
-                        <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-2xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex-shrink-0 flex items-center justify-center shadow-md shadow-[#D4AF37]/25 group-hover:scale-105 transition">
-                            <Sparkles className="w-5 h-5 lg:w-6 lg:h-6 text-[#071324] font-bold" />
+                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex-shrink-0 flex items-center justify-center shadow-md shadow-[#D4AF37]/25 group-hover:scale-105 transition">
+                            <Sparkles className="w-5 h-5 text-[#071324] font-bold" />
                         </div>
                         {!sidebarCollapsed && (
                             <div className="flex flex-col truncate">
-                                <span className="text-sm lg:text-base font-extrabold tracking-tight text-[#0E2038] dark:text-white truncate">
+                                <span className="text-sm font-extrabold tracking-tight text-[#0E2038] dark:text-white truncate">
                                     {siteName}
                                 </span>
-                                <span className="text-[11px] lg:text-xs font-bold text-[#926F18] dark:text-[#EBD495] uppercase tracking-wider flex items-center gap-1">
+                                <span className="text-[11px] font-bold text-[#926F18] dark:text-[#EBD495] uppercase tracking-wider flex items-center gap-1">
                                     <Shield className="w-3.5 h-3.5 text-[#D4AF37]" /> Control Tower
                                 </span>
                             </div>
@@ -129,11 +129,11 @@ export default function AdminLayout({ title = '', children }) {
                 </div>
 
                 {/* Navigation Links */}
-                <div className="flex-1 overflow-y-auto px-3.5 lg:px-4 py-4.5 space-y-5">
+                <div className="flex-1 overflow-y-auto px-3.5 lg:px-4 pt-6 pb-6 space-y-6">
                     {navigation.map((group, groupIdx) => (
-                        <div key={groupIdx}>
+                        <div key={groupIdx} className={groupIdx === 0 ? 'mt-1' : ''}>
                             {!sidebarCollapsed && (
-                                <h4 className="px-3 text-xs uppercase font-extrabold tracking-wider text-slate-400 dark:text-[#5E8CB6] mb-2">
+                                <h4 className="px-3 text-[11px] uppercase font-extrabold tracking-wider text-slate-400 dark:text-[#5E8CB6] mb-2.5">
                                     {group.group}
                                 </h4>
                             )}
