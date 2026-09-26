@@ -147,14 +147,14 @@ export default function AdminLayout({ title = '', children }) {
                                             key={idx}
                                             href={item.href}
                                             title={sidebarCollapsed ? item.name : undefined}
-                                            className={`flex items-center gap-3.5 px-3.5 py-2.5 lg:py-3 rounded-xl text-xs sm:text-sm lg:text-[14.5px] font-semibold transition-all duration-150 group ${
+                                            className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 group ${
                                                 isActive
                                                     ? 'bg-[#FDFBF5] text-[#926F18] border border-[#F5E7C2] dark:bg-[#142C49] dark:text-[#EBD495] dark:border-[#D4AF37]/50 shadow-2xs'
                                                     : 'text-slate-600 dark:text-[#8EB0CF] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-[#142C49]/60 border border-transparent'
                                             } ${sidebarCollapsed ? 'justify-center px-0' : ''}`}
                                         >
                                             <Icon
-                                                className={`w-5 h-5 flex-shrink-0 transition-transform duration-150 group-hover:scale-110 ${
+                                                className={`w-4.5 h-4.5 flex-shrink-0 transition-transform duration-150 group-hover:scale-110 ${
                                                     isActive 
                                                         ? 'text-[#D4AF37] dark:text-[#EBD495]' 
                                                         : 'text-slate-400 dark:text-[#5E8CB6] group-hover:text-slate-700 dark:group-hover:text-[#8EB0CF]'
@@ -162,9 +162,9 @@ export default function AdminLayout({ title = '', children }) {
                                             />
                                             {!sidebarCollapsed && (
                                                 <div className="flex items-center justify-between flex-1 truncate">
-                                                    <span className="truncate text-xs sm:text-sm lg:text-[14.5px]">{item.name}</span>
+                                                    <span className="truncate text-xs sm:text-sm">{item.name}</span>
                                                     {item.badge && (
-                                                        <span className={`text-[11px] font-bold px-2 py-0.5 rounded border ${
+                                                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded border ${
                                                             isActive
                                                                 ? 'bg-[#FBF5E6] text-[#755615] border-[#EBD495] dark:bg-[#071324]/80 dark:text-[#EBD495] dark:border-[#926F18]/60'
                                                                 : 'bg-slate-100 text-slate-500 border-slate-200 dark:bg-[#071324] dark:text-[#8EB0CF] dark:border-[#1C3E63]'
@@ -207,7 +207,7 @@ export default function AdminLayout({ title = '', children }) {
                 }`}
             >
                 {/* Topbar */}
-                <header className="h-16 lg:h-18 border-b border-slate-200 dark:border-[#1C3E63]/70 bg-white/90 dark:bg-[#0E2038]/90 backdrop-blur sticky top-0 z-30 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 shadow-2xs">
+                <header className="h-16 border-b border-slate-200 dark:border-[#1C3E63]/70 bg-white/90 dark:bg-[#0E2038]/90 backdrop-blur sticky top-0 z-30 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 shadow-2xs">
                     <div className="flex items-center gap-3">
                         <button
                             onClick={() => setMobileOpen(true)}
@@ -216,17 +216,17 @@ export default function AdminLayout({ title = '', children }) {
                             <Menu className="w-5 h-5" />
                         </button>
 
-                        <div className="hidden sm:flex items-center gap-2.5 text-xs sm:text-sm lg:text-sm text-slate-500 dark:text-[#8EB0CF] bg-slate-100/80 dark:bg-[#142C49]/70 border border-slate-200 dark:border-[#1C3E63] px-3.5 py-2 lg:py-2.5 rounded-xl w-72 lg:w-88 focus-within:ring-2 focus-within:ring-[#D4AF37]/30 focus-within:border-[#D4AF37] transition">
-                            <Search className="w-4.5 h-4.5 text-slate-400 dark:text-[#5E8CB6] shrink-0" />
+                        <div className="hidden sm:flex items-center gap-2.5 text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] bg-slate-100/80 dark:bg-[#142C49]/70 border border-slate-200 dark:border-[#1C3E63] px-3.5 py-2 rounded-xl w-72 lg:w-80 focus-within:ring-2 focus-within:ring-[#D4AF37]/30 focus-within:border-[#D4AF37] transition">
+                            <Search className="w-4 h-4 text-slate-400 dark:text-[#5E8CB6] shrink-0" />
                             <input
                                 type="text"
                                 placeholder="Search catalog, orders... (Ctrl+K)"
-                                className="bg-transparent text-xs sm:text-sm lg:text-sm text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#8EB0CF]/60 focus:outline-none w-full font-medium"
+                                className="bg-transparent text-xs sm:text-sm text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#8EB0CF]/60 focus:outline-none w-full font-medium"
                             />
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3.5">
+                    <div className="flex items-center gap-3">
                         {/* Light / Dark Mode Toggle */}
                         <ThemeToggle />
 
@@ -234,7 +234,7 @@ export default function AdminLayout({ title = '', children }) {
                         <Link
                             href="/"
                             target="_blank"
-                            className="inline-flex items-center gap-2 px-3.5 py-2 lg:py-2.5 rounded-xl bg-slate-100 hover:bg-[#FDFBF5] hover:text-[#926F18] hover:border-[#F5E7C2] dark:bg-[#142C49] dark:hover:bg-[#1C3E63] text-slate-700 dark:text-[#BACDE3] border border-slate-200 dark:border-[#1C3E63] text-xs sm:text-sm font-semibold transition shadow-2xs"
+                            className="inline-flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl bg-slate-100 hover:bg-[#FDFBF5] hover:text-[#926F18] hover:border-[#F5E7C2] dark:bg-[#142C49] dark:hover:bg-[#1C3E63] text-slate-700 dark:text-[#BACDE3] border border-slate-200 dark:border-[#1C3E63] text-xs sm:text-sm font-semibold transition shadow-2xs"
                         >
                             <Store className="w-4 h-4 text-[#D4AF37] dark:text-[#EBD495]" />
                             <span className="hidden sm:inline">Storefront</span>

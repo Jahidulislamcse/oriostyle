@@ -878,7 +878,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                     </div>
 
                     <div>
-                        <label className="block text-xs lg:text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3] mb-1.5">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3] mb-1.5">
                             Category Description
                         </label>
                         <textarea
@@ -886,23 +886,23 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             value={data.description}
                             onChange={(e) => setData('description', e.target.value)}
                             placeholder="Brief description for SEO, catalog intros and navigation cards..."
-                            className="block w-full py-2.5 lg:py-3 px-3.5 lg:px-4 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                            className="block w-full py-2 sm:py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
                         />
-                        {errors.description && <p className="mt-1.5 text-xs lg:text-sm text-rose-500 font-medium">{errors.description}</p>}
+                        {errors.description && <p className="mt-1.5 text-xs text-rose-500 font-medium">{errors.description}</p>}
                     </div>
 
                     {/* Status Toggles */}
-                    <div className="p-4.5 bg-[#F4F7FB] dark:bg-[#071324]/70 rounded-xl border border-slate-200 dark:border-[#1C3E63] flex flex-wrap gap-6">
+                    <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324]/70 rounded-xl border border-slate-200 dark:border-[#1C3E63] flex flex-wrap gap-6">
                         <label className="flex items-center gap-3 cursor-pointer select-none">
                             <input
                                 type="checkbox"
                                 checked={data.is_active}
                                 onChange={(e) => setData('is_active', e.target.checked)}
-                                className="w-4.5 h-4.5 text-[#D4AF37] rounded border-slate-300 dark:border-[#1C3E63] focus:ring-[#D4AF37] cursor-pointer"
+                                className="w-4 h-4 text-[#D4AF37] rounded border-slate-300 dark:border-[#1C3E63] focus:ring-[#D4AF37] cursor-pointer"
                             />
                             <div>
-                                <span className="text-xs lg:text-sm font-bold text-[#0E2038] dark:text-white block">Active Status</span>
-                                <span className="text-[11px] lg:text-xs text-slate-500 dark:text-[#8EB0CF]">Visible to customers in storefront</span>
+                                <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white block">Active Status</span>
+                                <span className="text-xs text-slate-500 dark:text-[#8EB0CF]">Visible to customers in storefront</span>
                             </div>
                         </label>
 
@@ -911,18 +911,18 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 type="checkbox"
                                 checked={data.is_featured}
                                 onChange={(e) => setData('is_featured', e.target.checked)}
-                                className="w-4.5 h-4.5 text-[#D4AF37] rounded border-slate-300 dark:border-[#1C3E63] focus:ring-[#D4AF37] cursor-pointer"
+                                className="w-4 h-4 text-[#D4AF37] rounded border-slate-300 dark:border-[#1C3E63] focus:ring-[#D4AF37] cursor-pointer"
                             />
                             <div>
-                                <span className="text-xs lg:text-sm font-bold text-[#0E2038] dark:text-white block">Featured Category</span>
-                                <span className="text-[11px] lg:text-xs text-slate-500 dark:text-[#8EB0CF]">Highlight in homepage sliders & cards</span>
+                                <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white block">Featured Category</span>
+                                <span className="text-xs text-slate-500 dark:text-[#8EB0CF]">Highlight in homepage sliders & cards</span>
                             </div>
                         </label>
                     </div>
 
                     {/* SEO Meta Section */}
-                    <div className="border-t border-slate-100 dark:border-[#1C3E63]/70 pt-4.5 space-y-3.5">
-                        <h4 className="text-xs lg:text-sm font-extrabold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
+                    <div className="border-t border-slate-100 dark:border-[#1C3E63]/70 pt-4 space-y-3.5">
+                        <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
                             SEO Search Engine Metadata (Optional)
                         </h4>
                         <FormInput
@@ -1018,30 +1018,30 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                     </div>
 
                     <div>
-                        <label className="block text-xs lg:text-sm font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3] mb-1.5">
+                        <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3] mb-1.5">
                             Category Description
                         </label>
                         <textarea
                             rows={3}
                             value={data.description}
                             onChange={(e) => setData('description', e.target.value)}
-                            className="block w-full py-2.5 lg:py-3 px-3.5 lg:px-4 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] text-sm lg:text-base focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                            className="block w-full py-2 sm:py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
                         />
-                        {errors.description && <p className="mt-1.5 text-xs lg:text-sm text-rose-500 font-medium">{errors.description}</p>}
+                        {errors.description && <p className="mt-1.5 text-xs text-rose-500 font-medium">{errors.description}</p>}
                     </div>
 
                     {/* Status Toggles */}
-                    <div className="p-4.5 bg-[#F4F7FB] dark:bg-[#071324]/70 rounded-xl border border-slate-200 dark:border-[#1C3E63] flex flex-wrap gap-6">
+                    <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324]/70 rounded-xl border border-slate-200 dark:border-[#1C3E63] flex flex-wrap gap-6">
                         <label className="flex items-center gap-3 cursor-pointer select-none">
                             <input
                                 type="checkbox"
                                 checked={data.is_active}
                                 onChange={(e) => setData('is_active', e.target.checked)}
-                                className="w-4.5 h-4.5 text-[#D4AF37] rounded border-slate-300 dark:border-[#1C3E63] focus:ring-[#D4AF37] cursor-pointer"
+                                className="w-4 h-4 text-[#D4AF37] rounded border-slate-300 dark:border-[#1C3E63] focus:ring-[#D4AF37] cursor-pointer"
                             />
                             <div>
-                                <span className="text-xs lg:text-sm font-bold text-[#0E2038] dark:text-white block">Active Status</span>
-                                <span className="text-[11px] lg:text-xs text-slate-500 dark:text-[#8EB0CF]">Visible to customers in storefront</span>
+                                <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white block">Active Status</span>
+                                <span className="text-xs text-slate-500 dark:text-[#8EB0CF]">Visible to customers in storefront</span>
                             </div>
                         </label>
 
@@ -1050,18 +1050,18 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 type="checkbox"
                                 checked={data.is_featured}
                                 onChange={(e) => setData('is_featured', e.target.checked)}
-                                className="w-4.5 h-4.5 text-[#D4AF37] rounded border-slate-300 dark:border-[#1C3E63] focus:ring-[#D4AF37] cursor-pointer"
+                                className="w-4 h-4 text-[#D4AF37] rounded border-slate-300 dark:border-[#1C3E63] focus:ring-[#D4AF37] cursor-pointer"
                             />
                             <div>
-                                <span className="text-xs lg:text-sm font-bold text-[#0E2038] dark:text-white block">Featured Category</span>
-                                <span className="text-[11px] lg:text-xs text-slate-500 dark:text-[#8EB0CF]">Highlight in homepage sliders & cards</span>
+                                <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white block">Featured Category</span>
+                                <span className="text-xs text-slate-500 dark:text-[#8EB0CF]">Highlight in homepage sliders & cards</span>
                             </div>
                         </label>
                     </div>
 
                     {/* SEO Meta Section */}
-                    <div className="border-t border-slate-100 dark:border-[#1C3E63]/70 pt-4.5 space-y-3.5">
-                        <h4 className="text-xs lg:text-sm font-extrabold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
+                    <div className="border-t border-slate-100 dark:border-[#1C3E63]/70 pt-4 space-y-3.5">
+                        <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
                             SEO Search Engine Metadata (Optional)
                         </h4>
                         <FormInput

@@ -65,7 +65,7 @@ export default function DataTable({
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={searchPlaceholder}
-                                className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-sm lg:text-base text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                className="block w-full pl-10 pr-3.5 py-2 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
                             />
                         </div>
                     )}
@@ -76,14 +76,14 @@ export default function DataTable({
             {/* Table */}
             <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-slate-200 dark:divide-[#1C3E63]/70 text-left">
-                    <thead className="bg-[#F4F7FB] dark:bg-[#071324] text-xs lg:text-sm font-bold uppercase tracking-wider text-[#0E2038] dark:text-[#BACDE3]">
+                    <thead className="bg-[#F4F7FB] dark:bg-[#071324] text-xs font-bold uppercase tracking-wider text-[#0E2038] dark:text-[#BACDE3]">
                         <tr>
                             {columns.map((col, idx) => (
                                 <th
                                     key={idx}
                                     scope="col"
                                     onClick={() => col.sortable !== false && handleSort(col.key)}
-                                    className={`px-5 py-4 ${
+                                    className={`px-5 py-3.5 ${
                                         col.sortable !== false ? 'cursor-pointer select-none hover:text-[#D4AF37] dark:hover:text-[#F5D77F] transition' : ''
                                     } ${col.className || ''}`}
                                 >
@@ -107,12 +107,12 @@ export default function DataTable({
                             ))}
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-[#1C3E63]/60 text-sm lg:text-base text-slate-800 dark:text-slate-200">
+                    <tbody className="divide-y divide-slate-100 dark:divide-[#1C3E63]/60 text-xs sm:text-sm text-slate-800 dark:text-slate-200">
                         {filteredData.length > 0 ? (
                             filteredData.map((row, rowIdx) => (
                                 <tr key={rowIdx} className="hover:bg-[#FDFBF5]/60 dark:hover:bg-[#142C49]/60 transition">
                                     {columns.map((col, colIdx) => (
-                                        <td key={colIdx} className={`px-5 py-4 whitespace-nowrap ${col.cellClassName || ''}`}>
+                                        <td key={colIdx} className={`px-5 py-3.5 whitespace-nowrap ${col.cellClassName || ''}`}>
                                             {col.render ? col.render(row[col.key], row) : row[col.key]}
                                         </td>
                                     ))}
@@ -123,7 +123,7 @@ export default function DataTable({
                                 <td colSpan={columns.length} className="px-5 py-12 text-center text-slate-400 dark:text-[#8EB0CF]">
                                     <div className="flex flex-col items-center justify-center gap-2">
                                         <Inbox className="w-9 h-9 text-slate-400 dark:text-[#5E8CB6]" />
-                                        <span className="text-sm lg:text-base font-medium">{emptyMessage}</span>
+                                        <span className="text-xs sm:text-sm font-medium">{emptyMessage}</span>
                                     </div>
                                 </td>
                             </tr>
@@ -134,7 +134,7 @@ export default function DataTable({
 
             {/* Pagination */}
             {pagination && (
-                <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between text-xs lg:text-sm text-slate-600 dark:text-[#BACDE3] bg-[#F4F7FB]/70 dark:bg-[#071324]">
+                <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between text-xs text-slate-600 dark:text-[#BACDE3] bg-[#F4F7FB]/70 dark:bg-[#071324]">
                     {pagination}
                 </div>
             )}
