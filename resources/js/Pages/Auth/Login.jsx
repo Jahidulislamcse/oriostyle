@@ -136,32 +136,25 @@ export default function Login({ status }) {
                             <UserCheck className="w-4 h-4 text-teal-400" />
                             <span>Demo Role Auto-Fill:</span>
                         </div>
-                        <div className="grid grid-cols-2 gap-2 text-xs">
+                        <div className="grid grid-cols-3 gap-2 text-xs">
                             <button
                                 type="button"
                                 onClick={() => fillDemoCredentials('superadmin@orio.com', 'password123')}
-                                className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-teal-300 border border-slate-700/80 transition text-left"
+                                className="px-2 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-purple-300 border border-slate-700/80 transition text-center"
                             >
                                 👑 Super Admin
                             </button>
                             <button
                                 type="button"
                                 onClick={() => fillDemoCredentials('admin@orio.com', 'password123')}
-                                className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-emerald-300 border border-slate-700/80 transition text-left"
+                                className="px-2 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-emerald-300 border border-slate-700/80 transition text-center"
                             >
-                                🛡️ Store Admin
-                            </button>
-                            <button
-                                type="button"
-                                onClick={() => fillDemoCredentials('staff@orio.com', 'password123')}
-                                className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-cyan-300 border border-slate-700/80 transition text-left"
-                            >
-                                📦 Inventory Staff
+                                🛡️ Admin
                             </button>
                             <button
                                 type="button"
                                 onClick={() => fillDemoCredentials('customer@orio.com', 'password123')}
-                                className="px-2.5 py-1.5 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-indigo-300 border border-slate-700/80 transition text-left"
+                                className="px-2 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-800 text-indigo-300 border border-slate-700/80 transition text-center"
                             >
                                 🛍️ Customer
                             </button>

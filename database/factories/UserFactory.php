@@ -60,20 +60,6 @@ class UserFactory extends Factory
         ]);
     }
 
-    public function manager(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => User::ROLE_MANAGER,
-        ]);
-    }
-
-    public function inventoryStaff(): static
-    {
-        return $this->state(fn (array $attributes) => [
-            'role' => User::ROLE_INVENTORY_STAFF,
-        ]);
-    }
-
     public function customer(): static
     {
         return $this->state(fn (array $attributes) => [

@@ -97,13 +97,12 @@ class Phase2AuthenticationTest extends TestCase
     }
 
     /**
-     * Test that super admin, manager, and inventory staff can access admin dashboard.
+     * Test that super admin and admin can access admin dashboard.
      */
-    public function test_all_admin_roles_can_access_admin_dashboard(): void
+    public function test_super_admin_and_admin_roles_can_access_admin_dashboard(): void
     {
         $superAdmin = User::factory()->superAdmin()->create();
-        $manager = User::factory()->manager()->create();
-        $staff = User::factory()->inventoryStaff()->create();
+        $admin = User::factory()->admin()->create();
 
         // Super Admin
         $this->actingAs($superAdmin)
@@ -111,13 +110,8 @@ class Phase2AuthenticationTest extends TestCase
             ->assertStatus(200)
             ->assertInertia(fn (Assert $page) => $page->component('Admin/Dashboard'));
 
-        // Manager
-        $this->actingAs($manager)
-            ->get('/admin/dashboard')
-            ->assertStatus(200);
-
-        // Staff
-        $this->actingAs($staff)
+        // Admin
+        $this->actingAs($admin)
             ->get('/admin/dashboard')
             ->assertStatus(200);
     }

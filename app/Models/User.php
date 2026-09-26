@@ -18,15 +18,11 @@ class User extends Authenticatable
      */
     public const ROLE_SUPER_ADMIN = 'super_admin';
     public const ROLE_ADMIN = 'admin';
-    public const ROLE_MANAGER = 'manager';
-    public const ROLE_INVENTORY_STAFF = 'inventory_staff';
     public const ROLE_CUSTOMER = 'customer';
 
     public const ADMIN_ROLES = [
         self::ROLE_SUPER_ADMIN,
         self::ROLE_ADMIN,
-        self::ROLE_MANAGER,
-        self::ROLE_INVENTORY_STAFF,
     ];
 
     /**
@@ -87,17 +83,7 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return in_array($this->role, [self::ROLE_SUPER_ADMIN, self::ROLE_ADMIN], true);
-    }
-
-    public function isManager(): bool
-    {
-        return $this->role === self::ROLE_MANAGER;
-    }
-
-    public function isInventoryStaff(): bool
-    {
-        return $this->role === self::ROLE_INVENTORY_STAFF;
+        return in_array($this->role, self::ADMIN_ROLES, true);
     }
 
     public function isCustomer(): bool

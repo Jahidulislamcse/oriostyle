@@ -1,14 +1,12 @@
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
 import { 
-    LayoutDashboard, 
     LogOut, 
     ShieldCheck, 
     ShoppingBag, 
     Users, 
     TrendingUp, 
     AlertTriangle,
-    Package,
     Sparkles,
     CheckCircle2
 } from 'lucide-react';
@@ -24,8 +22,6 @@ export default function Dashboard({ user, metrics }) {
     const roleBadgeColors = {
         super_admin: 'bg-purple-900/60 text-purple-300 border-purple-500/40',
         admin: 'bg-emerald-900/60 text-emerald-300 border-emerald-500/40',
-        manager: 'bg-blue-900/60 text-blue-300 border-blue-500/40',
-        inventory_staff: 'bg-cyan-900/60 text-cyan-300 border-cyan-500/40',
         customer: 'bg-slate-800 text-slate-300 border-slate-700',
     };
 
@@ -82,7 +78,7 @@ export default function Dashboard({ user, metrics }) {
                                 Welcome, {user?.name}
                             </h1>
                             <p className="text-sm text-slate-400 mt-1">
-                                You have authenticated with <strong className="text-teal-400 capitalize">{user?.role?.replace('_', ' ')}</strong> permissions.
+                                You have authenticated with <strong className="text-teal-400 capitalize">{user?.role?.replace('_', ' ')}</strong> privileges.
                             </p>
                         </div>
 
@@ -132,12 +128,12 @@ export default function Dashboard({ user, metrics }) {
 
                     <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
                         <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs text-slate-400 font-medium">Registered Staff</span>
+                            <span className="text-xs text-slate-400 font-medium">Administrators</span>
                             <div className="w-8 h-8 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
                                 <Users className="w-4 h-4" />
                             </div>
                         </div>
-                        <div className="text-2xl font-bold text-white">4</div>
+                        <div className="text-2xl font-bold text-white">2</div>
                         <span className="text-[11px] text-purple-400 font-medium">RBAC configured</span>
                     </div>
                 </div>
@@ -148,9 +144,8 @@ export default function Dashboard({ user, metrics }) {
                         <CheckCircle2 className="w-5 h-5 text-teal-400" />
                         <span>Phase 2 RBAC & Auth Architecture Verified</span>
                     </h2>
-                    <p className="text-sm text-slate-400 leading-relaxed mb-4">
-                        Multi-role authentication, `EnsureAdminAccess` middleware guards, deactivated account checks, and 
-                        session security are operational.
+                    <p className="text-sm text-slate-400 leading-relaxed">
+                        Configured with 3 streamlined roles: Super Admin, Store Admin, and Customer.
                     </p>
                 </div>
             </main>

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->string('phone', 30)->nullable()->index();
-            $table->enum('role', ['super_admin', 'admin', 'manager', 'inventory_staff', 'customer'])
+            $table->enum('role', ['super_admin', 'admin', 'customer'])
                 ->default('customer')
                 ->index();
             $table->string('avatar', 255)->nullable();
