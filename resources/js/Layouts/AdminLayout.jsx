@@ -20,8 +20,7 @@ import {
     ExternalLink, 
     Search,
     Store,
-    Shield,
-    UserCheck
+    Shield
 } from 'lucide-react';
 import ToastContainer from '@/Components/Common/ToastContainer';
 import Badge from '@/Components/Common/Badge';
@@ -84,7 +83,7 @@ export default function AdminLayout({ title = '', children }) {
     const siteName = settings?.site_name || 'ORIO STYLE';
 
     return (
-        <div className="min-h-screen bg-slate-100/80 dark:bg-slate-950 text-slate-950 dark:text-slate-100 font-sans selection:bg-teal-500 selection:text-white flex flex-col transition-colors duration-200">
+        <div className="min-h-screen bg-slate-100/80 dark:bg-slate-950 text-slate-950 dark:text-slate-100 font-sans selection:bg-orange-500 selection:text-white flex flex-col transition-colors duration-200">
             <Head title={title ? `${title} - Admin Control Tower` : `${siteName} - Admin`} />
             <ToastContainer />
 
@@ -105,7 +104,7 @@ export default function AdminLayout({ title = '', children }) {
                 {/* Brand Header */}
                 <div className="h-20 px-5 border-b-2 border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/80 dark:bg-slate-900">
                     <Link href="/admin/dashboard" className="flex items-center gap-3.5 overflow-hidden group">
-                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-600 via-teal-700 to-emerald-800 flex-shrink-0 flex items-center justify-center shadow-md shadow-teal-700/30 group-hover:scale-105 transition">
+                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-orange-500 via-orange-600 to-amber-600 flex-shrink-0 flex items-center justify-center shadow-md shadow-orange-600/30 group-hover:scale-105 transition">
                             <Sparkles className="w-6 h-6 text-white font-bold" />
                         </div>
                         {!sidebarCollapsed && (
@@ -113,7 +112,7 @@ export default function AdminLayout({ title = '', children }) {
                                 <span className="text-base font-black tracking-tight text-slate-950 dark:text-white truncate">
                                     {siteName}
                                 </span>
-                                <span className="text-xs font-bold text-teal-700 dark:text-teal-400 uppercase tracking-widest flex items-center gap-1">
+                                <span className="text-xs font-bold text-orange-600 dark:text-orange-400 uppercase tracking-widest flex items-center gap-1">
                                     <Shield className="w-3 h-3" /> Control Tower
                                 </span>
                             </div>
@@ -150,15 +149,15 @@ export default function AdminLayout({ title = '', children }) {
                                             title={sidebarCollapsed ? item.name : undefined}
                                             className={`flex items-center gap-3.5 px-3.5 py-3 rounded-2xl text-sm font-bold transition-all duration-150 group ${
                                                 isActive
-                                                    ? 'bg-teal-700 text-white shadow-md shadow-teal-800/30 border-2 border-teal-700 dark:bg-teal-500 dark:text-slate-950 dark:border-teal-500'
-                                                    : 'text-slate-800 dark:text-slate-200 hover:text-teal-700 dark:hover:text-teal-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 border-2 border-transparent'
+                                                    ? 'bg-orange-600 text-white shadow-md shadow-orange-600/30 border-2 border-orange-600 dark:bg-orange-500 dark:text-slate-950 dark:border-orange-500'
+                                                    : 'text-slate-800 dark:text-slate-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-orange-50/70 dark:hover:bg-slate-800/80 border-2 border-transparent'
                                             } ${sidebarCollapsed ? 'justify-center px-0' : ''}`}
                                         >
                                             <Icon
                                                 className={`w-5 h-5 flex-shrink-0 transition-transform duration-150 group-hover:scale-110 ${
                                                     isActive 
                                                         ? 'text-white dark:text-slate-950' 
-                                                        : 'text-slate-600 dark:text-slate-400 group-hover:text-teal-700 dark:group-hover:text-teal-300'
+                                                        : 'text-slate-600 dark:text-slate-400 group-hover:text-orange-600 dark:group-hover:text-orange-400'
                                                 }`}
                                             />
                                             {!sidebarCollapsed && (
@@ -217,7 +216,7 @@ export default function AdminLayout({ title = '', children }) {
                             <Menu className="w-6 h-6" />
                         </button>
 
-                        <div className="hidden sm:flex items-center gap-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 px-4 py-2.5 rounded-xl w-72 lg:w-80 focus-within:ring-4 focus-within:ring-teal-500/20 focus-within:border-teal-600 transition">
+                        <div className="hidden sm:flex items-center gap-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 px-4 py-2.5 rounded-xl w-72 lg:w-80 focus-within:ring-4 focus-within:ring-orange-500/20 focus-within:border-orange-600 transition">
                             <Search className="w-5 h-5 text-slate-500 dark:text-slate-400 shrink-0" />
                             <input
                                 type="text"
@@ -235,9 +234,9 @@ export default function AdminLayout({ title = '', children }) {
                         <Link
                             href="/"
                             target="_blank"
-                            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 border-2 border-slate-300 dark:border-slate-700 text-sm font-bold transition shadow-xs"
+                            className="inline-flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-orange-50 hover:text-orange-700 hover:border-orange-300 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-100 border-2 border-slate-300 dark:border-slate-700 text-sm font-bold transition shadow-xs"
                         >
-                            <Store className="w-4 h-4 text-teal-700 dark:text-teal-400" />
+                            <Store className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                             <span className="hidden sm:inline">Storefront</span>
                             <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
                         </Link>
@@ -248,12 +247,12 @@ export default function AdminLayout({ title = '', children }) {
                                 onClick={() => setUserMenuOpen(!userMenuOpen)}
                                 className="flex items-center gap-3 p-1.5 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800 transition text-left cursor-pointer border-2 border-transparent hover:border-slate-300 dark:hover:border-slate-700"
                             >
-                                <div className="w-10 h-10 rounded-xl bg-teal-700 text-white dark:bg-teal-500 dark:text-slate-950 flex items-center justify-center font-black text-sm shadow-sm">
+                                <div className="w-10 h-10 rounded-xl bg-orange-600 text-white dark:bg-orange-500 dark:text-slate-950 flex items-center justify-center font-black text-sm shadow-sm">
                                     {user?.name?.charAt(0) || 'A'}
                                 </div>
                                 <div className="hidden md:flex flex-col pr-1">
                                     <span className="text-sm font-extrabold text-slate-950 dark:text-white leading-tight">{user?.name}</span>
-                                    <span className="text-xs text-teal-700 dark:text-teal-400 font-bold capitalize">{user?.role?.replace('_', ' ')}</span>
+                                    <span className="text-xs text-orange-600 dark:text-orange-400 font-bold capitalize">{user?.role?.replace('_', ' ')}</span>
                                 </div>
                             </button>
 
@@ -267,7 +266,7 @@ export default function AdminLayout({ title = '', children }) {
                                             <p className="text-xs font-semibold text-slate-600 dark:text-slate-400 truncate">{user?.email}</p>
                                             <div className="mt-2">
                                                 <Badge
-                                                    variant={user?.role === 'super_admin' ? 'purple' : 'success'}
+                                                    variant={user?.role === 'super_admin' ? 'purple' : 'orange'}
                                                     size="sm"
                                                 >
                                                     {user?.role?.replace('_', ' ')}

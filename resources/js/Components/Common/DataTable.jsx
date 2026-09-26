@@ -65,7 +65,7 @@ export default function DataTable({
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={searchPlaceholder}
-                                className="block w-full pl-11 pr-4 py-2.5 bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-600 transition"
+                                className="block w-full pl-11 pr-4 py-2.5 bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:border-orange-600 transition"
                             />
                         </div>
                     )}
@@ -84,7 +84,7 @@ export default function DataTable({
                                     scope="col"
                                     onClick={() => col.sortable !== false && handleSort(col.key)}
                                     className={`px-6 py-4 ${
-                                        col.sortable !== false ? 'cursor-pointer select-none hover:text-teal-700 dark:hover:text-teal-300 transition' : ''
+                                        col.sortable !== false ? 'cursor-pointer select-none hover:text-orange-600 dark:hover:text-orange-400 transition' : ''
                                     } ${col.className || ''}`}
                                 >
                                     <div className="flex items-center gap-2">
@@ -93,9 +93,9 @@ export default function DataTable({
                                             <span className="text-slate-500 dark:text-slate-400">
                                                 {sortConfig.key === col.key ? (
                                                     sortConfig.direction === 'asc' ? (
-                                                        <ChevronUp className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                                                        <ChevronUp className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                                                     ) : (
-                                                        <ChevronDown className="w-4 h-4 text-teal-600 dark:text-teal-400" />
+                                                        <ChevronDown className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                                                     )
                                                 ) : (
                                                     <ChevronsUpDown className="w-3.5 h-3.5" />
@@ -110,7 +110,7 @@ export default function DataTable({
                     <tbody className="divide-y divide-slate-200 dark:divide-slate-800/80 text-sm font-medium text-slate-900 dark:text-slate-100">
                         {filteredData.length > 0 ? (
                             filteredData.map((row, rowIdx) => (
-                                <tr key={rowIdx} className="hover:bg-slate-50/80 dark:hover:bg-slate-800/50 transition">
+                                <tr key={rowIdx} className="hover:bg-orange-50/40 dark:hover:bg-slate-800/50 transition">
                                     {columns.map((col, colIdx) => (
                                         <td key={colIdx} className={`px-6 py-4.5 whitespace-nowrap ${col.cellClassName || ''}`}>
                                             {col.render ? col.render(row[col.key], row) : row[col.key]}

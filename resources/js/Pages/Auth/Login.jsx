@@ -26,7 +26,7 @@ export default function Login({ status }) {
     };
 
     return (
-        <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-950 dark:text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans selection:bg-teal-500 selection:text-white transition-colors duration-200">
+        <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-950 dark:text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans selection:bg-orange-500 selection:text-white transition-colors duration-200">
             <Head title="Sign In - ORIO STYLE" />
 
             {/* Top Right Theme Switcher */}
@@ -36,7 +36,7 @@ export default function Login({ status }) {
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
                 <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
-                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-600 to-emerald-700 flex items-center justify-center shadow-lg shadow-teal-600/30 group-hover:scale-105 transition">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 via-orange-600 to-amber-600 flex items-center justify-center shadow-lg shadow-orange-600/30 group-hover:scale-105 transition">
                         <Sparkles className="w-7 h-7 text-white font-bold" />
                     </div>
                     <span className="text-3xl font-black tracking-tight text-slate-950 dark:text-white">ORIO STYLE</span>
@@ -44,7 +44,7 @@ export default function Login({ status }) {
                 <h2 className="text-2xl font-black text-slate-950 dark:text-white tracking-tight">Sign in to your account</h2>
                 <p className="mt-2 text-sm font-medium text-slate-600 dark:text-slate-400">
                     Or{' '}
-                    <Link href="/register" className="font-bold text-teal-700 dark:text-teal-400 hover:underline transition">
+                    <Link href="/register" className="font-bold text-orange-600 dark:text-orange-400 hover:underline transition">
                         create a new customer account
                     </Link>
                 </p>
@@ -75,7 +75,7 @@ export default function Login({ status }) {
                                     autoComplete="username"
                                     required
                                     onChange={(e) => setData('email', e.target.value)}
-                                    className="block w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-600 text-sm sm:text-base font-medium transition"
+                                    className="block w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:border-orange-600 text-sm sm:text-base font-medium transition"
                                     placeholder="you@example.com"
                                 />
                             </div>
@@ -100,7 +100,7 @@ export default function Login({ status }) {
                                     autoComplete="current-password"
                                     required
                                     onChange={(e) => setData('password', e.target.value)}
-                                    className="block w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-600 text-sm sm:text-base font-medium transition"
+                                    className="block w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:border-orange-600 text-sm sm:text-base font-medium transition"
                                     placeholder="••••••••"
                                 />
                             </div>
@@ -116,7 +116,7 @@ export default function Login({ status }) {
                                     name="remember"
                                     checked={data.remember}
                                     onChange={(e) => setData('remember', e.target.checked)}
-                                    className="rounded border-2 border-slate-300 dark:border-slate-700 text-teal-600 focus:ring-teal-500/20 w-4.5 h-4.5 cursor-pointer"
+                                    className="rounded border-2 border-slate-300 dark:border-slate-700 text-orange-600 focus:ring-orange-500/20 w-4.5 h-4.5 cursor-pointer"
                                 />
                                 <span className="ml-2.5">Remember me on this device</span>
                             </label>
@@ -126,7 +126,7 @@ export default function Login({ status }) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="w-full flex justify-center items-center gap-2.5 py-3.5 px-5 rounded-2xl shadow-md text-base font-bold text-white bg-teal-700 hover:bg-teal-800 active:bg-teal-900 focus:outline-none focus:ring-4 focus:ring-teal-500/30 disabled:opacity-50 transition duration-150 cursor-pointer"
+                                className="w-full flex justify-center items-center gap-2.5 py-3.5 px-5 rounded-2xl shadow-md text-base font-bold text-white bg-orange-600 hover:bg-orange-700 active:bg-orange-800 focus:outline-none focus:ring-4 focus:ring-orange-500/30 disabled:opacity-50 transition duration-150 cursor-pointer"
                             >
                                 <span>Sign In</span>
                                 <ArrowRight className="w-5 h-5" />
@@ -138,7 +138,7 @@ export default function Login({ status }) {
                     <div className="mt-9 pt-7 border-t-2 border-slate-200 dark:border-slate-800">
                         <div className="flex items-center justify-between mb-3.5">
                             <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
-                                <UserCheck className="w-4 h-4 text-teal-700 dark:text-teal-400" />
+                                <UserCheck className="w-4 h-4 text-orange-600 dark:text-orange-400" />
                                 1-Click Demo Login
                             </span>
                             <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
@@ -158,7 +158,7 @@ export default function Login({ status }) {
                             <button
                                 type="button"
                                 onClick={() => fillDemoCredentials('admin@orio.com', 'password123')}
-                                className="px-3 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/60 dark:hover:bg-teal-900/60 border-2 border-teal-300 dark:border-teal-800 text-teal-900 dark:text-teal-200 text-xs font-black transition cursor-pointer flex flex-col items-center shadow-xs"
+                                className="px-3 py-2 rounded-xl bg-orange-50 hover:bg-orange-100 dark:bg-orange-950/60 dark:hover:bg-orange-900/60 border-2 border-orange-300 dark:border-orange-800 text-orange-900 dark:text-orange-200 text-xs font-black transition cursor-pointer flex flex-col items-center shadow-xs"
                             >
                                 <span>Store Admin</span>
                                 <span className="text-[10px] opacity-75 font-normal">Staff Access</span>

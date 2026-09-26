@@ -33,8 +33,8 @@ export default function Dashboard({ user, metrics }) {
             growth: '+0.0% MoM',
             subText: 'Immutable COGS tracked',
             icon: TrendingUp,
-            color: 'text-teal-700 dark:text-teal-400',
-            iconBg: 'bg-teal-100 text-teal-700 dark:bg-teal-950 dark:text-teal-300 border-2 border-teal-300 dark:border-teal-700',
+            color: 'text-orange-600 dark:text-orange-400',
+            iconBg: 'bg-orange-100 text-orange-700 dark:bg-orange-950 dark:text-orange-300 border-2 border-orange-300 dark:border-orange-700',
         },
         {
             title: 'Pending Orders',
@@ -73,7 +73,7 @@ export default function Dashboard({ user, metrics }) {
             icon: FolderTree,
             phase: 'Phase 4',
             badge: 'Live & Active',
-            color: 'text-teal-700 dark:text-teal-300 bg-teal-50 dark:bg-teal-950/80 border-2 border-teal-300 dark:border-teal-700/80',
+            color: 'text-orange-800 dark:text-orange-300 bg-orange-50 dark:bg-orange-950/80 border-2 border-orange-300 dark:border-orange-700/80',
         },
         {
             name: 'Brands & WebP Hub',
@@ -82,7 +82,7 @@ export default function Dashboard({ user, metrics }) {
             icon: Tag,
             phase: 'Phase 5',
             badge: 'Next Sprint',
-            color: 'text-indigo-700 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/80 border-2 border-indigo-300 dark:border-indigo-700/80',
+            color: 'text-indigo-800 dark:text-indigo-300 bg-indigo-50 dark:bg-indigo-950/80 border-2 border-indigo-300 dark:border-indigo-700/80',
         },
         {
             name: 'Products & Matrix Builder',
@@ -91,7 +91,7 @@ export default function Dashboard({ user, metrics }) {
             icon: Package,
             phase: 'Phase 6-7',
             badge: 'Planned',
-            color: 'text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/80 border-2 border-blue-300 dark:border-blue-700/80',
+            color: 'text-blue-800 dark:text-blue-300 bg-blue-50 dark:bg-blue-950/80 border-2 border-blue-300 dark:border-blue-700/80',
         },
         {
             name: 'Dynamic Settings CMS',
@@ -100,25 +100,25 @@ export default function Dashboard({ user, metrics }) {
             icon: Settings,
             phase: 'Phase 20',
             badge: 'CMS Engine',
-            color: 'text-purple-700 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/80 border-2 border-purple-300 dark:border-purple-700/80',
+            color: 'text-purple-800 dark:text-purple-300 bg-purple-50 dark:bg-purple-950/80 border-2 border-purple-300 dark:border-purple-700/80',
         },
     ];
 
     return (
         <AdminLayout title="Dashboard">
             {/* Top Welcome Banner */}
-            <div className="rounded-3xl bg-gradient-to-r from-teal-800 via-teal-700 to-slate-900 text-white p-7 sm:p-9 mb-8 shadow-md relative overflow-hidden">
+            <div className="rounded-3xl bg-gradient-to-r from-orange-700 via-orange-600 to-amber-700 text-white p-7 sm:p-9 mb-8 shadow-md relative overflow-hidden">
                 <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-white/10 to-transparent pointer-events-none" />
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-5 relative z-10">
                     <div className="space-y-2">
                         <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/20 border border-white/30 text-white text-xs font-black tracking-wide uppercase">
-                            <ShieldCheck className="w-4 h-4 text-teal-300" />
+                            <ShieldCheck className="w-4 h-4 text-orange-200" />
                             <span>Enterprise Admin Control Tower</span>
                         </div>
                         <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight">
                             Welcome back, {user?.name}
                         </h1>
-                        <p className="text-sm sm:text-base text-teal-100 font-medium max-w-2xl">
+                        <p className="text-sm sm:text-base text-orange-100 font-medium max-w-2xl">
                             System status: <span className="text-emerald-300 font-bold">● High Availability & Anti-N+1 Enforced</span> • Live connected to <strong className="text-white font-bold">{settings?.site_name || 'ORIO STYLE'}</strong>.
                         </p>
                     </div>
@@ -128,7 +128,7 @@ export default function Dashboard({ user, metrics }) {
                             variant="secondary"
                             size="md"
                             icon={FolderTree}
-                            className="shadow-md bg-white text-slate-950 hover:bg-slate-100 border-none font-black"
+                            className="shadow-md bg-white text-slate-950 hover:bg-orange-50 hover:text-orange-800 border-none font-black"
                         >
                             Open Category Tree
                         </Button>
@@ -157,7 +157,7 @@ export default function Dashboard({ user, metrics }) {
                                 {card.value}
                             </div>
                             <div className="flex items-center justify-between text-xs font-bold pt-2 border-t border-slate-100 dark:border-slate-800">
-                                <span className="text-teal-700 dark:text-teal-400">{card.growth}</span>
+                                <span className="text-orange-600 dark:text-orange-400">{card.growth}</span>
                                 <span className="text-slate-500 dark:text-slate-400">{card.subText}</span>
                             </div>
                         </div>
@@ -249,7 +249,7 @@ export default function Dashboard({ user, metrics }) {
                         <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 block mb-1">
                             Dynamic Settings Cache
                         </span>
-                        <div className="flex items-center gap-2 text-teal-700 dark:text-teal-400 font-bold text-sm">
+                        <div className="flex items-center gap-2 text-orange-600 dark:text-orange-400 font-bold text-sm">
                             <CheckCircle2 className="w-4 h-4" /> Redis / In-Memory Active
                         </div>
                     </div>

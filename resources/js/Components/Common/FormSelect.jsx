@@ -31,7 +31,7 @@ export default function FormSelect({
                 onChange={onChange}
                 disabled={disabled}
                 required={required}
-                className={`block w-full py-3 px-4 bg-white dark:bg-slate-900 border-2 rounded-xl text-slate-950 dark:text-white text-sm sm:text-base font-medium transition focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-600 disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-950 ${
+                className={`block w-full py-3 px-4 bg-white dark:bg-slate-900 border-2 rounded-xl text-slate-950 dark:text-white text-sm sm:text-base font-medium transition focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:border-orange-600 disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-950 ${
                     error 
                         ? 'border-rose-500 dark:border-rose-500 focus:ring-rose-500/20 focus:border-rose-600' 
                         : 'border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600'

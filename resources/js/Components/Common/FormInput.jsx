@@ -41,7 +41,7 @@ export default function FormInput({
                     disabled={disabled}
                     placeholder={placeholder}
                     required={required}
-                    className={`block w-full py-3 bg-white dark:bg-slate-900 border-2 rounded-xl text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm sm:text-base font-medium transition focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-600 disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-950 ${
+                    className={`block w-full py-3 bg-white dark:bg-slate-900 border-2 rounded-xl text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 text-sm sm:text-base font-medium transition focus:outline-none focus:ring-4 focus:ring-orange-500/20 focus:border-orange-600 disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-950 ${
                         Icon ? 'pl-11 pr-4' : 'px-4'
                     } ${
                         error 
