@@ -13,9 +13,9 @@ class SettingSeeder extends Seeder
     public function run(SettingService $settingService): void
     {
         $settingService->setMany([
-            'site_name' => 'ORIO STYLE',
+            'site_name' => 'ORIO STYLE LTD',
             'site_tagline' => 'Enterprise Single-Vendor E-Commerce Platform',
-            'copyright_text' => '© 2026 ORIO STYLE. All rights reserved.',
+            'copyright_text' => '© 2026 ORIO STYLE LTD. All rights reserved.',
             'support_phone' => '+880 1700-000000',
             'whatsapp_number' => '+880 1700-000000',
             'support_email' => 'support@orio.com',

@@ -13,13 +13,14 @@ export default function Button({
     ...props
 }) {
     const variants = {
-        primary: 'bg-[#C8A844] hover:bg-[#b29134] active:bg-[#8e7127] text-white font-semibold shadow-xs hover:shadow-sm transition border border-[#C8A844]/30',
-        secondary: 'bg-white hover:bg-slate-50 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-semibold shadow-2xs hover:border-slate-300 dark:hover:border-slate-600',
+        primary: 'bg-[#D4AF37] hover:bg-[#B89226] active:bg-[#926F18] text-[#071324] font-bold shadow-xs hover:shadow transition border border-[#D4AF37]/60',
+        navy: 'bg-[#0E2038] hover:bg-[#1C3E63] active:bg-[#142C49] text-[#F5D77F] dark:bg-[#142C49] dark:hover:bg-[#1C3E63] dark:text-[#F5D77F] font-bold shadow-xs border border-[#D4AF37]/40',
+        secondary: 'bg-white hover:bg-slate-50 dark:bg-[#142C49] dark:hover:bg-[#1C3E63] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#1C3E63] font-semibold shadow-2xs hover:border-slate-300 dark:hover:border-slate-600',
         danger: 'bg-rose-500 hover:bg-rose-600 active:bg-rose-700 text-white font-semibold shadow-xs border border-rose-500/20',
         success: 'bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-semibold shadow-xs border border-emerald-600/20',
-        soft: 'bg-[#fbf9f2] hover:bg-[#f6f1df] text-[#8e7127] dark:bg-[#392a0f]/50 dark:hover:bg-[#392a0f]/80 dark:text-[#deca94] font-semibold border border-[#ece1be] dark:border-[#8e7127]/60',
-        outline: 'bg-transparent hover:bg-[#fbf9f2] dark:hover:bg-slate-800 text-[#C8A844] dark:text-[#deca94] border border-[#C8A844]/60 font-semibold',
-        ghost: 'bg-transparent hover:bg-slate-100 dark:hover:bg-slate-800/70 text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-white border-transparent font-medium',
+        soft: 'bg-[#FDFBF5] hover:bg-[#FBF5E6] text-[#926F18] dark:bg-[#142C49] dark:hover:bg-[#1C3E63] dark:text-[#EBD495] font-semibold border border-[#F5E7C2] dark:border-[#D4AF37]/40',
+        outline: 'bg-transparent hover:bg-[#FDFBF5] dark:hover:bg-[#142C49] text-[#926F18] dark:text-[#DFC068] border border-[#D4AF37] font-semibold',
+        ghost: 'bg-transparent hover:bg-slate-100 dark:hover:bg-[#142C49] text-slate-600 hover:text-[#0E2038] dark:text-[#8EB0CF] dark:hover:text-white border-transparent font-medium',
     };
 
     const sizes = {
@@ -32,7 +33,7 @@ export default function Button({
         <button
             type={type}
             disabled={disabled || processing}
-            className={`inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/40 focus:ring-offset-1 dark:focus:ring-offset-slate-950 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`}
+            className={`inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/40 focus:ring-offset-1 dark:focus:ring-offset-[#071324] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`}
             {...props}
         >
             {processing ? (

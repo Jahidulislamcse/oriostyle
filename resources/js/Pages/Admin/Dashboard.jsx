@@ -31,8 +31,8 @@ export default function Dashboard({ user, metrics }) {
             growth: '+0.0% MoM',
             subText: 'Immutable COGS tracked',
             icon: TrendingUp,
-            color: 'text-[#8e7127] dark:text-[#deca94]',
-            iconBg: 'bg-[#fbf9f2] text-[#8e7127] dark:bg-[#392a0f]/50 dark:text-[#deca94] border border-[#ece1be] dark:border-[#8e7127]/40',
+            color: 'text-[#926F18] dark:text-[#EBD495]',
+            iconBg: 'bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/40',
         },
         {
             title: 'Pending Orders',
@@ -41,7 +41,7 @@ export default function Dashboard({ user, metrics }) {
             subText: 'Awaiting dispatch confirmation',
             icon: ShoppingBag,
             color: 'text-indigo-600 dark:text-indigo-400',
-            iconBg: 'bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40',
+            iconBg: 'bg-indigo-50 text-indigo-600 dark:bg-[#071324] dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40',
         },
         {
             title: 'Low-Stock Warnings',
@@ -50,7 +50,7 @@ export default function Dashboard({ user, metrics }) {
             subText: 'Units below safety threshold',
             icon: AlertTriangle,
             color: 'text-amber-600 dark:text-amber-400',
-            iconBg: 'bg-amber-50 text-amber-600 dark:bg-amber-950/50 dark:text-amber-300 border border-amber-200 dark:border-amber-800/40',
+            iconBg: 'bg-amber-50 text-amber-600 dark:bg-[#071324] dark:text-amber-300 border border-amber-200 dark:border-amber-800/40',
         },
         {
             title: 'Active Staff & Admins',
@@ -59,7 +59,7 @@ export default function Dashboard({ user, metrics }) {
             subText: 'Super Admin & Store Admin',
             icon: Users,
             color: 'text-purple-600 dark:text-purple-400',
-            iconBg: 'bg-purple-50 text-purple-600 dark:bg-purple-950/50 dark:text-purple-300 border border-purple-200 dark:border-purple-800/40',
+            iconBg: 'bg-purple-50 text-purple-600 dark:bg-[#071324] dark:text-purple-300 border border-purple-200 dark:border-purple-800/40',
         },
     ];
 
@@ -71,7 +71,7 @@ export default function Dashboard({ user, metrics }) {
             icon: FolderTree,
             phase: 'Phase 4',
             badge: 'Live & Active',
-            color: 'text-[#8e7127] dark:text-[#deca94] bg-[#fbf9f2] dark:bg-[#392a0f]/40 border border-[#ece1be] dark:border-[#8e7127]/50',
+            color: 'text-[#755615] dark:text-[#EBD495] bg-[#FDFBF5] dark:bg-[#0E2038] border border-[#F5E7C2] dark:border-[#D4AF37]/40 hover:border-[#D4AF37]',
         },
         {
             name: 'Brands & WebP Hub',
@@ -80,7 +80,7 @@ export default function Dashboard({ user, metrics }) {
             icon: Tag,
             phase: 'Phase 5',
             badge: 'Next Sprint',
-            color: 'text-indigo-700 dark:text-indigo-300 bg-indigo-50/70 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/50',
+            color: 'text-indigo-700 dark:text-indigo-300 bg-indigo-50/70 dark:bg-[#0E2038] border border-indigo-200 dark:border-indigo-800/50 hover:border-indigo-400',
         },
         {
             name: 'Products & Matrix Builder',
@@ -89,7 +89,7 @@ export default function Dashboard({ user, metrics }) {
             icon: Package,
             phase: 'Phase 6-7',
             badge: 'Planned',
-            color: 'text-blue-700 dark:text-blue-300 bg-blue-50/70 dark:bg-blue-950/40 border border-blue-200 dark:border-blue-800/50',
+            color: 'text-blue-700 dark:text-blue-300 bg-blue-50/70 dark:bg-[#0E2038] border border-blue-200 dark:border-blue-800/50 hover:border-blue-400',
         },
         {
             name: 'Dynamic Settings CMS',
@@ -98,25 +98,25 @@ export default function Dashboard({ user, metrics }) {
             icon: Settings,
             phase: 'Phase 20',
             badge: 'CMS Engine',
-            color: 'text-purple-700 dark:text-purple-300 bg-purple-50/70 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800/50',
+            color: 'text-purple-700 dark:text-purple-300 bg-purple-50/70 dark:bg-[#0E2038] border border-purple-200 dark:border-purple-800/50 hover:border-purple-400',
         },
     ];
 
     return (
         <AdminLayout title="Dashboard">
             {/* Top Welcome Banner */}
-            <div className="rounded-2xl bg-gradient-to-r from-[#fbf9f2] via-[#f6f1df]/60 to-white dark:from-[#392a0f]/30 dark:via-slate-900 dark:to-slate-900 border border-[#ece1be] dark:border-[#8e7127]/40 p-6 sm:p-7 mb-7 shadow-xs relative overflow-hidden">
+            <div className="rounded-2xl bg-gradient-to-r from-[#FDFBF5] via-[#FBF5E6]/70 to-white dark:from-[#0E2038] dark:via-[#10233B] dark:to-[#071324] border border-[#F5E7C2] dark:border-[#1C3E63] p-6 sm:p-7 mb-7 shadow-xs relative overflow-hidden">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
                     <div className="space-y-1.5">
-                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#f6f1df] text-[#755b23] dark:bg-[#392a0f]/60 dark:text-[#deca94] border border-[#deca94] dark:border-[#8e7127]/50 text-[11px] font-bold">
-                            <ShieldCheck className="w-3.5 h-3.5 text-[#C8A844] dark:text-[#deca94]" />
+                        <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FBF5E6] text-[#755615] dark:bg-[#071324] dark:text-[#EBD495] border border-[#EBD495] dark:border-[#D4AF37]/50 text-[11px] font-bold">
+                            <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] dark:text-[#EBD495]" />
                             <span>Enterprise Admin Control Tower</span>
                         </div>
-                        <h1 className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight">
+                        <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">
                             Welcome back, {user?.name}
                         </h1>
-                        <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-2xl font-normal">
-                            System status: <span className="text-emerald-600 dark:text-emerald-400 font-semibold">● High Availability & Anti-N+1 Enforced</span> • Connected to <strong className="text-slate-800 dark:text-white">{settings?.site_name || 'ORIO STYLE'}</strong>.
+                        <p className="text-xs sm:text-sm text-slate-600 dark:text-[#8EB0CF] max-w-2xl font-normal">
+                            System status: <span className="text-emerald-600 dark:text-emerald-400 font-semibold">● High Availability & Anti-N+1 Enforced</span> • Connected to <strong className="text-[#0E2038] dark:text-[#F5D77F]">{settings?.site_name || 'ORIO STYLE LTD'}</strong>.
                         </p>
                     </div>
 
@@ -125,7 +125,7 @@ export default function Dashboard({ user, metrics }) {
                             variant="primary"
                             size="md"
                             icon={FolderTree}
-                            className="shadow-xs font-semibold"
+                            className="shadow-xs font-bold"
                         >
                             Open Category Tree
                         </Button>
@@ -140,22 +140,22 @@ export default function Dashboard({ user, metrics }) {
                     return (
                         <div
                             key={idx}
-                            className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 shadow-xs hover:border-slate-300 dark:hover:border-slate-700 transition duration-150"
+                            className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 shadow-xs hover:border-slate-300 dark:hover:border-[#3B6D9B] transition duration-150"
                         >
                             <div className="flex items-center justify-between mb-3">
-                                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[#8EB0CF]">
                                     {card.title}
                                 </span>
                                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${card.iconBg} shadow-2xs`}>
                                     <Icon className="w-5 h-5" />
                                 </div>
                             </div>
-                            <div className="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-1.5">
+                            <div className="text-2xl sm:text-3xl font-extrabold text-[#0E2038] dark:text-white tracking-tight mb-1.5">
                                 {card.value}
                             </div>
-                            <div className="flex items-center justify-between text-xs font-medium pt-2 border-t border-slate-100 dark:border-slate-800/80">
-                                <span className="text-[#8e7127] dark:text-[#deca94] font-semibold">{card.growth}</span>
-                                <span className="text-slate-400 dark:text-slate-500">{card.subText}</span>
+                            <div className="flex items-center justify-between text-xs font-medium pt-2 border-t border-slate-100 dark:border-[#1C3E63]/60">
+                                <span className="text-[#926F18] dark:text-[#EBD495] font-semibold">{card.growth}</span>
+                                <span className="text-slate-400 dark:text-[#5E8CB6]">{card.subText}</span>
                             </div>
                         </div>
                     );
@@ -166,10 +166,10 @@ export default function Dashboard({ user, metrics }) {
             <div className="mb-7">
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <h2 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+                        <h2 className="text-lg font-bold text-[#0E2038] dark:text-white tracking-tight">
                             Platform Blueprint Execution
                         </h2>
-                        <p className="text-xs text-slate-500 dark:text-slate-400">
+                        <p className="text-xs text-slate-500 dark:text-[#8EB0CF]">
                             Direct jump into active and upcoming architecture phase modules.
                         </p>
                     </div>
@@ -186,17 +186,17 @@ export default function Dashboard({ user, metrics }) {
                             >
                                 <div>
                                     <div className="flex items-center justify-between mb-3">
-                                        <div className="p-2.5 rounded-xl bg-white dark:bg-slate-900 shadow-2xs">
+                                        <div className="p-2.5 rounded-xl bg-white dark:bg-[#071324] shadow-2xs">
                                             <Icon className="w-5 h-5" />
                                         </div>
-                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/90 dark:bg-slate-900/90 border border-current shadow-2xs">
+                                        <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-white/90 dark:bg-[#071324]/90 border border-current shadow-2xs">
                                             {action.badge}
                                         </span>
                                     </div>
-                                    <h3 className="text-sm font-bold text-slate-900 dark:text-white group-hover:underline">
+                                    <h3 className="text-sm font-bold text-[#0E2038] dark:text-white group-hover:underline">
                                         {action.name}
                                     </h3>
-                                    <p className="text-xs text-slate-600 dark:text-slate-300 mt-1 leading-snug font-normal">
+                                    <p className="text-xs text-slate-600 dark:text-[#BACDE3] mt-1 leading-snug font-normal">
                                         {action.desc}
                                     </p>
                                 </div>
@@ -212,17 +212,17 @@ export default function Dashboard({ user, metrics }) {
             </div>
 
             {/* Architecture Integrity Card */}
-            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-xs">
+            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-6 shadow-xs">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5 mb-5">
                     <div className="flex items-center gap-3">
-                        <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                        <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
                             <Activity className="w-5 h-5" />
                         </div>
                         <div>
-                            <h3 className="text-base font-bold text-slate-900 dark:text-white">
+                            <h3 className="text-base font-bold text-[#0E2038] dark:text-white">
                                 Active Guardrails & Database Health
                             </h3>
-                            <p className="text-xs text-slate-500 dark:text-slate-400">
+                            <p className="text-xs text-slate-500 dark:text-[#8EB0CF]">
                                 Real-time monitoring of anti-N+1 policies, cache engine, and security layer.
                             </p>
                         </div>
@@ -233,8 +233,8 @@ export default function Dashboard({ user, metrics }) {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                    <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
+                    <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#071324]/70 border border-slate-200 dark:border-[#1C3E63]/70">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] block mb-1">
                             Model Lazy Loading
                         </span>
                         <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold text-xs">
@@ -242,17 +242,17 @@ export default function Dashboard({ user, metrics }) {
                         </div>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
+                    <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#071324]/70 border border-slate-200 dark:border-[#1C3E63]/70">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] block mb-1">
                             Dynamic Settings Cache
                         </span>
-                        <div className="flex items-center gap-1.5 text-[#8e7127] dark:text-[#deca94] font-semibold text-xs">
+                        <div className="flex items-center gap-1.5 text-[#926F18] dark:text-[#EBD495] font-semibold text-xs">
                             <CheckCircle2 className="w-3.5 h-3.5" /> Redis / In-Memory Active
                         </div>
                     </div>
 
-                    <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700/80">
-                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 block mb-1">
+                    <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#071324]/70 border border-slate-200 dark:border-[#1C3E63]/70">
+                        <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] block mb-1">
                             RBAC Access Policy
                         </span>
                         <div className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 font-semibold text-xs">

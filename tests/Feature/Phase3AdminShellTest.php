@@ -24,7 +24,7 @@ class Phase3AdminShellTest extends TestCase
         $response->assertStatus(200);
         $response->assertInertia(fn (Assert $page) => $page
             ->has('settings')
-            ->where('settings.site_name', 'ORIO STYLE')
+            ->where('settings.site_name', 'ORIO STYLE LTD')
             ->where('settings.currency_symbol', '৳')
             ->where('settings.currency_code', 'BDT')
             ->has('settings.support_phone')

@@ -51,13 +51,13 @@ export default function DataTable({
     }, [data, searchQuery, sortConfig, columns]);
 
     return (
-        <div className="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
+        <div className="w-full bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl overflow-hidden shadow-xs">
             {/* Header Toolbar */}
             {(searchable || actions) && (
-                <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3.5 bg-slate-50/50 dark:bg-slate-900">
+                <div className="p-4 border-b border-slate-200 dark:border-[#1C3E63]/70 flex flex-col sm:flex-row items-center justify-between gap-3.5 bg-[#F4F7FB]/70 dark:bg-[#0E2038]">
                     {searchable && (
                         <div className="relative w-full sm:w-72">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#5E8CB6]">
                                 <Search className="w-4 h-4" />
                             </div>
                             <input
@@ -65,7 +65,7 @@ export default function DataTable({
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder={searchPlaceholder}
-                                className="block w-full pl-9 pr-3.5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700/80 rounded-xl text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#C8A844]/25 focus:border-[#C8A844] transition"
+                                className="block w-full pl-9 pr-3.5 py-2 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-sm text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition"
                             />
                         </div>
                     )}
@@ -75,8 +75,8 @@ export default function DataTable({
 
             {/* Table */}
             <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-slate-200 dark:divide-slate-800 text-left">
-                    <thead className="bg-slate-50 dark:bg-slate-900 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                <table className="min-w-full divide-y divide-slate-200 dark:divide-[#1C3E63]/70 text-left">
+                    <thead className="bg-[#F4F7FB] dark:bg-[#071324] text-xs font-bold uppercase tracking-wider text-[#0E2038] dark:text-[#BACDE3]">
                         <tr>
                             {columns.map((col, idx) => (
                                 <th
@@ -84,18 +84,18 @@ export default function DataTable({
                                     scope="col"
                                     onClick={() => col.sortable !== false && handleSort(col.key)}
                                     className={`px-5 py-3.5 ${
-                                        col.sortable !== false ? 'cursor-pointer select-none hover:text-[#C8A844] dark:hover:text-[#deca94] transition' : ''
+                                        col.sortable !== false ? 'cursor-pointer select-none hover:text-[#D4AF37] dark:hover:text-[#F5D77F] transition' : ''
                                     } ${col.className || ''}`}
                                 >
                                     <div className="flex items-center gap-1.5">
                                         <span>{col.label}</span>
                                         {col.sortable !== false && (
-                                            <span className="text-slate-400 dark:text-slate-500">
+                                            <span className="text-slate-400 dark:text-[#5E8CB6]">
                                                 {sortConfig.key === col.key ? (
                                                     sortConfig.direction === 'asc' ? (
-                                                        <ChevronUp className="w-3.5 h-3.5 text-[#C8A844]" />
+                                                        <ChevronUp className="w-3.5 h-3.5 text-[#D4AF37]" />
                                                     ) : (
-                                                        <ChevronDown className="w-3.5 h-3.5 text-[#C8A844]" />
+                                                        <ChevronDown className="w-3.5 h-3.5 text-[#D4AF37]" />
                                                     )
                                                 ) : (
                                                     <ChevronsUpDown className="w-3 h-3" />
@@ -107,10 +107,10 @@ export default function DataTable({
                             ))}
                         </tr>
                     </thead>
-                    <tbody className="divide-y divide-slate-100 dark:divide-slate-800/80 text-sm text-slate-800 dark:text-slate-200">
+                    <tbody className="divide-y divide-slate-100 dark:divide-[#1C3E63]/60 text-sm text-slate-800 dark:text-slate-200">
                         {filteredData.length > 0 ? (
                             filteredData.map((row, rowIdx) => (
-                                <tr key={rowIdx} className="hover:bg-[#fbf9f2]/60 dark:hover:bg-slate-800/40 transition">
+                                <tr key={rowIdx} className="hover:bg-[#FDFBF5]/60 dark:hover:bg-[#142C49]/60 transition">
                                     {columns.map((col, colIdx) => (
                                         <td key={colIdx} className={`px-5 py-3.5 whitespace-nowrap ${col.cellClassName || ''}`}>
                                             {col.render ? col.render(row[col.key], row) : row[col.key]}
@@ -120,9 +120,9 @@ export default function DataTable({
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={columns.length} className="px-5 py-12 text-center text-slate-400 dark:text-slate-500">
+                                <td colSpan={columns.length} className="px-5 py-12 text-center text-slate-400 dark:text-[#8EB0CF]">
                                     <div className="flex flex-col items-center justify-center gap-2">
-                                        <Inbox className="w-8 h-8 text-slate-400 dark:text-slate-600" />
+                                        <Inbox className="w-8 h-8 text-slate-400 dark:text-[#5E8CB6]" />
                                         <span className="text-sm font-medium">{emptyMessage}</span>
                                     </div>
                                 </td>
@@ -134,7 +134,7 @@ export default function DataTable({
 
             {/* Pagination */}
             {pagination && (
-                <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 bg-slate-50/50 dark:bg-slate-900">
+                <div className="p-4 border-t border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between text-xs text-slate-600 dark:text-[#BACDE3] bg-[#F4F7FB]/70 dark:bg-[#071324]">
                     {pagination}
                 </div>
             )}
