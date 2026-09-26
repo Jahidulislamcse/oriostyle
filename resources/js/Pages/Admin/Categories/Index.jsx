@@ -245,22 +245,22 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
             key: 'name',
             label: 'Category Name',
             render: (_, row) => (
-                <div className="flex items-center gap-3.5">
-                    <div className="w-10 h-10 lg:w-11 lg:h-11 rounded-xl bg-[#FDFBF5] dark:bg-[#071324] border border-[#F5E7C2] dark:border-[#D4AF37]/40 flex items-center justify-center text-[#926F18] dark:text-[#EBD495] font-bold shrink-0 shadow-2xs">
-                        {row.parent_id ? <CornerDownRight className="w-4.5 h-4.5 text-slate-400 dark:text-[#5E8CB6]" /> : <FolderTree className="w-5 h-5 lg:w-6 lg:h-6" />}
+                <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FDFBF5] dark:bg-[#071324] border border-[#F5E7C2] dark:border-[#D4AF37]/40 flex items-center justify-center text-[#926F18] dark:text-[#EBD495] font-bold shrink-0 shadow-2xs">
+                        {row.parent_id ? <CornerDownRight className="w-4 h-4 text-slate-400 dark:text-[#5E8CB6]" /> : <FolderTree className="w-4.5 h-4.5" />}
                     </div>
                     <div>
                         <div className="flex items-center gap-2">
-                            <span className={`font-bold ${row.parent_id ? 'text-[#0E2038] dark:text-slate-200 text-sm lg:text-base font-semibold' : 'text-[#0E2038] dark:text-white text-base lg:text-lg font-extrabold'}`}>
+                            <span className={`font-bold ${row.parent_id ? 'text-[#0E2038] dark:text-slate-200 text-xs sm:text-sm font-semibold' : 'text-[#0E2038] dark:text-white text-sm sm:text-base font-extrabold'}`}>
                                 {row.name}
                             </span>
                             {row.is_featured && (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] lg:text-xs font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                    <Star className="w-3 h-3 mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                    <Star className="w-2.5 h-2.5 mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
                                 </span>
                             )}
                         </div>
-                        <p className="text-xs lg:text-sm font-mono text-slate-400 dark:text-[#5E8CB6]">/{row.slug}</p>
+                        <p className="text-xs font-mono text-slate-400 dark:text-[#5E8CB6]">/{row.slug}</p>
                     </div>
                 </div>
             ),
@@ -271,12 +271,12 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
             render: (_, row) => (
                 <div>
                     {row.parent ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs lg:text-sm font-medium bg-[#F0F4F9] dark:bg-[#071324] text-[#0E2038] dark:text-[#BACDE3] border border-[#BACDE3] dark:border-[#1C3E63]">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-xs font-medium bg-[#F0F4F9] dark:bg-[#071324] text-[#0E2038] dark:text-[#BACDE3] border border-[#BACDE3] dark:border-[#1C3E63]">
                             <CornerDownRight className="w-3.5 h-3.5 text-[#D4AF37] dark:text-[#EBD495]" />
                             {row.parent.name}
                         </span>
                     ) : (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs lg:text-sm font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
                             <Layers className="w-3.5 h-3.5" /> Root Level
                         </span>
                     )}
@@ -298,7 +298,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
             label: 'Order',
             sortable: true,
             render: (order) => (
-                <span className="font-mono text-xs lg:text-sm font-semibold px-2.5 py-0.5 rounded bg-slate-100 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] border border-slate-200 dark:border-[#1C3E63]">
+                <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] border border-slate-200 dark:border-[#1C3E63]">
                     #{order}
                 </span>
             ),
@@ -311,7 +311,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                     type="button"
                     onClick={() => toggleActive(row)}
                     title="Click to toggle status"
-                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs lg:text-sm font-bold cursor-pointer transition border ${
+                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition border ${
                         isActive
                             ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60 hover:bg-emerald-100'
                             : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60 hover:bg-rose-100'
@@ -319,11 +319,11 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                 >
                     {isActive ? (
                         <>
-                            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Active
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Active
                         </>
                     ) : (
                         <>
-                            <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Inactive
+                            <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" /> Inactive
                         </>
                     )}
                 </button>
@@ -342,26 +342,26 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             type="button"
                             onClick={() => openCreateModal(row.id)}
                             title="Add subcategory inside this parent"
-                            className="p-2 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-[#926F18] dark:hover:text-[#EBD495] hover:bg-[#FDFBF5] dark:hover:bg-[#071324] transition cursor-pointer"
+                            className="p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-[#926F18] dark:hover:text-[#EBD495] hover:bg-[#FDFBF5] dark:hover:bg-[#071324] transition cursor-pointer"
                         >
-                            <Plus className="w-4.5 h-4.5" />
+                            <Plus className="w-4 h-4" />
                         </button>
                     )}
                     <button
                         type="button"
                         onClick={() => openEditModal(row)}
                         title="Edit category"
-                        className="p-2 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                        className="p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-[#071324] transition cursor-pointer"
                     >
-                        <Edit3 className="w-4.5 h-4.5" />
+                        <Edit3 className="w-4 h-4" />
                     </button>
                     <button
                         type="button"
                         onClick={() => setDeletingCategory(row)}
                         title="Delete category"
-                        className="p-2 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                        className="p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-[#071324] transition cursor-pointer"
                     >
-                        <Trash2 className="w-4.5 h-4.5" />
+                        <Trash2 className="w-4 h-4" />
                     </button>
                 </div>
             ),
@@ -372,48 +372,48 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         <AdminLayout title="Categories Taxonomy">
             <div className="space-y-6">
                 {/* Header Title & Actions */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#0E2038] p-6 lg:p-7 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
-                    <div className="space-y-1.5">
-                        <div className="flex items-center gap-3">
-                            <div className="p-2.5 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                <FolderTree className="w-6 h-6 text-[#D4AF37]" />
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#0E2038] p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-2.5">
+                            <div className="p-2 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                <FolderTree className="w-5 h-5 text-[#D4AF37]" />
                             </div>
-                            <h1 className="text-xl sm:text-2xl lg:text-3xl font-black text-[#0E2038] dark:text-white tracking-tight">
+                            <h1 className="text-xl sm:text-2xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">
                                 Category Hierarchy & Taxonomy Tree
                             </h1>
-                            <span className="px-3 py-1 text-xs lg:text-sm font-bold rounded-full bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                            <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
                                 Phase 4
                             </span>
                         </div>
-                        <p className="text-xs sm:text-sm lg:text-base text-slate-500 dark:text-[#8EB0CF] pl-11 max-w-2xl font-normal">
+                        <p className="text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] pl-10 max-w-2xl font-normal">
                             Configure self-referencing parent categories, nested subcategories, display sequencing, and catalog taxonomy.
                         </p>
                     </div>
 
                     <div className="flex items-center gap-3 self-start md:self-auto">
                         {/* View Switcher */}
-                        <div className="flex items-center bg-slate-100 dark:bg-[#071324] p-1.5 rounded-xl border border-slate-200 dark:border-[#1C3E63] text-xs lg:text-sm">
+                        <div className="flex items-center bg-slate-100 dark:bg-[#071324] p-1 rounded-xl border border-slate-200 dark:border-[#1C3E63] text-xs">
                             <button
                                 type="button"
                                 onClick={() => setViewMode('tree')}
-                                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-bold transition cursor-pointer ${
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
                                     viewMode === 'tree'
                                         ? 'bg-white dark:bg-[#0E2038] text-[#926F18] dark:text-[#EBD495] shadow-2xs border border-[#F5E7C2] dark:border-[#D4AF37]/40'
                                         : 'text-slate-600 dark:text-[#8EB0CF] hover:text-[#0E2038] dark:hover:text-white'
                                 }`}
                             >
-                                <FolderTree className="w-4 h-4" /> Tree View
+                                <FolderTree className="w-3.5 h-3.5" /> Tree View
                             </button>
                             <button
                                 type="button"
                                 onClick={() => setViewMode('table')}
-                                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-lg font-bold transition cursor-pointer ${
+                                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-bold transition cursor-pointer ${
                                     viewMode === 'table'
                                         ? 'bg-white dark:bg-[#0E2038] text-[#926F18] dark:text-[#EBD495] shadow-2xs border border-[#F5E7C2] dark:border-[#D4AF37]/40'
                                         : 'text-slate-600 dark:text-[#8EB0CF] hover:text-[#0E2038] dark:hover:text-white'
                                 }`}
                             >
-                                <List className="w-4 h-4" /> Table View
+                                <List className="w-3.5 h-3.5" /> Table View
                             </button>
                         </div>
 
@@ -431,72 +431,72 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                 </div>
 
                 {/* Metric Summary Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4.5">
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 lg:p-6 shadow-xs">
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs lg:text-sm font-bold uppercase tracking-wider">Total Categories</span>
-                            <FolderTree className="w-5 h-5 text-[#D4AF37] dark:text-[#EBD495]" />
+                            <span className="text-xs font-bold uppercase tracking-wider">Total Categories</span>
+                            <FolderTree className="w-4.5 h-4.5 text-[#D4AF37] dark:text-[#EBD495]" />
                         </div>
-                        <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#0E2038] dark:text-white">
+                        <div className="text-2xl sm:text-3xl font-extrabold text-[#0E2038] dark:text-white">
                             {stats.total ?? categories.length}
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 lg:p-6 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs lg:text-sm font-bold uppercase tracking-wider">Root Level</span>
-                            <Layers className="w-5 h-5 text-indigo-600 dark:text-indigo-400" />
+                            <span className="text-xs font-bold uppercase tracking-wider">Root Level</span>
+                            <Layers className="w-4.5 h-4.5 text-indigo-600 dark:text-indigo-400" />
                         </div>
-                        <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-indigo-600 dark:text-indigo-400">
+                        <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
                             {stats.root_count ?? rootCategories.length}
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 lg:p-6 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs lg:text-sm font-bold uppercase tracking-wider">Subcategories</span>
-                            <CornerDownRight className="w-5 h-5 text-cyan-600 dark:text-cyan-400" />
+                            <span className="text-xs font-bold uppercase tracking-wider">Subcategories</span>
+                            <CornerDownRight className="w-4.5 h-4.5 text-cyan-600 dark:text-cyan-400" />
                         </div>
-                        <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-cyan-600 dark:text-cyan-400">
+                        <div className="text-2xl sm:text-3xl font-extrabold text-cyan-600 dark:text-cyan-400">
                             {stats.sub_count ?? (categories.length - rootCategories.length)}
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 lg:p-6 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs lg:text-sm font-bold uppercase tracking-wider">Active Status</span>
-                            <CheckCircle2 className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                            <span className="text-xs font-bold uppercase tracking-wider">Active Status</span>
+                            <CheckCircle2 className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
                         </div>
-                        <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-emerald-600 dark:text-emerald-400">
+                        <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
                             {stats.active_count ?? 0}
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 lg:p-6 shadow-xs col-span-2 sm:col-span-1">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs col-span-2 sm:col-span-1">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs lg:text-sm font-bold uppercase tracking-wider">Featured Items</span>
-                            <Star className="w-5 h-5 text-[#D4AF37] fill-[#D4AF37]" />
+                            <span className="text-xs font-bold uppercase tracking-wider">Featured Items</span>
+                            <Star className="w-4.5 h-4.5 text-[#D4AF37] fill-[#D4AF37]" />
                         </div>
-                        <div className="text-2xl sm:text-3xl lg:text-4xl font-black text-[#926F18] dark:text-[#EBD495]">
+                        <div className="text-2xl sm:text-3xl font-extrabold text-[#926F18] dark:text-[#EBD495]">
                             {stats.featured_count ?? 0}
                         </div>
                     </div>
                 </div>
 
                 {/* Filter & Search Bar */}
-                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4.5 sm:p-5 shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="flex flex-col sm:flex-row items-center gap-3.5 w-full md:w-auto">
+                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3.5">
+                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
                         {/* Search Input */}
-                        <div className="relative w-full sm:w-72 lg:w-80">
-                            <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-[#5E8CB6]">
-                                <Search className="w-4.5 h-4.5" />
+                        <div className="relative w-full sm:w-64">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#5E8CB6]">
+                                <Search className="w-4 h-4" />
                             </div>
                             <input
                                 type="text"
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search by name, slug..."
-                                className="block w-full pl-10 pr-3.5 py-2.5 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm lg:text-base text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                className="block w-full pl-9 pr-3.5 py-2 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
                             />
                         </div>
 
@@ -504,7 +504,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="w-full sm:w-44 py-2.5 px-3.5 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm lg:text-base font-medium text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition"
+                            className="w-full sm:w-40 py-2 px-3 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm font-medium text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition"
                         >
                             <option value="all">All Statuses</option>
                             <option value="active">Active Only</option>
@@ -515,7 +515,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         <select
                             value={parentFilter}
                             onChange={(e) => setParentFilter(e.target.value)}
-                            className="w-full sm:w-56 py-2.5 px-3.5 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm lg:text-base font-medium text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition"
+                            className="w-full sm:w-48 py-2 px-3 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm font-medium text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition"
                         >
                             <option value="all">All Levels</option>
                             <option value="root">Root Categories Only</option>
@@ -530,18 +530,18 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
 
                     {/* Tree Expand/Collapse Controls (if Tree view) */}
                     {viewMode === 'tree' && (
-                        <div className="flex items-center gap-2.5 self-end md:self-auto text-xs lg:text-sm">
+                        <div className="flex items-center gap-2 self-end md:self-auto text-xs">
                             <button
                                 type="button"
                                 onClick={expandAll}
-                                className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-[#1C3E63] text-slate-600 dark:text-[#BACDE3] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#071324] transition cursor-pointer font-bold"
+                                className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1C3E63] text-slate-600 dark:text-[#BACDE3] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#071324] transition cursor-pointer font-semibold"
                             >
                                 Expand All
                             </button>
                             <button
                                 type="button"
                                 onClick={collapseAll}
-                                className="px-3.5 py-2 rounded-xl border border-slate-200 dark:border-[#1C3E63] text-slate-600 dark:text-[#BACDE3] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#071324] transition cursor-pointer font-bold"
+                                className="px-3 py-1.5 rounded-lg border border-slate-200 dark:border-[#1C3E63] text-slate-600 dark:text-[#BACDE3] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#071324] transition cursor-pointer font-semibold"
                             >
                                 Collapse All
                             </button>
@@ -559,7 +559,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                     />
                 ) : (
                     /* Tree View Mode */
-                    <div className="space-y-3.5">
+                    <div className="space-y-3">
                         {rootCategories.length > 0 ? (
                             rootCategories
                                 .filter((root) => {
@@ -579,51 +579,51 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                             className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl overflow-hidden shadow-xs transition duration-150"
                                         >
                                             {/* Root Category Row */}
-                                            <div className="p-4 sm:p-5 lg:p-5.5 bg-[#F4F7FB]/70 dark:bg-[#0E2038] border-b border-slate-200/80 dark:border-[#1C3E63]/70 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                                                <div className="flex items-center gap-3.5">
+                                            <div className="p-3.5 sm:p-4 bg-[#F4F7FB]/70 dark:bg-[#0E2038] border-b border-slate-200/80 dark:border-[#1C3E63]/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+                                                <div className="flex items-center gap-3">
                                                     {/* Expand Toggle */}
                                                     <button
                                                         type="button"
                                                         onClick={() => toggleRootExpand(root.id)}
-                                                        className="p-2 rounded-xl text-slate-400 hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-[#071324] transition cursor-pointer"
+                                                        className="p-1.5 rounded-lg text-slate-400 hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-[#071324] transition cursor-pointer"
                                                     >
                                                         {isExpanded ? (
-                                                            <ChevronDown className="w-5 h-5 text-[#D4AF37] dark:text-[#EBD495]" />
+                                                            <ChevronDown className="w-4.5 h-4.5 text-[#D4AF37] dark:text-[#EBD495]" />
                                                         ) : (
-                                                            <ChevronRight className="w-5 h-5" />
+                                                            <ChevronRight className="w-4.5 h-4.5" />
                                                         )}
                                                     </button>
 
                                                     {/* Category Icon / Badge */}
-                                                    <div className="w-11 h-11 lg:w-12 lg:h-12 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50 flex items-center justify-center font-bold shrink-0 shadow-2xs">
-                                                        <FolderTree className="w-5 h-5 lg:w-6 lg:h-6 text-[#D4AF37]" />
+                                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+                                                        <FolderTree className="w-4.5 h-4.5 text-[#D4AF37]" />
                                                     </div>
 
                                                     {/* Category Info */}
                                                     <div>
-                                                        <div className="flex items-center gap-2.5 flex-wrap">
-                                                            <span className="font-black text-[#0E2038] dark:text-white text-base lg:text-lg">
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <span className="font-extrabold text-[#0E2038] dark:text-white text-sm sm:text-base">
                                                                 {root.name}
                                                             </span>
-                                                            <span className="font-mono text-xs lg:text-sm text-slate-400 dark:text-[#5E8CB6]">
+                                                            <span className="font-mono text-xs text-slate-400 dark:text-[#5E8CB6]">
                                                                 /{root.slug}
                                                             </span>
                                                             {root.is_featured && (
-                                                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] lg:text-xs font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                                                    <Star className="w-3 h-3 mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                                                    <Star className="w-2.5 h-2.5 mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <p className="text-xs lg:text-sm text-slate-500 dark:text-[#8EB0CF] mt-0.5 line-clamp-1 font-normal">
+                                                        <p className="text-xs text-slate-500 dark:text-[#8EB0CF] mt-0.5 line-clamp-1 font-normal">
                                                             {root.description || 'No description provided.'}
                                                         </p>
                                                     </div>
                                                 </div>
 
                                                 {/* Meta & Quick Actions */}
-                                                <div className="flex items-center gap-3 pl-9 sm:pl-0 self-end sm:self-auto">
+                                                <div className="flex items-center gap-2.5 pl-9 sm:pl-0 self-end sm:self-auto">
                                                     {/* Order Badge */}
-                                                    <span className="text-xs lg:text-sm font-mono px-2.5 py-0.5 rounded-md bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-semibold border border-transparent dark:border-[#1C3E63]">
+                                                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-medium border border-transparent dark:border-[#1C3E63]">
                                                         Order #{root.display_order}
                                                     </span>
 
@@ -637,7 +637,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                         type="button"
                                                         onClick={() => toggleActive(root)}
                                                         title="Click to toggle status"
-                                                        className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs lg:text-sm font-bold cursor-pointer transition border ${
+                                                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition border ${
                                                             root.is_active
                                                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60 hover:bg-emerald-100'
                                                                 : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60 hover:bg-rose-100'
@@ -645,11 +645,11 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                     >
                                                         {root.is_active ? (
                                                             <>
-                                                                <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> Active
+                                                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Active
                                                             </>
                                                         ) : (
                                                             <>
-                                                                <XCircle className="w-4 h-4 text-rose-600 dark:text-rose-400" /> Inactive
+                                                                <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" /> Inactive
                                                             </>
                                                         )}
                                                     </button>
@@ -659,7 +659,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                         type="button"
                                                         onClick={() => toggleFeatured(root)}
                                                         title={root.is_featured ? 'Remove from featured' : 'Mark as featured'}
-                                                        className={`p-2 rounded-xl border transition cursor-pointer ${
+                                                        className={`p-1.5 rounded-lg border transition cursor-pointer ${
                                                             root.is_featured
                                                                 ? 'bg-[#FDFBF5] text-[#926F18] border-[#F5E7C2] dark:bg-[#071324] dark:text-[#EBD495] dark:border-[#D4AF37]/50'
                                                                 : 'text-slate-400 hover:text-[#D4AF37] border-slate-200 dark:border-[#1C3E63] hover:bg-slate-100 dark:hover:bg-[#071324]'
@@ -669,30 +669,30 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                     </button>
 
                                                     {/* Quick Actions Buttons */}
-                                                    <div className="flex items-center gap-1.5 border-l border-slate-200 dark:border-[#1C3E63] pl-2.5">
+                                                    <div className="flex items-center gap-1 border-l border-slate-200 dark:border-[#1C3E63] pl-2">
                                                         <button
                                                             type="button"
                                                             onClick={() => openCreateModal(root.id)}
                                                             title="Add nested subcategory"
-                                                            className="p-2 rounded-xl text-slate-500 dark:text-[#8EB0CF] hover:text-[#926F18] dark:hover:text-[#EBD495] hover:bg-[#FDFBF5] dark:hover:bg-[#071324] transition cursor-pointer"
+                                                            className="p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-[#926F18] dark:hover:text-[#EBD495] hover:bg-[#FDFBF5] dark:hover:bg-[#071324] transition cursor-pointer"
                                                         >
-                                                            <Plus className="w-4.5 h-4.5" />
+                                                            <Plus className="w-4 h-4" />
                                                         </button>
                                                         <button
                                                             type="button"
                                                             onClick={() => openEditModal(root)}
                                                             title="Edit category"
-                                                            className="p-2 rounded-xl text-slate-500 dark:text-[#8EB0CF] hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                                                            className="p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-[#071324] transition cursor-pointer"
                                                         >
-                                                            <Edit3 className="w-4.5 h-4.5" />
+                                                            <Edit3 className="w-4 h-4" />
                                                         </button>
                                                         <button
                                                             type="button"
                                                             onClick={() => setDeletingCategory(root)}
                                                             title="Delete category"
-                                                            className="p-2 rounded-xl text-slate-500 dark:text-[#8EB0CF] hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                                                            className="p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-[#071324] transition cursor-pointer"
                                                         >
-                                                            <Trash2 className="w-4.5 h-4.5" />
+                                                            <Trash2 className="w-4 h-4" />
                                                         </button>
                                                     </div>
                                                 </div>
@@ -700,33 +700,33 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
 
                                             {/* Subcategories Nested List */}
                                             {isExpanded && (
-                                                <div className="p-4 sm:p-5 space-y-2.5 bg-white dark:bg-[#071324]/60">
+                                                <div className="p-3 sm:p-3.5 space-y-2 bg-white dark:bg-[#071324]/60">
                                                     {children.length > 0 ? (
                                                         children.map((sub) => (
                                                             <div
                                                                 key={sub.id}
-                                                                className="ml-4 sm:ml-8 pl-3.5 sm:pl-5 py-3 pr-3.5 rounded-xl border-l-3 border-[#D4AF37] bg-[#F4F7FB]/60 dark:bg-[#0E2038]/60 hover:bg-[#FDFBF5]/50 dark:hover:bg-[#142C49]/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3.5 border-y border-r border-slate-100 dark:border-[#1C3E63]/60"
+                                                                className="ml-3 sm:ml-7 pl-3 sm:pl-4 py-2.5 pr-3 rounded-xl border-l-2 border-[#D4AF37] bg-[#F4F7FB]/60 dark:bg-[#0E2038]/60 hover:bg-[#FDFBF5]/50 dark:hover:bg-[#142C49]/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-y border-r border-slate-100 dark:border-[#1C3E63]/60"
                                                             >
-                                                                <div className="flex items-center gap-3.5">
-                                                                    <div className="w-9 h-9 rounded-lg bg-[#FDFBF5] dark:bg-[#071324] flex items-center justify-center text-[#926F18] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/30 shrink-0">
-                                                                        <CornerDownRight className="w-4.5 h-4.5 text-[#D4AF37]" />
+                                                                <div className="flex items-center gap-3">
+                                                                    <div className="w-8 h-8 rounded-lg bg-[#FDFBF5] dark:bg-[#071324] flex items-center justify-center text-[#926F18] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/30 shrink-0">
+                                                                        <CornerDownRight className="w-4 h-4 text-[#D4AF37]" />
                                                                     </div>
                                                                     <div>
                                                                         <div className="flex items-center gap-2 flex-wrap">
-                                                                            <span className="font-bold text-[#0E2038] dark:text-white text-sm sm:text-base">
+                                                                            <span className="font-bold text-[#0E2038] dark:text-white text-xs sm:text-sm">
                                                                                 {sub.name}
                                                                             </span>
-                                                                            <span className="font-mono text-xs text-slate-400 dark:text-[#5E8CB6]">
+                                                                            <span className="font-mono text-[11px] text-slate-400 dark:text-[#5E8CB6]">
                                                                                 /{sub.slug}
                                                                             </span>
                                                                             {sub.is_featured && (
-                                                                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[10px] lg:text-xs font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                                                                    <Star className="w-2.5 h-2.5 mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                                                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                                                                    <Star className="w-2.5 h-2.5 mr-0.5 fill-[#D4AF37] text-[#D4AF37]" /> Featured
                                                                                 </span>
                                                                             )}
                                                                         </div>
                                                                         {sub.description && (
-                                                                            <p className="text-xs lg:text-sm text-slate-500 dark:text-[#8EB0CF] line-clamp-1 font-normal">
+                                                                            <p className="text-[11px] text-slate-500 dark:text-[#8EB0CF] line-clamp-1 font-normal">
                                                                                 {sub.description}
                                                                             </p>
                                                                         )}
@@ -734,15 +734,15 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                 </div>
 
                                                                 {/* Subcategory actions */}
-                                                                <div className="flex items-center gap-2.5 pl-11 sm:pl-0 self-end sm:self-auto">
-                                                                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-semibold border border-transparent dark:border-[#1C3E63]">
+                                                                <div className="flex items-center gap-2 pl-11 sm:pl-0 self-end sm:self-auto">
+                                                                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-medium border border-transparent dark:border-[#1C3E63]">
                                                                         #{sub.display_order}
                                                                     </span>
 
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => toggleActive(sub)}
-                                                                        className={`px-2.5 py-0.5 rounded-full text-xs font-bold cursor-pointer transition border ${
+                                                                        className={`px-2 py-0.5 rounded-full text-[11px] font-semibold cursor-pointer transition border ${
                                                                             sub.is_active
                                                                                 ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60'
                                                                                 : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60'
@@ -754,7 +754,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => toggleFeatured(sub)}
-                                                                        className={`p-1.5 rounded-lg border transition cursor-pointer ${
+                                                                        className={`p-1 rounded-md border transition cursor-pointer ${
                                                                             sub.is_featured
                                                                                 ? 'text-[#926F18] bg-[#FDFBF5] border-[#F5E7C2] dark:bg-[#071324] dark:text-[#EBD495] dark:border-[#D4AF37]/50'
                                                                                 : 'text-slate-400 hover:text-[#D4AF37] border-slate-200 dark:border-[#1C3E63]'
@@ -766,29 +766,29 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => openEditModal(sub)}
-                                                                        className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition cursor-pointer"
+                                                                        className="p-1 rounded-md text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition cursor-pointer"
                                                                     >
-                                                                        <Edit3 className="w-4 h-4" />
+                                                                        <Edit3 className="w-3.5 h-3.5" />
                                                                     </button>
                                                                     <button
                                                                         type="button"
                                                                         onClick={() => setDeletingCategory(sub)}
-                                                                        className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-300 transition cursor-pointer"
+                                                                        className="p-1 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-300 transition cursor-pointer"
                                                                     >
-                                                                        <Trash2 className="w-4 h-4" />
+                                                                        <Trash2 className="w-3.5 h-3.5" />
                                                                     </button>
                                                                 </div>
                                                             </div>
                                                         ))
                                                     ) : (
-                                                        <div className="py-4 text-center text-xs lg:text-sm text-slate-400 dark:text-[#8EB0CF]">
+                                                        <div className="py-3.5 text-center text-xs text-slate-400 dark:text-[#8EB0CF]">
                                                             No subcategories nested under {root.name} yet.{' '}
                                                             <button
                                                                 type="button"
                                                                 onClick={() => openCreateModal(root.id)}
                                                                 className="text-[#926F18] dark:text-[#EBD495] font-bold hover:underline cursor-pointer inline-flex items-center gap-1 ml-1"
                                                             >
-                                                                <Plus className="w-3.5 h-3.5 text-[#D4AF37]" /> Add first subcategory
+                                                                <Plus className="w-3 h-3 text-[#D4AF37]" /> Add first subcategory
                                                             </button>
                                                         </div>
                                                     )}
