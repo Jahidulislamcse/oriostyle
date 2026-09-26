@@ -1,27 +1,27 @@
 {
-  "_arrow-right-B67nDfsH.js": {
-    "file": "assets/arrow-right-B67nDfsH.js",
+  "_arrow-right-DsUkoXtc.js": {
+    "file": "assets/arrow-right-DsUkoXtc.js",
     "name": "arrow-right",
     "imports": [
-      "_sparkles-CL9lwHl5.js"
+      "_sparkles-CZ6pNlVm.js"
     ]
   },
-  "_mail-B5U3NV2B.js": {
-    "file": "assets/mail-B5U3NV2B.js",
+  "_mail-BuIQtgse.js": {
+    "file": "assets/mail-BuIQtgse.js",
     "name": "mail",
     "imports": [
-      "_sparkles-CL9lwHl5.js"
+      "_sparkles-CZ6pNlVm.js"
     ]
   },
-  "_shield-check-GjrDrRlu.js": {
-    "file": "assets/shield-check-GjrDrRlu.js",
+  "_shield-check-Dzog_K5a.js": {
+    "file": "assets/shield-check-Dzog_K5a.js",
     "name": "shield-check",
     "imports": [
-      "_sparkles-CL9lwHl5.js"
+      "_sparkles-CZ6pNlVm.js"
     ]
   },
-  "_sparkles-CL9lwHl5.js": {
-    "file": "assets/sparkles-CL9lwHl5.js",
+  "_sparkles-CZ6pNlVm.js": {
+    "file": "assets/sparkles-CZ6pNlVm.js",
     "name": "sparkles",
     "imports": [
       "resources/js/app.jsx"
@@ -37,66 +37,66 @@
     ]
   },
   "resources/js/Pages/Admin/Dashboard.jsx": {
-    "file": "assets/Dashboard-DBZZDuMC.js",
+    "file": "assets/Dashboard-I5SWIGSD.js",
     "name": "Dashboard",
     "src": "resources/js/Pages/Admin/Dashboard.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-CL9lwHl5.js",
-      "_shield-check-GjrDrRlu.js",
-      "_arrow-right-B67nDfsH.js"
+      "_sparkles-CZ6pNlVm.js",
+      "_shield-check-Dzog_K5a.js",
+      "_arrow-right-DsUkoXtc.js"
     ],
     "css": [
       "assets/app-dzNGlFy7.css"
     ]
   },
   "resources/js/Pages/Auth/Login.jsx": {
-    "file": "assets/Login-CsHBC8dN.js",
+    "file": "assets/Login-qVJ6dCj-.js",
     "name": "Login",
     "src": "resources/js/Pages/Auth/Login.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-CL9lwHl5.js",
-      "_mail-B5U3NV2B.js",
-      "_arrow-right-B67nDfsH.js"
+      "_sparkles-CZ6pNlVm.js",
+      "_mail-BuIQtgse.js",
+      "_arrow-right-DsUkoXtc.js"
     ],
     "css": [
       "assets/app-dzNGlFy7.css"
     ]
   },
   "resources/js/Pages/Auth/Register.jsx": {
-    "file": "assets/Register--YReFoS7.js",
+    "file": "assets/Register-_WVt-0XI.js",
     "name": "Register",
     "src": "resources/js/Pages/Auth/Register.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-CL9lwHl5.js",
-      "_mail-B5U3NV2B.js",
-      "_arrow-right-B67nDfsH.js"
+      "_sparkles-CZ6pNlVm.js",
+      "_mail-BuIQtgse.js",
+      "_arrow-right-DsUkoXtc.js"
     ],
     "css": [
       "assets/app-dzNGlFy7.css"
     ]
   },
   "resources/js/Pages/Welcome.jsx": {
-    "file": "assets/Welcome-CsXgHE-P.js",
+    "file": "assets/Welcome-B9byQX_4.js",
     "name": "Welcome",
     "src": "resources/js/Pages/Welcome.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-CL9lwHl5.js",
-      "_shield-check-GjrDrRlu.js"
+      "_sparkles-CZ6pNlVm.js",
+      "_shield-check-Dzog_K5a.js"
     ],
     "css": [
       "assets/app-dzNGlFy7.css"
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-CmCKVvFD.js",
+    "file": "assets/app-CCeP6-dL.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
