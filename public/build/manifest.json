@@ -1,66 +1,66 @@
 {
-  "_Button-530uuB1l.js": {
-    "file": "assets/Button-530uuB1l.js",
+  "_Button-OHXu0NU2.js": {
+    "file": "assets/Button-OHXu0NU2.js",
     "name": "Button",
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-Bb01NaII.js",
-      "_circle-check-7vMADu5H.js",
-      "_ThemeToggle-CUS8LVNN.js"
+      "_sparkles-BVLqBAs6.js",
+      "_circle-check-Crt42B1d.js",
+      "_ThemeToggle-8-WJA2pw.js"
     ]
   },
-  "_ThemeToggle-CUS8LVNN.js": {
-    "file": "assets/ThemeToggle-CUS8LVNN.js",
+  "_ThemeToggle-8-WJA2pw.js": {
+    "file": "assets/ThemeToggle-8-WJA2pw.js",
     "name": "ThemeToggle",
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-Bb01NaII.js"
+      "_sparkles-BVLqBAs6.js"
     ]
   },
-  "_arrow-right-DsryA7M3.js": {
-    "file": "assets/arrow-right-DsryA7M3.js",
+  "_arrow-right-CqKuy992.js": {
+    "file": "assets/arrow-right-CqKuy992.js",
     "name": "arrow-right",
     "imports": [
-      "_sparkles-Bb01NaII.js"
+      "_sparkles-BVLqBAs6.js"
     ]
   },
-  "_circle-check-7vMADu5H.js": {
-    "file": "assets/circle-check-7vMADu5H.js",
+  "_circle-check-Crt42B1d.js": {
+    "file": "assets/circle-check-Crt42B1d.js",
     "name": "circle-check",
     "imports": [
-      "_sparkles-Bb01NaII.js"
+      "_sparkles-BVLqBAs6.js"
     ]
   },
-  "_layers-C9CcVBen.js": {
-    "file": "assets/layers-C9CcVBen.js",
+  "_layers-C8O_z0Xk.js": {
+    "file": "assets/layers-C8O_z0Xk.js",
     "name": "layers",
     "imports": [
-      "_sparkles-Bb01NaII.js"
+      "_sparkles-BVLqBAs6.js"
     ]
   },
-  "_mail-DpwH6EOC.js": {
-    "file": "assets/mail-DpwH6EOC.js",
+  "_mail-BMQPeBtP.js": {
+    "file": "assets/mail-BMQPeBtP.js",
     "name": "mail",
     "imports": [
-      "_sparkles-Bb01NaII.js"
+      "_sparkles-BVLqBAs6.js"
     ]
   },
-  "_shield-check-BWESOJkz.js": {
-    "file": "assets/shield-check-BWESOJkz.js",
+  "_shield-check-Bmtq_rPq.js": {
+    "file": "assets/shield-check-Bmtq_rPq.js",
     "name": "shield-check",
     "imports": [
-      "_sparkles-Bb01NaII.js"
+      "_sparkles-BVLqBAs6.js"
     ]
   },
-  "_sparkles-Bb01NaII.js": {
-    "file": "assets/sparkles-Bb01NaII.js",
+  "_sparkles-BVLqBAs6.js": {
+    "file": "assets/sparkles-BVLqBAs6.js",
     "name": "sparkles",
     "imports": [
       "resources/js/app.jsx"
     ]
   },
   "resources/css/app.css": {
-    "file": "assets/app-BIx7aMxf.css",
+    "file": "assets/app-B4BA_F18.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -69,89 +69,89 @@
     ]
   },
   "resources/js/Pages/Admin/Categories/Index.jsx": {
-    "file": "assets/Index-DaIFxkHg.js",
+    "file": "assets/Index-BZL9eTV_.js",
     "name": "Index",
     "src": "resources/js/Pages/Admin/Categories/Index.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_Button-530uuB1l.js",
-      "_sparkles-Bb01NaII.js",
-      "_layers-C9CcVBen.js",
-      "_circle-check-7vMADu5H.js",
-      "_ThemeToggle-CUS8LVNN.js"
+      "_Button-OHXu0NU2.js",
+      "_sparkles-BVLqBAs6.js",
+      "_layers-C8O_z0Xk.js",
+      "_circle-check-Crt42B1d.js",
+      "_ThemeToggle-8-WJA2pw.js"
     ],
     "css": [
-      "assets/app-BIx7aMxf.css"
+      "assets/app-B4BA_F18.css"
     ]
   },
   "resources/js/Pages/Admin/Dashboard.jsx": {
-    "file": "assets/Dashboard-CM6VVzPC.js",
+    "file": "assets/Dashboard-BKG9ulhy.js",
     "name": "Dashboard",
     "src": "resources/js/Pages/Admin/Dashboard.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_Button-530uuB1l.js",
-      "_sparkles-Bb01NaII.js",
-      "_shield-check-BWESOJkz.js",
-      "_arrow-right-DsryA7M3.js",
-      "_circle-check-7vMADu5H.js",
-      "_ThemeToggle-CUS8LVNN.js"
+      "_Button-OHXu0NU2.js",
+      "_sparkles-BVLqBAs6.js",
+      "_shield-check-Bmtq_rPq.js",
+      "_arrow-right-CqKuy992.js",
+      "_circle-check-Crt42B1d.js",
+      "_ThemeToggle-8-WJA2pw.js"
     ],
     "css": [
-      "assets/app-BIx7aMxf.css"
+      "assets/app-B4BA_F18.css"
     ]
   },
   "resources/js/Pages/Auth/Login.jsx": {
-    "file": "assets/Login-BDuHBe0a.js",
+    "file": "assets/Login-Dzy9ibd4.js",
     "name": "Login",
     "src": "resources/js/Pages/Auth/Login.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_ThemeToggle-CUS8LVNN.js",
-      "_sparkles-Bb01NaII.js",
-      "_mail-DpwH6EOC.js",
-      "_arrow-right-DsryA7M3.js"
+      "_ThemeToggle-8-WJA2pw.js",
+      "_sparkles-BVLqBAs6.js",
+      "_mail-BMQPeBtP.js",
+      "_arrow-right-CqKuy992.js"
     ],
     "css": [
-      "assets/app-BIx7aMxf.css"
+      "assets/app-B4BA_F18.css"
     ]
   },
   "resources/js/Pages/Auth/Register.jsx": {
-    "file": "assets/Register-BS7dsDdx.js",
+    "file": "assets/Register-O_EzJstL.js",
     "name": "Register",
     "src": "resources/js/Pages/Auth/Register.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-Bb01NaII.js",
-      "_mail-DpwH6EOC.js",
-      "_arrow-right-DsryA7M3.js"
+      "_sparkles-BVLqBAs6.js",
+      "_mail-BMQPeBtP.js",
+      "_arrow-right-CqKuy992.js"
     ],
     "css": [
-      "assets/app-BIx7aMxf.css"
+      "assets/app-B4BA_F18.css"
     ]
   },
   "resources/js/Pages/Welcome.jsx": {
-    "file": "assets/Welcome-CV8R_G0C.js",
+    "file": "assets/Welcome-CA42wKFP.js",
     "name": "Welcome",
     "src": "resources/js/Pages/Welcome.jsx",
     "isDynamicEntry": true,
     "imports": [
       "resources/js/app.jsx",
-      "_sparkles-Bb01NaII.js",
-      "_circle-check-7vMADu5H.js",
-      "_shield-check-BWESOJkz.js",
-      "_layers-C9CcVBen.js"
+      "_sparkles-BVLqBAs6.js",
+      "_circle-check-Crt42B1d.js",
+      "_shield-check-Bmtq_rPq.js",
+      "_layers-C8O_z0Xk.js"
     ],
     "css": [
-      "assets/app-BIx7aMxf.css"
+      "assets/app-B4BA_F18.css"
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-D5v-ahzG.js",
+    "file": "assets/app-CZdv4hjB.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -163,7 +163,7 @@
       "resources/js/Pages/Welcome.jsx"
     ],
     "css": [
-      "assets/app-BIx7aMxf.css"
+      "assets/app-B4BA_F18.css"
     ]
   }
 }

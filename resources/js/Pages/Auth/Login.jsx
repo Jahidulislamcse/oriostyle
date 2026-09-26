@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link, useForm } from '@inertiajs/react';
-import { Lock, Mail, Sparkles, ArrowRight, UserCheck } from 'lucide-react';
+import { Lock, Mail, Sparkles, ArrowRight, UserCheck, Shield } from 'lucide-react';
 import ThemeToggle from '@/Components/Common/ThemeToggle';
 
 export default function Login({ status }) {
@@ -26,46 +26,46 @@ export default function Login({ status }) {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans selection:bg-teal-500 selection:text-white transition-colors duration-200">
+        <div className="min-h-screen bg-slate-100 dark:bg-slate-950 text-slate-950 dark:text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans selection:bg-teal-500 selection:text-white transition-colors duration-200">
             <Head title="Sign In - ORIO STYLE" />
 
             {/* Top Right Theme Switcher */}
-            <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
+            <div className="absolute top-5 right-5 sm:top-7 sm:right-7">
                 <ThemeToggle />
             </div>
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-                <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-teal-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-teal-500/20 group-hover:scale-105 transition">
-                        <Sparkles className="w-6 h-6 text-white font-bold" />
+                <Link href="/" className="inline-flex items-center gap-3 mb-5 group">
+                    <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-teal-600 to-emerald-700 flex items-center justify-center shadow-lg shadow-teal-600/30 group-hover:scale-105 transition">
+                        <Sparkles className="w-7 h-7 text-white font-bold" />
                     </div>
-                    <span className="text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">ORIO STYLE</span>
+                    <span className="text-3xl font-black tracking-tight text-slate-950 dark:text-white">ORIO STYLE</span>
                 </Link>
-                <h2 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight">Sign in to your account</h2>
-                <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
+                <h2 className="text-2xl font-black text-slate-950 dark:text-white tracking-tight">Sign in to your account</h2>
+                <p className="mt-2 text-sm font-medium text-slate-600 dark:text-slate-400">
                     Or{' '}
-                    <Link href="/register" className="font-bold text-teal-600 dark:text-teal-400 hover:underline transition">
+                    <Link href="/register" className="font-bold text-teal-700 dark:text-teal-400 hover:underline transition">
                         create a new customer account
                     </Link>
                 </p>
             </div>
 
             <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4 sm:px-0">
-                <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 py-8 px-6 shadow-xl rounded-2xl sm:px-10">
+                <div className="bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 py-9 px-7 shadow-xl rounded-3xl sm:px-10">
                     {status && (
-                        <div className="mb-4 font-semibold text-sm text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-500/30 p-3.5 rounded-xl">
+                        <div className="mb-5 font-bold text-sm text-emerald-900 dark:text-emerald-200 bg-emerald-100 dark:bg-emerald-950/80 border-2 border-emerald-300 dark:border-emerald-700 p-4 rounded-2xl">
                             {status}
                         </div>
                     )}
 
-                    <form className="space-y-5" onSubmit={submit}>
+                    <form className="space-y-6" onSubmit={submit}>
                         <div>
-                            <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                            <label className="block text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100 mb-2">
                                 Email Address
                             </label>
-                            <div className="relative rounded-xl shadow-2xs">
-                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
-                                    <Mail className="h-4 w-4" />
+                            <div className="relative rounded-xl shadow-xs">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 dark:text-slate-400">
+                                    <Mail className="h-5 w-5" />
                                 </div>
                                 <input
                                     id="email"
@@ -75,24 +75,22 @@ export default function Login({ status }) {
                                     autoComplete="username"
                                     required
                                     onChange={(e) => setData('email', e.target.value)}
-                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm transition"
+                                    className="block w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-600 text-sm sm:text-base font-medium transition"
                                     placeholder="you@example.com"
                                 />
                             </div>
                             {errors.email && (
-                                <p className="mt-1.5 text-xs text-rose-500 dark:text-rose-400 font-bold">{errors.email}</p>
+                                <p className="mt-2 text-xs sm:text-sm text-rose-600 dark:text-rose-400 font-bold">{errors.email}</p>
                             )}
                         </div>
 
                         <div>
-                            <div className="flex items-center justify-between mb-1.5">
-                                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">
-                                    Password
-                                </label>
-                            </div>
-                            <div className="relative rounded-xl shadow-2xs">
-                                <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
-                                    <Lock className="h-4 w-4" />
+                            <label className="block text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100 mb-2">
+                                Password
+                            </label>
+                            <div className="relative rounded-xl shadow-xs">
+                                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-500 dark:text-slate-400">
+                                    <Lock className="h-5 w-5" />
                                 </div>
                                 <input
                                     id="password"
@@ -102,25 +100,25 @@ export default function Login({ status }) {
                                     autoComplete="current-password"
                                     required
                                     onChange={(e) => setData('password', e.target.value)}
-                                    className="block w-full pl-10 pr-3.5 py-2.5 bg-white dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent text-sm transition"
+                                    className="block w-full pl-12 pr-4 py-3 bg-white dark:bg-slate-800 border-2 border-slate-300 dark:border-slate-700 rounded-xl text-slate-950 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-600 text-sm sm:text-base font-medium transition"
                                     placeholder="••••••••"
                                 />
                             </div>
                             {errors.password && (
-                                <p className="mt-1.5 text-xs text-rose-500 dark:text-rose-400 font-bold">{errors.password}</p>
+                                <p className="mt-2 text-xs sm:text-sm text-rose-600 dark:text-rose-400 font-bold">{errors.password}</p>
                             )}
                         </div>
 
                         <div className="flex items-center justify-between">
-                            <label className="flex items-center text-xs font-medium text-slate-700 dark:text-slate-300 cursor-pointer">
+                            <label className="flex items-center text-sm font-semibold text-slate-800 dark:text-slate-200 cursor-pointer">
                                 <input
                                     type="checkbox"
                                     name="remember"
                                     checked={data.remember}
                                     onChange={(e) => setData('remember', e.target.checked)}
-                                    className="rounded bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-700 text-teal-600 focus:ring-teal-500/20 w-4 h-4 cursor-pointer"
+                                    className="rounded border-2 border-slate-300 dark:border-slate-700 text-teal-600 focus:ring-teal-500/20 w-4.5 h-4.5 cursor-pointer"
                                 />
-                                <span className="ml-2">Remember me on this device</span>
+                                <span className="ml-2.5">Remember me on this device</span>
                             </label>
                         </div>
 
@@ -128,41 +126,51 @@ export default function Login({ status }) {
                             <button
                                 type="submit"
                                 disabled={processing}
-                                className="w-full flex justify-center items-center gap-2 py-3 px-4 rounded-xl shadow-md text-sm font-bold text-white bg-teal-600 hover:bg-teal-700 active:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500 disabled:opacity-50 transition duration-150 cursor-pointer"
+                                className="w-full flex justify-center items-center gap-2.5 py-3.5 px-5 rounded-2xl shadow-md text-base font-bold text-white bg-teal-700 hover:bg-teal-800 active:bg-teal-900 focus:outline-none focus:ring-4 focus:ring-teal-500/30 disabled:opacity-50 transition duration-150 cursor-pointer"
                             >
                                 <span>Sign In</span>
-                                <ArrowRight className="w-4 h-4" />
+                                <ArrowRight className="w-5 h-5" />
                             </button>
                         </div>
                     </form>
 
                     {/* Quick Demo Credentials Panel */}
-                    <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-800">
-                        <div className="flex items-center gap-1.5 mb-3 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400">
-                            <UserCheck className="w-4 h-4 text-teal-600 dark:text-teal-400" />
-                            <span>1-Click Demo Auto-Fill:</span>
+                    <div className="mt-9 pt-7 border-t-2 border-slate-200 dark:border-slate-800">
+                        <div className="flex items-center justify-between mb-3.5">
+                            <span className="text-xs font-black uppercase tracking-wider text-slate-700 dark:text-slate-300 flex items-center gap-1.5">
+                                <UserCheck className="w-4 h-4 text-teal-700 dark:text-teal-400" />
+                                1-Click Demo Login
+                            </span>
+                            <span className="text-[11px] font-bold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-md">
+                                Dev Helpers
+                            </span>
                         </div>
-                        <div className="grid grid-cols-3 gap-2 text-xs">
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                             <button
                                 type="button"
                                 onClick={() => fillDemoCredentials('superadmin@orio.com', 'password123')}
-                                className="px-2 py-2 rounded-xl bg-purple-50 dark:bg-slate-800 hover:bg-purple-100 dark:hover:bg-slate-700 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-slate-700 font-bold transition text-center cursor-pointer shadow-2xs"
+                                className="px-3 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/60 dark:hover:bg-purple-900/60 border-2 border-purple-300 dark:border-purple-800 text-purple-900 dark:text-purple-200 text-xs font-black transition cursor-pointer flex flex-col items-center shadow-xs"
                             >
-                                👑 Super Admin
+                                <span>Super Admin</span>
+                                <span className="text-[10px] opacity-75 font-normal">All Access</span>
                             </button>
+
                             <button
                                 type="button"
                                 onClick={() => fillDemoCredentials('admin@orio.com', 'password123')}
-                                className="px-2 py-2 rounded-xl bg-emerald-50 dark:bg-slate-800 hover:bg-emerald-100 dark:hover:bg-slate-700 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-slate-700 font-bold transition text-center cursor-pointer shadow-2xs"
+                                className="px-3 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 dark:bg-teal-950/60 dark:hover:bg-teal-900/60 border-2 border-teal-300 dark:border-teal-800 text-teal-900 dark:text-teal-200 text-xs font-black transition cursor-pointer flex flex-col items-center shadow-xs"
                             >
-                                🛡️ Admin
+                                <span>Store Admin</span>
+                                <span className="text-[10px] opacity-75 font-normal">Staff Access</span>
                             </button>
+
                             <button
                                 type="button"
                                 onClick={() => fillDemoCredentials('customer@orio.com', 'password123')}
-                                className="px-2 py-2 rounded-xl bg-indigo-50 dark:bg-slate-800 hover:bg-indigo-100 dark:hover:bg-slate-700 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-slate-700 font-bold transition text-center cursor-pointer shadow-2xs"
+                                className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 border-2 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-200 text-xs font-black transition cursor-pointer flex flex-col items-center shadow-xs"
                             >
-                                🛍️ Customer
+                                <span>Customer</span>
+                                <span className="text-[10px] opacity-75 font-normal">Storefront</span>
                             </button>
                         </div>
                     </div>

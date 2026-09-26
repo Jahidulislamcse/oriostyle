@@ -19,9 +19,9 @@ export default function FormSelect({
             {label && (
                 <label
                     htmlFor={id}
-                    className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5"
+                    className="block text-xs sm:text-sm font-bold uppercase tracking-wider text-slate-900 dark:text-slate-100 mb-2"
                 >
-                    {label} {required && <span className="text-rose-500">*</span>}
+                    {label} {required && <span className="text-rose-600 font-bold">*</span>}
                 </label>
             )}
 
@@ -31,23 +31,23 @@ export default function FormSelect({
                 onChange={onChange}
                 disabled={disabled}
                 required={required}
-                className={`block w-full py-2.5 px-3.5 bg-white dark:bg-slate-900 border rounded-xl text-slate-900 dark:text-white text-sm transition focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-950 ${
+                className={`block w-full py-3 px-4 bg-white dark:bg-slate-900 border-2 rounded-xl text-slate-950 dark:text-white text-sm sm:text-base font-medium transition focus:outline-none focus:ring-4 focus:ring-teal-500/20 focus:border-teal-600 disabled:opacity-50 disabled:bg-slate-100 dark:disabled:bg-slate-950 ${
                     error 
-                        ? 'border-rose-400 dark:border-rose-500/80 focus:ring-rose-500' 
-                        : 'border-slate-300 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700'
+                        ? 'border-rose-500 dark:border-rose-500 focus:ring-rose-500/20 focus:border-rose-600' 
+                        : 'border-slate-300 dark:border-slate-700 hover:border-slate-400 dark:hover:border-slate-600'
                 } ${className}`}
                 {...props}
             >
-                {placeholder && <option value="" disabled className="text-slate-400">{placeholder}</option>}
+                {placeholder && <option value="" disabled className="text-slate-400 font-medium">{placeholder}</option>}
                 {options.map((opt, idx) => (
-                    <option key={idx} value={opt.value ?? opt} className="bg-white dark:bg-slate-900 text-slate-900 dark:text-white">
+                    <option key={idx} value={opt.value ?? opt} className="bg-white dark:bg-slate-900 text-slate-950 dark:text-white font-medium py-1">
                         {opt.label ?? opt}
                     </option>
                 ))}
             </select>
 
-            {error && <p className="mt-1.5 text-xs text-rose-500 dark:text-rose-400 font-medium">{error}</p>}
-            {helpText && !error && <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">{helpText}</p>}
+            {error && <p className="mt-1.5 text-xs sm:text-sm text-rose-600 dark:text-rose-400 font-bold">{error}</p>}
+            {helpText && !error && <p className="mt-1.5 text-xs font-semibold text-slate-600 dark:text-slate-400">{helpText}</p>}
         </div>
     );
 }

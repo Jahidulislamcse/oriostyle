@@ -45,34 +45,34 @@ export default function Modal({
         <div className="fixed inset-0 z-50 overflow-y-auto px-4 py-6 sm:px-0 flex items-center justify-center">
             {/* Backdrop */}
             <div
-                className="fixed inset-0 bg-slate-950/60 backdrop-blur-xs transition-opacity"
+                className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs transition-opacity"
                 onClick={onClose}
             />
 
             {/* Dialog Content */}
             <div
-                className={`relative w-full ${maxWidths[maxWidth] || maxWidths.md} bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl overflow-hidden z-10 transform transition-all duration-200`}
+                className={`relative w-full ${maxWidths[maxWidth] || maxWidths.md} bg-white dark:bg-slate-900 border-2 border-slate-300 dark:border-slate-800 rounded-3xl shadow-2xl overflow-hidden z-10 transform transition-all duration-200`}
             >
                 {/* Header */}
-                <div className="px-6 py-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div className="px-6 py-5 border-b-2 border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50/60 dark:bg-slate-900">
                     <div>
-                        {title && <h3 className="text-lg font-bold text-slate-900 dark:text-white">{title}</h3>}
-                        {description && <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">{description}</p>}
+                        {title && <h3 className="text-xl font-black text-slate-950 dark:text-white tracking-tight">{title}</h3>}
+                        {description && <p className="text-sm font-medium text-slate-600 dark:text-slate-400 mt-1">{description}</p>}
                     </div>
                     <button
                         onClick={onClose}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition cursor-pointer"
+                        className="p-2 rounded-xl text-slate-500 hover:text-slate-950 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 transition cursor-pointer"
                     >
                         <X className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Body */}
-                <div className="p-6 text-slate-700 dark:text-slate-300">{children}</div>
+                <div className="p-6 text-slate-900 dark:text-slate-100 max-h-[75vh] overflow-y-auto">{children}</div>
 
                 {/* Footer */}
                 {footer && (
-                    <div className="px-6 py-4 bg-slate-50 dark:bg-slate-950/50 border-t border-slate-100 dark:border-slate-800 flex items-center justify-end gap-3">
+                    <div className="px-6 py-4 bg-slate-100 dark:bg-slate-950 border-t-2 border-slate-200 dark:border-slate-800 flex items-center justify-end gap-3">
                         {footer}
                     </div>
                 )}
