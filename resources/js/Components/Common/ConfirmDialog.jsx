@@ -36,16 +36,16 @@ export default function ConfirmDialog({
                 </>
             }
         >
-            <div className="flex items-start gap-4">
-                <div className={`p-3 rounded-2xl shrink-0 ${
+            <div className="flex items-start gap-3.5">
+                <div className={`p-2.5 rounded-xl shrink-0 ${
                     variant === 'danger'
-                        ? 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-300 border-2 border-rose-300 dark:border-rose-800'
-                        : 'bg-amber-100 text-amber-700 dark:bg-amber-950 dark:text-amber-300 border-2 border-amber-300 dark:border-amber-800'
+                        ? 'bg-rose-50 text-rose-600 dark:bg-rose-950/60 dark:text-rose-400 border border-rose-200 dark:border-rose-800'
+                        : 'bg-amber-50 text-amber-600 dark:bg-amber-950/60 dark:text-amber-400 border border-amber-200 dark:border-amber-800'
                 }`}>
-                    <AlertTriangle className="w-6 h-6" />
+                    <AlertTriangle className="w-5 h-5" />
                 </div>
                 <div>
-                    <p className="text-base text-slate-800 dark:text-slate-200 font-medium leading-relaxed">{message}</p>
+                    <p className="text-sm text-slate-700 dark:text-slate-300 font-normal leading-relaxed">{message}</p>
                 </div>
             </div>
         </Modal>
