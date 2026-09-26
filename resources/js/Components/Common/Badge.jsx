@@ -35,9 +35,9 @@ export default function Badge({
     };
 
     const sizes = {
-        sm: 'px-2 py-0.5 text-xs font-semibold',
-        md: 'px-2.5 py-0.5 text-xs font-semibold',
-        lg: 'px-3 py-1 text-sm font-semibold',
+        sm: 'px-2.5 py-0.5 text-xs font-bold',
+        md: 'px-3 py-1 text-xs lg:text-sm font-bold',
+        lg: 'px-3.5 py-1.5 text-sm lg:text-base font-bold',
     };
 
     return (

@@ -24,9 +24,9 @@ export default function Button({
     };
 
     const sizes = {
-        sm: 'px-3 py-1.5 text-xs rounded-xl gap-1.5',
-        md: 'px-4 py-2.2 text-sm rounded-xl gap-2',
-        lg: 'px-5 py-2.5 text-base rounded-xl gap-2.5',
+        sm: 'px-3.5 py-1.5 text-xs lg:text-sm rounded-xl gap-1.5',
+        md: 'px-4.5 py-2.5 text-sm lg:text-base rounded-xl gap-2',
+        lg: 'px-6 py-3 text-base lg:text-lg rounded-xl gap-2.5',
     };
 
     return (
@@ -37,9 +37,9 @@ export default function Button({
             {...props}
         >
             {processing ? (
-                <Loader2 className="w-4 h-4 animate-spin text-current" />
+                <Loader2 className="w-4.5 h-4.5 animate-spin text-current" />
             ) : Icon ? (
-                <Icon className="w-4 h-4 text-current flex-shrink-0" />
+                <Icon className="w-4.5 h-4.5 text-current flex-shrink-0" />
             ) : null}
             <span>{children}</span>
         </button>
