@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
-import { Sparkles, LayoutDashboard, LogIn } from 'lucide-react';
+import { Sparkles, LayoutDashboard, LogIn, LogOut } from 'lucide-react';
 
 export default function Welcome({ appName, auth, settings = {} }) {
     const siteName = settings?.site_name || appName || 'ORIO STYLE LTD';
@@ -19,7 +19,7 @@ export default function Welcome({ appName, auth, settings = {} }) {
             {/* Top Navigation / Staff Access */}
             <header className="w-full max-w-7xl mx-auto flex justify-end z-10">
                 {auth?.user ? (
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
                         {(auth.user.role === 'super_admin' || auth.user.role === 'admin') && (
                             <Link
                                 href="/admin/dashboard"
@@ -32,6 +32,15 @@ export default function Welcome({ appName, auth, settings = {} }) {
                         <span className="text-xs text-slate-400 font-medium hidden sm:inline">
                             Logged in as <span className="text-[#EBD495] font-semibold">{auth.user.name}</span>
                         </span>
+                        <Link
+                            href="/logout"
+                            method="post"
+                            as="button"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-[#0E2038] border border-slate-700/60 hover:border-rose-500/40 text-xs font-medium transition cursor-pointer"
+                        >
+                            <LogOut className="w-3.5 h-3.5" />
+                            <span>Logout</span>
+                        </Link>
                     </div>
                 ) : (
                     <Link
