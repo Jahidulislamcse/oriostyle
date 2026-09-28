@@ -69,35 +69,27 @@ export default function Dashboard({ user, metrics }) {
             desc: 'Configure parent-child taxonomies, subcategories and live slugs',
             href: '/admin/categories',
             icon: FolderTree,
-            phase: 'Phase 4',
-            badge: 'Live & Active',
             color: 'text-[#755615] dark:text-[#EBD495] bg-[#FDFBF5] dark:bg-[#0E2038] border border-[#F5E7C2] dark:border-[#D4AF37]/40 hover:border-[#D4AF37]',
         },
         {
-            name: 'Brands & WebP Hub',
-            desc: 'Upload brand logos with automated WebP conversion',
+            name: 'Brands & Media Hub',
+            desc: 'Manage verified product brands, logos and media assets',
             href: '/admin/brands',
             icon: Tag,
-            phase: 'Phase 5',
-            badge: 'Next Sprint',
             color: 'text-indigo-700 dark:text-indigo-300 bg-indigo-50/70 dark:bg-[#0E2038] border border-indigo-200 dark:border-indigo-800/50 hover:border-indigo-400',
         },
         {
-            name: 'Products & Matrix Builder',
-            desc: 'Single products & Cartesian variant SKU matrix',
+            name: 'Products & Inventory',
+            desc: 'Manage catalog products, stock variants and pricing matrices',
             href: '/admin/products',
             icon: Package,
-            phase: 'Phase 6-7',
-            badge: 'Planned',
             color: 'text-blue-700 dark:text-blue-300 bg-blue-50/70 dark:bg-[#0E2038] border border-blue-200 dark:border-blue-800/50 hover:border-blue-400',
         },
         {
-            name: 'Dynamic Settings CMS',
-            desc: 'Zero hardcoded brand info, phones, currency & VAT',
+            name: 'Store Settings & Identity',
+            desc: 'Update storefront brand name, logo, contact, shipping and tax rules',
             href: '/admin/settings',
             icon: Settings,
-            phase: 'CMS',
-            badge: 'Live & Active',
             color: 'text-purple-700 dark:text-purple-300 bg-purple-50/70 dark:bg-[#0E2038] border border-purple-200 dark:border-purple-800/50 hover:border-purple-400',
         },
     ];
@@ -110,13 +102,13 @@ export default function Dashboard({ user, metrics }) {
                     <div className="space-y-1.5">
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FBF5E6] text-[#755615] dark:bg-[#071324] dark:text-[#EBD495] border border-[#EBD495] dark:border-[#D4AF37]/50 text-[11px] sm:text-xs font-bold">
                             <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] dark:text-[#EBD495]" />
-                            <span>Enterprise Admin Control Tower</span>
+                            <span>Store Management Portal</span>
                         </div>
                         <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">
                             Welcome back, {user?.name}
                         </h1>
                         <p className="text-xs sm:text-sm text-slate-600 dark:text-[#8EB0CF] max-w-2xl font-normal">
-                            System status: <span className="text-emerald-600 dark:text-emerald-400 font-semibold">● High Availability & Anti-N+1 Enforced</span> • Connected to <strong className="text-[#0E2038] dark:text-[#F5D77F]">{settings?.site_name || 'ORIO STYLE LTD'}</strong>.
+                            System status: <span className="text-emerald-600 dark:text-emerald-400 font-semibold">● Operating Normally</span> • Connected to <strong className="text-[#0E2038] dark:text-[#F5D77F]">{settings?.site_name || 'ORIO STYLE LTD'}</strong>.
                         </p>
                     </div>
 
@@ -162,15 +154,15 @@ export default function Dashboard({ user, metrics }) {
                 })}
             </div>
 
-            {/* Quick Action Phase Modules */}
+            {/* Quick Action Management Shortcuts */}
             <div className="mb-6">
                 <div className="flex items-center justify-between mb-3.5">
                     <div>
                         <h2 className="text-base sm:text-lg font-bold text-[#0E2038] dark:text-white tracking-tight">
-                            Platform Blueprint Execution
+                            Store Management Shortcuts
                         </h2>
                         <p className="text-xs text-slate-500 dark:text-[#8EB0CF]">
-                            Direct jump into active and upcoming architecture phase modules.
+                            Quick access to key operational catalogs, products, and configurations.
                         </p>
                     </div>
                 </div>
@@ -189,9 +181,6 @@ export default function Dashboard({ user, metrics }) {
                                         <div className="p-2.5 rounded-xl bg-white dark:bg-[#071324] shadow-2xs">
                                             <Icon className="w-4.5 h-4.5 lg:w-5 lg:h-5" />
                                         </div>
-                                        <span className="text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-md bg-white/90 dark:bg-[#071324]/90 border border-current shadow-2xs">
-                                            {action.badge}
-                                        </span>
                                     </div>
                                     <h3 className="text-sm font-bold text-[#0E2038] dark:text-white group-hover:underline">
                                         {action.name}
@@ -201,9 +190,11 @@ export default function Dashboard({ user, metrics }) {
                                     </p>
                                 </div>
 
-                                <div className="mt-4 flex items-center justify-between text-xs font-semibold pt-2.5 border-t border-current/20">
-                                    <span>{action.phase}</span>
-                                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition" />
+                                <div className="mt-4 flex items-center justify-end text-xs font-semibold pt-2.5 border-t border-current/20">
+                                    <span className="flex items-center gap-1">
+                                        <span>Manage</span>
+                                        <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition" />
+                                    </span>
                                 </div>
                             </Link>
                         );
@@ -211,7 +202,7 @@ export default function Dashboard({ user, metrics }) {
                 </div>
             </div>
 
-            {/* Architecture Integrity Card */}
+            {/* System Health Card */}
             <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs">
                 <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5 mb-4.5">
                     <div className="flex items-center gap-3">
@@ -220,10 +211,10 @@ export default function Dashboard({ user, metrics }) {
                         </div>
                         <div>
                             <h3 className="text-sm sm:text-base font-bold text-[#0E2038] dark:text-white">
-                                Active Guardrails & Database Health
+                                Store Engine & System Health
                             </h3>
                             <p className="text-xs text-slate-500 dark:text-[#8EB0CF]">
-                                Real-time monitoring of anti-N+1 policies, cache engine, and security layer.
+                                Real-time monitoring of database performance, caching layer, and security services.
                             </p>
                         </div>
                     </div>
@@ -235,10 +226,10 @@ export default function Dashboard({ user, metrics }) {
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
                     <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#071324]/70 border border-slate-200 dark:border-[#1C3E63]/70">
                         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] block mb-1">
-                            Model Lazy Loading
+                            Database Optimization
                         </span>
                         <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold text-xs">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Strictly Blocked (Anti-N+1)
+                            <CheckCircle2 className="w-3.5 h-3.5" /> High Performance & Optimized
                         </div>
                     </div>
 
@@ -247,16 +238,16 @@ export default function Dashboard({ user, metrics }) {
                             Dynamic Settings Cache
                         </span>
                         <div className="flex items-center gap-1.5 text-[#926F18] dark:text-[#EBD495] font-semibold text-xs">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Redis / In-Memory Active
+                            <CheckCircle2 className="w-3.5 h-3.5" /> In-Memory Cache Active
                         </div>
                     </div>
 
                     <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#071324]/70 border border-slate-200 dark:border-[#1C3E63]/70">
                         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] block mb-1">
-                            RBAC Access Policy
+                            Staff Access Policy
                         </span>
                         <div className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 font-semibold text-xs">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> 3 Roles Enforced
+                            <CheckCircle2 className="w-3.5 h-3.5" /> Role-Based Access Active
                         </div>
                     </div>
                 </div>

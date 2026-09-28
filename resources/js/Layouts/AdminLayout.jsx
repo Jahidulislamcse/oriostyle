@@ -50,32 +50,32 @@ export default function AdminLayout({ title = '', children }) {
         {
             group: 'Catalog & Taxonomy',
             items: [
-                { name: 'Categories Tree', href: '/admin/categories', icon: FolderTree, badge: 'Live', current: route().current('admin.categories.*') },
-                { name: 'Brands & Media', href: '/admin/brands', icon: Tag, badge: 'Phase 5', current: route().current('admin.brands.*') },
-                { name: 'Products Catalog', href: '/admin/products', icon: Package, badge: 'Phase 6', current: route().current('admin.products.*') },
-                { name: 'Variant Matrix', href: '/admin/variants', icon: Boxes, badge: 'Phase 7', current: route().current('admin.variants.*') },
+                { name: 'Categories Tree', href: '/admin/categories', icon: FolderTree, current: route().current('admin.categories.*') },
+                { name: 'Brands & Media', href: '/admin/brands', icon: Tag, current: route().current('admin.brands.*') },
+                { name: 'Products Catalog', href: '/admin/products', icon: Package, current: route().current('admin.products.*') },
+                { name: 'Variant Matrix', href: '/admin/variants', icon: Boxes, current: route().current('admin.variants.*') },
             ],
         },
         {
             group: 'Procurement & Stock',
             items: [
-                { name: 'Suppliers Ledger', href: '/admin/suppliers', icon: Truck, badge: 'Phase 8', current: route().current('admin.suppliers.*') },
-                { name: 'Stock-In Purchases', href: '/admin/purchases', icon: Boxes, badge: 'Phase 9', current: route().current('admin.purchases.*') },
-                { name: 'Inventory Control', href: '/admin/inventory', icon: Package, badge: 'Phase 10', current: route().current('admin.inventory.*') },
+                { name: 'Suppliers Ledger', href: '/admin/suppliers', icon: Truck, current: route().current('admin.suppliers.*') },
+                { name: 'Stock-In Purchases', href: '/admin/purchases', icon: Boxes, current: route().current('admin.purchases.*') },
+                { name: 'Inventory Control', href: '/admin/inventory', icon: Package, current: route().current('admin.inventory.*') },
             ],
         },
         {
             group: 'Orders & Fulfillment',
             items: [
-                { name: 'Orders Management', href: '/admin/orders', icon: ShoppingBag, badge: 'Phase 17', current: route().current('admin.orders.*') },
-                { name: 'Invoices & Thermal', href: '/admin/invoices', icon: FileText, badge: 'Phase 18', current: route().current('admin.invoices.*') },
+                { name: 'Orders Management', href: '/admin/orders', icon: ShoppingBag, current: route().current('admin.orders.*') },
+                { name: 'Invoices & Thermal', href: '/admin/invoices', icon: FileText, current: route().current('admin.invoices.*') },
             ],
         },
         {
             group: 'System & Intelligence',
             items: [
-                { name: 'Analytics & Profit BI', href: '/admin/analytics', icon: BarChart3, badge: 'Phase 20', current: route().current('admin.analytics.*') },
-                { name: 'Dynamic Settings', href: '/admin/settings', icon: Settings, badge: 'Live', current: route().current('admin.settings.*') },
+                { name: 'Analytics & Profit BI', href: '/admin/analytics', icon: BarChart3, current: route().current('admin.analytics.*') },
+                { name: 'Dynamic Settings', href: '/admin/settings', icon: Settings, current: route().current('admin.settings.*') },
             ],
         },
     ];
@@ -86,7 +86,7 @@ export default function AdminLayout({ title = '', children }) {
 
     return (
         <div className="min-h-screen bg-[#F4F7FB] dark:bg-[#071324] text-[#0E2038] dark:text-slate-100 font-sans selection:bg-[#D4AF37] selection:text-[#071324] flex flex-col transition-colors duration-200">
-            <Head title={title ? `${title} - Admin Control Tower` : `${siteName} - Admin`}>
+            <Head title={title ? `${title} - Store Administration` : `${siteName} - Admin`}>
                 {siteFavicon && <link rel="icon" href={siteFavicon} />}
             </Head>
             <ToastContainer />
@@ -123,7 +123,7 @@ export default function AdminLayout({ title = '', children }) {
                                     {siteName}
                                 </span>
                                 <span className="text-[11px] font-bold text-[#926F18] dark:text-[#EBD495] uppercase tracking-wider flex items-center gap-1">
-                                    <Shield className="w-3.5 h-3.5 text-[#D4AF37]" /> Control Tower
+                                    <Shield className="w-3.5 h-3.5 text-[#D4AF37]" /> Store Management
                                 </span>
                             </div>
                         )}

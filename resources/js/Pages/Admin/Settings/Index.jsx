@@ -1078,11 +1078,11 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
                                 <div className="p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
                                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
-                                        Anti-N+1 Lazy Loading
+                                        Database Optimization
                                     </span>
                                     <p className="text-sm font-bold flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
                                         <ShieldCheck className="w-4 h-4" />
-                                        <span>Strictly Enforced</span>
+                                        <span>Active & Enforced</span>
                                     </p>
                                 </div>
 

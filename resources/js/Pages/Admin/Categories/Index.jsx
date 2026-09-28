@@ -381,9 +381,6 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             <h1 className="text-xl sm:text-2xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">
                                 Category Hierarchy & Taxonomy Tree
                             </h1>
-                            <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                Phase 4
-                            </span>
                         </div>
                         <p className="text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] pl-10 max-w-2xl font-normal">
                             Configure self-referencing parent categories, nested subcategories, display sequencing, and catalog taxonomy.
