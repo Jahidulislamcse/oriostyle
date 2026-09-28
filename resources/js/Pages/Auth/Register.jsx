@@ -1,9 +1,14 @@
 import React from 'react';
-import { Head, Link, useForm } from '@inertiajs/react';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Lock, Mail, User, Phone, Sparkles, ArrowRight } from 'lucide-react';
 import ThemeToggle from '@/Components/Common/ThemeToggle';
 
 export default function Register() {
+    const { settings } = usePage().props;
+    const siteName = settings?.site_name || 'ORIO STYLE LTD';
+    const siteLogo = settings?.site_logo;
+    const siteFavicon = settings?.site_favicon;
+
     const { data, setData, post, processing, errors, reset } = useForm({
         name: '',
         email: '',
@@ -21,7 +26,9 @@ export default function Register() {
 
     return (
         <div className="min-h-screen bg-[#F4F7FB] dark:bg-[#071324] text-[#0E2038] dark:text-slate-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-sans selection:bg-[#D4AF37] selection:text-[#071324] transition-colors duration-200">
-            <Head title="Create Account - ORIO STYLE LTD" />
+            <Head title={`Create Account - ${siteName}`}>
+                {siteFavicon && <link rel="icon" href={siteFavicon} />}
+            </Head>
 
             {/* Top Right Theme Switcher */}
             <div className="absolute top-4 right-4 sm:top-6 sm:right-6">
@@ -30,10 +37,16 @@ export default function Register() {
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
                 <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
-                    <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex items-center justify-center shadow-md shadow-[#D4AF37]/25 group-hover:scale-105 transition">
-                        <Sparkles className="w-6 h-6 text-[#071324] font-bold" />
-                    </div>
-                    <span className="text-2xl font-extrabold tracking-tight text-[#0E2038] dark:text-white">ORIO STYLE LTD</span>
+                    {siteLogo ? (
+                        <div className="w-11 h-11 rounded-2xl bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#D4AF37]/40 p-1 flex items-center justify-center shadow-xs group-hover:scale-105 transition overflow-hidden">
+                            <img src={siteLogo} alt={siteName} className="max-h-full max-w-full object-contain" />
+                        </div>
+                    ) : (
+                        <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex items-center justify-center shadow-md shadow-[#D4AF37]/25 group-hover:scale-105 transition">
+                            <Sparkles className="w-6 h-6 text-[#071324] font-bold" />
+                        </div>
+                    )}
+                    <span className="text-2xl font-extrabold tracking-tight text-[#0E2038] dark:text-white">{siteName}</span>
                 </Link>
                 <h2 className="text-xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">Create your customer account</h2>
                 <p className="mt-2 text-sm text-slate-600 dark:text-[#8EB0CF]">

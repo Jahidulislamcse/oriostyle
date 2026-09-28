@@ -34,7 +34,7 @@ class Setting extends Model
      */
     public function getFormattedValueAttribute(): mixed
     {
-        if (is_null($this->value)) {
+        if (is_null($this->value) || $this->value === '') {
             return null;
         }
 

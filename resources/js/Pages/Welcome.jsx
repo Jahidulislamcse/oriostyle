@@ -15,7 +15,7 @@ import {
     FolderTree
 } from 'lucide-react';
 
-export default function Welcome({ appName, auth, phpVersion, laravelVersion }) {
+export default function Welcome({ appName, auth, phpVersion, laravelVersion, settings = {} }) {
     const features = [
         {
             title: 'Anti-N+1 Query Policy',
@@ -52,24 +52,35 @@ export default function Welcome({ appName, auth, phpVersion, laravelVersion }) {
         { phase: 'Phase 2', name: 'RBAC & Authentication', status: 'Completed', current: false, done: true },
         { phase: 'Phase 3', name: 'Admin Dashboard Shell', status: 'Completed', current: false, done: true },
         { phase: 'Phase 4', name: 'Category Hierarchy Tree', status: 'Completed', current: false, done: true },
-        { phase: 'Phase 5', name: 'Brands & WebP Media Hub', status: 'In Progress', current: true, done: false },
+        { phase: 'Phase 5', name: 'Dynamic Settings & CMS', status: 'Completed', current: false, done: true },
+        { phase: 'Phase 6', name: 'Brands & WebP Media Hub', status: 'In Progress', current: true, done: false },
     ];
 
-    const siteName = appName || 'ORIO STYLE LTD';
+    const siteName = settings?.site_name || appName || 'ORIO STYLE LTD';
+    const siteLogo = settings?.site_logo;
+    const siteFavicon = settings?.site_favicon;
 
     return (
         <div className="min-h-screen bg-[#071324] text-slate-100 flex flex-col selection:bg-[#D4AF37] selection:text-[#071324] font-sans antialiased">
-            <Head title="ORIO STYLE LTD - Enterprise Single-Vendor E-Commerce" />
+            <Head title={`${siteName} - ${settings?.site_tagline || 'Enterprise E-Commerce'}`}>
+                {siteFavicon && <link rel="icon" href={siteFavicon} />}
+            </Head>
 
             {/* Top Navigation */}
             <header className="border-b border-[#1C3E63]/70 backdrop-blur-md bg-[#0E2038]/80 sticky top-0 z-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex items-center justify-center shadow-md shadow-[#D4AF37]/25">
-                            <Sparkles className="w-5 h-5 text-[#071324] font-bold" />
-                        </div>
+                        {siteLogo ? (
+                            <div className="w-10 h-10 rounded-xl bg-white dark:bg-[#071324] border border-[#F5E7C2] dark:border-[#D4AF37]/40 p-1 flex items-center justify-center shadow-xs overflow-hidden">
+                                <img src={siteLogo} alt={siteName} className="max-h-full max-w-full object-contain" />
+                            </div>
+                        ) : (
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex items-center justify-center shadow-md shadow-[#D4AF37]/25">
+                                <Sparkles className="w-5 h-5 text-[#071324] font-bold" />
+                            </div>
+                        )}
                         <div>
-                            <span className="text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
+                            <span className="text-lg sm:text-xl font-extrabold tracking-tight text-white flex items-center gap-2">
                                 {siteName}
                                 <span className="text-[10px] uppercase font-bold tracking-widest px-2 py-0.5 rounded-full bg-[#142C49] text-[#EBD495] border border-[#D4AF37]/40">
                                     Live
@@ -235,7 +246,7 @@ export default function Welcome({ appName, auth, phpVersion, laravelVersion }) {
             {/* Footer */}
             <footer className="border-t border-[#1C3E63]/70 py-6 text-center text-xs text-[#8EB0CF] bg-[#0E2038]/50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2">
-                    <span>{siteName} &copy; 2026. All rights reserved.</span>
+                    <span>{settings?.copyright_text || `${siteName} © 2026. All rights reserved.`}</span>
                     <span className="font-mono text-[#5E8CB6]">Strict Anti-N+1 Eloquent Engine Active</span>
                 </div>
             </footer>

@@ -75,16 +75,20 @@ export default function AdminLayout({ title = '', children }) {
             group: 'System & Intelligence',
             items: [
                 { name: 'Analytics & Profit BI', href: '/admin/analytics', icon: BarChart3, badge: 'Phase 20', current: route().current('admin.analytics.*') },
-                { name: 'Dynamic Settings', href: '/admin/settings', icon: Settings, badge: 'CMS', current: route().current('admin.settings.*') },
+                { name: 'Dynamic Settings', href: '/admin/settings', icon: Settings, badge: 'Live', current: route().current('admin.settings.*') },
             ],
         },
     ];
 
     const siteName = settings?.site_name || 'ORIO STYLE LTD';
+    const siteLogo = settings?.site_logo;
+    const siteFavicon = settings?.site_favicon;
 
     return (
         <div className="min-h-screen bg-[#F4F7FB] dark:bg-[#071324] text-[#0E2038] dark:text-slate-100 font-sans selection:bg-[#D4AF37] selection:text-[#071324] flex flex-col transition-colors duration-200">
-            <Head title={title ? `${title} - Admin Control Tower` : `${siteName} - Admin`} />
+            <Head title={title ? `${title} - Admin Control Tower` : `${siteName} - Admin`}>
+                {siteFavicon && <link rel="icon" href={siteFavicon} />}
+            </Head>
             <ToastContainer />
 
             {/* Mobile Drawer Backdrop */}
@@ -104,9 +108,15 @@ export default function AdminLayout({ title = '', children }) {
                 {/* Brand Header */}
                 <div className="h-16 px-4.5 lg:px-5 border-b border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between">
                     <Link href="/admin/dashboard" className="flex items-center gap-3 overflow-hidden group">
-                        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex-shrink-0 flex items-center justify-center shadow-md shadow-[#D4AF37]/25 group-hover:scale-105 transition">
-                            <Sparkles className="w-5 h-5 text-[#071324] font-bold" />
-                        </div>
+                        {siteLogo ? (
+                            <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#D4AF37]/40 p-1 flex-shrink-0 flex items-center justify-center shadow-xs group-hover:scale-105 transition overflow-hidden">
+                                <img src={siteLogo} alt={siteName} className="max-h-full max-w-full object-contain" />
+                            </div>
+                        ) : (
+                            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex-shrink-0 flex items-center justify-center shadow-md shadow-[#D4AF37]/25 group-hover:scale-105 transition">
+                                <Sparkles className="w-5 h-5 text-[#071324] font-bold" />
+                            </div>
+                        )}
                         {!sidebarCollapsed && (
                             <div className="flex flex-col truncate">
                                 <span className="text-sm font-extrabold tracking-tight text-[#0E2038] dark:text-white truncate">

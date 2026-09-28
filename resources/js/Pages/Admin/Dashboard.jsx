@@ -96,8 +96,8 @@ export default function Dashboard({ user, metrics }) {
             desc: 'Zero hardcoded brand info, phones, currency & VAT',
             href: '/admin/settings',
             icon: Settings,
-            phase: 'Phase 20',
-            badge: 'CMS Engine',
+            phase: 'CMS',
+            badge: 'Live & Active',
             color: 'text-purple-700 dark:text-purple-300 bg-purple-50/70 dark:bg-[#0E2038] border border-purple-200 dark:border-purple-800/50 hover:border-purple-400',
         },
     ];
