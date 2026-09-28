@@ -129,7 +129,11 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post(route('admin.settings.update'), {
+        const targetUrl = typeof route === 'function' && route().has('admin.settings.update')
+            ? route('admin.settings.update')
+            : '/admin/settings';
+
+        post(targetUrl, {
             preserveScroll: true,
             forceFormData: true,
             onSuccess: () => {
@@ -141,7 +145,11 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
     };
 
     const handleClearCache = () => {
-        router.post(route('admin.settings.clear-cache'), {}, {
+        const targetUrl = typeof route === 'function' && route().has('admin.settings.clear-cache')
+            ? route('admin.settings.clear-cache')
+            : '/admin/settings/clear-cache';
+
+        router.post(targetUrl, {}, {
             preserveScroll: true,
         });
     };
