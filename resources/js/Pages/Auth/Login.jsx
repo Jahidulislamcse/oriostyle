@@ -23,11 +23,11 @@ export default function Login({ status }) {
     };
 
     const fillDemoCredentials = (email, password) => {
-        setData((prev) => ({
-            ...prev,
+        setData({
+            ...data,
             email,
             password,
-        }));
+        });
     };
 
     return (
@@ -158,11 +158,11 @@ export default function Login({ status }) {
                                 Dev Helpers
                             </span>
                         </div>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 gap-2.5">
                             <button
                                 type="button"
                                 onClick={() => fillDemoCredentials('superadmin@orio.com', 'password123')}
-                                className="px-2.5 py-1.5 rounded-lg bg-purple-50 hover:bg-purple-100 dark:bg-[#071324] dark:hover:bg-[#142C49] border border-purple-200 dark:border-purple-800 text-purple-800 dark:text-purple-300 text-xs font-semibold transition cursor-pointer flex flex-col items-center"
+                                className="px-3 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-[#071324] dark:hover:bg-[#142C49] border border-purple-200 dark:border-purple-800 text-purple-800 dark:text-purple-300 text-xs font-semibold transition cursor-pointer flex flex-col items-center"
                             >
                                 <span>Super Admin</span>
                                 <span className="text-[9px] opacity-75">All Access</span>
@@ -171,19 +171,10 @@ export default function Login({ status }) {
                             <button
                                 type="button"
                                 onClick={() => fillDemoCredentials('admin@orio.com', 'password123')}
-                                className="px-2.5 py-1.5 rounded-lg bg-[#FDFBF5] hover:bg-[#FBF5E6] dark:bg-[#071324] dark:hover:bg-[#142C49] border border-[#F5E7C2] dark:border-[#D4AF37]/50 text-[#926F18] dark:text-[#EBD495] text-xs font-semibold transition cursor-pointer flex flex-col items-center"
+                                className="px-3 py-2 rounded-xl bg-[#FDFBF5] hover:bg-[#FBF5E6] dark:bg-[#071324] dark:hover:bg-[#142C49] border border-[#F5E7C2] dark:border-[#D4AF37]/50 text-[#926F18] dark:text-[#EBD495] text-xs font-semibold transition cursor-pointer flex flex-col items-center"
                             >
                                 <span>Store Admin</span>
                                 <span className="text-[9px] opacity-75">Staff Access</span>
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => fillDemoCredentials('customer@orio.com', 'password123')}
-                                className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 dark:bg-[#071324] dark:hover:bg-[#142C49] border border-slate-200 dark:border-[#1C3E63] text-slate-700 dark:text-[#BACDE3] text-xs font-semibold transition cursor-pointer flex flex-col items-center"
-                            >
-                                <span>Customer</span>
-                                <span className="text-[9px] opacity-75">Storefront</span>
                             </button>
                         </div>
                     </div>
