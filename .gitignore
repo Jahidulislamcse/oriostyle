@@ -21,3 +21,11 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+
+# Project Planning & Architecture Documents (Keep local, do not push to repo)
+/docs
+/diagrams
+PROJECT_MASTER_BLUEPRINT.md
+*.docx
+test_diagram.png
+/.kilo
