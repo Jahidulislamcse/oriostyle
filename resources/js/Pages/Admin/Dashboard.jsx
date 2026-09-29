@@ -108,7 +108,7 @@ export default function Dashboard({ user, metrics }) {
                             Welcome back, {user?.name}
                         </h1>
                         <p className="text-xs sm:text-sm text-slate-600 dark:text-[#8EB0CF] max-w-2xl font-normal">
-                            System status: <span className="text-emerald-600 dark:text-emerald-400 font-semibold">● Operating Normally</span> • Connected to <strong className="text-[#0E2038] dark:text-[#F5D77F]">{settings?.site_name || 'ORIO STYLE LTD'}</strong>.
+                            System status: <span className="text-emerald-600 dark:text-emerald-400 font-semibold">● Operating Normally</span> •  <strong className="text-[#0E2038] dark:text-[#F5D77F]">{settings?.site_name || 'ORIO STYLE LTD'}</strong>.
                         </p>
                     </div>
 
