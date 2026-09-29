@@ -17,7 +17,7 @@ export default function Login({ status }) {
 
     const submit = (e) => {
         e.preventDefault();
-        post(route('login.store'), {
+        post('/login', {
             onFinish: () => reset('password'),
         });
     };
