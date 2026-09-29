@@ -156,6 +156,7 @@ export default function AdminLayout({ title = '', children }) {
                                         <Link
                                             key={idx}
                                             href={item.href}
+                                            onClick={() => setMobileOpen(false)}
                                             title={sidebarCollapsed ? item.name : undefined}
                                             className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 group ${
                                                 isActive
@@ -212,15 +213,16 @@ export default function AdminLayout({ title = '', children }) {
 
             {/* Main Content Wrapper */}
             <div
-                className={`flex-1 flex flex-col transition-all duration-300 ${
+                className={`flex-1 flex flex-col min-w-0 transition-all duration-300 ${
                     sidebarCollapsed ? 'lg:pl-20' : 'lg:pl-72'
                 }`}
             >
                 {/* Topbar */}
-                <header className="h-16 border-b border-slate-200 dark:border-[#1C3E63]/70 bg-white/90 dark:bg-[#0E2038]/90 backdrop-blur sticky top-0 z-30 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4 shadow-2xs">
-                    <div className="flex items-center gap-3">
+                <header className="h-16 border-b border-slate-200 dark:border-[#1C3E63]/70 bg-white/90 dark:bg-[#0E2038]/90 backdrop-blur sticky top-0 z-30 px-3.5 sm:px-6 lg:px-8 flex items-center justify-between gap-2.5 sm:gap-4 shadow-2xs">
+                    <div className="flex items-center gap-2 sm:gap-3">
                         <button
                             onClick={() => setMobileOpen(true)}
+                            aria-label="Open Navigation Menu"
                             className="lg:hidden p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#142C49] transition cursor-pointer"
                         >
                             <Menu className="w-5 h-5" />
@@ -299,7 +301,7 @@ export default function AdminLayout({ title = '', children }) {
                 </header>
 
                 {/* Main Content Area */}
-                <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto">
+                <main className="flex-1 p-3 sm:p-5 lg:p-7 max-w-[1600px] w-full mx-auto min-w-0">
                     {children}
                 </main>
             </div>

@@ -97,7 +97,7 @@ export default function Dashboard({ user, metrics }) {
     return (
         <AdminLayout title="Dashboard">
             {/* Top Welcome Banner */}
-            <div className="rounded-2xl bg-gradient-to-r from-[#FDFBF5] via-[#FBF5E6]/70 to-white dark:from-[#0E2038] dark:via-[#10233B] dark:to-[#071324] border border-[#F5E7C2] dark:border-[#1C3E63] p-5 sm:p-6 lg:p-7 mb-6 shadow-xs relative overflow-hidden">
+            <div className="rounded-2xl bg-gradient-to-r from-[#FDFBF5] via-[#FBF5E6]/70 to-white dark:from-[#0E2038] dark:via-[#10233B] dark:to-[#071324] border border-[#F5E7C2] dark:border-[#1C3E63] p-4.5 sm:p-6 lg:p-7 mb-5 sm:mb-6 shadow-xs relative overflow-hidden">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
                     <div className="space-y-1.5">
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FBF5E6] text-[#755615] dark:bg-[#071324] dark:text-[#EBD495] border border-[#EBD495] dark:border-[#D4AF37]/50 text-[11px] sm:text-xs font-bold">
@@ -112,12 +112,12 @@ export default function Dashboard({ user, metrics }) {
                         </p>
                     </div>
 
-                    <Link href="/admin/categories">
+                    <Link href="/admin/categories" className="w-full sm:w-auto shrink-0">
                         <Button
                             variant="primary"
                             size="md"
                             icon={FolderTree}
-                            className="shadow-xs font-bold shrink-0"
+                            className="shadow-xs font-bold w-full sm:w-auto justify-center"
                         >
                             Open Category Tree
                         </Button>
@@ -126,13 +126,13 @@ export default function Dashboard({ user, metrics }) {
             </div>
 
             {/* Metrics Row */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 mb-5 sm:mb-6">
                 {metricCards.map((card, idx) => {
                     const Icon = card.icon;
                     return (
                         <div
                             key={idx}
-                            className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 shadow-xs hover:border-slate-300 dark:hover:border-[#3B6D9B] transition duration-150"
+                            className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-5 shadow-xs hover:border-slate-300 dark:hover:border-[#3B6D9B] transition duration-150"
                         >
                             <div className="flex items-center justify-between mb-2.5">
                                 <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[#8EB0CF]">
@@ -155,7 +155,7 @@ export default function Dashboard({ user, metrics }) {
             </div>
 
             {/* Quick Action Management Shortcuts */}
-            <div className="mb-6">
+            <div className="mb-5 sm:mb-6">
                 <div className="flex items-center justify-between mb-3.5">
                     <div>
                         <h2 className="text-base sm:text-lg font-bold text-[#0E2038] dark:text-white tracking-tight">
@@ -167,14 +167,14 @@ export default function Dashboard({ user, metrics }) {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4">
                     {quickActions.map((action, idx) => {
                         const Icon = action.icon;
                         return (
                             <Link
                                 key={idx}
                                 href={action.href}
-                                className={`rounded-2xl p-4.5 sm:p-5 transition-all duration-150 group flex flex-col justify-between shadow-2xs hover:shadow-xs ${action.color}`}
+                                className={`rounded-2xl p-4 sm:p-5 transition-all duration-150 group flex flex-col justify-between shadow-2xs hover:shadow-xs ${action.color}`}
                             >
                                 <div>
                                     <div className="flex items-center justify-between mb-3">
@@ -203,10 +203,10 @@ export default function Dashboard({ user, metrics }) {
             </div>
 
             {/* System Health Card */}
-            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3.5 mb-4.5">
+            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
                     <div className="flex items-center gap-3">
-                        <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+                        <div className="p-2.5 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 shrink-0">
                             <Activity className="w-5 h-5" />
                         </div>
                         <div>
@@ -218,18 +218,18 @@ export default function Dashboard({ user, metrics }) {
                             </p>
                         </div>
                     </div>
-                    <Badge variant="success" size="md" dot>
+                    <Badge variant="success" size="md" dot className="shrink-0">
                         All Systems Normal
                     </Badge>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     <div className="p-3.5 rounded-xl bg-slate-50/80 dark:bg-[#071324]/70 border border-slate-200 dark:border-[#1C3E63]/70">
                         <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] block mb-1">
                             Database Optimization
                         </span>
                         <div className="flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold text-xs">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> High Performance & Optimized
+                            <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> High Performance & Optimized
                         </div>
                     </div>
 
@@ -238,7 +238,7 @@ export default function Dashboard({ user, metrics }) {
                             Dynamic Settings Cache
                         </span>
                         <div className="flex items-center gap-1.5 text-[#926F18] dark:text-[#EBD495] font-semibold text-xs">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> In-Memory Cache Active
+                            <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> In-Memory Cache Active
                         </div>
                     </div>
 
@@ -247,7 +247,7 @@ export default function Dashboard({ user, metrics }) {
                             Staff Access Policy
                         </span>
                         <div className="flex items-center gap-1.5 text-indigo-600 dark:text-indigo-400 font-semibold text-xs">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> Role-Based Access Active
+                            <CheckCircle2 className="w-3.5 h-3.5 shrink-0" /> Role-Based Access Active
                         </div>
                     </div>
                 </div>

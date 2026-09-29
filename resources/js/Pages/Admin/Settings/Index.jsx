@@ -174,34 +174,34 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
     return (
         <AdminLayout title="Platform Settings">
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
                 {/* Header Title & Actions */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#0E2038] p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#0E2038] p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
                     <div className="space-y-1">
-                        <div className="flex items-center gap-2.5">
-                            <div className="p-2 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                <Settings className="w-5 h-5 text-[#D4AF37]" />
+                        <div className="flex items-center gap-2 sm:gap-2.5 flex-wrap">
+                            <div className="p-1.5 sm:p-2 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50 shrink-0">
+                                <Settings className="w-4.5 sm:w-5 h-4.5 sm:h-5 text-[#D4AF37]" />
                             </div>
-                            <h1 className="text-xl sm:text-2xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">
-                                Dynamic Platform Settings & CMS
+                            <h1 className="text-lg sm:text-2xl font-extrabold text-[#0E2038] dark:text-white tracking-tight break-words">
+                                Platform Settings & CMS
                             </h1>
-                            <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                            <span className="px-2 sm:px-2.5 py-0.5 text-[10px] sm:text-xs font-bold rounded-full bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
                                 Live Synchronized
                             </span>
                         </div>
-                        <p className="text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] pl-10 max-w-3xl font-normal">
+                        <p className="text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] pl-0 sm:pl-9 max-w-3xl font-normal">
                             Configure brand identity, storefront logo, contact details, currency rules, shipping zones, tax parameters, and SEO tags.
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-2.5 self-start md:self-auto shrink-0">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full md:w-auto">
                         <Button
                             variant="secondary"
                             size="md"
                             icon={RotateCcw}
                             onClick={handleClearCache}
                             title="Purge cached public settings"
-                            className="text-xs sm:text-sm"
+                            className="flex-1 sm:flex-none text-xs sm:text-sm justify-center"
                         >
                             Flush Cache
                         </Button>
@@ -211,7 +211,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                             icon={Save}
                             onClick={handleSubmit}
                             processing={processing}
-                            className="shadow-xs font-bold shrink-0"
+                            className="flex-1 sm:flex-none shadow-xs font-bold justify-center"
                         >
                             Save Settings
                         </Button>
@@ -219,8 +219,8 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                 </div>
 
                 {/* Settings Tabs Bar */}
-                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-2 shadow-xs overflow-x-auto scrollbar-none">
-                    <div className="flex items-center gap-1.5 min-w-max">
+                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-1.5 sm:p-2 shadow-xs overflow-x-auto touch-pan-x scrollbar-none">
+                    <div className="flex items-center gap-1 sm:gap-1.5 min-w-max">
                         {tabs.map((tab) => {
                             const Icon = tab.icon;
                             const isActive = activeTab === tab.id;
@@ -229,13 +229,13 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                     key={tab.id}
                                     type="button"
                                     onClick={() => setActiveTab(tab.id)}
-                                    className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer ${
+                                    className={`flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition cursor-pointer shrink-0 whitespace-nowrap ${
                                         isActive
                                             ? 'bg-[#FDFBF5] text-[#926F18] border border-[#F5E7C2] dark:bg-[#142C49] dark:text-[#EBD495] dark:border-[#D4AF37]/50 shadow-2xs'
                                             : 'text-slate-600 dark:text-[#8EB0CF] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-[#071324] border border-transparent'
                                     }`}
                                 >
-                                    <Icon className={`w-4 h-4 ${isActive ? 'text-[#D4AF37] dark:text-[#EBD495]' : 'text-slate-400 dark:text-[#5E8CB6]'}`} />
+                                    <Icon className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isActive ? 'text-[#D4AF37] dark:text-[#EBD495]' : 'text-slate-400 dark:text-[#5E8CB6]'}`} />
                                     <span>{tab.label}</span>
                                 </button>
                             );
@@ -244,12 +244,12 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                 </div>
 
                 {/* Form Body Container */}
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                     {/* TAB 1: General & Identity */}
                     {activeTab === 'general' && (
-                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                            <div className="lg:col-span-2 space-y-6">
-                                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs space-y-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+                            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+                                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4">
                                     <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
                                         <Globe className="w-5 h-5 text-[#D4AF37]" />
                                         <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
@@ -290,7 +290,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                 </div>
 
                                 {/* Logo & Favicon Upload Cards */}
-                                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs space-y-5">
+                                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5">
                                     <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
                                         <Upload className="w-5 h-5 text-[#D4AF37]" />
                                         <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
@@ -298,9 +298,9 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                         </h3>
                                     </div>
 
-                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
                                         {/* Main Brand Logo */}
-                                        <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3">
+                                        <div className="p-3.5 sm:p-4 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3">
                                             <div className="flex items-center justify-between">
                                                 <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3]">
                                                     Primary Logo
@@ -349,7 +349,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                         </div>
 
                                         {/* White / Dark Mode Logo */}
-                                        <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3">
+                                        <div className="p-3.5 sm:p-4 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3">
                                             <div className="flex items-center justify-between">
                                                 <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3]">
                                                     Light Theme Logo
@@ -398,7 +398,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                         </div>
 
                                         {/* Browser Favicon */}
-                                        <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3">
+                                        <div className="p-3.5 sm:p-4 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3 sm:col-span-2 md:col-span-1">
                                             <div className="flex items-center justify-between">
                                                 <span className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3]">
                                                     Browser Favicon
@@ -450,8 +450,8 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                             </div>
 
                             {/* Sidebar Info Card */}
-                            <div className="space-y-6">
-                                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 shadow-xs space-y-3.5">
+                            <div className="space-y-4 sm:space-y-6">
+                                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3.5">
                                     <h4 className="text-xs font-extrabold uppercase tracking-wider text-[#0E2038] dark:text-white flex items-center gap-2">
                                         <Sparkles className="w-4 h-4 text-[#D4AF37]" />
                                         <span>Identity Synchronization</span>
@@ -470,7 +470,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
                     {/* TAB 2: Store & Contact Information */}
                     {activeTab === 'contact' && (
-                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
+                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-6">
                             <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
                                 <Phone className="w-5 h-5 text-[#D4AF37]" />
                                 <div>
@@ -548,8 +548,8 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
                     {/* TAB 3: Currency & Commerce */}
                     {activeTab === 'commerce' && (
-                        <div className="space-y-6">
-                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
+                        <div className="space-y-4 sm:space-y-6">
+                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-6">
                                 <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
                                     <Coins className="w-5 h-5 text-[#D4AF37]" />
                                     <div>
@@ -563,8 +563,8 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                 </div>
 
                                 {/* Live Currency Formatting Preview Banner */}
-                                <div className="p-4 rounded-xl bg-gradient-to-r from-[#FDFBF5] via-[#FBF5E6] to-[#FDFBF5] dark:from-[#071324] dark:via-[#0E2038] dark:to-[#071324] border border-[#F5E7C2] dark:border-[#D4AF37]/40 flex flex-col sm:flex-row items-center justify-between gap-4">
-                                    <div className="space-y-1 text-center sm:text-left">
+                                <div className="p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-[#FDFBF5] via-[#FBF5E6] to-[#FDFBF5] dark:from-[#071324] dark:via-[#0E2038] dark:to-[#071324] border border-[#F5E7C2] dark:border-[#D4AF37]/40 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
+                                    <div className="space-y-1 text-left">
                                         <span className="text-xs font-bold uppercase tracking-wider text-[#926F18] dark:text-[#EBD495]">
                                             Live Currency Format Simulation
                                         </span>
@@ -572,7 +572,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                             This is how product prices and checkout amounts appear across the storefront.
                                         </p>
                                     </div>
-                                    <div className="px-5 py-2.5 rounded-xl bg-[#0E2038] dark:bg-[#071324] text-[#F5D77F] border border-[#D4AF37]/50 text-xl font-extrabold tracking-tight font-mono shadow-xs">
+                                    <div className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-xl bg-[#0E2038] dark:bg-[#071324] text-[#F5D77F] border border-[#D4AF37]/50 text-lg sm:text-xl font-extrabold tracking-tight font-mono shadow-xs text-center shrink-0">
                                         {currencyFormattedSample}
                                     </div>
                                 </div>
@@ -637,7 +637,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
                     {/* TAB 4: Shipping & Delivery */}
                     {activeTab === 'shipping' && (
-                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
+                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-6">
                             <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
                                 <Truck className="w-5 h-5 text-[#D4AF37]" />
                                 <div>
@@ -712,7 +712,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
                     {/* TAB 5: Invoicing, Tax & Checkout */}
                     {activeTab === 'invoicing' && (
-                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
+                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-6">
                             <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
                                 <Receipt className="w-5 h-5 text-[#D4AF37]" />
                                 <div>
@@ -783,7 +783,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                             </div>
 
                             {/* Payment Method & Tax Toggles */}
-                            <div className="p-4.5 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] flex flex-wrap gap-6">
+                            <div className="p-3.5 sm:p-4.5 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6">
                                 <label className="flex items-center gap-3 cursor-pointer select-none">
                                     <input
                                         type="checkbox"
@@ -843,7 +843,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
                     {/* TAB 6: Social Media & Floating Widgets */}
                     {activeTab === 'social' && (
-                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
+                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-6">
                             <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
                                 <Share2 className="w-5 h-5 text-[#D4AF37]" />
                                 <div>
@@ -856,9 +856,9 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-[#FDFBF5] dark:bg-[#071324] rounded-xl border border-[#F5E7C2] dark:border-[#D4AF37]/40 flex items-center justify-between">
+                            <div className="p-3.5 sm:p-4 bg-[#FDFBF5] dark:bg-[#071324] rounded-xl border border-[#F5E7C2] dark:border-[#D4AF37]/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                                 <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20">
+                                    <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 shrink-0">
                                         <MessageSquare className="w-5 h-5" />
                                     </div>
                                     <div>
@@ -870,7 +870,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                         </p>
                                     </div>
                                 </div>
-                                <label className="relative inline-flex items-center cursor-pointer">
+                                <label className="relative inline-flex items-center cursor-pointer shrink-0 self-end sm:self-auto">
                                     <input
                                         type="checkbox"
                                         checked={data.whatsapp_chat_enabled}
@@ -941,7 +941,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
                     {/* TAB 7: SEO & Custom Analytics Scripts */}
                     {activeTab === 'seo' && (
-                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
+                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-6">
                             <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
                                 <Search className="w-5 h-5 text-[#D4AF37]" />
                                 <div>
@@ -1025,7 +1025,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
                     {/* TAB 8: System & Cache Diagnostics */}
                     {activeTab === 'system' && (
-                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 sm:p-6 shadow-xs space-y-6">
+                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-6">
                             <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
                                 <Server className="w-5 h-5 text-[#D4AF37]" />
                                 <div>
@@ -1038,55 +1038,55 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                 </div>
                             </div>
 
-                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                                <div className="p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
+                                <div className="p-3.5 sm:p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
                                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
                                         PHP Runtime
                                     </span>
-                                    <p className="text-lg font-extrabold text-[#0E2038] dark:text-white font-mono">
+                                    <p className="text-base sm:text-lg font-extrabold text-[#0E2038] dark:text-white font-mono">
                                         v{system.phpVersion || '8.2+'}
                                     </p>
                                 </div>
 
-                                <div className="p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
+                                <div className="p-3.5 sm:p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
                                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
                                         Laravel Framework
                                     </span>
-                                    <p className="text-lg font-extrabold text-[#0E2038] dark:text-white font-mono">
+                                    <p className="text-base sm:text-lg font-extrabold text-[#0E2038] dark:text-white font-mono">
                                         v{system.laravelVersion || '12.0'}
                                     </p>
                                 </div>
 
-                                <div className="p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
+                                <div className="p-3.5 sm:p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
                                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
                                         Cache Driver
                                     </span>
-                                    <p className="text-lg font-extrabold text-[#D4AF37] dark:text-[#EBD495] font-mono capitalize">
+                                    <p className="text-base sm:text-lg font-extrabold text-[#D4AF37] dark:text-[#EBD495] font-mono capitalize">
                                         {system.cacheDriver || 'file'}
                                     </p>
                                 </div>
 
-                                <div className="p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
+                                <div className="p-3.5 sm:p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
                                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
                                         Storage Symbolic Link
                                     </span>
-                                    <p className="text-sm font-bold flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-                                        <CheckCircle2 className="w-4 h-4" />
+                                    <p className="text-xs sm:text-sm font-bold flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                                        <CheckCircle2 className="w-4 h-4 shrink-0" />
                                         <span>Active & Serving Media</span>
                                     </p>
                                 </div>
 
-                                <div className="p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
+                                <div className="p-3.5 sm:p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
                                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
                                         Database Optimization
                                     </span>
-                                    <p className="text-sm font-bold flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
-                                        <ShieldCheck className="w-4 h-4" />
+                                    <p className="text-xs sm:text-sm font-bold flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400">
+                                        <ShieldCheck className="w-4 h-4 shrink-0" />
                                         <span>Active & Enforced</span>
                                     </p>
                                 </div>
 
-                                <div className="p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
+                                <div className="p-3.5 sm:p-4 rounded-xl bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] space-y-1">
                                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6]">
                                         Server Time
                                     </span>
@@ -1096,7 +1096,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                 </div>
                             </div>
 
-                            <div className="p-4 bg-[#FDFBF5] dark:bg-[#071324] rounded-xl border border-[#F5E7C2] dark:border-[#D4AF37]/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div className="p-3.5 sm:p-4 bg-[#FDFBF5] dark:bg-[#071324] rounded-xl border border-[#F5E7C2] dark:border-[#D4AF37]/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5">
                                 <div>
                                     <h4 className="text-sm font-bold text-[#0E2038] dark:text-white">
                                         Purge Public Settings Cache
@@ -1110,7 +1110,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                     size="md"
                                     icon={RotateCcw}
                                     onClick={handleClearCache}
-                                    className="shrink-0"
+                                    className="w-full sm:w-auto shrink-0 justify-center"
                                 >
                                     Purge Cache Now
                                 </Button>
@@ -1119,19 +1119,20 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                     )}
 
                     {/* Bottom Floating/Sticky Save Action Bar */}
-                    <div className="flex items-center justify-between bg-white dark:bg-[#0E2038] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3.5 bg-white dark:bg-[#0E2038] p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
                         <div className="flex items-center gap-2">
-                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
                             <span className="text-xs font-semibold text-slate-600 dark:text-[#8EB0CF]">
                                 All parameters are cached for sub-millisecond retrieval.
                             </span>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2.5 sm:gap-3">
                             <Button
                                 variant="secondary"
                                 size="md"
                                 onClick={() => reset()}
                                 disabled={processing}
+                                className="flex-1 sm:flex-none justify-center"
                             >
                                 Reset Form
                             </Button>
@@ -1141,7 +1142,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                 type="submit"
                                 icon={Save}
                                 processing={processing}
-                                className="shadow-xs font-bold"
+                                className="flex-1 sm:flex-none shadow-xs font-bold justify-center"
                             >
                                 Save All Settings
                             </Button>

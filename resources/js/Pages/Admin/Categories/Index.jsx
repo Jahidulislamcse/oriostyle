@@ -370,24 +370,24 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
 
     return (
         <AdminLayout title="Categories Taxonomy">
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
                 {/* Header Title & Actions */}
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#0E2038] p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white dark:bg-[#0E2038] p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
                     <div className="space-y-1">
                         <div className="flex items-center gap-2.5">
-                            <div className="p-2 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                            <div className="p-2 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50 shrink-0">
                                 <FolderTree className="w-5 h-5 text-[#D4AF37]" />
                             </div>
                             <h1 className="text-xl sm:text-2xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">
                                 Category Hierarchy & Taxonomy Tree
                             </h1>
                         </div>
-                        <p className="text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] pl-10 max-w-2xl font-normal">
+                        <p className="text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] pl-0 sm:pl-10 max-w-2xl font-normal">
                             Configure self-referencing parent categories, nested subcategories, display sequencing, and catalog taxonomy.
                         </p>
                     </div>
 
-                    <div className="flex items-center gap-3 self-start md:self-auto">
+                    <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 w-full md:w-auto justify-between sm:justify-end">
                         {/* View Switcher */}
                         <div className="flex items-center bg-slate-100 dark:bg-[#071324] p-1 rounded-xl border border-slate-200 dark:border-[#1C3E63] text-xs">
                             <button
@@ -420,7 +420,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             size="md"
                             icon={Plus}
                             onClick={() => openCreateModal()}
-                            className="shadow-xs font-bold shrink-0"
+                            className="shadow-xs font-bold w-full sm:w-auto justify-center shrink-0"
                         >
                             Add Category
                         </Button>
@@ -428,63 +428,63 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                 </div>
 
                 {/* Metric Summary Cards */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs">
-                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs font-bold uppercase tracking-wider">Total Categories</span>
-                            <FolderTree className="w-4.5 h-4.5 text-[#D4AF37] dark:text-[#EBD495]" />
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
+                            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Total</span>
+                            <FolderTree className="w-4 h-4 text-[#D4AF37] dark:text-[#EBD495]" />
                         </div>
-                        <div className="text-2xl sm:text-3xl font-extrabold text-[#0E2038] dark:text-white">
+                        <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#0E2038] dark:text-white">
                             {stats.total ?? categories.length}
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs">
-                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs font-bold uppercase tracking-wider">Root Level</span>
-                            <Layers className="w-4.5 h-4.5 text-indigo-600 dark:text-indigo-400" />
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
+                            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Roots</span>
+                            <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                         </div>
-                        <div className="text-2xl sm:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
+                        <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-indigo-600 dark:text-indigo-400">
                             {stats.root_count ?? rootCategories.length}
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs">
-                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs font-bold uppercase tracking-wider">Subcategories</span>
-                            <CornerDownRight className="w-4.5 h-4.5 text-cyan-600 dark:text-cyan-400" />
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
+                            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Subcategories</span>
+                            <CornerDownRight className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
                         </div>
-                        <div className="text-2xl sm:text-3xl font-extrabold text-cyan-600 dark:text-cyan-400">
+                        <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-cyan-600 dark:text-cyan-400">
                             {stats.sub_count ?? (categories.length - rootCategories.length)}
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs">
-                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs font-bold uppercase tracking-wider">Active Status</span>
-                            <CheckCircle2 className="w-4.5 h-4.5 text-emerald-600 dark:text-emerald-400" />
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
+                            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Active</span>
+                            <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                         </div>
-                        <div className="text-2xl sm:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
+                        <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-emerald-600 dark:text-emerald-400">
                             {stats.active_count ?? 0}
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-4.5 shadow-xs col-span-2 sm:col-span-1">
-                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-2">
-                            <span className="text-xs font-bold uppercase tracking-wider">Featured Items</span>
-                            <Star className="w-4.5 h-4.5 text-[#D4AF37] fill-[#D4AF37]" />
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs col-span-2 sm:col-span-1">
+                        <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
+                            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Featured</span>
+                            <Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />
                         </div>
-                        <div className="text-2xl sm:text-3xl font-extrabold text-[#926F18] dark:text-[#EBD495]">
+                        <div className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#926F18] dark:text-[#EBD495]">
                             {stats.featured_count ?? 0}
                         </div>
                     </div>
                 </div>
 
                 {/* Filter & Search Bar */}
-                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3.5">
-                    <div className="flex flex-col sm:flex-row items-center gap-3 w-full md:w-auto">
+                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 w-full md:w-auto flex-1 max-w-3xl">
                         {/* Search Input */}
-                        <div className="relative w-full sm:w-64">
+                        <div className="relative w-full">
                             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-[#5E8CB6]">
                                 <Search className="w-4 h-4" />
                             </div>
@@ -501,7 +501,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         <select
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
-                            className="w-full sm:w-40 py-2 px-3 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm font-medium text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition"
+                            className="w-full py-2 px-3 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm font-medium text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition cursor-pointer"
                         >
                             <option value="all">All Statuses</option>
                             <option value="active">Active Only</option>
@@ -512,7 +512,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         <select
                             value={parentFilter}
                             onChange={(e) => setParentFilter(e.target.value)}
-                            className="w-full sm:w-48 py-2 px-3 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm font-medium text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition"
+                            className="w-full py-2 px-3 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-xs sm:text-sm font-medium text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition cursor-pointer"
                         >
                             <option value="all">All Levels</option>
                             <option value="root">Root Categories Only</option>
@@ -527,7 +527,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
 
                     {/* Tree Expand/Collapse Controls (if Tree view) */}
                     {viewMode === 'tree' && (
-                        <div className="flex items-center gap-2 self-end md:self-auto text-xs">
+                        <div className="flex items-center gap-2 justify-end text-xs shrink-0">
                             <button
                                 type="button"
                                 onClick={expandAll}
@@ -576,13 +576,13 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                             className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl overflow-hidden shadow-xs transition duration-150"
                                         >
                                             {/* Root Category Row */}
-                                            <div className="p-3.5 sm:p-4 bg-[#F4F7FB]/70 dark:bg-[#0E2038] border-b border-slate-200/80 dark:border-[#1C3E63]/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
-                                                <div className="flex items-center gap-3">
+                                            <div className="p-3 sm:p-4 bg-[#F4F7FB]/70 dark:bg-[#0E2038] border-b border-slate-200/80 dark:border-[#1C3E63]/70 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-3.5">
+                                                <div className="flex items-center gap-2.5 sm:gap-3 min-w-0 flex-1">
                                                     {/* Expand Toggle */}
                                                     <button
                                                         type="button"
                                                         onClick={() => toggleRootExpand(root.id)}
-                                                        className="p-1.5 rounded-lg text-slate-400 hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-[#071324] transition cursor-pointer"
+                                                        className="p-1.5 rounded-lg text-slate-400 hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-[#071324] transition cursor-pointer shrink-0"
                                                     >
                                                         {isExpanded ? (
                                                             <ChevronDown className="w-4.5 h-4.5 text-[#D4AF37] dark:text-[#EBD495]" />
@@ -592,86 +592,88 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                     </button>
 
                                                     {/* Category Icon / Badge */}
-                                                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50 flex items-center justify-center font-bold shrink-0 shadow-2xs">
-                                                        <FolderTree className="w-4.5 h-4.5 text-[#D4AF37]" />
+                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50 flex items-center justify-center font-bold shrink-0 shadow-2xs">
+                                                        <FolderTree className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#D4AF37]" />
                                                     </div>
 
                                                     {/* Category Info */}
-                                                    <div>
-                                                        <div className="flex items-center gap-2 flex-wrap">
-                                                            <span className="font-extrabold text-[#0E2038] dark:text-white text-sm sm:text-base">
+                                                    <div className="min-w-0 flex-1">
+                                                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                                            <span className="font-extrabold text-[#0E2038] dark:text-white text-xs sm:text-base break-words">
                                                                 {root.name}
                                                             </span>
-                                                            <span className="font-mono text-xs text-slate-400 dark:text-[#5E8CB6]">
+                                                            <span className="font-mono text-[10px] sm:text-xs text-slate-400 dark:text-[#5E8CB6] truncate">
                                                                 /{root.slug}
                                                             </span>
                                                             {root.is_featured && (
-                                                                <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                                                    <Star className="w-2.5 h-2.5 mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                                                <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                                                    <Star className="w-2.5 h-2.5 mr-0.5 sm:mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
                                                                 </span>
                                                             )}
                                                         </div>
-                                                        <p className="text-xs text-slate-500 dark:text-[#8EB0CF] mt-0.5 line-clamp-1 font-normal">
+                                                        <p className="text-[11px] sm:text-xs text-slate-500 dark:text-[#8EB0CF] mt-0.5 line-clamp-1 font-normal">
                                                             {root.description || 'No description provided.'}
                                                         </p>
                                                     </div>
                                                 </div>
 
                                                 {/* Meta & Quick Actions */}
-                                                <div className="flex items-center gap-2.5 pl-9 sm:pl-0 self-end sm:self-auto">
-                                                    {/* Order Badge */}
-                                                    <span className="text-xs font-mono px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-medium border border-transparent dark:border-[#1C3E63]">
-                                                        Order #{root.display_order}
-                                                    </span>
+                                                <div className="flex flex-wrap items-center justify-between sm:justify-end gap-2 pl-0 sm:pl-0 w-full sm:w-auto border-t sm:border-t-0 pt-2 sm:pt-0 border-slate-200/60 dark:border-[#1C3E63]/40">
+                                                    <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                                        {/* Order Badge */}
+                                                        <span className="text-[10px] sm:text-xs font-mono px-1.5 sm:px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-medium border border-transparent dark:border-[#1C3E63]">
+                                                            #{root.display_order}
+                                                        </span>
 
-                                                    {/* Subcategories count */}
-                                                    <Badge variant={children.length > 0 ? 'gold' : 'neutral'} size="md">
-                                                        {children.length} {children.length === 1 ? 'Subcategory' : 'Subcategories'}
-                                                    </Badge>
+                                                        {/* Subcategories count */}
+                                                        <Badge variant={children.length > 0 ? 'gold' : 'neutral'} size="sm">
+                                                            {children.length} {children.length === 1 ? 'Sub' : 'Subs'}
+                                                        </Badge>
 
-                                                    {/* Active toggle */}
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => toggleActive(root)}
-                                                        title="Click to toggle status"
-                                                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold cursor-pointer transition border ${
-                                                            root.is_active
-                                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60 hover:bg-emerald-100'
-                                                                : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60 hover:bg-rose-100'
-                                                        }`}
-                                                    >
-                                                        {root.is_active ? (
-                                                            <>
-                                                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Active
-                                                            </>
-                                                        ) : (
-                                                            <>
-                                                                <XCircle className="w-3.5 h-3.5 text-rose-600 dark:text-rose-400" /> Inactive
-                                                            </>
-                                                        )}
-                                                    </button>
+                                                        {/* Active toggle */}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => toggleActive(root)}
+                                                            title="Click to toggle status"
+                                                            className={`inline-flex items-center gap-1 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs font-semibold cursor-pointer transition border ${
+                                                                root.is_active
+                                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60 hover:bg-emerald-100'
+                                                                    : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60 hover:bg-rose-100'
+                                                            }`}
+                                                        >
+                                                            {root.is_active ? (
+                                                                <>
+                                                                    <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-emerald-600 dark:text-emerald-400" /> Active
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <XCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-rose-600 dark:text-rose-400" /> Inactive
+                                                                </>
+                                                            )}
+                                                        </button>
 
-                                                    {/* Featured star toggle */}
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => toggleFeatured(root)}
-                                                        title={root.is_featured ? 'Remove from featured' : 'Mark as featured'}
-                                                        className={`p-1.5 rounded-lg border transition cursor-pointer ${
-                                                            root.is_featured
-                                                                ? 'bg-[#FDFBF5] text-[#926F18] border-[#F5E7C2] dark:bg-[#071324] dark:text-[#EBD495] dark:border-[#D4AF37]/50'
-                                                                : 'text-slate-400 hover:text-[#D4AF37] border-slate-200 dark:border-[#1C3E63] hover:bg-slate-100 dark:hover:bg-[#071324]'
-                                                        }`}
-                                                    >
-                                                        <Star className={`w-4 h-4 ${root.is_featured ? 'fill-[#D4AF37] text-[#D4AF37]' : ''}`} />
-                                                    </button>
+                                                        {/* Featured star toggle */}
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => toggleFeatured(root)}
+                                                            title={root.is_featured ? 'Remove from featured' : 'Mark as featured'}
+                                                            className={`p-1 sm:p-1.5 rounded-lg border transition cursor-pointer ${
+                                                                root.is_featured
+                                                                    ? 'bg-[#FDFBF5] text-[#926F18] border-[#F5E7C2] dark:bg-[#071324] dark:text-[#EBD495] dark:border-[#D4AF37]/50'
+                                                                    : 'text-slate-400 hover:text-[#D4AF37] border-slate-200 dark:border-[#1C3E63] hover:bg-slate-100 dark:hover:bg-[#071324]'
+                                                            }`}
+                                                        >
+                                                            <Star className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${root.is_featured ? 'fill-[#D4AF37] text-[#D4AF37]' : ''}`} />
+                                                        </button>
+                                                    </div>
 
                                                     {/* Quick Actions Buttons */}
-                                                    <div className="flex items-center gap-1 border-l border-slate-200 dark:border-[#1C3E63] pl-2">
+                                                    <div className="flex items-center gap-0.5 sm:gap-1 sm:border-l sm:border-slate-200 sm:dark:border-[#1C3E63] sm:pl-2 ml-auto sm:ml-0">
                                                         <button
                                                             type="button"
                                                             onClick={() => openCreateModal(root.id)}
                                                             title="Add nested subcategory"
-                                                            className="p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-[#926F18] dark:hover:text-[#EBD495] hover:bg-[#FDFBF5] dark:hover:bg-[#071324] transition cursor-pointer"
+                                                            className="p-1 sm:p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-[#926F18] dark:hover:text-[#EBD495] hover:bg-[#FDFBF5] dark:hover:bg-[#071324] transition cursor-pointer"
                                                         >
                                                             <Plus className="w-4 h-4" />
                                                         </button>
@@ -679,7 +681,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                             type="button"
                                                             onClick={() => openEditModal(root)}
                                                             title="Edit category"
-                                                            className="p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                                                            className="p-1 sm:p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-[#071324] transition cursor-pointer"
                                                         >
                                                             <Edit3 className="w-4 h-4" />
                                                         </button>
@@ -687,7 +689,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                             type="button"
                                                             onClick={() => setDeletingCategory(root)}
                                                             title="Delete category"
-                                                            className="p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                                                            className="p-1 sm:p-1.5 rounded-lg text-slate-500 dark:text-[#8EB0CF] hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-[#071324] transition cursor-pointer"
                                                         >
                                                             <Trash2 className="w-4 h-4" />
                                                         </button>
@@ -697,27 +699,27 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
 
                                             {/* Subcategories Nested List */}
                                             {isExpanded && (
-                                                <div className="p-3 sm:p-3.5 space-y-2 bg-white dark:bg-[#071324]/60">
+                                                <div className="p-2.5 sm:p-3.5 space-y-2 bg-white dark:bg-[#071324]/60">
                                                     {children.length > 0 ? (
                                                         children.map((sub) => (
                                                             <div
                                                                 key={sub.id}
-                                                                className="ml-3 sm:ml-7 pl-3 sm:pl-4 py-2.5 pr-3 rounded-xl border-l-2 border-[#D4AF37] bg-[#F4F7FB]/60 dark:bg-[#0E2038]/60 hover:bg-[#FDFBF5]/50 dark:hover:bg-[#142C49]/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-y border-r border-slate-100 dark:border-[#1C3E63]/60"
+                                                                className="ml-1 sm:ml-7 pl-2.5 sm:pl-4 py-2 sm:py-2.5 pr-2.5 sm:pr-3 rounded-xl border-l-2 border-[#D4AF37] bg-[#F4F7FB]/60 dark:bg-[#0E2038]/60 hover:bg-[#FDFBF5]/50 dark:hover:bg-[#142C49]/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-y border-r border-slate-100 dark:border-[#1C3E63]/60"
                                                             >
-                                                                <div className="flex items-center gap-3">
-                                                                    <div className="w-8 h-8 rounded-lg bg-[#FDFBF5] dark:bg-[#071324] flex items-center justify-center text-[#926F18] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/30 shrink-0">
-                                                                        <CornerDownRight className="w-4 h-4 text-[#D4AF37]" />
+                                                                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                                                                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[#FDFBF5] dark:bg-[#071324] flex items-center justify-center text-[#926F18] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/30 shrink-0">
+                                                                        <CornerDownRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D4AF37]" />
                                                                     </div>
-                                                                    <div>
-                                                                        <div className="flex items-center gap-2 flex-wrap">
-                                                                            <span className="font-bold text-[#0E2038] dark:text-white text-xs sm:text-sm">
+                                                                    <div className="min-w-0 flex-1">
+                                                                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                                                            <span className="font-bold text-[#0E2038] dark:text-white text-xs sm:text-sm break-words">
                                                                                 {sub.name}
                                                                             </span>
-                                                                            <span className="font-mono text-[11px] text-slate-400 dark:text-[#5E8CB6]">
+                                                                            <span className="font-mono text-[10px] sm:text-[11px] text-slate-400 dark:text-[#5E8CB6] truncate">
                                                                                 /{sub.slug}
                                                                             </span>
                                                                             {sub.is_featured && (
-                                                                                <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                                                                <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
                                                                                     <Star className="w-2.5 h-2.5 mr-0.5 fill-[#D4AF37] text-[#D4AF37]" /> Featured
                                                                                 </span>
                                                                             )}
@@ -731,49 +733,53 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                 </div>
 
                                                                 {/* Subcategory actions */}
-                                                                <div className="flex items-center gap-2 pl-11 sm:pl-0 self-end sm:self-auto">
-                                                                    <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-medium border border-transparent dark:border-[#1C3E63]">
-                                                                        #{sub.display_order}
-                                                                    </span>
+                                                                <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 pl-0 sm:pl-0 w-full sm:w-auto border-t sm:border-t-0 pt-1.5 sm:pt-0 border-slate-200/50 dark:border-[#1C3E63]/30">
+                                                                    <div className="flex items-center gap-1.5">
+                                                                        <span className="text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-medium border border-transparent dark:border-[#1C3E63]">
+                                                                            #{sub.display_order}
+                                                                        </span>
 
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => toggleActive(sub)}
-                                                                        className={`px-2 py-0.5 rounded-full text-[11px] font-semibold cursor-pointer transition border ${
-                                                                            sub.is_active
-                                                                                ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60'
-                                                                                : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60'
-                                                                        }`}
-                                                                    >
-                                                                        {sub.is_active ? 'Active' : 'Inactive'}
-                                                                    </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => toggleActive(sub)}
+                                                                            className={`px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold cursor-pointer transition border ${
+                                                                                sub.is_active
+                                                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60'
+                                                                                    : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60'
+                                                                            }`}
+                                                                        >
+                                                                            {sub.is_active ? 'Active' : 'Inactive'}
+                                                                        </button>
 
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => toggleFeatured(sub)}
-                                                                        className={`p-1 rounded-md border transition cursor-pointer ${
-                                                                            sub.is_featured
-                                                                                ? 'text-[#926F18] bg-[#FDFBF5] border-[#F5E7C2] dark:bg-[#071324] dark:text-[#EBD495] dark:border-[#D4AF37]/50'
-                                                                                : 'text-slate-400 hover:text-[#D4AF37] border-slate-200 dark:border-[#1C3E63]'
-                                                                        }`}
-                                                                    >
-                                                                        <Star className={`w-3.5 h-3.5 ${sub.is_featured ? 'fill-[#D4AF37] text-[#D4AF37]' : ''}`} />
-                                                                    </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => toggleFeatured(sub)}
+                                                                            className={`p-1 rounded-md border transition cursor-pointer ${
+                                                                                sub.is_featured
+                                                                                    ? 'text-[#926F18] bg-[#FDFBF5] border-[#F5E7C2] dark:bg-[#071324] dark:text-[#EBD495] dark:border-[#D4AF37]/50'
+                                                                                    : 'text-slate-400 hover:text-[#D4AF37] border-slate-200 dark:border-[#1C3E63]'
+                                                                            }`}
+                                                                        >
+                                                                            <Star className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${sub.is_featured ? 'fill-[#D4AF37] text-[#D4AF37]' : ''}`} />
+                                                                        </button>
+                                                                    </div>
 
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => openEditModal(sub)}
-                                                                        className="p-1 rounded-md text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 transition cursor-pointer"
-                                                                    >
-                                                                        <Edit3 className="w-3.5 h-3.5" />
-                                                                    </button>
-                                                                    <button
-                                                                        type="button"
-                                                                        onClick={() => setDeletingCategory(sub)}
-                                                                        className="p-1 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-300 transition cursor-pointer"
-                                                                    >
-                                                                        <Trash2 className="w-3.5 h-3.5" />
-                                                                    </button>
+                                                                    <div className="flex items-center gap-0.5 sm:gap-1 ml-auto sm:ml-0">
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => openEditModal(sub)}
+                                                                            className="p-1 sm:p-1.5 rounded-md text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                                                                        >
+                                                                            <Edit3 className="w-3.5 h-3.5" />
+                                                                        </button>
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => setDeletingCategory(sub)}
+                                                                            className="p-1 sm:p-1.5 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                                                                        >
+                                                                            <Trash2 className="w-3.5 h-3.5" />
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         ))
@@ -940,7 +946,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         />
                     </div>
 
-                    <div className="flex items-center justify-end gap-3 pt-4.5 border-t border-slate-100 dark:border-[#1C3E63]/70">
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 sm:gap-3 pt-4 border-t border-slate-100 dark:border-[#1C3E63]/70">
                         <Button variant="secondary" size="md" onClick={() => setIsCreateModalOpen(false)}>
                             Cancel
                         </Button>
@@ -1077,7 +1083,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         />
                     </div>
 
-                    <div className="flex items-center justify-end gap-3 pt-4.5 border-t border-slate-100 dark:border-[#1C3E63]/70">
+                    <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-end gap-2.5 sm:gap-3 pt-4 border-t border-slate-100 dark:border-[#1C3E63]/70">
                         <Button
                             variant="secondary"
                             size="md"
