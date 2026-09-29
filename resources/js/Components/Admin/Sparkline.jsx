@@ -13,12 +13,17 @@ export default function Sparkline({
     const min = Math.min(...data);
     const max = Math.max(...data);
     const range = max - min === 0 ? 1 : max - min;
+    const isFlat = max === min;
     const width = 120;
-    const padding = 4;
+    const paddingX = 4;
+    const paddingTop = 6;
+    const paddingBottom = 6;
 
     const points = data.map((val, idx) => {
-        const x = padding + (idx / (data.length - 1)) * (width - padding * 2);
-        const y = height - padding - ((val - min) / range) * (height - padding * 2);
+        const x = paddingX + (idx / (data.length - 1)) * (width - paddingX * 2);
+        const y = isFlat
+            ? height / 2
+            : height - paddingBottom - ((val - min) / range) * (height - paddingTop - paddingBottom);
         return [x, y];
     });
 
@@ -31,7 +36,7 @@ export default function Sparkline({
             const p0 = i > 0 ? points[i - 1] : points[i];
             const p1 = points[i];
             const p2 = points[i + 1];
-            const p3 = i != points.length - 2 ? points[i + 2] : p2;
+            const p3 = i !== points.length - 2 ? points[i + 2] : p2;
 
             const cp1x = p1[0] + (p2[0] - p0[0]) / 6;
             const cp1y = p1[1] + (p2[1] - p0[1]) / 6;
@@ -52,7 +57,7 @@ export default function Sparkline({
         <div className={`relative overflow-hidden ${className}`}>
             <svg
                 viewBox={`0 0 ${width} ${height}`}
-                className="w-full h-full overflow-visible"
+                className="w-full h-full overflow-hidden"
                 preserveAspectRatio="none"
             >
                 <defs>
