@@ -97,9 +97,9 @@ export default function Dashboard({ user, metrics }) {
     return (
         <AdminLayout title="Dashboard">
             {/* Top Welcome Banner */}
-            <div className="rounded-2xl bg-gradient-to-r from-[#FDFBF5] via-[#FBF5E6]/70 to-white dark:from-[#0E2038] dark:via-[#10233B] dark:to-[#071324] border border-[#F5E7C2] dark:border-[#1C3E63] p-4.5 sm:p-6 lg:p-7 mb-5 sm:mb-6 shadow-xs relative overflow-hidden">
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
-                    <div className="space-y-1.5">
+            <div className="rounded-2xl bg-gradient-to-r from-[#FDFBF5] via-[#FBF5E6]/70 to-white dark:from-[#0E2038] dark:via-[#10233B] dark:to-[#071324] border border-[#F5E7C2] dark:border-[#1C3E63] p-4 sm:p-6 lg:p-7 mb-4 sm:mb-6 shadow-xs relative overflow-hidden">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3.5 sm:gap-4 relative z-10">
+                    <div className="space-y-1.5 sm:space-y-2">
                         <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#FBF5E6] text-[#755615] dark:bg-[#071324] dark:text-[#EBD495] border border-[#EBD495] dark:border-[#D4AF37]/50 text-[11px] sm:text-xs font-bold">
                             <ShieldCheck className="w-3.5 h-3.5 text-[#D4AF37] dark:text-[#EBD495]" />
                             <span>Store Management Portal</span>
@@ -112,12 +112,12 @@ export default function Dashboard({ user, metrics }) {
                         </p>
                     </div>
 
-                    <Link href="/admin/categories" className="w-full sm:w-auto shrink-0">
+                    <Link href="/admin/categories" className="w-full sm:w-auto shrink-0 mt-1 sm:mt-0">
                         <Button
                             variant="primary"
                             size="md"
                             icon={FolderTree}
-                            className="shadow-xs font-bold w-full sm:w-auto justify-center"
+                            className="shadow-xs font-bold w-full sm:w-auto justify-center text-xs sm:text-sm"
                         >
                             Open Category Tree
                         </Button>

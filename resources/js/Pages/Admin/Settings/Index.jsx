@@ -783,7 +783,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                             </div>
 
                             {/* Payment Method & Tax Toggles */}
-                            <div className="p-3.5 sm:p-4.5 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6">
+                            <div className="p-3.5 sm:p-5 bg-[#F4F7FB] dark:bg-[#071324] rounded-xl border border-slate-200 dark:border-[#1C3E63] flex flex-col sm:flex-row flex-wrap gap-4 sm:gap-6">
                                 <label className="flex items-center gap-3 cursor-pointer select-none">
                                     <input
                                         type="checkbox"

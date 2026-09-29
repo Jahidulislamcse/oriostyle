@@ -429,7 +429,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
 
                 {/* Metric Summary Cards */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-5 shadow-xs">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
                             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Total</span>
                             <FolderTree className="w-4 h-4 text-[#D4AF37] dark:text-[#EBD495]" />
@@ -439,7 +439,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-5 shadow-xs">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
                             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Roots</span>
                             <Layers className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
@@ -449,7 +449,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-5 shadow-xs">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
                             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Subcategories</span>
                             <CornerDownRight className="w-4 h-4 text-cyan-600 dark:text-cyan-400" />
@@ -459,7 +459,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-5 shadow-xs">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
                             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Active</span>
                             <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
@@ -469,7 +469,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         </div>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-4.5 shadow-xs col-span-2 sm:col-span-1">
+                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-3.5 sm:p-5 shadow-xs col-span-2 sm:col-span-1">
                         <div className="flex items-center justify-between text-slate-500 dark:text-[#8EB0CF] mb-1.5">
                             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider">Featured</span>
                             <Star className="w-4 h-4 text-[#D4AF37] fill-[#D4AF37]" />
