@@ -57,7 +57,7 @@ export default function Sparkline({
         <div className={`relative overflow-hidden ${className}`}>
             <svg
                 viewBox={`0 0 ${width} ${height}`}
-                className="w-full h-full overflow-hidden"
+                className="w-full h-full overflow-visible"
                 preserveAspectRatio="none"
             >
                 <defs>
