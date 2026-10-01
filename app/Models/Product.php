@@ -35,6 +35,12 @@ class Product extends Model
         'meta_description',
     ];
 
+    protected $appends = [
+        'effective_price',
+        'is_on_sale',
+        'primary_image_url',
+    ];
+
     protected function casts(): array
     {
         return [
@@ -74,11 +80,11 @@ class Product extends Model
     }
 
     /**
-     * Relationship: Primary product image
+     * Relationship: Primary product image (prioritizes is_primary = true, falls back to display_order)
      */
     public function primaryImage(): HasOne
     {
-        return $this->hasOne(ProductImage::class, 'product_id')->where('is_primary', true);
+        return $this->hasOne(ProductImage::class, 'product_id')->orderByDesc('is_primary')->orderBy('display_order');
     }
 
     /**
@@ -111,6 +117,19 @@ class Product extends Model
     public function scopeLowStock(Builder $query): Builder
     {
         return $query->whereColumn('stock_quantity', '<=', 'low_stock_threshold');
+    }
+
+    /**
+     * Accessor: Get primary image URL safely
+     */
+    public function getPrimaryImageUrlAttribute(): ?string
+    {
+        $img = $this->primaryImage ?? $this->images->first();
+        if (!$img) {
+            return null;
+        }
+
+        return $img->image_url ?? $img->image_path;
     }
 
     /**

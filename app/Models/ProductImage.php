@@ -19,12 +19,32 @@ class ProductImage extends Model
         'display_order',
     ];
 
+    protected $appends = [
+        'image_url',
+    ];
+
     protected function casts(): array
     {
         return [
             'is_primary' => 'boolean',
             'display_order' => 'integer',
         ];
+    }
+
+    /**
+     * Accessor for full public image URL.
+     */
+    public function getImageUrlAttribute(): string
+    {
+        if (empty($this->image_path)) {
+            return '';
+        }
+
+        if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://')) {
+            return $this->image_path;
+        }
+
+        return asset('storage/' . ltrim($this->image_path, '/'));
     }
 
     public function product(): BelongsTo

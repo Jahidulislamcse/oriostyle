@@ -31,7 +31,8 @@ class ProductService
             ->with([
                 'category:id,name,slug',
                 'brand:id,name,slug',
-                'primaryImage:id,product_id,image_path',
+                'primaryImage',
+                'images',
             ])
             ->withCount(['variants', 'images'])
             ->orderBy('id', 'desc');

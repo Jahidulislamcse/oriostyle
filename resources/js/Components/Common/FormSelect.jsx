@@ -12,10 +12,11 @@ export default function FormSelect({
     disabled = false,
     placeholder = 'Select an option',
     className = '',
+    containerClassName = '',
     ...props
 }) {
     return (
-        <div className="w-full">
+        <div className={containerClassName || 'w-full'}>
             {label && (
                 <label
                     htmlFor={id}
