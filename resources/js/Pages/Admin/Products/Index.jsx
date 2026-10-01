@@ -152,135 +152,153 @@ export default function ProductIndex({
         {
             key: 'name',
             label: 'Product',
-            render: (row) => (
-                <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-lg bg-navy-950 border border-gold-500/20 flex items-center justify-center overflow-hidden flex-shrink-0">
-                        {row.primary_image?.image_url || row.images?.[0]?.image_url ? (
-                            <img
-                                src={row.primary_image?.image_url || row.images?.[0]?.image_url}
-                                alt={row.name}
-                                className="w-full h-full object-cover"
-                            />
-                        ) : (
-                            <Package className="w-6 h-6 text-gold-400/40" />
-                        )}
-                    </div>
-                    <div>
-                        <div className="font-semibold text-slate-100 line-clamp-1">{row.name}</div>
-                        <div className="text-xs text-slate-400 font-mono flex items-center gap-2">
-                            <span>SKU: {row.sku || 'N/A'}</span>
-                            {row.is_new_arrival && (
-                                <span className="text-[10px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/30">
-                                    NEW
-                                </span>
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-lg bg-navy-950 border border-gold-500/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {row.primary_image?.image_url || row.images?.[0]?.image_url ? (
+                                <img
+                                    src={row.primary_image?.image_url || row.images?.[0]?.image_url}
+                                    alt={row.name || 'Product'}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <Package className="w-6 h-6 text-gold-400/40" />
                             )}
                         </div>
+                        <div>
+                            <div className="font-semibold text-slate-100 line-clamp-1">{row.name || 'N/A'}</div>
+                            <div className="text-xs text-slate-400 font-mono flex items-center gap-2">
+                                <span>SKU: {row.sku || 'N/A'}</span>
+                                {row.is_new_arrival && (
+                                    <span className="text-[10px] bg-blue-500/10 text-blue-400 px-1.5 py-0.5 rounded border border-blue-500/30">
+                                        NEW
+                                    </span>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            ),
+                );
+            },
         },
         {
             key: 'category_brand',
             label: 'Category & Brand',
-            render: (row) => (
-                <div className="space-y-1">
-                    <div className="flex items-center gap-1 text-xs text-slate-300">
-                        <Layers className="w-3 h-3 text-gold-400" />
-                        <span>{row.category?.name || 'Uncategorized'}</span>
-                    </div>
-                    {row.brand && (
-                        <div className="flex items-center gap-1 text-xs text-slate-400">
-                            <Award className="w-3 h-3 text-amber-400" />
-                            <span>{row.brand.name}</span>
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <div className="space-y-1">
+                        <div className="flex items-center gap-1 text-xs text-slate-300">
+                            <Layers className="w-3 h-3 text-gold-400" />
+                            <span>{row.category?.name || 'Uncategorized'}</span>
                         </div>
-                    )}
-                </div>
-            ),
+                        {row.brand && (
+                            <div className="flex items-center gap-1 text-xs text-slate-400">
+                                <Award className="w-3 h-3 text-amber-400" />
+                                <span>{row.brand.name}</span>
+                            </div>
+                        )}
+                    </div>
+                );
+            },
         },
         {
             key: 'price',
             label: 'Price',
-            render: (row) => (
-                <div className="font-mono text-sm">
-                    {row.sale_price ? (
-                        <div>
-                            <span className="font-bold text-emerald-400">
-                                ${(parseFloat(row.sale_price) || 0).toFixed(2)}
-                            </span>
-                            <span className="text-xs text-slate-500 line-through ml-1.5">
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <div className="font-mono text-sm">
+                        {row.sale_price ? (
+                            <div>
+                                <span className="font-bold text-emerald-400">
+                                    ${(parseFloat(row.sale_price) || 0).toFixed(2)}
+                                </span>
+                                <span className="text-xs text-slate-500 line-through ml-1.5">
+                                    ${(parseFloat(row.base_price) || 0).toFixed(2)}
+                                </span>
+                            </div>
+                        ) : (
+                            <span className="font-bold text-slate-200">
                                 ${(parseFloat(row.base_price) || 0).toFixed(2)}
                             </span>
-                        </div>
-                    ) : (
-                        <span className="font-bold text-slate-200">
-                            ${(parseFloat(row.base_price) || 0).toFixed(2)}
-                        </span>
-                    )}
-                </div>
-            ),
+                        )}
+                    </div>
+                );
+            },
         },
         {
             key: 'stock',
             label: 'Stock Level',
-            render: (row) => (
-                <button
-                    onClick={() => openStockModal(row)}
-                    className="hover:opacity-80 transition-opacity text-left"
-                    title="Click to adjust stock level"
-                >
-                    {getStockBadge(row)}
-                </button>
-            ),
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <button
+                        onClick={() => openStockModal(row)}
+                        className="hover:opacity-80 transition-opacity text-left"
+                        title="Click to adjust stock level"
+                    >
+                        {getStockBadge(row)}
+                    </button>
+                );
+            },
         },
         {
             key: 'status',
             label: 'Status',
-            render: (row) => (
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => handleToggleActive(row)}
-                        className="transition-transform active:scale-95"
-                        title="Toggle Active Status"
-                    >
-                        <Badge variant={row.is_active ? 'success' : 'secondary'} className="cursor-pointer">
-                            {row.is_active ? 'Active' : 'Draft'}
-                        </Badge>
-                    </button>
-                    {row.is_featured && (
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <div className="flex items-center gap-2">
                         <button
-                            onClick={() => handleToggleFeatured(row)}
-                            title="Toggle Featured"
+                            onClick={() => handleToggleActive(row)}
+                            className="transition-transform active:scale-95"
+                            title="Toggle Active Status"
                         >
-                            <Badge variant="warning" className="cursor-pointer">
-                                <Star className="w-3 h-3 fill-amber-400 inline mr-1" />
-                                Featured
+                            <Badge variant={row.is_active ? 'success' : 'secondary'} className="cursor-pointer">
+                                {row.is_active ? 'Active' : 'Draft'}
                             </Badge>
                         </button>
-                    )}
-                </div>
-            ),
+                        {row.is_featured && (
+                            <button
+                                onClick={() => handleToggleFeatured(row)}
+                                title="Toggle Featured"
+                            >
+                                <Badge variant="warning" className="cursor-pointer">
+                                    <Star className="w-3 h-3 fill-amber-400 inline mr-1" />
+                                    Featured
+                                </Badge>
+                            </button>
+                        )}
+                    </div>
+                );
+            },
         },
         {
             key: 'actions',
             label: 'Actions',
-            render: (row) => (
-                <div className="flex items-center gap-2">
-                    <Link
-                        href={route('admin.products.edit', row.id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
-                        title="Edit Product"
-                    >
-                        <Edit3 className="w-4 h-4" />
-                    </Link>
-                    <button
-                        onClick={() => setDeletingProduct(row)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-navy-800 transition-colors"
-                        title="Delete Product"
-                    >
-                        <Trash2 className="w-4 h-4" />
-                    </button>
-                </div>
-            ),
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <div className="flex items-center gap-2">
+                        <Link
+                            href={route('admin.products.edit', row.id)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
+                            title="Edit Product"
+                        >
+                            <Edit3 className="w-4 h-4" />
+                        </Link>
+                        <button
+                            onClick={() => setDeletingProduct(row)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-navy-800 transition-colors"
+                            title="Delete Product"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                        </button>
+                    </div>
+                );
+            },
         },
     ];
 

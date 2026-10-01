@@ -166,94 +166,109 @@ export default function BrandIndex({ brands = { data: [] }, stats = {}, filters 
         {
             key: 'name',
             label: 'Brand',
-            render: (row) => (
-                <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-navy-800 border border-gold-500/20 flex items-center justify-center overflow-hidden flex-shrink-0">
-                        {row.logo_url ? (
-                            <img src={row.logo_url} alt={row.name} className="w-full h-full object-contain p-1" />
-                        ) : (
-                            <Award className="w-5 h-5 text-gold-400/60" />
-                        )}
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-navy-800 border border-gold-500/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                            {row.logo_url ? (
+                                <img src={row.logo_url} alt={row.name} className="w-full h-full object-contain p-1" />
+                            ) : (
+                                <Award className="w-5 h-5 text-gold-400/60" />
+                            )}
+                        </div>
+                        <div>
+                            <div className="font-medium text-slate-100">{row.name || 'N/A'}</div>
+                            <div className="text-xs text-slate-400 font-mono">/{row.slug || ''}</div>
+                        </div>
                     </div>
-                    <div>
-                        <div className="font-medium text-slate-100">{row.name}</div>
-                        <div className="text-xs text-slate-400 font-mono">/{row.slug}</div>
-                    </div>
-                </div>
-            ),
+                );
+            },
         },
         {
             key: 'products_count',
             label: 'Products',
-            render: (row) => (
-                <div className="flex items-center gap-1.5 text-slate-300 font-mono text-sm">
-                    <Package className="w-4 h-4 text-gold-400" />
-                    <span>{row.products_count ?? row.products?.length ?? 0}</span>
-                </div>
-            ),
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <div className="flex items-center gap-1.5 text-slate-300 font-mono text-sm">
+                        <Package className="w-4 h-4 text-gold-400" />
+                        <span>{row.products_count ?? row.products?.length ?? 0}</span>
+                    </div>
+                );
+            },
         },
         {
             key: 'website_url',
             label: 'Website',
-            render: (row) => row.website_url ? (
-                <a
-                    href={row.website_url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1 text-xs text-gold-400 hover:text-gold-300 hover:underline"
-                >
-                    <Globe className="w-3.5 h-3.5" />
-                    <span className="truncate max-w-[140px]">{row.website_url.replace(/^https?:\/\//, '')}</span>
-                    <ExternalLink className="w-3 h-3" />
-                </a>
-            ) : (
-                <span className="text-xs text-slate-500">—</span>
-            ),
+            render: (val, item) => {
+                const row = item || val || {};
+                return row.website_url ? (
+                    <a
+                        href={row.website_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-xs text-gold-400 hover:text-gold-300 hover:underline"
+                    >
+                        <Globe className="w-3.5 h-3.5" />
+                        <span className="truncate max-w-[140px]">{row.website_url.replace(/^https?:\/\//, '')}</span>
+                        <ExternalLink className="w-3 h-3" />
+                    </a>
+                ) : (
+                    <span className="text-xs text-slate-500">—</span>
+                );
+            },
         },
         {
             key: 'status',
             label: 'Status',
-            render: (row) => (
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => handleToggleActive(row)}
-                        title="Toggle Active Status"
-                        className="transition-transform active:scale-95"
-                    >
-                        <Badge variant={row.is_active ? 'success' : 'secondary'} className="cursor-pointer">
-                            {row.is_active ? 'Active' : 'Inactive'}
-                        </Badge>
-                    </button>
-                    {row.is_featured && (
-                        <Badge variant="warning" className="flex items-center gap-1">
-                            <Star className="w-3 h-3 fill-gold-400" />
-                            Featured
-                        </Badge>
-                    )}
-                </div>
-            ),
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => handleToggleActive(row)}
+                            title="Toggle Active Status"
+                            className="transition-transform active:scale-95"
+                        >
+                            <Badge variant={row.is_active ? 'success' : 'secondary'} className="cursor-pointer">
+                                {row.is_active ? 'Active' : 'Inactive'}
+                            </Badge>
+                        </button>
+                        {row.is_featured && (
+                            <Badge variant="warning" className="flex items-center gap-1">
+                                <Star className="w-3 h-3 fill-gold-400" />
+                                Featured
+                            </Badge>
+                        )}
+                    </div>
+                );
+            },
         },
         {
             key: 'actions',
             label: 'Actions',
-            render: (row) => (
-                <div className="flex items-center gap-2">
-                    <button
-                        onClick={() => openEditModal(row)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
-                        title="Edit Brand"
-                    >
-                        <Edit3 className="w-4 h-4" />
-                    </button>
-                    <button
-                        onClick={() => setDeletingBrand(row)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-navy-800 transition-colors"
-                        title="Delete Brand"
-                    >
-                        <Trash2 className="w-4 h-4" />
-                    </button>
-                </div>
-            ),
+            render: (val, item) => {
+                const row = item || val || {};
+                return (
+                    <div className="flex items-center gap-2">
+                        <button
+                            onClick={() => openEditModal(row)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
+                            title="Edit Brand"
+                        >
+                            <Edit3 className="w-4 h-4" />
+                        </button>
+                        <button
+                            onClick={() => setDeletingBrand(row)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-navy-800 transition-colors"
+                            title="Delete Brand"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                        </button>
+                    </div>
+                );
+            },
         },
     ];
 

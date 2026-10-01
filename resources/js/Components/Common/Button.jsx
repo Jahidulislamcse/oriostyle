@@ -7,11 +7,14 @@ export default function Button({
     size = 'md',
     className = '',
     processing = false,
+    loading = false,
     disabled = false,
     children,
     icon,
     ...props
 }) {
+    const isSpinning = Boolean(processing || loading);
+
     const variants = {
         primary: 'bg-[#D4AF37] hover:bg-[#B89226] active:bg-[#926F18] text-[#071324] font-semibold shadow-2xs hover:shadow-xs transition border border-[#D4AF37]/70',
         navy: 'bg-[#0E2038] hover:bg-[#1C3E63] active:bg-[#142C49] text-[#F5D77F] dark:bg-[#142C49] dark:hover:bg-[#1C3E63] dark:text-[#F5D77F] font-semibold shadow-2xs border border-[#D4AF37]/40',
@@ -31,7 +34,7 @@ export default function Button({
     };
 
     const renderIcon = () => {
-        if (processing) {
+        if (isSpinning) {
             return <Loader2 className="w-4 h-4 animate-spin text-current" />;
         }
         if (React.isValidElement(icon)) {
@@ -47,7 +50,7 @@ export default function Button({
     return (
         <button
             type={type}
-            disabled={disabled || processing}
+            disabled={disabled || isSpinning}
             className={`inline-flex items-center justify-center font-medium transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/40 focus:ring-offset-1 dark:focus:ring-offset-[#071324] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer ${variants[variant] || variants.primary} ${sizes[size] || sizes.md} ${className}`}
             {...props}
         >
