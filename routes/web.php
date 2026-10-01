@@ -1,7 +1,9 @@
 <?php
 
+use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Database\Eloquent\Model;
@@ -62,9 +64,27 @@ Route::prefix('admin')
         Route::patch('/categories/{category}/toggle-active', [CategoryController::class, 'toggleActive'])->name('categories.toggle-active');
         Route::patch('/categories/{category}/toggle-featured', [CategoryController::class, 'toggleFeatured'])->name('categories.toggle-featured');
 
+        // Phase 6: Brand Catalog Management
+        Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
+        Route::post('/brands', [BrandController::class, 'store'])->name('brands.store');
+        Route::put('/brands/{brand}', [BrandController::class, 'update'])->name('brands.update');
+        Route::delete('/brands/{brand}', [BrandController::class, 'destroy'])->name('brands.destroy');
+        Route::patch('/brands/{brand}/toggle-active', [BrandController::class, 'toggleActive'])->name('brands.toggle-active');
+        Route::patch('/brands/{brand}/toggle-featured', [BrandController::class, 'toggleFeatured'])->name('brands.toggle-featured');
+
+        // Phase 6: Product & Inventory Management
+        Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+        Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+        Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
+        Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+        Route::patch('/products/{product}/toggle-active', [ProductController::class, 'toggleActive'])->name('products.toggle-active');
+        Route::patch('/products/{product}/toggle-featured', [ProductController::class, 'toggleFeatured'])->name('products.toggle-featured');
+        Route::patch('/products/{product}/update-stock', [ProductController::class, 'updateStock'])->name('products.update-stock');
+
         // Dynamic System Settings & CMS Identity
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
         Route::post('/settings/clear-cache', [SettingsController::class, 'clearCache'])->name('settings.clear-cache');
     });
-
