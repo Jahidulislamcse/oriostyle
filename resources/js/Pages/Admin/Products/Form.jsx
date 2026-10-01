@@ -135,13 +135,13 @@ export default function ProductForm({ product = null, categories = [], brands = 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (isEditing) {
-            router.post(route('admin.products.update', product.id), {
+        if (isEditing && product?.id) {
+            router.post(`/admin/products/${product.id}`, {
                 _method: 'put',
                 ...data,
             });
         } else {
-            post(route('admin.products.store'));
+            post('/admin/products');
         }
     };
 

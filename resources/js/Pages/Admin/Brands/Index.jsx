@@ -122,7 +122,7 @@ export default function BrandIndex({ brands = { data: [] }, stats = {}, filters 
 
     const submitCreate = (e) => {
         e.preventDefault();
-        post(route('admin.brands.store'), {
+        post('/admin/brands', {
             onSuccess: () => {
                 setIsCreateModalOpen(false);
                 reset();
@@ -132,10 +132,10 @@ export default function BrandIndex({ brands = { data: [] }, stats = {}, filters 
 
     const submitEdit = (e) => {
         e.preventDefault();
-        if (!editingBrand) return;
+        if (!editingBrand || !editingBrand.id) return;
 
         // Use Inertia post with _method PUT for multipart form data support
-        router.post(route('admin.brands.update', editingBrand.id), {
+        router.post(`/admin/brands/${editingBrand.id}`, {
             _method: 'put',
             ...data,
         }, {
