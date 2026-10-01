@@ -172,7 +172,7 @@ export default function ProductForm({ product = null, categories = [], brands = 
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-navy-900/80 border border-gold-500/20 p-4 rounded-xl sticky top-4 z-20 backdrop-blur-md">
                     <div className="flex items-center gap-3">
                         <Link
-                            href={route('admin.products.index')}
+                            href="/admin/products"
                             className="p-2 rounded-lg text-slate-400 hover:text-slate-200 bg-navy-950 border border-slate-700/80 transition-colors"
                         >
                             <ArrowLeft className="w-5 h-5" />
@@ -189,7 +189,7 @@ export default function ProductForm({ product = null, categories = [], brands = 
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <Link href={route('admin.products.index')}>
+                        <Link href="/admin/products">
                             <Button type="button" variant="ghost">
                                 Cancel
                             </Button>

@@ -58,6 +58,7 @@ Route::prefix('admin')
 
         // Phase 4: Category Hierarchy & Taxonomy
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+        Route::get('/categories/index', fn () => redirect()->route('admin.categories.index'));
         Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
         Route::post('/categories/store', [CategoryController::class, 'store']);
         Route::put('/categories/{category}', [CategoryController::class, 'update'])->name('categories.update');
@@ -67,6 +68,7 @@ Route::prefix('admin')
 
         // Phase 6: Brand Catalog Management
         Route::get('/brands', [BrandController::class, 'index'])->name('brands.index');
+        Route::get('/brands/index', fn () => redirect()->route('admin.brands.index'));
         Route::post('/brands', [BrandController::class, 'store'])->name('brands.store');
         Route::post('/brands/store', [BrandController::class, 'store']);
         Route::put('/brands/{brand}', [BrandController::class, 'update'])->name('brands.update');
@@ -78,6 +80,7 @@ Route::prefix('admin')
 
         // Phase 6: Product & Inventory Management
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+        Route::get('/products/index', fn () => redirect()->route('admin.products.index'));
         Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
         Route::post('/products', [ProductController::class, 'store'])->name('products.store');
         Route::post('/products/store', [ProductController::class, 'store']);
