@@ -73,6 +73,8 @@ Route::prefix('admin')
         Route::delete('/brands/{brand}', [BrandController::class, 'destroy'])->name('brands.destroy');
         Route::patch('/brands/{brand}/toggle-active', [BrandController::class, 'toggleActive'])->name('brands.toggle-active');
         Route::patch('/brands/{brand}/toggle-featured', [BrandController::class, 'toggleFeatured'])->name('brands.toggle-featured');
+        Route::patch('/brands/toggle-active', fn () => redirect()->route('admin.brands.index'));
+        Route::patch('/brands/toggle-featured', fn () => redirect()->route('admin.brands.index'));
 
         // Phase 6: Product & Inventory Management
         Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -87,6 +89,9 @@ Route::prefix('admin')
         Route::patch('/products/{product}/toggle-active', [ProductController::class, 'toggleActive'])->name('products.toggle-active');
         Route::patch('/products/{product}/toggle-featured', [ProductController::class, 'toggleFeatured'])->name('products.toggle-featured');
         Route::patch('/products/{product}/update-stock', [ProductController::class, 'updateStock'])->name('products.update-stock');
+        Route::patch('/products/toggle-active', fn () => redirect()->route('admin.products.index'));
+        Route::patch('/products/toggle-featured', fn () => redirect()->route('admin.products.index'));
+        Route::patch('/products/update-stock', fn () => redirect()->route('admin.products.index'));
 
         // Dynamic System Settings & CMS Identity
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');

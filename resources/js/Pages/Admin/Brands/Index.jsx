@@ -154,11 +154,15 @@ export default function BrandIndex({ brands = { data: [] }, stats = {}, filters 
     };
 
     const handleToggleActive = (brand) => {
-        router.patch(route('admin.brands.toggle-active', brand.id), {}, { preserveScroll: true });
+        const brandId = (brand && typeof brand === 'object') ? brand.id : brand;
+        if (!brandId) return;
+        router.patch(`/admin/brands/${brandId}/toggle-active`, {}, { preserveScroll: true });
     };
 
     const handleToggleFeatured = (brand) => {
-        router.patch(route('admin.brands.toggle-featured', brand.id), {}, { preserveScroll: true });
+        const brandId = (brand && typeof brand === 'object') ? brand.id : brand;
+        if (!brandId) return;
+        router.patch(`/admin/brands/${brandId}/toggle-featured`, {}, { preserveScroll: true });
     };
 
     // Columns for table view

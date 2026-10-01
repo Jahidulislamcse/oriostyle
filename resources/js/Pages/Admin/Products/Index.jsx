@@ -76,11 +76,11 @@ export default function ProductIndex({
 
     const submitStockUpdate = (e) => {
         e.preventDefault();
-        if (!stockModalProduct) return;
+        if (!stockModalProduct || !stockModalProduct.id) return;
 
         setStockUpdating(true);
         router.patch(
-            route('admin.products.update-stock', stockModalProduct.id),
+            `/admin/products/${stockModalProduct.id}/update-stock`,
             { stock_quantity: newStockQty },
             {
                 onSuccess: () => {
@@ -93,11 +93,15 @@ export default function ProductIndex({
     };
 
     const handleToggleActive = (product) => {
-        router.patch(route('admin.products.toggle-active', product.id), {}, { preserveScroll: true });
+        const productId = (product && typeof product === 'object') ? product.id : product;
+        if (!productId) return;
+        router.patch(`/admin/products/${productId}/toggle-active`, {}, { preserveScroll: true });
     };
 
     const handleToggleFeatured = (product) => {
-        router.patch(route('admin.products.toggle-featured', product.id), {}, { preserveScroll: true });
+        const productId = (product && typeof product === 'object') ? product.id : product;
+        if (!productId) return;
+        router.patch(`/admin/products/${productId}/toggle-featured`, {}, { preserveScroll: true });
     };
 
     const categoryOptions = [
