@@ -80,6 +80,7 @@ Route::prefix('admin')
         Route::post('/products', [ProductController::class, 'store'])->name('products.store');
         Route::post('/products/store', [ProductController::class, 'store']);
         Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
+        Route::get('/products/edit/{product}', [ProductController::class, 'edit']);
         Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
         Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
         Route::patch('/products/{product}/toggle-active', [ProductController::class, 'toggleActive'])->name('products.toggle-active');

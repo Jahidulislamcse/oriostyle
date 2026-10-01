@@ -288,16 +288,28 @@ export default function ProductIndex({
             label: 'Actions',
             cellClassName: 'min-w-[90px]',
             render: (val, item) => {
-                const row = item || val || {};
+                const row = (item && typeof item === 'object' && item.id) ? item : (val && typeof val === 'object' && val.id) ? val : (item || val || {});
+                const productId = row.id;
+
                 return (
                     <div className="flex items-center gap-2">
-                        <Link
-                            href={route('admin.products.edit', row.id)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
-                            title="Edit Product"
-                        >
-                            <Edit3 className="w-4 h-4" />
-                        </Link>
+                        {productId ? (
+                            <Link
+                                href={route('admin.products.edit', productId)}
+                                className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
+                                title="Edit Product"
+                            >
+                                <Edit3 className="w-4 h-4" />
+                            </Link>
+                        ) : (
+                            <button
+                                type="button"
+                                disabled
+                                className="p-1.5 rounded-lg text-slate-600 cursor-not-allowed"
+                            >
+                                <Edit3 className="w-4 h-4" />
+                            </button>
+                        )}
                         <button
                             onClick={() => setDeletingProduct(row)}
                             className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-navy-800 transition-colors"
