@@ -85,6 +85,14 @@ class Category extends Model
         return $this->children()->with('allChildren');
     }
 
+    /**
+     * Products belonging directly to this category.
+     */
+    public function products(): HasMany
+    {
+        return $this->hasMany(Product::class, 'category_id');
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Query Scopes
@@ -111,6 +119,14 @@ class Category extends Model
      * Scope a query to only include root/top-level categories.
      */
     public function scopeRoot(Builder $query): Builder
+    {
+        return $query->whereNull('parent_id');
+    }
+
+    /**
+     * Scope a query to only include root/top-level categories (alias).
+     */
+    public function scopeRootOnly(Builder $query): Builder
     {
         return $query->whereNull('parent_id');
     }
