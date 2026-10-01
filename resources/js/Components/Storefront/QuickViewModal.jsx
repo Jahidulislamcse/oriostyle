@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from '@inertiajs/react';
-import { X, ShoppingBag, CheckCircle, AlertCircle, ArrowRight, Tag } from 'lucide-react';
 import Modal from '@/Components/Common/Modal';
 
 export default function QuickViewModal({ product, isOpen, onClose }) {
@@ -19,41 +18,30 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
 
     const mainImageUrl = allImages.length > 0 && allImages[selectedImgIndex]?.image_path
         ? (allImages[selectedImgIndex].image_path.startsWith('http') ? allImages[selectedImgIndex].image_path : `/storage/${allImages[selectedImgIndex].image_path}`)
-        : null;
+        : '/assets/img/product/17.jpg';
 
     const isOutOfStock = (product.stock_quantity ?? 0) <= 0;
 
     return (
         <Modal show={isOpen} onClose={onClose} maxWidth="3xl">
-            <div className="bg-[#0E2038] text-slate-100 rounded-3xl border border-[#D4AF37]/30 p-6 relative overflow-hidden">
-                {/* Close Button */}
+            <div className="bg-white text-dark rounded-4 p-4 position-relative border shadow-2xl">
+                {/* Close button */}
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 p-2 rounded-full bg-[#071324] text-slate-400 hover:text-white hover:bg-rose-500/20 transition z-20 cursor-pointer"
+                    className="btn btn-sm btn-light rounded-circle position-absolute top-0 end-0 m-3 z-3 shadow-sm"
                 >
-                    <X className="w-5 h-5" />
+                    <i className="ri-close-line fs-5"></i>
                 </button>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
-                    {/* Image Preview & Thumbnail Selector */}
-                    <div className="space-y-4">
-                        <div className="relative aspect-square w-full rounded-2xl bg-[#071324] border border-slate-800 flex items-center justify-center p-4 overflow-hidden">
-                            {mainImageUrl ? (
-                                <img
-                                    src={mainImageUrl}
-                                    alt={product.name}
-                                    className="w-full h-full object-contain"
-                                />
-                            ) : (
-                                <div className="flex flex-col items-center justify-center text-slate-600">
-                                    <ShoppingBag className="w-16 h-16 stroke-1" />
-                                    <span className="text-xs mt-2">No Image</span>
-                                </div>
-                            )}
+                <div className="row g-4 items-start">
+                    {/* Image Column */}
+                    <div className="col-md-6">
+                        <div className="bg-light rounded-3 p-3 border d-flex align-items-center justify-content-center mb-3" style={{ aspectRatio: '1/1' }}>
+                            <img src={mainImageUrl} alt={product.name} className="w-100 h-100 object-fit-contain" />
                         </div>
 
                         {allImages.length > 1 && (
-                            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+                            <div className="d-flex gap-2 overflow-auto pb-1">
                                 {allImages.map((img, idx) => {
                                     const thumbUrl = img.image_path?.startsWith('http')
                                         ? img.image_path
@@ -62,13 +50,12 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                                         <button
                                             key={img.id || idx}
                                             onClick={() => setSelectedImgIndex(idx)}
-                                            className={`w-14 h-14 rounded-xl border-2 overflow-hidden shrink-0 transition cursor-pointer ${
-                                                selectedImgIndex === idx
-                                                    ? 'border-[#D4AF37] scale-105'
-                                                    : 'border-slate-800 opacity-60 hover:opacity-100'
+                                            className={`rounded-2 border p-1 overflow-hidden shrink-0 ${
+                                                selectedImgIndex === idx ? 'border-warning shadow-sm' : 'border-light opacity-75'
                                             }`}
+                                            style={{ width: '54px', height: '54px' }}
                                         >
-                                            <img src={thumbUrl} alt="" className="w-full h-full object-cover" />
+                                            <img src={thumbUrl} alt="" className="w-100 h-100 object-fit-cover" />
                                         </button>
                                     );
                                 })}
@@ -76,76 +63,48 @@ export default function QuickViewModal({ product, isOpen, onClose }) {
                         )}
                     </div>
 
-                    {/* Product Specs & Info */}
-                    <div className="space-y-5 flex flex-col justify-between h-full">
+                    {/* Info Column */}
+                    <div className="col-md-6 d-flex flex-column justify-content-between">
                         <div>
-                            {/* Taxonomy Header */}
-                            <div className="flex items-center gap-2 text-xs font-semibold text-[#D4AF37] uppercase tracking-wider mb-2">
-                                <span>{product.category?.name || 'Category'}</span>
-                                {product.brand?.name && (
-                                    <>
-                                        <span>•</span>
-                                        <span className="text-slate-400">{product.brand.name}</span>
-                                    </>
+                            <div className="text-uppercase text-warning fw-bold text-xs mb-1">
+                                {product.category?.name} {product.brand?.name && `• ${product.brand.name}`}
+                            </div>
+
+                            <h3 className="fw-extrabold fs-4 text-dark mb-1">{product.name}</h3>
+                            <p className="text-muted font-mono text-xs mb-3">SKU: {product.sku || 'N/A'}</p>
+
+                            <div className="d-flex align-items-baseline gap-3 mb-3">
+                                <span className="fs-3 fw-extrabold text-dark">${effectivePrice.toFixed(2)}</span>
+                                {hasDiscount && (
+                                    <span className="text-muted text-decoration-line-through fs-6">${basePrice.toFixed(2)}</span>
+                                )}
+                                {hasDiscount && (
+                                    <span className="badge bg-warning text-dark font-bold">SAVE ${(basePrice - salePrice).toFixed(2)}</span>
                                 )}
                             </div>
 
-                            {/* Product Title */}
-                            <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-tight">
-                                {product.name}
-                            </h2>
-
-                            {/* SKU */}
-                            <p className="text-xs text-slate-500 font-mono mt-1">
-                                SKU: {product.sku || 'N/A'}
-                            </p>
-
-                            {/* Pricing */}
-                            <div className="mt-4 flex items-baseline gap-3">
-                                <span className="text-2xl font-extrabold text-[#EBD495]">
-                                    ${effectivePrice.toFixed(2)}
-                                </span>
-                                {hasDiscount && (
-                                    <span className="text-sm text-slate-400 line-through">
-                                        ${basePrice.toFixed(2)}
-                                    </span>
-                                )}
-                                {hasDiscount && (
-                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#D4AF37]/20 text-[#EBD495] border border-[#D4AF37]/40">
-                                        SAVE ${ (basePrice - salePrice).toFixed(2) }
-                                    </span>
-                                )}
-                            </div>
-
-                            {/* Stock Availability */}
-                            <div className="mt-4 flex items-center gap-2 text-xs font-semibold">
+                            <div className="mb-3">
                                 {isOutOfStock ? (
-                                    <span className="flex items-center gap-1.5 text-rose-400">
-                                        <AlertCircle className="w-4 h-4" /> Out of Stock
-                                    </span>
+                                    <span className="badge bg-danger">Out of Stock</span>
                                 ) : (
-                                    <span className="flex items-center gap-1.5 text-emerald-400">
-                                        <CheckCircle className="w-4 h-4" /> In Stock ({product.stock_quantity} available)
-                                    </span>
+                                    <span className="badge bg-success">In Stock ({product.stock_quantity} available)</span>
                                 )}
                             </div>
 
-                            {/* Short Description */}
                             {product.short_description && (
-                                <p className="mt-4 text-xs text-slate-300 leading-relaxed bg-[#071324]/50 p-3 rounded-xl border border-slate-800">
+                                <p className="text-xs text-secondary bg-light p-3 rounded-3 border mb-4">
                                     {product.short_description}
                                 </p>
                             )}
                         </div>
 
-                        {/* CTA Link */}
-                        <div className="pt-4 border-t border-slate-800">
+                        <div className="pt-3 border-top">
                             <Link
                                 href={`/product/${product.slug}`}
-                                className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-[#D4AF37] via-[#C59B27] to-[#926F18] text-[#071324] font-extrabold text-sm hover:brightness-110 transition shadow-lg shadow-[#D4AF37]/20 flex items-center justify-center gap-2"
+                                className="btn btn-dark text-warning w-100 fw-bold py-2.5 rounded-3 d-flex align-items-center justify-content-center gap-2"
                             >
                                 <span>View Full Product Page & Options</span>
-                                <ArrowRight className="w-4 h-4" />
+                                <i className="ri-arrow-right-line"></i>
                             </Link>
                         </div>
                     </div>

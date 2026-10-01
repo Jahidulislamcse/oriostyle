@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link, usePage } from '@inertiajs/react';
-import { ShoppingBag, ShieldCheck, Truck, RefreshCw, Phone, Mail, MapPin, Sparkles } from 'lucide-react';
 
 export default function Footer() {
     const { settings, appName } = usePage().props;
@@ -8,141 +7,115 @@ export default function Footer() {
     const siteLogo = settings?.site_logo;
 
     return (
-        <footer className="bg-[#040C18] text-slate-300 border-t border-[#D4AF37]/20 pt-16 pb-12 font-sans relative overflow-hidden">
-            {/* Ambient Background Blur */}
-            <div className="absolute bottom-0 right-0 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none"></div>
-
-            {/* Value Highlights Bar */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-16">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 sm:p-8 rounded-2xl bg-[#0E2038]/60 border border-[#D4AF37]/20 shadow-xl backdrop-blur-sm">
-                    <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center border border-[#D4AF37]/30 shrink-0">
-                            <ShieldCheck className="w-6 h-6 text-[#D4AF37]" />
+        <footer className="mn-footer bg-dark text-white pt-5 pb-4 border-top border-warning">
+            <div className="container-fluid max-w-7xl mx-auto px-3">
+                {/* Value Highlights */}
+                <div className="row g-4 mb-5 p-4 rounded-4 bg-secondary bg-opacity-10 border border-secondary">
+                    <div className="col-md-4 d-flex align-items-center gap-3">
+                        <div className="bg-warning text-dark p-3 rounded-3 shrink-0">
+                            <i className="ri-shield-check-line fs-3"></i>
                         </div>
                         <div>
-                            <h4 className="text-sm font-bold text-white">100% Authentic Guarantee</h4>
-                            <p className="text-xs text-slate-400 mt-0.5">Every item is verified & quality checked</p>
+                            <h5 className="fs-6 fw-bold mb-1">100% Authentic Quality</h5>
+                            <p className="text-muted text-xs mb-0">Every product verified & quality tested</p>
                         </div>
                     </div>
-
-                    <div className="flex items-center gap-4 border-t md:border-t-0 md:border-l border-slate-800 pt-4 md:pt-0 md:pl-6">
-                        <div className="w-12 h-12 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center border border-[#D4AF37]/30 shrink-0">
-                            <Truck className="w-6 h-6 text-[#D4AF37]" />
+                    <div className="col-md-4 d-flex align-items-center gap-3">
+                        <div className="bg-warning text-dark p-3 rounded-3 shrink-0">
+                            <i className="ri-truck-line fs-3"></i>
                         </div>
                         <div>
-                            <h4 className="text-sm font-bold text-white">Express Nationwide Shipping</h4>
-                            <p className="text-xs text-slate-400 mt-0.5">Fast, safe & tracked delivery</p>
+                            <h5 className="fs-6 fw-bold mb-1">Express Shipping</h5>
+                            <p className="text-muted text-xs mb-0">Fast, safe & tracked nationwide delivery</p>
                         </div>
                     </div>
-
-                    <div className="flex items-center gap-4 border-t md:border-t-0 md:border-l border-slate-800 pt-4 md:pt-0 md:pl-6">
-                        <div className="w-12 h-12 rounded-xl bg-[#D4AF37]/10 flex items-center justify-center border border-[#D4AF37]/30 shrink-0">
-                            <RefreshCw className="w-6 h-6 text-[#D4AF37]" />
+                    <div className="col-md-4 d-flex align-items-center gap-3">
+                        <div className="bg-warning text-dark p-3 rounded-3 shrink-0">
+                            <i className="ri-customer-service-2-line fs-3"></i>
                         </div>
                         <div>
-                            <h4 className="text-sm font-bold text-white">Dedicated Support</h4>
-                            <p className="text-xs text-slate-400 mt-0.5">Responsive assistance for all orders</p>
+                            <h5 className="fs-6 fw-bold mb-1">24/7 Dedicated Support</h5>
+                            <p className="text-muted text-xs mb-0">Instant assistance for all orders & queries</p>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            {/* Main Footer Links */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 mb-12">
-                {/* Brand Column */}
-                <div className="space-y-4 md:col-span-1">
-                    <Link href="/" className="flex items-center gap-3">
-                        {siteLogo ? (
-                            <div className="w-10 h-10 rounded-xl bg-white p-1 border border-[#D4AF37]/40 flex items-center justify-center">
-                                <img src={siteLogo} alt={siteName} className="max-h-full max-w-full object-contain" />
-                            </div>
-                        ) : (
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex items-center justify-center shadow-md">
-                                <ShoppingBag className="w-5 h-5 text-[#071324]" />
-                            </div>
-                        )}
-                        <span className="font-extrabold text-lg text-white">{siteName}</span>
-                    </Link>
-                    <p className="text-xs text-slate-400 leading-relaxed">
-                        {settings?.storefront_description || 'Your premier luxury ecommerce destination. Experience unparalleled craftsmanship, curated catalog, and seamless shopping.'}
-                    </p>
-                    <div className="pt-2 text-xs text-[#EBD495] flex items-center gap-1.5 font-semibold">
-                        <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-                        <span>{settings?.storefront_tagline || 'Excellence in Fashion & Retail'}</span>
+                {/* Main Footer Links */}
+                <div className="row g-4 mb-5">
+                    {/* Brand Info */}
+                    <div className="col-lg-4">
+                        <Link href="/" className="d-flex align-items-center text-decoration-none mb-3">
+                            {siteLogo ? (
+                                <img src={siteLogo} alt={siteName} style={{ maxHeight: '45px' }} />
+                            ) : (
+                                <span className="fs-4 fw-bold text-white">{siteName}</span>
+                            )}
+                        </Link>
+                        <p className="text-muted text-xs leading-relaxed mb-3">
+                            {settings?.storefront_description || 'Your premier luxury ecommerce destination. Experience authentic craft, verified catalog, and seamless shopping powered by Antu Storefront Engine.'}
+                        </p>
+                        <div className="text-warning text-xs font-semibold d-flex align-items-center gap-1">
+                            <i className="ri-sparkling-fill"></i>
+                            <span>{settings?.storefront_tagline || 'Excellence in Fashion & Commerce'}</span>
+                        </div>
+                    </div>
+
+                    {/* Quick Navigation */}
+                    <div className="col-6 col-lg-2">
+                        <h6 className="text-warning font-bold uppercase tracking-wider text-xs mb-3">Quick Navigation</h6>
+                        <ul className="list-unstyled text-xs space-y-2 text-muted">
+                            <li><Link href="/" className="text-slate-300 text-decoration-none hover-warning">Home</Link></li>
+                            <li><Link href="/shop" className="text-slate-300 text-decoration-none hover-warning">Shop Catalog</Link></li>
+                            <li><Link href="/shop?on_sale=1" className="text-slate-300 text-decoration-none hover-warning">Special Offers</Link></li>
+                            <li><Link href="/login" className="text-slate-300 text-decoration-none hover-warning">Account Login</Link></li>
+                        </ul>
+                    </div>
+
+                    {/* Customer Support */}
+                    <div className="col-6 col-lg-3">
+                        <h6 className="text-warning font-bold uppercase tracking-wider text-xs mb-3">Customer Support</h6>
+                        <ul className="list-unstyled text-xs space-y-2 text-muted">
+                            <li><span>Shipping & Delivery Policy</span></li>
+                            <li><span>Return & Refund Guarantee</span></li>
+                            <li><span>Terms & Conditions</span></li>
+                            <li><span>Privacy Policy</span></li>
+                        </ul>
+                    </div>
+
+                    {/* Contact Details */}
+                    <div className="col-lg-3">
+                        <h6 className="text-warning font-bold uppercase tracking-wider text-xs mb-3">Contact Information</h6>
+                        <ul className="list-unstyled text-xs space-y-2 text-muted">
+                            {settings?.contact_address && (
+                                <li className="d-flex items-start gap-2">
+                                    <i className="ri-map-pin-line text-warning"></i>
+                                    <span>{settings.contact_address}</span>
+                                </li>
+                            )}
+                            {settings?.contact_phone && (
+                                <li className="d-flex items-center gap-2">
+                                    <i className="ri-phone-line text-warning"></i>
+                                    <span>{settings.contact_phone}</span>
+                                </li>
+                            )}
+                            {settings?.contact_email && (
+                                <li className="d-flex items-center gap-2">
+                                    <i className="ri-mail-line text-warning"></i>
+                                    <span>{settings.contact_email}</span>
+                                </li>
+                            )}
+                        </ul>
                     </div>
                 </div>
 
-                {/* Quick Links */}
-                <div>
-                    <h5 className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] mb-4">Quick Navigation</h5>
-                    <ul className="space-y-2.5 text-xs text-slate-400">
-                        <li>
-                            <Link href="/" className="hover:text-[#EBD495] transition">Home</Link>
-                        </li>
-                        <li>
-                            <Link href="/shop" className="hover:text-[#EBD495] transition">Shop Full Catalog</Link>
-                        </li>
-                        <li>
-                            <Link href="/shop?on_sale=1" className="hover:text-[#EBD495] transition">Special Offers & Sales</Link>
-                        </li>
-                        <li>
-                            <Link href="/login" className="hover:text-[#EBD495] transition">Account Login</Link>
-                        </li>
-                    </ul>
-                </div>
-
-                {/* Information */}
-                <div>
-                    <h5 className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] mb-4">Customer Support</h5>
-                    <ul className="space-y-2.5 text-xs text-slate-400">
-                        <li>
-                            <span className="hover:text-slate-200 cursor-default">Shipping & Delivery Info</span>
-                        </li>
-                        <li>
-                            <span className="hover:text-slate-200 cursor-default">Return & Exchange Policy</span>
-                        </li>
-                        <li>
-                            <span className="hover:text-slate-200 cursor-default">Terms & Conditions</span>
-                        </li>
-                        <li>
-                            <span className="hover:text-slate-200 cursor-default">Privacy Policy</span>
-                        </li>
-                    </ul>
-                </div>
-
-                {/* Contact Information */}
-                <div className="space-y-3">
-                    <h5 className="text-xs font-bold uppercase tracking-wider text-[#D4AF37] mb-4">Contact Information</h5>
-                    {settings?.contact_address && (
-                        <div className="flex items-start gap-2 text-xs text-slate-400">
-                            <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
-                            <span>{settings.contact_address}</span>
-                        </div>
-                    )}
-                    {settings?.contact_phone && (
-                        <div className="flex items-center gap-2 text-xs text-slate-400">
-                            <Phone className="w-4 h-4 text-[#D4AF37] shrink-0" />
-                            <span>{settings.contact_phone}</span>
-                        </div>
-                    )}
-                    {settings?.contact_email && (
-                        <div className="flex items-center gap-2 text-xs text-slate-400">
-                            <Mail className="w-4 h-4 text-[#D4AF37] shrink-0" />
-                            <span>{settings.contact_email}</span>
-                        </div>
-                    )}
-                </div>
-            </div>
-
-            {/* Bottom Copyright Bar */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-8 border-t border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
-                <p>{settings?.copyright_text || `${siteName} © ${new Date().getFullYear()}. All rights reserved.`}</p>
-                <div className="flex items-center gap-4">
-                    <span className="hover:text-slate-300 transition cursor-default">Privacy</span>
-                    <span>•</span>
-                    <span className="hover:text-slate-300 transition cursor-default">Terms</span>
-                    <span>•</span>
-                    <span className="hover:text-[#EBD495] transition cursor-default">Powered by ORIO Engine</span>
+                {/* Bottom Bar */}
+                <div className="pt-4 border-top border-secondary border-opacity-50 d-flex flex-wrap justify-content-between align-items-center text-xs text-muted">
+                    <p className="mb-0">{settings?.copyright_text || `${siteName} © ${new Date().getFullYear()}. All rights reserved.`}</p>
+                    <div className="d-flex align-items-center gap-3">
+                        <span>Antu Ecommerce Template</span>
+                        <span>•</span>
+                        <span>ORIO Engine v1.0</span>
+                    </div>
                 </div>
             </div>
         </footer>
