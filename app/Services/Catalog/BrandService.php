@@ -46,6 +46,10 @@ class BrandService
      */
     public function createBrand(array $data, ?UploadedFile $logoFile = null): Brand
     {
+        if (!empty($data['website_url']) && !str_starts_with($data['website_url'], 'http://') && !str_starts_with($data['website_url'], 'https://')) {
+            $data['website_url'] = 'https://' . $data['website_url'];
+        }
+
         if (empty($data['slug'])) {
             $data['slug'] = $this->generateUniqueSlug($data['name']);
         }
@@ -65,6 +69,9 @@ class BrandService
      */
     public function updateBrand(Brand $brand, array $data, ?UploadedFile $logoFile = null, bool $removeLogo = false): Brand
     {
+        if (!empty($data['website_url']) && !str_starts_with($data['website_url'], 'http://') && !str_starts_with($data['website_url'], 'https://')) {
+            $data['website_url'] = 'https://' . $data['website_url'];
+        }
         if (!empty($data['name']) && $data['name'] !== $brand->name && empty($data['slug'])) {
             $data['slug'] = $this->generateUniqueSlug($data['name'], $brand->id);
         }

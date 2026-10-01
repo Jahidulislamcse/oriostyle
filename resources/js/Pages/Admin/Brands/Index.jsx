@@ -103,7 +103,7 @@ export default function BrandIndex({ brands = { data: [] }, stats = {}, filters 
         reset();
         clearErrors();
         setEditingBrand(brand);
-        setLogoPreview(brand.logo_url || null);
+        setLogoPreview(brand.logo_url || brand.logo || null);
         setData({
             name: brand.name || '',
             slug: brand.slug || '',
@@ -171,8 +171,8 @@ export default function BrandIndex({ brands = { data: [] }, stats = {}, filters 
                 return (
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-lg bg-navy-800 border border-gold-500/20 flex items-center justify-center overflow-hidden flex-shrink-0">
-                            {row.logo_url ? (
-                                <img src={row.logo_url} alt={row.name} className="w-full h-full object-contain p-1" />
+                            {(row.logo_url || row.logo) ? (
+                                <img src={row.logo_url || row.logo} alt={row.name} className="w-full h-full object-contain p-1" />
                             ) : (
                                 <Award className="w-5 h-5 text-gold-400/60" />
                             )}
@@ -410,8 +410,8 @@ export default function BrandIndex({ brands = { data: [] }, stats = {}, filters 
                                 <div>
                                     <div className="flex items-start justify-between gap-3">
                                         <div className="w-14 h-14 rounded-xl bg-navy-950 border border-gold-500/20 flex items-center justify-center overflow-hidden flex-shrink-0 group-hover:border-gold-500/50 transition-colors">
-                                            {brand.logo_url ? (
-                                                <img src={brand.logo_url} alt={brand.name} className="w-full h-full object-contain p-2" />
+                                            {(brand.logo_url || brand.logo) ? (
+                                                <img src={brand.logo_url || brand.logo} alt={brand.name} className="w-full h-full object-contain p-2" />
                                             ) : (
                                                 <Award className="w-7 h-7 text-gold-400/50" />
                                             )}

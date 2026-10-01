@@ -26,6 +26,10 @@ class Brand extends Model
         'meta_description',
     ];
 
+    protected $appends = [
+        'logo_url',
+    ];
+
     protected function casts(): array
     {
         return [
@@ -33,6 +37,22 @@ class Brand extends Model
             'is_active' => 'boolean',
             'is_featured' => 'boolean',
         ];
+    }
+
+    /**
+     * Accessor: Get full public logo URL safely.
+     */
+    public function getLogoUrlAttribute(): ?string
+    {
+        if (empty($this->logo)) {
+            return null;
+        }
+
+        if (str_starts_with($this->logo, 'http://') || str_starts_with($this->logo, 'https://')) {
+            return $this->logo;
+        }
+
+        return asset('storage/' . ltrim($this->logo, '/'));
     }
 
     /**
