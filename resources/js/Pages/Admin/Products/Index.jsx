@@ -295,7 +295,7 @@ export default function ProductIndex({
                     <div className="flex items-center gap-2">
                         {productId ? (
                             <Link
-                                href={route('admin.products.edit', productId)}
+                                href={`/admin/products/${productId}/edit`}
                                 className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
                                 title="Edit Product"
                             >
@@ -588,7 +588,7 @@ export default function ProductIndex({
                                         <div className="flex items-center gap-1">
                                             {product?.id ? (
                                                 <Link
-                                                    href={route('admin.products.edit', product.id)}
+                                                    href={`/admin/products/${product.id}/edit`}
                                                     className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
                                                     title="Edit Product"
                                                 >
