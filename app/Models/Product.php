@@ -120,16 +120,20 @@ class Product extends Model
     }
 
     /**
-     * Accessor: Get primary image URL safely
+     * Accessor: Get primary image URL safely without triggering lazy loading violations.
      */
     public function getPrimaryImageUrlAttribute(): ?string
     {
-        $img = $this->primaryImage ?? $this->images->first();
-        if (!$img) {
-            return null;
+        if ($this->relationLoaded('primaryImage') && $this->primaryImage) {
+            return $this->primaryImage->image_url ?? $this->primaryImage->image_path;
         }
 
-        return $img->image_url ?? $img->image_path;
+        if ($this->relationLoaded('images') && $this->images->isNotEmpty()) {
+            $img = $this->images->firstWhere('is_primary', true) ?? $this->images->first();
+            return $img->image_url ?? $img->image_path;
+        }
+
+        return null;
     }
 
     /**

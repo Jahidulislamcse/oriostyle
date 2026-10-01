@@ -115,7 +115,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product): Response
     {
-        $product->load(['category', 'brand', 'images', 'variants']);
+        $product->load(['category', 'brand', 'primaryImage', 'images', 'variants']);
         $categories = Category::query()->orderBy('name')->get(['id', 'name', 'parent_id']);
         $brands = Brand::query()->orderBy('name')->get(['id', 'name']);
 

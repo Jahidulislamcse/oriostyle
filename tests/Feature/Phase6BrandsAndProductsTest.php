@@ -259,6 +259,63 @@ class Phase6BrandsAndProductsTest extends TestCase
         );
     }
 
+    public function test_admin_can_render_edit_product_page(): void
+    {
+        $category = Category::create(['name' => 'Jewelry', 'slug' => 'jewelry']);
+        $brand = Brand::create(['name' => 'Cartier', 'slug' => 'cartier']);
+
+        $product = Product::create([
+            'category_id' => $category->id,
+            'brand_id' => $brand->id,
+            'name' => 'Cartier Ring',
+            'slug' => 'cartier-ring',
+            'sku' => 'RING-001',
+            'base_price' => 1500.00,
+            'stock_quantity' => 10,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->adminUser)
+            ->get(route('admin.products.edit', $product->id));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) =>
+            $page->component('Admin/Products/Form')
+                ->where('product.id', $product->id)
+                ->where('product.name', 'Cartier Ring')
+        );
+    }
+
+    public function test_admin_can_update_product(): void
+    {
+        $product = Product::create([
+            'name' => 'Original Watch',
+            'slug' => 'original-watch',
+            'sku' => 'WATCH-001',
+            'base_price' => 100.00,
+            'stock_quantity' => 5,
+        ]);
+
+        $response = $this->actingAs($this->adminUser)
+            ->put(route('admin.products.update', $product->id), [
+                'name' => 'Updated Luxury Watch',
+                'slug' => 'updated-luxury-watch',
+                'sku' => 'WATCH-001',
+                'base_price' => 250.00,
+                'stock_quantity' => 15,
+                'is_active' => true,
+            ]);
+
+        $response->assertRedirect(route('admin.products.index'));
+
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id,
+            'name' => 'Updated Luxury Watch',
+            'base_price' => 250.00,
+            'stock_quantity' => 15,
+        ]);
+    }
+
     public function test_non_admin_cannot_access_brands_or_products(): void
     {
         $this->actingAs($this->customerUser)
