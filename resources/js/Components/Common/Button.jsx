@@ -39,6 +39,8 @@ export default function Button({
         >
             {processing ? (
                 <Loader2 className="w-4 h-4 animate-spin text-current" />
+            ) : React.isValidElement(icon) ? (
+                icon
             ) : Icon ? (
                 <Icon className="w-4 h-4 text-current flex-shrink-0" />
             ) : null}
