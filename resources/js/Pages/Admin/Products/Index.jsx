@@ -586,12 +586,15 @@ export default function ProductIndex({
                                         </button>
 
                                         <div className="flex items-center gap-1">
-                                            <Link
-                                                href={route('admin.products.edit', product.id)}
-                                                className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
-                                            >
-                                                <Edit3 className="w-4 h-4" />
-                                            </Link>
+                                            {product?.id ? (
+                                                <Link
+                                                    href={route('admin.products.edit', product.id)}
+                                                    className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
+                                                    title="Edit Product"
+                                                >
+                                                    <Edit3 className="w-4 h-4" />
+                                                </Link>
+                                            ) : null}
                                             <button
                                                 onClick={() => setDeletingProduct(product)}
                                                 className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-navy-800 transition-colors"
