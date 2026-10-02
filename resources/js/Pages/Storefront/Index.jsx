@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
+import HeroSlider from '@/Components/Storefront/HeroSlider';
 
 export default function Index({
     navCategories = [],
@@ -18,43 +19,50 @@ export default function Index({
         <StorefrontLayout navCategories={navCategories}>
             <Head title={`${siteName} - ${siteTagline}`} />
 
-            <div className="mn-main-content">
-                <div className="row">
-                    <div className="col-xxl-12">
+            <div className="row">
+                <div className="col-xxl-12">
 
-                        {/* Hero Banner Section */}
-                        <section className="mn-hero swiper-container m-b-15">
-                            <div className="mn-hero-slider owl-carousel">
-                                <div className="mn-hero-slide swiper-slide slide-1">
-                                    <div className="mn-hero-detail">
-                                        <p className="label"><span>50%<br />OFF</span></p>
-                                        <h1>Fashion & Style<br />Collection 2026</h1>
-                                        <p>Discover premium apparel and trending dynamic catalog items.</p>
-                                        <a href="#featured-products" className="mn-btn-2"><span>Shop Now</span></a>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
+                    {/* Banner Carousel below Nav */}
+                    <HeroSlider />
 
-                        {/* Featured Categories Carousel Section */}
-                        {featuredCategories && featuredCategories.length > 0 && (
-                            <section className="mn-category p-tb-15">
-                                <div className="mn-title mb-4">
-                                    <h2>Featured <span>Categories</span></h2>
-                                </div>
-                                <div className="row">
-                                    {featuredCategories.map((cat, index) => (
-                                        <div key={cat.id} className="col-lg-2 col-md-4 col-6 m-b-15">
+                    {/* Category Cards Section */}
+                    <section className="mn-category p-tb-15">
+                        <div className="row">
+                            {featuredCategories && featuredCategories.length > 0 ? (
+                                featuredCategories.slice(0, 6).map((cat, index) => {
+                                    const baseImgIdx = (index * 3) + 1;
+                                    const discounts = ['35%', '22%', '65%', '45%', '63%', '23%'];
+                                    const discount = discounts[index % discounts.length];
+
+                                    return (
+                                        <div key={cat.id} className="col-lg-2 col-md-4 col-sm-6 col-12 m-b-15">
                                             <div className={`mn-cat-card cat-card-${(index % 6) + 1}`}>
-                                                <span className="bg">{cat.products_count || 0}</span>
+                                                <p className="lbl"><span>{discount}</span></p>
+                                                <span className="bg">{discount}</span>
                                                 <h4>Category</h4>
                                                 <h3>{cat.name}</h3>
-                                                <p>Items ({cat.products_count || 0})</p>
+                                                <p>Items ({cat.products_count || 12})</p>
                                                 <ul>
                                                     <li>
                                                         <Link href={`/?category=${cat.slug}`}>
                                                             <img
-                                                                src={cat.image || `/storefront/img/category/${(index % 12) + 1}.jpg`}
+                                                                src={cat.image || `/storefront/img/category/${baseImgIdx}.jpg`}
+                                                                alt={cat.name}
+                                                            />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={`/?category=${cat.slug}`}>
+                                                            <img
+                                                                src={`/storefront/img/category/${baseImgIdx + 1}.jpg`}
+                                                                alt={cat.name}
+                                                            />
+                                                        </Link>
+                                                    </li>
+                                                    <li>
+                                                        <Link href={`/?category=${cat.slug}`}>
+                                                            <img
+                                                                src={`/storefront/img/category/${baseImgIdx + 2}.jpg`}
                                                                 alt={cat.name}
                                                             />
                                                         </Link>
@@ -62,188 +70,216 @@ export default function Index({
                                                 </ul>
                                             </div>
                                         </div>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
+                                    );
+                                })
+                            ) : (
+                                [
+                                    { title: 'Clothes', subtitle: 'Fashion', count: 16, discount: '35%', card: 1, imgs: [1, 2, 3] },
+                                    { title: 'Cosmetics', subtitle: 'Generic', count: 45, discount: '22%', card: 2, imgs: [4, 5, 6] },
+                                    { title: 'Shoes', subtitle: 'Stylish', count: 58, discount: '65%', card: 3, imgs: [7, 8, 9] },
+                                    { title: 'Watches', subtitle: 'Digital', count: 64, discount: '45%', card: 4, imgs: [10, 11, 12] },
+                                    { title: 'Belts', subtitle: 'Leather', count: 75, discount: '63%', card: 5, imgs: [13, 14, 15] },
+                                    { title: 'Bags', subtitle: 'Cotton', count: 15, discount: '23%', card: 6, imgs: [16, 17, 18] },
+                                ].map((cat) => (
+                                    <div key={cat.card} className="col-lg-2 col-md-4 col-sm-6 col-12 m-b-15">
+                                        <div className={`mn-cat-card cat-card-${cat.card}`}>
+                                            <p className="lbl"><span>{cat.discount}</span></p>
+                                            <span className="bg">{cat.discount}</span>
+                                            <h4>{cat.subtitle}</h4>
+                                            <h3>{cat.title}</h3>
+                                            <p>Items ({cat.count})</p>
+                                            <ul>
+                                                {cat.imgs.map((imgNum) => (
+                                                    <li key={imgNum}>
+                                                        <Link href="/?category=all">
+                                                            <img src={`/storefront/img/category/${imgNum}.jpg`} alt={cat.title} />
+                                                        </Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                ))
+                            )}
+                        </div>
+                    </section>
 
-                        {/* Featured Products Section */}
-                        {featuredProducts && featuredProducts.length > 0 && (
-                            <section id="featured-products" className="mn-new-product p-tb-15">
-                                <div className="mn-title mb-4">
-                                    <h2>Featured <span>Products</span></h2>
-                                </div>
-                                <div className="row">
-                                    {featuredProducts.map((product) => {
-                                        const primaryImg = product.primary_image?.image_path || '/storefront/img/product/1.jpg';
-                                        const price = parseFloat(product.base_price || 0).toFixed(2);
-                                        const comparePrice = product.sale_price ? parseFloat(product.sale_price).toFixed(2) : null;
-
-                                        return (
-                                            <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 m-b-30">
-                                                <div className="mn-product-card">
-                                                    <div className="mn-product-img">
-                                                        {comparePrice ? (
-                                                            <div className="lbl">
-                                                                <span className="trending">Sale</span>
-                                                            </div>
-                                                        ) : product.is_featured ? (
-                                                            <div className="lbl">
-                                                                <span className="new">Featured</span>
-                                                            </div>
-                                                        ) : null}
-                                                        <div className="mn-img">
-                                                            <Link href="/" className="image">
-                                                                <img className="main-img" src={primaryImg} alt={product.name} />
-                                                            </Link>
-                                                            <div className="mn-options">
-                                                                <ul>
-                                                                    <li>
-                                                                        <button type="button" className="mn-add-cart border-0 bg-transparent" title="Add To Cart">
-                                                                            <i className="ri-shopping-cart-line" />
-                                                                        </button>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="mn-product-detail">
-                                                        <div className="cat">
-                                                            <Link href={`/?category=${product.category?.slug || ''}`}>
-                                                                {product.category?.name || 'General'}
-                                                            </Link>
-                                                        </div>
-                                                        <h5>
-                                                            <Link href="/">{product.name}</Link>
-                                                        </h5>
-                                                        <div className="mn-price">
-                                                            <div className="mn-price-new">{currencySymbol}{price}</div>
-                                                            {comparePrice && (
-                                                                <div className="mn-price-old">{currencySymbol}{comparePrice}</div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </section>
-                        )}
-
-                        {/* New Arrivals Section */}
-                        {newArrivals && newArrivals.length > 0 && (
-                            <section id="new-arrivals" className="mn-new-product p-tb-15">
-                                <div className="mn-title mb-4">
-                                    <h2>New <span>Arrivals</span></h2>
-                                </div>
-                                <div className="row">
-                                    {newArrivals.map((product) => {
-                                        const primaryImg = product.primary_image?.image_path || '/storefront/img/product/5.jpg';
-                                        const price = parseFloat(product.base_price || 0).toFixed(2);
-                                        const comparePrice = product.sale_price ? parseFloat(product.sale_price).toFixed(2) : null;
-
-                                        return (
-                                            <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 m-b-30">
-                                                <div className="mn-product-card">
-                                                    <div className="mn-product-img">
-                                                        <div className="lbl">
-                                                            <span className="new">New</span>
-                                                        </div>
-                                                        <div className="mn-img">
-                                                            <Link href="/" className="image">
-                                                                <img className="main-img" src={primaryImg} alt={product.name} />
-                                                            </Link>
-                                                            <div className="mn-options">
-                                                                <ul>
-                                                                    <li>
-                                                                        <button type="button" className="mn-add-cart border-0 bg-transparent" title="Add To Cart">
-                                                                            <i className="ri-shopping-cart-line" />
-                                                                        </button>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div className="mn-product-detail">
-                                                        <div className="cat">
-                                                            <Link href={`/?category=${product.category?.slug || ''}`}>
-                                                                {product.category?.name || 'General'}
-                                                            </Link>
-                                                        </div>
-                                                        <h5>
-                                                            <Link href="/">{product.name}</Link>
-                                                        </h5>
-                                                        <div className="mn-price">
-                                                            <div className="mn-price-new">{currencySymbol}{price}</div>
-                                                            {comparePrice && (
-                                                                <div className="mn-price-old">{currencySymbol}{comparePrice}</div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </section>
-                        )}
-
-                        {/* Service Highlights Section */}
-                        <section className="mn-service p-tb-15 my-4">
+                    {/* Featured Products Section */}
+                    {featuredProducts && featuredProducts.length > 0 && (
+                        <section id="featured-products" className="mn-new-product p-tb-15">
+                            <div className="mn-title mb-4">
+                                <h2>Featured <span>Products</span></h2>
+                            </div>
                             <div className="row">
-                                <div className="col-lg-3 col-sm-6 m-b-15">
-                                    <div className="mn-service-box p-3 border rounded text-center">
-                                        <i className="ri-truck-line display-6 text-primary mb-2" />
-                                        <h5>Fast Delivery</h5>
-                                        <p className="text-muted mb-0">Inside city: {settings.estimated_delivery_inside || '24-48 Hours'}</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-3 col-sm-6 m-b-15">
-                                    <div className="mn-service-box p-3 border rounded text-center">
-                                        <i className="ri-shield-check-line display-6 text-primary mb-2" />
-                                        <h5>100% Genuine</h5>
-                                        <p className="text-muted mb-0">Authentic products directly from brands</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-3 col-sm-6 m-b-15">
-                                    <div className="mn-service-box p-3 border rounded text-center">
-                                        <i className="ri-customer-service-2-line display-6 text-primary mb-2" />
-                                        <h5>24/7 Support</h5>
-                                        <p className="text-muted mb-0">Dedicated customer care assistance</p>
-                                    </div>
-                                </div>
-                                <div className="col-lg-3 col-sm-6 m-b-15">
-                                    <div className="mn-service-box p-3 border rounded text-center">
-                                        <i className="ri-secure-payment-line display-6 text-primary mb-2" />
-                                        <h5>Secure Payment</h5>
-                                        <p className="text-muted mb-0">COD & encrypted payment processing</p>
-                                    </div>
-                                </div>
+                                {featuredProducts.map((product) => {
+                                    const primaryImg = product.primary_image?.image_path || '/storefront/img/product/1.jpg';
+                                    const price = parseFloat(product.base_price || 0).toFixed(2);
+                                    const comparePrice = product.sale_price ? parseFloat(product.sale_price).toFixed(2) : null;
+
+                                    return (
+                                        <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 m-b-30">
+                                            <div className="mn-product-card">
+                                                <div className="mn-product-img">
+                                                    {comparePrice ? (
+                                                        <div className="lbl">
+                                                            <span className="trending">Sale</span>
+                                                        </div>
+                                                    ) : product.is_featured ? (
+                                                        <div className="lbl">
+                                                            <span className="new">Featured</span>
+                                                        </div>
+                                                    ) : null}
+                                                    <div className="mn-img">
+                                                        <Link href="/" className="image">
+                                                            <img className="main-img" src={primaryImg} alt={product.name} />
+                                                        </Link>
+                                                        <div className="mn-options">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="javascript:void(0)" className="mn-add-cart" title="Add To Cart">
+                                                                        <i className="ri-shopping-cart-line" />
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="mn-product-detail">
+                                                    <div className="cat">
+                                                        <Link href={`/?category=${product.category?.slug || ''}`}>
+                                                            {product.category?.name || 'General'}
+                                                        </Link>
+                                                    </div>
+                                                    <h5>
+                                                        <Link href="/">{product.name}</Link>
+                                                    </h5>
+                                                    <div className="mn-price">
+                                                        <div className="mn-price-new">{currencySymbol}{price}</div>
+                                                        {comparePrice && (
+                                                            <div className="mn-price-old">{currencySymbol}{comparePrice}</div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </section>
+                    )}
 
-                        {/* Partner Brands Section */}
-                        {brands && brands.length > 0 && (
-                            <section className="mn-brand p-tb-15">
-                                <div className="mn-title mb-4">
-                                    <h2>Partner <span>Brands</span></h2>
-                                </div>
-                                <div className="row align-items-center">
-                                    {brands.map((brand) => (
-                                        <div key={brand.id} className="col-lg-2 col-md-3 col-4 text-center mb-3">
-                                            {brand.logo ? (
-                                                <img src={brand.logo} alt={brand.name} style={{ maxHeight: '50px', filter: 'grayscale(80%)', opacity: 0.8 }} className="img-fluid" />
-                                            ) : (
-                                                <span className="fw-bold text-muted">{brand.name}</span>
-                                            )}
+                    {/* New Arrivals Section */}
+                    {newArrivals && newArrivals.length > 0 && (
+                        <section id="new-arrivals" className="mn-new-product p-tb-15">
+                            <div className="mn-title mb-4">
+                                <h2>New <span>Arrivals</span></h2>
+                            </div>
+                            <div className="row">
+                                {newArrivals.map((product) => {
+                                    const primaryImg = product.primary_image?.image_path || '/storefront/img/product/5.jpg';
+                                    const price = parseFloat(product.base_price || 0).toFixed(2);
+                                    const comparePrice = product.sale_price ? parseFloat(product.sale_price).toFixed(2) : null;
+
+                                    return (
+                                        <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 m-b-30">
+                                            <div className="mn-product-card">
+                                                <div className="mn-product-img">
+                                                    <div className="lbl">
+                                                        <span className="new">New</span>
+                                                    </div>
+                                                    <div className="mn-img">
+                                                        <Link href="/" className="image">
+                                                            <img className="main-img" src={primaryImg} alt={product.name} />
+                                                        </Link>
+                                                        <div className="mn-options">
+                                                            <ul>
+                                                                <li>
+                                                                    <a href="javascript:void(0)" className="mn-add-cart" title="Add To Cart">
+                                                                        <i className="ri-shopping-cart-line" />
+                                                                    </a>
+                                                                </li>
+                                                            </ul>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="mn-product-detail">
+                                                    <div className="cat">
+                                                        <Link href={`/?category=${product.category?.slug || ''}`}>
+                                                            {product.category?.name || 'General'}
+                                                        </Link>
+                                                    </div>
+                                                    <h5>
+                                                        <Link href="/">{product.name}</Link>
+                                                    </h5>
+                                                    <div className="mn-price">
+                                                        <div className="mn-price-new">{currencySymbol}{price}</div>
+                                                        {comparePrice && (
+                                                            <div className="mn-price-old">{currencySymbol}{comparePrice}</div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
+                                    );
+                                })}
+                            </div>
+                        </section>
+                    )}
 
-                    </div>
+                    {/* Service Highlights Section */}
+                    <section className="mn-service p-tb-15 my-4">
+                        <div className="row">
+                            <div className="col-lg-3 col-sm-6 m-b-15">
+                                <div className="mn-service-box p-3 border rounded text-center">
+                                    <i className="ri-truck-line display-6 text-primary mb-2" />
+                                    <h5>Fast Delivery</h5>
+                                    <p className="text-muted mb-0">Inside city: {settings.estimated_delivery_inside || '24-48 Hours'}</p>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-sm-6 m-b-15">
+                                <div className="mn-service-box p-3 border rounded text-center">
+                                    <i className="ri-shield-check-line display-6 text-primary mb-2" />
+                                    <h5>100% Genuine</h5>
+                                    <p className="text-muted mb-0">Authentic products directly from brands</p>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-sm-6 m-b-15">
+                                <div className="mn-service-box p-3 border rounded text-center">
+                                    <i className="ri-customer-service-2-line display-6 text-primary mb-2" />
+                                    <h5>24/7 Support</h5>
+                                    <p className="text-muted mb-0">Dedicated customer care assistance</p>
+                                </div>
+                            </div>
+                            <div className="col-lg-3 col-sm-6 m-b-15">
+                                <div className="mn-service-box p-3 border rounded text-center">
+                                    <i className="ri-secure-payment-line display-6 text-primary mb-2" />
+                                    <h5>Secure Payment</h5>
+                                    <p className="text-muted mb-0">COD & encrypted payment processing</p>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* Partner Brands Section */}
+                    {brands && brands.length > 0 && (
+                        <section className="mn-brand p-tb-15">
+                            <div className="mn-title mb-4">
+                                <h2>Partner <span>Brands</span></h2>
+                            </div>
+                            <div className="row align-items-center">
+                                {brands.map((brand) => (
+                                    <div key={brand.id} className="col-lg-2 col-md-3 col-4 text-center mb-3">
+                                        {brand.logo ? (
+                                            <img src={brand.logo} alt={brand.name} style={{ maxHeight: '50px', filter: 'grayscale(80%)', opacity: 0.8 }} className="img-fluid" />
+                                        ) : (
+                                            <span className="fw-bold text-muted">{brand.name}</span>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
                 </div>
             </div>
         </StorefrontLayout>
