@@ -147,6 +147,22 @@ class Product extends Model
     }
 
     /**
+     * Accessor: Get price for storefront display
+     */
+    public function getPriceAttribute(): float
+    {
+        return $this->effective_price;
+    }
+
+    /**
+     * Accessor: Get compare at price for storefront display
+     */
+    public function getComparePriceAttribute(): ?float
+    {
+        return $this->is_on_sale ? $this->base_price : null;
+    }
+
+    /**
      * Accessor: Check if on sale
      */
     public function getIsOnSaleAttribute(): bool

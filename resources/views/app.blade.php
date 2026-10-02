@@ -28,36 +28,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Icon CSS -->
-    <link href="/assets/css/vendor/materialdesignicons.min.css" rel="stylesheet">
-    <link href="/assets/css/vendor/remixicon.css" rel="stylesheet">
-
-    <!-- Antu Vendor CSS -->
-    <link href="/assets/css/vendor/bootstrap.min.css" rel="stylesheet">
-    <link href="/assets/css/vendor/animate.min.css" rel="stylesheet">
-    <link href="/assets/css/vendor/owl.carousel.min.css" rel="stylesheet">
-    <link href="/assets/css/vendor/slick.min.css" rel="stylesheet">
-    <link href="/assets/css/vendor/swiper-bundle.min.css" rel="stylesheet">
-    <link href="/assets/css/vendor/nouislider.css" rel="stylesheet">
-
-    <!-- Antu Main Template CSS -->
-    <link href="/assets/css/style.css" rel="stylesheet">
-
     <!-- Ziggy Named Routes & Scripts -->
     @routes
     @viteReactRefresh
     @vite(['resources/css/app.css', 'resources/js/app.jsx'])
     @inertiaHead
 </head>
-<body class="h-full font-sans antialiased bg-[#F4F7FB] text-slate-800 dark:bg-[#071324] dark:text-slate-100 selection:bg-[#D4AF37] selection:text-[#071324] transition-colors duration-200" data-mn-mode="light">
+<body class="h-full font-sans antialiased bg-[#F4F7FB] text-slate-800 dark:bg-[#071324] dark:text-slate-100 selection:bg-[#D4AF37] selection:text-[#071324] transition-colors duration-200">
     @inertia
-
-    <!-- Antu Template Vendor JS -->
-    <script src="/assets/js/vendor/jquery-3.7.1.min.js"></script>
-    <script src="/assets/js/vendor/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/vendor/swiper-bundle.min.js"></script>
-    <script src="/assets/js/vendor/slick.min.js"></script>
-    <script src="/assets/js/vendor/nouislider.js"></script>
-    <script src="/assets/js/main.js"></script>
 </body>
 </html>

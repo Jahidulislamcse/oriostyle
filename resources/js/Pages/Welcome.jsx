@@ -1,173 +1,89 @@
-import React, { useState } from 'react';
-import { Head, Link, usePage } from '@inertiajs/react';
-import StoreLayout from '@/Layouts/StoreLayout';
-import ProductCard from '@/Components/Storefront/ProductCard';
-import QuickViewModal from '@/Components/Storefront/QuickViewModal';
+import React from 'react';
+import { Head, Link } from '@inertiajs/react';
+import { Sparkles, LayoutDashboard, LogIn, LogOut } from 'lucide-react';
 
-export default function Welcome({
-    categoriesTree = [],
-    featuredBrands = [],
-    featuredProducts = [],
-    newArrivals = [],
-}) {
-    const { settings, appName } = usePage().props;
+export default function Welcome({ appName, auth, settings = {} }) {
     const siteName = settings?.site_name || appName || 'ORIO STYLE LTD';
+    const siteLogo = settings?.site_logo;
     const siteFavicon = settings?.site_favicon;
 
-    const [quickViewProduct, setQuickViewProduct] = useState(null);
-
     return (
-        <StoreLayout categoriesTree={categoriesTree}>
-            <Head title={`${siteName} - Mantu Storefront`}>
+        <div className="min-h-screen bg-[#071324] text-slate-100 flex flex-col justify-between p-6 sm:p-8 selection:bg-[#D4AF37] selection:text-[#071324] font-sans antialiased relative overflow-hidden">
+            <Head title={`${siteName} - System Development in Progress`}>
                 {siteFavicon && <link rel="icon" href={siteFavicon} />}
             </Head>
 
-            <div className="container-fluid px-3 py-2">
-                {/* Hero Swiper Banner Section (Exact Mantu Template Visual) */}
-                <section className="mn-hero swiper-container m-b-15">
-                    <div className="mn-hero-slider">
-                        <div className="mn-hero-slide swiper-slide slide-1">
-                            <div className="mn-hero-detail">
-                                <p className="label"><span>44%<br />Off</span></p>
-                                <h1>Fashion sale <br />for Children's</h1>
-                                <p>Wear the change. Fashion that feels good.</p>
-                                <Link href="/shop" className="mn-btn-2"><span>Shop Now</span></Link>
-                            </div>
-                        </div>
-                    </div>
-                </section>
+            {/* Subtle Ambient Glow */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#D4AF37]/5 rounded-full blur-3xl pointer-events-none"></div>
 
-                {/* Category Banner Showcase Row (4 Gray Cards with 3 Thumbnails Each) */}
-                <section className="mn-category p-tb-15">
-                    <div className="row g-3">
-                        {/* Category Card 1 */}
-                        <div className="col-lg-3 col-md-6">
-                            <div className="mn-cat-card cat-card-1 h-100">
-                                <p className="lbl"><span>35%</span></p>
-                                <span className="bg">35%</span>
-                                <h4>Fashion</h4>
-                                <h3>Clothes</h3>
-                                <p>Items ({categoriesTree?.[0]?.products_count || 16})</p>
-                                <ul>
-                                    <li><Link href="/shop?category=clothes"><img src="/assets/img/category/1.jpg" alt="category" /></Link></li>
-                                    <li><Link href="/shop?category=clothes"><img src="/assets/img/category/2.jpg" alt="category" /></Link></li>
-                                    <li><Link href="/shop?category=clothes"><img src="/assets/img/category/3.jpg" alt="category" /></Link></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        {/* Category Card 2 */}
-                        <div className="col-lg-3 col-md-6">
-                            <div className="mn-cat-card cat-card-2 h-100">
-                                <p className="lbl"><span>22%</span></p>
-                                <span className="bg">22%</span>
-                                <h4>Generic</h4>
-                                <h3>Cosmetics</h3>
-                                <p>Items (45)</p>
-                                <ul>
-                                    <li><Link href="/shop?category=cosmetics"><img src="/assets/img/category/4.jpg" alt="category" /></Link></li>
-                                    <li><Link href="/shop?category=cosmetics"><img src="/assets/img/category/5.jpg" alt="category" /></Link></li>
-                                    <li><Link href="/shop?category=cosmetics"><img src="/assets/img/category/6.jpg" alt="category" /></Link></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        {/* Category Card 3 */}
-                        <div className="col-lg-3 col-md-6">
-                            <div className="mn-cat-card cat-card-3 h-100">
-                                <p className="lbl"><span>65%</span></p>
-                                <span className="bg">65%</span>
-                                <h4>Stylish</h4>
-                                <h3>Shoes</h3>
-                                <p>Items (58)</p>
-                                <ul>
-                                    <li><Link href="/shop?category=shoes"><img src="/assets/img/category/7.jpg" alt="category" /></Link></li>
-                                    <li><Link href="/shop?category=shoes"><img src="/assets/img/category/8.jpg" alt="category" /></Link></li>
-                                    <li><Link href="/shop?category=shoes"><img src="/assets/img/category/9.jpg" alt="category" /></Link></li>
-                                </ul>
-                            </div>
-                        </div>
-
-                        {/* Category Card 4 */}
-                        <div className="col-lg-3 col-md-6">
-                            <div className="mn-cat-card cat-card-4 h-100">
-                                <p className="lbl"><span>45%</span></p>
-                                <span className="bg">45%</span>
-                                <h4>Digital</h4>
-                                <h3>Watches</h3>
-                                <p>Items (64)</p>
-                                <ul>
-                                    <li><Link href="/shop?category=watches"><img src="/assets/img/category/10.jpg" alt="category" /></Link></li>
-                                    <li><Link href="/shop?category=watches"><img src="/assets/img/category/11.jpg" alt="category" /></Link></li>
-                                    <li><Link href="/shop?category=watches"><img src="/assets/img/category/12.jpg" alt="category" /></Link></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                {/* New Arrivals Section */}
-                <section className="mn-new-product p-tb-15">
-                    <div className="mn-title d-flex justify-content-between align-items-center mb-3">
-                        <h2>New <span>Arrivals</span></h2>
-                        <Link href="/shop" className="text-dark font-bold text-xs">View All →</Link>
-                    </div>
-
-                    <div className="row g-3">
-                        {newArrivals && newArrivals.length > 0 ? (
-                            newArrivals.map((product) => (
-                                <div key={product.id} className="col-lg-3 col-md-4 col-sm-6">
-                                    <ProductCard
-                                        product={product}
-                                        onQuickView={(p) => setQuickViewProduct(p)}
-                                    />
-                                </div>
-                            ))
-                        ) : (
-                            featuredProducts.map((product) => (
-                                <div key={product.id} className="col-lg-3 col-md-4 col-sm-6">
-                                    <ProductCard
-                                        product={product}
-                                        onQuickView={(p) => setQuickViewProduct(p)}
-                                    />
-                                </div>
-                            ))
+            {/* Top Navigation / Staff Access */}
+            <header className="w-full max-w-7xl mx-auto flex justify-end z-10">
+                {auth?.user ? (
+                    <div className="flex items-center gap-2 sm:gap-3">
+                        {(auth.user.role === 'super_admin' || auth.user.role === 'admin') && (
+                            <Link
+                                href="/admin/dashboard"
+                                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#0E2038] hover:bg-[#142C49] text-[#EBD495] text-xs font-semibold border border-[#D4AF37]/40 transition shadow-xs"
+                            >
+                                <LayoutDashboard className="w-3.5 h-3.5 text-[#D4AF37]" />
+                                <span>Admin Dashboard</span>
+                            </Link>
                         )}
+                        <span className="text-xs text-slate-400 font-medium hidden sm:inline">
+                            Logged in as <span className="text-[#EBD495] font-semibold">{auth.user.name}</span>
+                        </span>
+                        <Link
+                            href="/logout"
+                            method="post"
+                            as="button"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-[#0E2038] border border-slate-700/60 hover:border-rose-500/40 text-xs font-medium transition cursor-pointer"
+                        >
+                            <LogOut className="w-3.5 h-3.5" />
+                            <span>Logout</span>
+                        </Link>
                     </div>
-                </section>
+                ) : (
+                    <Link
+                        href="/login"
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-slate-400 hover:text-[#EBD495] hover:bg-[#0E2038]/60 border border-transparent hover:border-[#1C3E63] text-xs font-medium transition"
+                    >
+                        <LogIn className="w-3.5 h-3.5" />
+                        <span>Sign In</span>
+                    </Link>
+                )}
+            </header>
 
-                {/* Value Highlights Footer Bar */}
-                <section className="p-tb-15 border-top mt-4">
-                    <div className="row text-center g-3">
-                        <div className="col-md-3">
-                            <i className="ri-truck-line fs-2 text-primary"></i>
-                            <h6 className="fw-bold mt-2 mb-0">Free Shipping</h6>
-                            <p className="text-muted text-xs">On orders over $100</p>
+            {/* Main Centered Content */}
+            <main className="flex-1 flex flex-col items-center justify-center text-center px-4 z-10 py-12">
+                <div className="flex flex-col items-center max-w-lg mx-auto">
+                    {/* Brand Logo */}
+                    {siteLogo ? (
+                        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white dark:bg-[#0E2038] border-2 border-[#D4AF37]/50 p-3.5 flex items-center justify-center shadow-2xl shadow-[#D4AF37]/20 overflow-hidden mb-6 hover:scale-105 transition duration-300">
+                            <img src={siteLogo} alt={siteName} className="max-h-full max-w-full object-contain" />
                         </div>
-                        <div className="col-md-3">
-                            <i className="ri-shield-check-line fs-2 text-primary"></i>
-                            <h6 className="fw-bold mt-2 mb-0">Genuine Quality</h6>
-                            <p className="text-muted text-xs">100% verified authentic</p>
+                    ) : (
+                        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] flex items-center justify-center shadow-2xl shadow-[#D4AF37]/25 mb-6 hover:scale-105 transition duration-300">
+                            <Sparkles className="w-12 h-12 text-[#071324]" />
                         </div>
-                        <div className="col-md-3">
-                            <i className="ri-refresh-line fs-2 text-primary"></i>
-                            <h6 className="fw-bold mt-2 mb-0">Easy Returns</h6>
-                            <p className="text-muted text-xs">30-day money back</p>
-                        </div>
-                        <div className="col-md-3">
-                            <i className="ri-secure-payment-line fs-2 text-primary"></i>
-                            <h6 className="fw-bold mt-2 mb-0">Secure Payment</h6>
-                            <p className="text-muted text-xs">Protected transactions</p>
-                        </div>
+                    )}
+
+                    {/* Site Name */}
+                    <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight mb-5">
+                        {siteName}
+                    </h1>
+
+                    {/* System In Progress Notice */}
+                    <div className="inline-flex items-center gap-2.5 px-4.5 py-2 rounded-full bg-[#0E2038] border border-[#D4AF37]/40 text-[#EBD495] text-xs sm:text-sm font-semibold shadow-lg shadow-[#071324]/60">
+                        <span className="w-2 h-2 rounded-full bg-[#D4AF37] animate-pulse"></span>
+                        <span>System development is in progress.</span>
                     </div>
-                </section>
-            </div>
+                </div>
+            </main>
 
-            <QuickViewModal
-                product={quickViewProduct}
-                isOpen={!!quickViewProduct}
-                onClose={() => setQuickViewProduct(null)}
-            />
-        </StoreLayout>
+            {/* Minimal Footer */}
+            <footer className="w-full max-w-7xl mx-auto text-center text-xs text-slate-500 z-10">
+                <p>{settings?.copyright_text || `${siteName} © 2026. All rights reserved.`}</p>
+            </footer>
+        </div>
     );
 }

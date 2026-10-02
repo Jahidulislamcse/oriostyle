@@ -10,7 +10,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-use App\Http\Controllers\Storefront\CatalogController;
 use App\Http\Controllers\Storefront\HomeController;
 
 /*
@@ -19,10 +18,6 @@ use App\Http\Controllers\Storefront\HomeController;
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/shop', [CatalogController::class, 'shop'])->name('shop');
-Route::get('/category/{category:slug}', [CatalogController::class, 'category'])->name('category.show');
-Route::get('/brand/{brand:slug}', [CatalogController::class, 'brand'])->name('brand.show');
-Route::get('/product/{product:slug}', [CatalogController::class, 'product'])->name('product.show');
 
 /*
 |--------------------------------------------------------------------------

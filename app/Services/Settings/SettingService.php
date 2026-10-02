@@ -107,6 +107,16 @@ class SettingService
      *
      * @return array<string, mixed>
      */
+    public function getSettings(): array
+    {
+        return $this->getAllPublicCached();
+    }
+
+    /**
+     * Retrieve all public settings with high-performance caching.
+     *
+     * @return array<string, mixed>
+     */
     public function getAllPublicCached(): array
     {
         if (! Schema::hasTable('settings')) {

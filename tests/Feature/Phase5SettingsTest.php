@@ -190,17 +190,16 @@ class Phase5SettingsTest extends TestCase
         $response->assertRedirect(route('login'));
     }
 
-    public function test_inertia_middleware_shares_settings_globally_to_storefront_pages(): void
+    public function test_settings_are_passed_to_storefront_homepage(): void
     {
         $this->settingService->set('site_name', 'ORIO COUTURE', 'general');
 
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Welcome')
-            ->where('appName', 'ORIO COUTURE')
-            ->where('settings.site_name', 'ORIO COUTURE')
-        );
+        $response->assertViewIs('storefront.index');
+        $response->assertViewHas('settings', function ($settings) {
+            return ($settings['site_name'] ?? '') === 'ORIO COUTURE';
+        });
     }
 }

@@ -19,7 +19,7 @@ class Phase3AdminShellTest extends TestCase
     {
         $this->seed();
 
-        $response = $this->get('/');
+        $response = $this->get('/login');
 
         $response->assertStatus(200);
         $response->assertInertia(fn (Assert $page) => $page
@@ -48,7 +48,7 @@ class Phase3AdminShellTest extends TestCase
         $this->assertEquals('$', $service->get('currency_symbol'));
 
         // Verify Inertia globally picks up the updated settings without hardcoding
-        $response = $this->get('/');
+        $response = $this->get('/login');
         $response->assertInertia(fn (Assert $page) => $page
             ->where('settings.site_name', 'ORIO ENTERPRISE LUXE')
             ->where('settings.currency_symbol', '$')

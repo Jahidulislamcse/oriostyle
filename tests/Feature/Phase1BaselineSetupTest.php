@@ -79,39 +79,29 @@ class Phase1BaselineSetupTest extends TestCase
     }
 
     /**
-     * Test that the root route renders the Inertia Welcome component with expected props.
+     * Test that the root route renders the Storefront landing page.
      */
-    public function test_root_route_renders_inertia_welcome_page(): void
+    public function test_root_route_renders_storefront_page(): void
     {
         $response = $this->get('/');
 
         $response->assertStatus(200);
-
-        $response->assertInertia(fn (Assert $page) => $page
-            ->component('Welcome')
-            ->has('appName')
-            ->has('auth')
-            ->has('flash')
-            ->has('phpVersion')
-            ->has('laravelVersion')
-            ->has('dbStatus')
-            ->where('antiN1Status', 'enforced')
-        );
+        $response->assertViewIs('storefront.index');
     }
 
     /**
-     * Test that HandleInertiaRequests middleware shares flash message structure.
+     * Test that HandleInertiaRequests middleware shares flash message structure on Inertia pages.
      */
     public function test_inertia_middleware_shares_flash_props(): void
     {
         $response = $this->withSession([
             'success' => 'Operation successful!',
-        ])->get('/');
+        ])->get('/login');
 
         $response->assertStatus(200);
 
         $response->assertInertia(fn (Assert $page) => $page
-            ->component('Welcome')
+            ->component('Auth/Login')
             ->where('flash.success', 'Operation successful!')
         );
     }
