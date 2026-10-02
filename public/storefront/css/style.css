@@ -2039,7 +2039,7 @@ header {
 }
 
 .mn-header {
-  padding: 0 30px;
+  padding: 0 24px;
   background-color: #fff;
   border-radius: 0 0 15px 15px;
   display: -webkit-box;
@@ -2051,6 +2051,7 @@ header {
   border: 1px solid #e5e5e5;
   border-top: 0;
   position: relative;
+  min-height: 40px;
   /*===== Mobile menus =====*/
 }
 .mn-header .mn-header-items {
@@ -2069,22 +2070,35 @@ header {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .mn-header .mn-header-items .left-header .logo {
   margin-right: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .mn-header .mn-header-items .left-header .logo img {
-  width: 110px;
+  width: auto;
+  max-width: 95px;
+  max-height: 28px;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .mn-header .mn-header-items .left-header .mn-toggle-menu {
-  line-height: 30px;
+  line-height: 28px;
   display: none;
 }
 .mn-header .mn-header-items .left-header .mn-toggle-menu .header-icon {
   color: #313b50;
 }
 .mn-header .mn-header-items .left-header .mn-toggle-menu .header-icon i {
-  font-size: 22px;
+  font-size: 20px;
 }
 .mn-header .mn-header-items .right-header {
   display: -webkit-inline-box;
@@ -2121,13 +2135,13 @@ header {
 .mn-header .mn-header-items .right-header .mn-main-menu ul li {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  margin: 0 0 0 30px;
+  margin: 0 0 0 24px;
 }
 .mn-header .mn-header-items .right-header .mn-main-menu ul li a {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  font-size: 15px;
-  line-height: 50px;
+  font-size: 14px;
+  line-height: 40px;
   text-decoration: none;
   text-transform: capitalize;
   color: #313b50;
@@ -2373,10 +2387,10 @@ header {
           justify-content: flex-end;
 }
 .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-search > a, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-user > a, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-wish > a, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-cart > a {
-  width: 30px;
-  height: 50px;
-  margin-left: 15px;
-  line-height: 50px;
+  width: 26px;
+  height: 40px;
+  margin-left: 12px;
+  line-height: 40px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2392,8 +2406,8 @@ header {
   fill: #3a4ee5;
 }
 .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-search > a .label, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-user > a .label, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-wish > a .label, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-cart > a .label {
-  width: 15px;
-  height: 15px;
+  width: 14px;
+  height: 14px;
   background-color: #f90c4c;
   border-radius: 50%;
   display: -webkit-box;
@@ -2406,9 +2420,10 @@ header {
       -ms-flex-pack: center;
           justify-content: center;
   position: absolute;
-  top: 6px;
+  top: 3px;
   right: -3px;
-  font-size: 12px;
+  font-size: 10px;
+  line-height: 14px;
   color: #fff;
 }
 .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-search > a .lbl-1, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-user > a .lbl-1, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-wish > a .lbl-1, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-cart > a .lbl-1 {
@@ -2420,8 +2435,8 @@ header {
           animation: blinker 4s infinite alternate ease-in-out;
 }
 .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-search > a svg, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-user > a svg, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-wish > a svg, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-cart > a svg {
-  width: 22px;
-  height: 22px;
+  width: 18px;
+  height: 18px;
 }
 .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-search > a svg path, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-user > a svg path, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-wish > a svg path, .mn-header .mn-header-items .right-header .mn-tool-icons .mn-tool-cart > a svg path {
   -webkit-transition: all 0.3s ease-in-out;
@@ -2467,7 +2482,7 @@ header {
   }
 }
 .mn-header .mn-toggle-sidebar {
-  margin-right: 20px;
+  margin-right: 16px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -2476,8 +2491,8 @@ header {
           align-items: center;
 }
 .mn-header .mn-toggle-sidebar .outer-ring {
-  width: 30px;
-  height: 18px;
+  width: 26px;
+  height: 16px;
   display: block;
   border: 1px solid #313b50;
   border-radius: 30px;
@@ -2487,17 +2502,17 @@ header {
 .mn-header .mn-toggle-sidebar .outer-ring .inner-ring {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  width: 10px;
-  height: 10px;
+  width: 8px;
+  height: 8px;
   position: absolute;
   top: 3px;
-  right: 4px;
+  right: 3px;
   border-radius: 30px;
   display: block;
   background-color: #313b50;
 }
 .mn-header .mn-toggle-sidebar.active-toggle .outer-ring .inner-ring {
-  left: 4px;
+  left: 3px;
 }
 .mn-header .mn-mobile-menu-overlay {
   display: none;
