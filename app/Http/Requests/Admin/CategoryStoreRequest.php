@@ -29,6 +29,7 @@ class CategoryStoreRequest extends FormRequest
             'image' => ['nullable', 'string', 'max:2048'],
             'icon' => ['nullable', 'string', 'max:100'],
             'description' => ['nullable', 'string', 'max:5000'],
+            'discount' => ['nullable', 'string', 'max:50'],
             'display_order' => ['nullable', 'integer', 'min:0', 'max:999999'],
             'is_active' => ['nullable', 'boolean'],
             'is_featured' => ['nullable', 'boolean'],

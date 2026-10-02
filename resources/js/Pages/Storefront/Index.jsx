@@ -24,7 +24,7 @@ export default function Index({
     const siteTagline = settings.site_tagline || 'Enterprise Single-Vendor E-Commerce Platform';
     const currencySymbol = settings.currency_symbol || '৳';
 
-    // Map dynamic categories to template structure with up to 3 dynamic images & fallback
+    // Map dynamic subcategories to template structure with up to 3 dynamic images & fallback
     const categoriesToRender = featuredCategories && featuredCategories.length > 0
         ? featuredCategories.slice(0, 6).map((cat, index) => {
             const fallback = DEFAULT_CATEGORIES[index % DEFAULT_CATEGORIES.length];
@@ -46,7 +46,7 @@ export default function Index({
                 title: cat.name,
                 subtitle: cat.parent?.name || fallback.subtitle,
                 count: cat.products_count !== undefined ? cat.products_count : fallback.count,
-                discount: fallback.discount,
+                discount: cat.discount ? String(cat.discount).trim() : null,
                 card: (index % 6) + 1,
                 slug: cat.slug || fallback.slug,
                 images: dynamicImgs,
@@ -75,8 +75,12 @@ export default function Index({
                                     <div key={cat.id || cat.card} className="col-lg-2 col-md-4 col-sm-6 col-12 m-b-15 d-flex">
                                         <div className={`mn-cat-card cat-card-${cat.card} w-100`}>
                                             <div>
-                                                <p className="lbl"><span>{cat.discount}</span></p>
-                                                <span className="bg">{cat.discount}</span>
+                                                {cat.discount && (
+                                                    <>
+                                                        <p className="lbl"><span>{cat.discount}</span></p>
+                                                        <span className="bg">{cat.discount}</span>
+                                                    </>
+                                                )}
                                                 <h4>{cat.subtitle}</h4>
                                                 <h3 title={cat.title}>{cat.title}</h3>
                                                 <p>Items ({cat.count})</p>

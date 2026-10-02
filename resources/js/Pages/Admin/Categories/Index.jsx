@@ -71,6 +71,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         icon: '',
         image: '',
         description: '',
+        discount: '',
         display_order: 0,
         is_active: true,
         is_featured: false,
@@ -120,6 +121,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
             icon: '',
             image: '',
             description: '',
+            discount: '',
             display_order: 0,
             is_active: true,
             is_featured: false,
@@ -152,6 +154,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
             icon: category.icon || '',
             image: category.image || '',
             description: category.description || '',
+            discount: category.discount || '',
             display_order: category.display_order ?? 0,
             is_active: Boolean(category.is_active),
             is_featured: Boolean(category.is_featured),
@@ -399,6 +402,11 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 {row.is_featured && (
                                     <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
                                         <Star className="w-2.5 h-2.5 mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                    </span>
+                                )}
+                                {row.discount && (
+                                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                        🏷️ {row.discount}
                                     </span>
                                 )}
                             </div>
@@ -765,6 +773,11 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                     <Star className="w-2.5 h-2.5 mr-0.5 sm:mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
                                                                 </span>
                                                             )}
+                                                            {root.discount && (
+                                                                <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                                                    🏷️ {root.discount}
+                                                                </span>
+                                                            )}
                                                             {root.images && root.images.length > 0 && (
                                                                 <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-slate-100 dark:bg-[#071324] text-slate-500 dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
                                                                     <ImageIcon className="w-2.5 h-2.5" /> {root.images.length} {root.images.length === 1 ? 'img' : 'imgs'}
@@ -888,6 +901,11 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                                 {sub.is_featured && (
                                                                                     <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
                                                                                         <Star className="w-2.5 h-2.5 mr-0.5 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                                                                    </span>
+                                                                                )}
+                                                                                {sub.discount && (
+                                                                                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                                                                        🏷️ {sub.discount}
                                                                                     </span>
                                                                                 )}
                                                                                 {sub.images && sub.images.length > 0 && (
@@ -1027,7 +1045,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         helpText="Select parent to create a subcategory, or leave as Root level."
                     />
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <FormInput
                             id="create_display_order"
                             label="Display Sequence Order"
@@ -1036,7 +1054,17 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             onChange={(e) => setData('display_order', parseInt(e.target.value) || 0)}
                             placeholder="0"
                             error={errors.display_order}
-                            helpText="Lower numbers appear first in storefront menus."
+                            helpText="Storefront sequence."
+                        />
+
+                        <FormInput
+                            id="create_discount"
+                            label="Discount Badge (Optional)"
+                            value={data.discount}
+                            onChange={(e) => setData('discount', e.target.value)}
+                            placeholder="e.g. 35% or 20% OFF"
+                            error={errors.discount}
+                            helpText="Nullable storefront offer badge."
                         />
 
                         <FormInput
@@ -1044,7 +1072,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             label="Icon Identifier"
                             value={data.icon}
                             onChange={(e) => setData('icon', e.target.value)}
-                            placeholder="e.g. Shirt, Watch, Sparkles"
+                            placeholder="e.g. Shirt, Watch"
                             error={errors.icon}
                         />
                     </div>
@@ -1244,7 +1272,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         helpText="Cannot select this category or its subcategories as its parent."
                     />
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <FormInput
                             id="edit_display_order"
                             label="Display Sequence Order"
@@ -1252,6 +1280,17 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             value={data.display_order}
                             onChange={(e) => setData('display_order', parseInt(e.target.value) || 0)}
                             error={errors.display_order}
+                            helpText="Storefront sequence."
+                        />
+
+                        <FormInput
+                            id="edit_discount"
+                            label="Discount Badge (Optional)"
+                            value={data.discount}
+                            onChange={(e) => setData('discount', e.target.value)}
+                            placeholder="e.g. 35% or 20% OFF"
+                            error={errors.discount}
+                            helpText="Nullable storefront offer badge."
                         />
 
                         <FormInput
@@ -1259,7 +1298,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             label="Icon Identifier"
                             value={data.icon}
                             onChange={(e) => setData('icon', e.target.value)}
-                            placeholder="e.g. Shirt, Watch, Sparkles"
+                            placeholder="e.g. Shirt, Watch"
                             error={errors.icon}
                         />
                     </div>

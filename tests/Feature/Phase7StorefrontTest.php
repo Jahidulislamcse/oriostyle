@@ -88,4 +88,35 @@ class Phase7StorefrontTest extends TestCase
             ->where('featuredCategories.0.images.0.is_featured', true)
         );
     }
+
+    public function test_storefront_homepage_prioritizes_featured_subcategories_with_dynamic_discount(): void
+    {
+        $parentCategory = Category::create([
+            'name' => 'Fashion',
+            'slug' => 'fashion',
+            'is_active' => true,
+            'is_featured' => true,
+        ]);
+
+        $subCategory = Category::create([
+            'name' => 'Formal Shirts',
+            'slug' => 'formal-shirts',
+            'parent_id' => $parentCategory->id,
+            'discount' => '35% OFF',
+            'is_active' => true,
+            'is_featured' => true,
+            'display_order' => 1,
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Storefront/Index')
+            ->where('featuredCategories.0.id', $subCategory->id)
+            ->where('featuredCategories.0.name', 'Formal Shirts')
+            ->where('featuredCategories.0.discount', '35% OFF')
+            ->where('featuredCategories.0.parent.name', 'Fashion')
+        );
+    }
 }

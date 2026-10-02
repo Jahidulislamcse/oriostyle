@@ -33,6 +33,7 @@ class Category extends Model
         'image',
         'icon',
         'description',
+        'discount',
         'display_order',
         'is_active',
         'is_featured',
@@ -142,6 +143,14 @@ class Category extends Model
     public function scopeRoot(Builder $query): Builder
     {
         return $query->whereNull('parent_id');
+    }
+
+    /**
+     * Scope a query to only include subcategories.
+     */
+    public function scopeSubcategory(Builder $query): Builder
+    {
+        return $query->whereNotNull('parent_id');
     }
 
     /*
