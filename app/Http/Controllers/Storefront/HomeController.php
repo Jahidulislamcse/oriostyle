@@ -36,7 +36,7 @@ class HomeController extends Controller
             ->with(['parent:id,name,slug', 'images', 'featuredImage'])
             ->withCount(['products' => fn($q) => $q->where('is_active', true)])
             ->orderBy('display_order')
-            ->take(6)
+            ->take(16)
             ->get();
 
         if ($featuredCategories->isEmpty()) {
@@ -46,7 +46,7 @@ class HomeController extends Controller
                 ->with(['parent:id,name,slug', 'images', 'featuredImage'])
                 ->withCount(['products' => fn($q) => $q->where('is_active', true)])
                 ->orderBy('display_order')
-                ->take(6)
+                ->take(16)
                 ->get();
         }
 
@@ -56,7 +56,7 @@ class HomeController extends Controller
                 ->with(['parent:id,name,slug', 'images', 'featuredImage'])
                 ->withCount(['products' => fn($q) => $q->where('is_active', true)])
                 ->orderBy('display_order')
-                ->take(6)
+                ->take(16)
                 ->get();
         }
 

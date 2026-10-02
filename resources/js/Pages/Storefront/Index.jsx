@@ -2,6 +2,7 @@ import React from 'react';
 import { Head, Link } from '@inertiajs/react';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import HeroSlider from '@/Components/Storefront/HeroSlider';
+import CategoryScrollSection from '@/Components/Storefront/CategoryScrollSection';
 
 const DEFAULT_CATEGORIES = [
     { title: 'Clothes', subtitle: 'Fashion', count: 16, discount: '35%', card: 1, imgs: [1, 2, 3], slug: 'clothes' },
@@ -26,7 +27,7 @@ export default function Index({
 
     // Map dynamic subcategories to template structure with up to 3 dynamic images & fallback
     const categoriesToRender = featuredCategories && featuredCategories.length > 0
-        ? featuredCategories.slice(0, 6).map((cat, index) => {
+        ? featuredCategories.map((cat, index) => {
             const fallback = DEFAULT_CATEGORIES[index % DEFAULT_CATEGORIES.length];
             
             // Build 3 image list from dynamic category images
@@ -67,43 +68,8 @@ export default function Index({
                     {/* Banner Carousel below Nav */}
                     <HeroSlider />
 
-                    {/* Category Cards Section */}
-                    <section className="mn-category p-tb-15">
-                        <div className="mn-cat">
-                            <div className="row">
-                                {categoriesToRender.map((cat) => (
-                                    <div key={cat.id || cat.card} className="col-lg-2 col-md-4 col-sm-6 col-12 m-b-15 d-flex">
-                                        <div className={`mn-cat-card cat-card-${cat.card} w-100`}>
-                                            <div>
-                                                {cat.discount && (
-                                                    <>
-                                                        <p className="lbl"><span>{cat.discount}</span></p>
-                                                        <span className="bg">{cat.discount}</span>
-                                                    </>
-                                                )}
-                                                <h4>{cat.subtitle}</h4>
-                                                <h3 title={cat.title}>{cat.title}</h3>
-                                                <p>Items ({cat.count})</p>
-                                            </div>
-                                            <ul>
-                                                {cat.images.map((imgSrc, imgIdx) => (
-                                                    <li key={imgIdx} style={{ width: '33.33%' }}>
-                                                        <Link href={`/?category=${cat.slug}`}>
-                                                            <img
-                                                                src={imgSrc}
-                                                                alt={cat.title}
-                                                                className="img-fluid"
-                                                            />
-                                                        </Link>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
+                    {/* Scrollable Category Cards Section (4 cards desktop, 2 cards mobile) */}
+                    <CategoryScrollSection categories={categoriesToRender} />
 
                     {/* Featured Products Section */}
                     {featuredProducts && featuredProducts.length > 0 && (
