@@ -21,7 +21,11 @@ import {
     Search,
     ChevronDown,
     ChevronRight,
-    List
+    List,
+    Image as ImageIcon,
+    UploadCloud,
+    X,
+    Check
 } from 'lucide-react';
 
 export default function CategoryIndex({ categories = [], parentOptions = [], stats = {}, filters = {} }) {
@@ -44,12 +48,18 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
     const [deletingCategory, setDeletingCategory] = useState(null);
     const [slugAutoSync, setSlugAutoSync] = useState(true);
 
+    // Multi-Image state
+    const [newImages, setNewImages] = useState([]);
+    const [newImagePreviews, setNewImagePreviews] = useState([]);
+    const [existingImages, setExistingImages] = useState([]);
+    const [featuredImageId, setFeaturedImageId] = useState(null);
+    const [featuredNewIndex, setFeaturedNewIndex] = useState(0);
+    const [deletedImageIds, setDeletedImageIds] = useState([]);
+
     // Inertia Form for Create/Edit
     const {
         data,
         setData,
-        post,
-        put,
         processing,
         errors,
         reset,
@@ -91,10 +101,18 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         setData('slug', e.target.value);
     };
 
+    // Open Create Modal
     const openCreateModal = (presetParentId = '') => {
         reset();
         clearErrors();
         setSlugAutoSync(true);
+        setNewImages([]);
+        setNewImagePreviews([]);
+        setExistingImages([]);
+        setFeaturedImageId(null);
+        setFeaturedNewIndex(0);
+        setDeletedImageIds([]);
+
         setData({
             name: '',
             slug: '',
@@ -111,11 +129,22 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         setIsCreateModalOpen(true);
     };
 
+    // Open Edit Modal
     const openEditModal = (category) => {
         reset();
         clearErrors();
         setSlugAutoSync(false);
         setEditingCategory(category);
+
+        const imgs = category.images || [];
+        setExistingImages(imgs);
+        const feat = imgs.find(i => i.is_featured) || imgs[0] || null;
+        setFeaturedImageId(feat ? feat.id : null);
+        setFeaturedNewIndex(null);
+        setNewImages([]);
+        setNewImagePreviews([]);
+        setDeletedImageIds([]);
+
         setData({
             name: category.name || '',
             slug: category.slug || '',
@@ -132,12 +161,101 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         setIsEditModalOpen(true);
     };
 
+    // Image Upload Handlers (Max 3 total per category)
+    const handleFileSelection = (e) => {
+        const selectedFiles = Array.from(e.target.files || []);
+        if (selectedFiles.length === 0) return;
+
+        const currentTotal = existingImages.length + newImages.length;
+        const availableSlots = Math.max(0, 3 - currentTotal);
+        const filesToAdd = selectedFiles.slice(0, availableSlots);
+
+        if (filesToAdd.length === 0) return;
+
+        const updatedFiles = [...newImages, ...filesToAdd];
+        setNewImages(updatedFiles);
+
+        const newPreviews = filesToAdd.map((file) => ({
+            url: URL.createObjectURL(file),
+            name: file.name,
+        }));
+        const updatedPreviews = [...newImagePreviews, ...newPreviews];
+        setNewImagePreviews(updatedPreviews);
+
+        // If no existing image was featured, ensure a new image is featured
+        if (featuredImageId === null && (featuredNewIndex === null || featuredNewIndex >= updatedFiles.length)) {
+            setFeaturedNewIndex(0);
+        }
+    };
+
+    const handleRemoveNewImage = (indexToRemove) => {
+        const updatedFiles = [...newImages];
+        updatedFiles.splice(indexToRemove, 1);
+        setNewImages(updatedFiles);
+
+        const updatedPreviews = [...newImagePreviews];
+        updatedPreviews.splice(indexToRemove, 1);
+        setNewImagePreviews(updatedPreviews);
+
+        if (featuredNewIndex === indexToRemove) {
+            if (existingImages.length > 0) {
+                setFeaturedImageId(existingImages[0].id);
+                setFeaturedNewIndex(null);
+            } else if (updatedFiles.length > 0) {
+                setFeaturedNewIndex(0);
+            } else {
+                setFeaturedNewIndex(null);
+            }
+        } else if (featuredNewIndex > indexToRemove) {
+            setFeaturedNewIndex(featuredNewIndex - 1);
+        }
+    };
+
+    const handleDeleteExistingImage = (imageId) => {
+        setDeletedImageIds((prev) => [...prev, imageId]);
+        const remaining = existingImages.filter((img) => img.id !== imageId);
+        setExistingImages(remaining);
+
+        if (featuredImageId === imageId) {
+            if (remaining.length > 0) {
+                setFeaturedImageId(remaining[0].id);
+                setFeaturedNewIndex(null);
+            } else if (newImages.length > 0) {
+                setFeaturedImageId(null);
+                setFeaturedNewIndex(0);
+            } else {
+                setFeaturedImageId(null);
+                setFeaturedNewIndex(null);
+            }
+        }
+    };
+
+    const handleSetFeaturedExisting = (imageId) => {
+        setFeaturedImageId(imageId);
+        setFeaturedNewIndex(null);
+    };
+
+    const handleSetFeaturedNew = (index) => {
+        setFeaturedNewIndex(index);
+        setFeaturedImageId(null);
+    };
+
     const submitCreate = (e) => {
         e.preventDefault();
-        post(route('admin.categories.store'), {
+        
+        const payload = {
+            ...data,
+            images: newImages,
+            featured_image_index: featuredNewIndex !== null ? featuredNewIndex : 0,
+        };
+
+        router.post(route('admin.categories.store'), payload, {
+            forceFormData: true,
             onSuccess: () => {
                 setIsCreateModalOpen(false);
                 reset();
+                setNewImages([]);
+                setNewImagePreviews([]);
             },
         });
     };
@@ -145,11 +263,25 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
     const submitEdit = (e) => {
         e.preventDefault();
         if (!editingCategory) return;
-        put(route('admin.categories.update', editingCategory.id), {
+
+        const payload = {
+            _method: 'put',
+            ...data,
+            images: newImages,
+            featured_image_index: featuredNewIndex,
+            featured_image_id: featuredImageId,
+            deleted_image_ids: deletedImageIds,
+        };
+
+        router.post(route('admin.categories.update', editingCategory.id), payload, {
+            forceFormData: true,
             onSuccess: () => {
                 setIsEditModalOpen(false);
                 setEditingCategory(null);
                 reset();
+                setNewImages([]);
+                setNewImagePreviews([]);
+                setDeletedImageIds([]);
             },
         });
     };
@@ -243,27 +375,45 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
     const tableColumns = [
         {
             key: 'name',
-            label: 'Category Name',
-            render: (_, row) => (
-                <div className="flex items-center gap-3">
-                    <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#FDFBF5] dark:bg-[#071324] border border-[#F5E7C2] dark:border-[#D4AF37]/40 flex items-center justify-center text-[#926F18] dark:text-[#EBD495] font-bold shrink-0 shadow-2xs">
-                        {row.parent_id ? <CornerDownRight className="w-4 h-4 text-slate-400 dark:text-[#5E8CB6]" /> : <FolderTree className="w-4.5 h-4.5" />}
-                    </div>
-                    <div>
-                        <div className="flex items-center gap-2">
-                            <span className={`font-bold ${row.parent_id ? 'text-[#0E2038] dark:text-slate-200 text-xs sm:text-sm font-semibold' : 'text-[#0E2038] dark:text-white text-sm sm:text-base font-extrabold'}`}>
-                                {row.name}
-                            </span>
-                            {row.is_featured && (
-                                <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                    <Star className="w-2.5 h-2.5 mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
-                                </span>
+            label: 'Category Name & Media',
+            render: (_, row) => {
+                const primaryImg = row.featured_image?.image_url || row.images?.[0]?.image_url || row.images?.[0]?.image_path;
+                const imgCount = row.images?.length || 0;
+
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-[#FDFBF5] dark:bg-[#071324] border border-[#F5E7C2] dark:border-[#D4AF37]/40 flex items-center justify-center text-[#926F18] dark:text-[#EBD495] font-bold shrink-0 shadow-2xs overflow-hidden">
+                            {primaryImg ? (
+                                <img src={primaryImg} alt={row.name} className="w-full h-full object-cover" />
+                            ) : row.parent_id ? (
+                                <CornerDownRight className="w-4 h-4 text-slate-400 dark:text-[#5E8CB6]" />
+                            ) : (
+                                <FolderTree className="w-4.5 h-4.5 text-[#D4AF37]" />
                             )}
                         </div>
-                        <p className="text-xs font-mono text-slate-400 dark:text-[#5E8CB6]">/{row.slug}</p>
+                        <div>
+                            <div className="flex items-center gap-2">
+                                <span className={`font-bold ${row.parent_id ? 'text-[#0E2038] dark:text-slate-200 text-xs sm:text-sm font-semibold' : 'text-[#0E2038] dark:text-white text-sm sm:text-base font-extrabold'}`}>
+                                    {row.name}
+                                </span>
+                                {row.is_featured && (
+                                    <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                        <Star className="w-2.5 h-2.5 mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                    </span>
+                                )}
+                            </div>
+                            <div className="flex items-center gap-2 mt-0.5">
+                                <p className="text-xs font-mono text-slate-400 dark:text-[#5E8CB6]">/{row.slug}</p>
+                                {imgCount > 0 && (
+                                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-100 dark:bg-[#071324] text-slate-500 dark:text-[#8EB0CF] font-medium border border-slate-200 dark:border-[#1C3E63]">
+                                        {imgCount} {imgCount === 1 ? 'image' : 'images'}
+                                    </span>
+                                )}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            ),
+                );
+            },
         },
         {
             key: 'parent',
@@ -383,7 +533,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             </h1>
                         </div>
                         <p className="text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] pl-0 sm:pl-10 max-w-2xl font-normal">
-                            Configure self-referencing parent categories, nested subcategories, display sequencing, and catalog taxonomy.
+                            Configure parent categories, subcategories, up to 3 gallery images, and catalog taxonomy.
                         </p>
                     </div>
 
@@ -569,6 +719,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 .map((root) => {
                                     const children = subcategoriesMap[root.id] || [];
                                     const isExpanded = Boolean(expandedRoots[root.id]);
+                                    const rootImg = root.featured_image?.image_url || root.images?.[0]?.image_url || root.images?.[0]?.image_path;
 
                                     return (
                                         <div
@@ -591,9 +742,13 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                         )}
                                                     </button>
 
-                                                    {/* Category Icon / Badge */}
-                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50 flex items-center justify-center font-bold shrink-0 shadow-2xs">
-                                                        <FolderTree className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#D4AF37]" />
+                                                    {/* Category Icon / Image Avatar */}
+                                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50 flex items-center justify-center font-bold shrink-0 shadow-2xs overflow-hidden">
+                                                        {rootImg ? (
+                                                            <img src={rootImg} alt={root.name} className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <FolderTree className="w-4 h-4 sm:w-4.5 sm:h-4.5 text-[#D4AF37]" />
+                                                        )}
                                                     </div>
 
                                                     {/* Category Info */}
@@ -608,6 +763,11 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                             {root.is_featured && (
                                                                 <span className="inline-flex items-center px-1.5 sm:px-2 py-0.5 rounded-full text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
                                                                     <Star className="w-2.5 h-2.5 mr-0.5 sm:mr-1 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                                                </span>
+                                                            )}
+                                                            {root.images && root.images.length > 0 && (
+                                                                <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-slate-100 dark:bg-[#071324] text-slate-500 dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
+                                                                    <ImageIcon className="w-2.5 h-2.5" /> {root.images.length} {root.images.length === 1 ? 'img' : 'imgs'}
                                                                 </span>
                                                             )}
                                                         </div>
@@ -701,40 +861,51 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                             {isExpanded && (
                                                 <div className="p-2.5 sm:p-3.5 space-y-2 bg-white dark:bg-[#071324]/60">
                                                     {children.length > 0 ? (
-                                                        children.map((sub) => (
-                                                            <div
-                                                                key={sub.id}
-                                                                className="ml-1 sm:ml-7 pl-2.5 sm:pl-4 py-2 sm:py-2.5 pr-2.5 sm:pr-3 rounded-xl border-l-2 border-[#D4AF37] bg-[#F4F7FB]/60 dark:bg-[#0E2038]/60 hover:bg-[#FDFBF5]/50 dark:hover:bg-[#142C49]/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-y border-r border-slate-100 dark:border-[#1C3E63]/60"
-                                                            >
-                                                                <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                                                                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[#FDFBF5] dark:bg-[#071324] flex items-center justify-center text-[#926F18] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/30 shrink-0">
-                                                                        <CornerDownRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D4AF37]" />
-                                                                    </div>
-                                                                    <div className="min-w-0 flex-1">
-                                                                        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                                                                            <span className="font-bold text-[#0E2038] dark:text-white text-xs sm:text-sm break-words">
-                                                                                {sub.name}
-                                                                            </span>
-                                                                            <span className="font-mono text-[10px] sm:text-[11px] text-slate-400 dark:text-[#5E8CB6] truncate">
-                                                                                /{sub.slug}
-                                                                            </span>
-                                                                            {sub.is_featured && (
-                                                                                <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                                                                    <Star className="w-2.5 h-2.5 mr-0.5 fill-[#D4AF37] text-[#D4AF37]" /> Featured
-                                                                                </span>
+                                                        children.map((sub) => {
+                                                            const subImg = sub.featured_image?.image_url || sub.images?.[0]?.image_url || sub.images?.[0]?.image_path;
+
+                                                            return (
+                                                                <div
+                                                                    key={sub.id}
+                                                                    className="ml-1 sm:ml-7 pl-2.5 sm:pl-4 py-2 sm:py-2.5 pr-2.5 sm:pr-3 rounded-xl border-l-2 border-[#D4AF37] bg-[#F4F7FB]/60 dark:bg-[#0E2038]/60 hover:bg-[#FDFBF5]/50 dark:hover:bg-[#142C49]/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-y border-r border-slate-100 dark:border-[#1C3E63]/60"
+                                                                >
+                                                                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                                                                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[#FDFBF5] dark:bg-[#071324] flex items-center justify-center text-[#926F18] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/30 shrink-0 overflow-hidden">
+                                                                            {subImg ? (
+                                                                                <img src={subImg} alt={sub.name} className="w-full h-full object-cover" />
+                                                                            ) : (
+                                                                                <CornerDownRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D4AF37]" />
                                                                             )}
                                                                         </div>
-                                                                        {sub.description && (
-                                                                            <p className="text-[11px] text-slate-500 dark:text-[#8EB0CF] line-clamp-1 font-normal">
-                                                                                {sub.description}
-                                                                            </p>
-                                                                        )}
+                                                                        <div className="min-w-0 flex-1">
+                                                                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                                                                <span className="font-bold text-[#0E2038] dark:text-white text-xs sm:text-sm break-words">
+                                                                                    {sub.name}
+                                                                                </span>
+                                                                                <span className="font-mono text-[10px] sm:text-[11px] text-slate-400 dark:text-[#5E8CB6] truncate">
+                                                                                    /{sub.slug}
+                                                                                </span>
+                                                                                {sub.is_featured && (
+                                                                                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                                                                        <Star className="w-2.5 h-2.5 mr-0.5 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                                                                    </span>
+                                                                                )}
+                                                                                {sub.images && sub.images.length > 0 && (
+                                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-slate-100 dark:bg-[#071324] text-slate-500 dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
+                                                                                        <ImageIcon className="w-2.5 h-2.5" /> {sub.images.length} {sub.images.length === 1 ? 'img' : 'imgs'}
+                                                                                    </span>
+                                                                                )}
+                                                                            </div>
+                                                                            {sub.description && (
+                                                                                <p className="text-[11px] text-slate-500 dark:text-[#8EB0CF] line-clamp-1 font-normal">
+                                                                                    {sub.description}
+                                                                                </p>
+                                                                            )}
+                                                                        </div>
                                                                     </div>
-                                                                </div>
 
-                                                                {/* Subcategory actions */}
-                                                                <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 pl-0 sm:pl-0 w-full sm:w-auto border-t sm:border-t-0 pt-1.5 sm:pt-0 border-slate-200/50 dark:border-[#1C3E63]/30">
-                                                                    <div className="flex items-center gap-1.5">
+                                                                    {/* Subcategory actions */}
+                                                                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 pl-0 sm:pl-0 w-full sm:w-auto border-t sm:border-t-0 pt-1.5 sm:pt-0 border-slate-200/50 dark:border-[#1C3E63]/30">
                                                                         <span className="text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-medium border border-transparent dark:border-[#1C3E63]">
                                                                             #{sub.display_order}
                                                                         </span>
@@ -762,9 +933,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                         >
                                                                             <Star className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${sub.is_featured ? 'fill-[#D4AF37] text-[#D4AF37]' : ''}`} />
                                                                         </button>
-                                                                    </div>
 
-                                                                    <div className="flex items-center gap-0.5 sm:gap-1 ml-auto sm:ml-0">
                                                                         <button
                                                                             type="button"
                                                                             onClick={() => openEditModal(sub)}
@@ -781,8 +950,8 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                         </button>
                                                                     </div>
                                                                 </div>
-                                                            </div>
-                                                        ))
+                                                            );
+                                                        })
                                                     ) : (
                                                         <div className="py-3.5 text-center text-xs text-slate-400 dark:text-[#8EB0CF]">
                                                             No subcategories nested under {root.name} yet.{' '}
@@ -894,6 +1063,81 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                         {errors.description && <p className="mt-1.5 text-xs text-rose-500 font-medium">{errors.description}</p>}
                     </div>
 
+                    {/* Category Multi-Image Upload (Max 3, with 1 Featured Image) */}
+                    <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324]/70 rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white block">
+                                    Category Gallery Images (Max 3)
+                                </span>
+                                <span className="text-xs text-slate-500 dark:text-[#8EB0CF]">
+                                    Upload up to 3 images and select 1 as the primary Featured image.
+                                </span>
+                            </div>
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-[#071324] text-slate-700 dark:text-[#BACDE3]">
+                                {newImages.length}/3 images
+                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-3">
+                            {/* New image previews */}
+                            {newImagePreviews.map((prev, idx) => {
+                                const isFeatured = featuredNewIndex === idx;
+                                return (
+                                    <div key={idx} className="relative group border rounded-xl overflow-hidden bg-white dark:bg-[#071324] border-slate-200 dark:border-[#1C3E63]">
+                                        <div className="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-[#071324]/80 flex items-center justify-center">
+                                            <img src={prev.url} alt={prev.name} className="w-full h-full object-cover" />
+                                        </div>
+                                        {/* Featured Selector */}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleSetFeaturedNew(idx)}
+                                            className={`absolute top-2 left-2 px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 transition ${
+                                                isFeatured
+                                                    ? 'bg-[#D4AF37] text-white shadow-xs'
+                                                    : 'bg-black/60 text-white hover:bg-black/80'
+                                            }`}
+                                        >
+                                            <Star className={`w-3 h-3 ${isFeatured ? 'fill-white text-white' : 'text-slate-300'}`} />
+                                            {isFeatured ? 'Featured' : 'Featured'}
+                                        </button>
+                                        {/* Remove Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveNewImage(idx)}
+                                            className="absolute top-2 right-2 p-1.5 rounded-md bg-rose-600/80 text-white hover:bg-rose-600 transition"
+                                            title="Remove image"
+                                        >
+                                            <X className="w-3.5 h-3.5" />
+                                        </button>
+                                    </div>
+                                );
+                            })}
+
+                            {/* Upload Drop Zone */}
+                            {newImages.length < 3 && (
+                                <label className="border-2 border-dashed border-slate-300 dark:border-[#1C3E63] rounded-xl aspect-square flex flex-col items-center justify-center text-center p-3 cursor-pointer hover:border-[#D4AF37] dark:hover:border-[#D4AF37] hover:bg-white/80 dark:hover:bg-[#071324]/80 transition group">
+                                    <input
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
+                                        multiple={3 - newImages.length > 1}
+                                        onChange={handleFileSelection}
+                                        className="hidden"
+                                    />
+                                    <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#071324] flex items-center justify-center text-slate-400 dark:text-[#5E8CB6] group-hover:text-[#926F18] dark:group-hover:text-[#EBD495] group-hover:bg-[#FDFBF5] mb-1.5 transition">
+                                        <UploadCloud className="w-4 h-4" />
+                                    </div>
+                                    <span className="text-xs font-bold text-slate-700 dark:text-[#BACDE3] group-hover:text-[#926F18] dark:group-hover:text-[#EBD495] transition block">
+                                        Upload Image
+                                    </span>
+                                    <span className="text-[10px] text-slate-400 dark:text-[#5E8CB6]">
+                                        Max 3MB
+                                    </span>
+                                </label>
+                            )}
+                        </div>
+                    </div>
+
                     {/* Status Toggles */}
                     <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324]/70 rounded-xl border border-slate-200 dark:border-[#1C3E63] flex flex-wrap gap-6">
                         <label className="flex items-center gap-3 cursor-pointer select-none">
@@ -965,7 +1209,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                     setEditingCategory(null);
                 }}
                 title={`Edit Category: ${editingCategory?.name || ''}`}
-                description="Update taxonomy details, parent relationship, and SEO tags."
+                description="Update taxonomy details, gallery images, parent relationship, and SEO tags."
                 maxWidth="xl"
             >
                 <form onSubmit={submitEdit} className="space-y-4">
@@ -1031,6 +1275,115 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             className="block w-full py-2 sm:py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
                         />
                         {errors.description && <p className="mt-1.5 text-xs text-rose-500 font-medium">{errors.description}</p>}
+                    </div>
+
+                    {/* Category Multi-Image Upload (Max 3, with 1 Featured Image) */}
+                    <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324]/70 rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white block">
+                                    Category Gallery Images (Max 3)
+                                </span>
+                                <span className="text-xs text-slate-500 dark:text-[#8EB0CF]">
+                                    Upload up to 3 images and select 1 as the primary Featured image.
+                                </span>
+                            </div>
+                            <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-slate-200 dark:bg-[#071324] text-slate-700 dark:text-[#BACDE3]">
+                                {existingImages.length + newImages.length}/3 images
+                            </span>
+                        </div>
+
+                        <div className="grid grid-cols-3 gap-3">
+                            {/* Existing Images */}
+                            {existingImages.map((img) => {
+                                const isFeatured = featuredImageId === img.id;
+                                return (
+                                    <div key={img.id} className="relative group border rounded-xl overflow-hidden bg-white dark:bg-[#071324] border-slate-200 dark:border-[#1C3E63]">
+                                        <div className="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-[#071324]/80 flex items-center justify-center">
+                                            <img src={img.image_url || img.image_path} alt="Category" className="w-full h-full object-cover" />
+                                        </div>
+                                        {/* Featured Selector */}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleSetFeaturedExisting(img.id)}
+                                            className={`absolute top-2 left-2 px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 transition ${
+                                                isFeatured
+                                                    ? 'bg-[#D4AF37] text-white shadow-xs'
+                                                    : 'bg-black/60 text-white hover:bg-black/80'
+                                            }`}
+                                        >
+                                            <Star className={`w-3 h-3 ${isFeatured ? 'fill-white text-white' : 'text-slate-300'}`} />
+                                            {isFeatured ? 'Featured' : 'Featured'}
+                                        </button>
+                                        {/* Delete Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleDeleteExistingImage(img.id)}
+                                            className="absolute top-2 right-2 p-1.5 rounded-md bg-rose-600/80 text-white hover:bg-rose-600 transition"
+                                            title="Delete image"
+                                        >
+                                            <Trash2 className="w-3.5 h-3.5" />
+                                        </button>
+                                    </div>
+                                );
+                            })}
+
+                            {/* New image previews */}
+                            {newImagePreviews.map((prev, idx) => {
+                                const isFeatured = featuredImageId === null && (featuredNewIndex === idx || (existingImages.length === 0 && idx === 0));
+                                return (
+                                    <div key={`new-${idx}`} className="relative group border rounded-xl overflow-hidden bg-white dark:bg-[#071324] border-slate-200 dark:border-[#1C3E63]">
+                                        <div className="aspect-square w-full overflow-hidden bg-slate-100 dark:bg-[#071324]/80 flex items-center justify-center">
+                                            <img src={prev.url} alt={prev.name} className="w-full h-full object-cover" />
+                                        </div>
+                                        {/* Featured Selector */}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleSetFeaturedNew(idx)}
+                                            className={`absolute top-2 left-2 px-2 py-1 rounded-md text-[10px] font-bold flex items-center gap-1 transition ${
+                                                isFeatured
+                                                    ? 'bg-[#D4AF37] text-white shadow-xs'
+                                                    : 'bg-black/60 text-white hover:bg-black/80'
+                                            }`}
+                                        >
+                                            <Star className={`w-3 h-3 ${isFeatured ? 'fill-white text-white' : 'text-slate-300'}`} />
+                                            {isFeatured ? 'Featured' : 'Featured'}
+                                        </button>
+                                        {/* Remove Button */}
+                                        <button
+                                            type="button"
+                                            onClick={() => handleRemoveNewImage(idx)}
+                                            className="absolute top-2 right-2 p-1.5 rounded-md bg-rose-600/80 text-white hover:bg-rose-600 transition"
+                                            title="Remove image"
+                                        >
+                                            <X className="w-3.5 h-3.5" />
+                                        </button>
+                                    </div>
+                                );
+                            })}
+
+                            {/* Upload Drop Zone */}
+                            {existingImages.length + newImages.length < 3 && (
+                                <label className="border-2 border-dashed border-slate-300 dark:border-[#1C3E63] rounded-xl aspect-square flex flex-col items-center justify-center text-center p-3 cursor-pointer hover:border-[#D4AF37] dark:hover:border-[#D4AF37] hover:bg-white/80 dark:hover:bg-[#071324]/80 transition group">
+                                    <input
+                                        type="file"
+                                        accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
+                                        multiple={3 - (existingImages.length + newImages.length) > 1}
+                                        onChange={handleFileSelection}
+                                        className="hidden"
+                                    />
+                                    <div className="w-8 h-8 rounded-full bg-slate-100 dark:bg-[#071324] flex items-center justify-center text-slate-400 dark:text-[#5E8CB6] group-hover:text-[#926F18] dark:group-hover:text-[#EBD495] group-hover:bg-[#FDFBF5] mb-1.5 transition">
+                                        <UploadCloud className="w-4 h-4" />
+                                    </div>
+                                    <span className="text-xs font-bold text-slate-700 dark:text-[#BACDE3] group-hover:text-[#926F18] dark:group-hover:text-[#EBD495] transition block">
+                                        Upload Image
+                                    </span>
+                                    <span className="text-[10px] text-slate-400 dark:text-[#5E8CB6]">
+                                        Max 3MB
+                                    </span>
+                                </label>
+                            )}
+                        </div>
                     </div>
 
                     {/* Status Toggles */}

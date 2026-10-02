@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 
 class Category extends Model
@@ -91,6 +92,26 @@ class Category extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class, 'category_id');
+    }
+
+    /**
+     * Gallery images belonging to this category (max 3).
+     */
+    public function images(): HasMany
+    {
+        return $this->hasMany(CategoryImage::class, 'category_id')
+            ->orderBy('display_order')
+            ->orderBy('id');
+    }
+
+    /**
+     * Featured hero image for this category (prioritizes is_featured = true, falls back to display_order).
+     */
+    public function featuredImage(): HasOne
+    {
+        return $this->hasOne(CategoryImage::class, 'category_id')
+            ->orderByDesc('is_featured')
+            ->orderBy('display_order');
     }
 
     /*

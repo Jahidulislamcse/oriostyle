@@ -58,7 +58,14 @@ class CategoryController extends Controller
      */
     public function store(CategoryStoreRequest $request): RedirectResponse
     {
-        $category = $this->categoryService->createCategory($request->validated());
+        $images = $request->file('images', []);
+        $featuredIndex = $request->input('featured_image_index');
+
+        $category = $this->categoryService->createCategory(
+            $request->validated(),
+            $images,
+            $featuredIndex !== null ? (int) $featuredIndex : null
+        );
 
         return redirect()->back()->with('success', "Category '{$category->name}' created successfully.");
     }
@@ -69,7 +76,20 @@ class CategoryController extends Controller
     public function update(CategoryUpdateRequest $request, Category $category): RedirectResponse
     {
         try {
-            $this->categoryService->updateCategory($category, $request->validated());
+            $images = $request->file('images', []);
+            $featuredIndex = $request->input('featured_image_index');
+            $deletedImageIds = $request->input('deleted_image_ids', []);
+            $featuredImageId = $request->input('featured_image_id');
+
+            $this->categoryService->updateCategory(
+                $category,
+                $request->validated(),
+                $images,
+                $featuredIndex !== null ? (int) $featuredIndex : null,
+                is_array($deletedImageIds) ? $deletedImageIds : [],
+                $featuredImageId !== null ? (int) $featuredImageId : null
+            );
+
             return redirect()->back()->with('success', "Category '{$category->name}' updated successfully.");
         } catch (InvalidArgumentException $e) {
             return redirect()->back()->withErrors(['parent_id' => $e->getMessage()]);

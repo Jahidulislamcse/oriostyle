@@ -32,6 +32,7 @@ class HomeController extends Controller
         $featuredCategories = Category::query()
             ->active()
             ->featured()
+            ->with(['images', 'featuredImage'])
             ->withCount(['products' => fn($q) => $q->where('is_active', true)])
             ->orderBy('display_order')
             ->take(6)
@@ -40,6 +41,7 @@ class HomeController extends Controller
         if ($featuredCategories->isEmpty()) {
             $featuredCategories = Category::query()
                 ->active()
+                ->with(['images', 'featuredImage'])
                 ->withCount(['products' => fn($q) => $q->where('is_active', true)])
                 ->orderBy('display_order')
                 ->take(6)

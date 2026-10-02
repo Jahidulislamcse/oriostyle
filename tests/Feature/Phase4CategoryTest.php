@@ -3,10 +3,13 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\CategoryImage;
 use App\Models\User;
 use App\Services\Catalog\CategoryService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class Phase4CategoryTest extends TestCase
@@ -269,6 +272,107 @@ class Phase4CategoryTest extends TestCase
         $customerResponse = $this->actingAs($this->customerUser)
             ->get(route('admin.categories.index'));
         $customerResponse->assertForbidden();
+    }
+
+    public function test_admin_can_create_category_with_up_to_3_images_and_mark_featured(): void
+    {
+        Storage::fake('public');
+
+        $images = [
+            UploadedFile::fake()->image('cat1.jpg', 600, 600),
+            UploadedFile::fake()->image('cat2.jpg', 600, 600),
+            UploadedFile::fake()->image('cat3.jpg', 600, 600),
+        ];
+
+        $response = $this->actingAs($this->adminUser)
+            ->post(route('admin.categories.store'), [
+                'name' => 'Footwear & Boots',
+                'description' => 'Premium luxury leather boots',
+                'display_order' => 2,
+                'is_active' => true,
+                'is_featured' => true,
+                'images' => $images,
+                'featured_image_index' => 1, // 2nd image marked as featured
+            ]);
+
+        $response->assertRedirect();
+        $category = Category::where('name', 'Footwear & Boots')->first();
+        $this->assertNotNull($category);
+
+        $this->assertCount(3, $category->images);
+        $this->assertEquals(3, CategoryImage::where('category_id', $category->id)->count());
+
+        $featured = $category->featuredImage;
+        $this->assertNotNull($featured);
+        $this->assertTrue((bool) $featured->is_featured);
+        $this->assertEquals(1, $featured->display_order);
+    }
+
+    public function test_admin_can_create_subcategory_with_images_and_featured_flag(): void
+    {
+        Storage::fake('public');
+
+        $parent = Category::create([
+            'name' => 'Electronics',
+            'slug' => 'electronics',
+            'is_active' => true,
+        ]);
+
+        $images = [
+            UploadedFile::fake()->image('sub1.jpg', 400, 400),
+            UploadedFile::fake()->image('sub2.jpg', 400, 400),
+        ];
+
+        $response = $this->actingAs($this->adminUser)
+            ->post(route('admin.categories.store'), [
+                'parent_id' => $parent->id,
+                'name' => 'Smart Watches',
+                'description' => 'Wearable smart tech',
+                'images' => $images,
+                'featured_image_index' => 0,
+            ]);
+
+        $response->assertRedirect();
+        $sub = Category::where('name', 'Smart Watches')->first();
+        $this->assertNotNull($sub);
+        $this->assertEquals($parent->id, $sub->parent_id);
+        $this->assertCount(2, $sub->images);
+        $this->assertTrue((bool) $sub->featuredImage->is_featured);
+    }
+
+    public function test_admin_can_update_category_images_and_change_featured(): void
+    {
+        Storage::fake('public');
+
+        $category = Category::create([
+            'name' => 'Leather Bags',
+            'slug' => 'leather-bags',
+            'is_active' => true,
+        ]);
+
+        $img1 = CategoryImage::create([
+            'category_id' => $category->id,
+            'image_path' => 'categories/bag1.jpg',
+            'is_featured' => true,
+            'display_order' => 0,
+        ]);
+
+        $newImage = UploadedFile::fake()->image('bag2.jpg', 400, 400);
+
+        $response = $this->actingAs($this->adminUser)
+            ->put(route('admin.categories.update', $category->id), [
+                'name' => 'Luxury Leather Bags',
+                'images' => [$newImage],
+                'featured_image_index' => 0, // mark the newly uploaded image as featured
+                'deleted_image_ids' => [$img1->id],
+            ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseMissing('category_images', ['id' => $img1->id]);
+
+        $category->refresh();
+        $this->assertCount(1, $category->images);
+        $this->assertTrue((bool) $category->featuredImage->is_featured);
     }
 
     public function test_category_service_caches_and_invalidates_storefront_nav_tree(): void

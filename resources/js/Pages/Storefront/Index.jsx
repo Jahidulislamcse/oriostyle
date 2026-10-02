@@ -24,22 +24,38 @@ export default function Index({
     const siteTagline = settings.site_tagline || 'Enterprise Single-Vendor E-Commerce Platform';
     const currencySymbol = settings.currency_symbol || '৳';
 
-    // Map dynamic categories to template structure with fallback to default mock categories
+    // Map dynamic categories to template structure with up to 3 dynamic images & fallback
     const categoriesToRender = featuredCategories && featuredCategories.length > 0
         ? featuredCategories.slice(0, 6).map((cat, index) => {
             const fallback = DEFAULT_CATEGORIES[index % DEFAULT_CATEGORIES.length];
+            
+            // Build 3 image list from dynamic category images
+            let dynamicImgs = [];
+            if (cat.images && cat.images.length > 0) {
+                dynamicImgs = cat.images.slice(0, 3).map((img) => img.image_url || img.image_path);
+            }
+            
+            // Fill up to 3 images with fallback if fewer than 3 uploaded
+            while (dynamicImgs.length < 3) {
+                const fallbackImgNum = fallback.imgs[dynamicImgs.length] || ((index * 3 + dynamicImgs.length + 1) % 18 || 1);
+                dynamicImgs.push(`/storefront/img/category/${fallbackImgNum}.jpg`);
+            }
+
             return {
                 id: cat.id,
                 title: cat.name,
-                subtitle: fallback.subtitle,
-                count: cat.products_count || fallback.count,
+                subtitle: cat.parent?.name || fallback.subtitle,
+                count: cat.products_count !== undefined ? cat.products_count : fallback.count,
                 discount: fallback.discount,
                 card: (index % 6) + 1,
                 slug: cat.slug || fallback.slug,
-                imgs: fallback.imgs,
+                images: dynamicImgs,
             };
         })
-        : DEFAULT_CATEGORIES;
+        : DEFAULT_CATEGORIES.map(c => ({
+            ...c,
+            images: c.imgs.map(n => `/storefront/img/category/${n}.jpg`)
+        }));
 
     return (
         <StorefrontLayout navCategories={navCategories}>
@@ -56,19 +72,21 @@ export default function Index({
                         <div className="mn-cat">
                             <div className="row">
                                 {categoriesToRender.map((cat) => (
-                                    <div key={cat.id || cat.card} className="col-lg-2 col-md-4 col-sm-6 col-12 m-b-15">
-                                        <div className={`mn-cat-card cat-card-${cat.card}`}>
-                                            <p className="lbl"><span>{cat.discount}</span></p>
-                                            <span className="bg">{cat.discount}</span>
-                                            <h4>{cat.subtitle}</h4>
-                                            <h3>{cat.title}</h3>
-                                            <p>Items ({cat.count})</p>
+                                    <div key={cat.id || cat.card} className="col-lg-2 col-md-4 col-sm-6 col-12 m-b-15 d-flex">
+                                        <div className={`mn-cat-card cat-card-${cat.card} w-100`}>
+                                            <div>
+                                                <p className="lbl"><span>{cat.discount}</span></p>
+                                                <span className="bg">{cat.discount}</span>
+                                                <h4>{cat.subtitle}</h4>
+                                                <h3 title={cat.title}>{cat.title}</h3>
+                                                <p>Items ({cat.count})</p>
+                                            </div>
                                             <ul>
-                                                {cat.imgs.map((imgNum) => (
-                                                    <li key={imgNum} style={{ width: '33.33%' }}>
+                                                {cat.images.map((imgSrc, imgIdx) => (
+                                                    <li key={imgIdx} style={{ width: '33.33%' }}>
                                                         <Link href={`/?category=${cat.slug}`}>
                                                             <img
-                                                                src={`/storefront/img/category/${imgNum}.jpg`}
+                                                                src={imgSrc}
                                                                 alt={cat.title}
                                                                 className="img-fluid"
                                                             />

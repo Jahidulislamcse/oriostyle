@@ -54,4 +54,38 @@ class Phase7StorefrontTest extends TestCase
             ->has('settings')
         );
     }
+
+    public function test_storefront_homepage_renders_category_with_multi_images(): void
+    {
+        $category = Category::create([
+            'name' => 'Footwear',
+            'slug' => 'footwear',
+            'is_active' => true,
+            'is_featured' => true,
+        ]);
+
+        \App\Models\CategoryImage::create([
+            'category_id' => $category->id,
+            'image_path' => 'categories/boot1.jpg',
+            'is_featured' => true,
+            'display_order' => 0,
+        ]);
+
+        \App\Models\CategoryImage::create([
+            'category_id' => $category->id,
+            'image_path' => 'categories/boot2.jpg',
+            'is_featured' => false,
+            'display_order' => 1,
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertStatus(200);
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Storefront/Index')
+            ->where('featuredCategories.0.name', 'Footwear')
+            ->has('featuredCategories.0.images', 2)
+            ->where('featuredCategories.0.images.0.is_featured', true)
+        );
+    }
 }

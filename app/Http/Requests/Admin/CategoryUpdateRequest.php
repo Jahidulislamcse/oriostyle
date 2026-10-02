@@ -41,6 +41,12 @@ class CategoryUpdateRequest extends FormRequest
             'is_featured' => ['nullable', 'boolean'],
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:1000'],
+            'images' => ['nullable', 'array', 'max:3'],
+            'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:3072'],
+            'featured_image_index' => ['nullable', 'integer', 'min:0', 'max:2'],
+            'featured_image_id' => ['nullable', 'integer'],
+            'deleted_image_ids' => ['nullable', 'array'],
+            'deleted_image_ids.*' => ['integer'],
         ];
     }
 
