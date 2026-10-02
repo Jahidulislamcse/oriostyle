@@ -3,6 +3,15 @@ import { Head, Link } from '@inertiajs/react';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import HeroSlider from '@/Components/Storefront/HeroSlider';
 
+const DEFAULT_CATEGORIES = [
+    { title: 'Clothes', subtitle: 'Fashion', count: 16, discount: '35%', card: 1, imgs: [1, 2, 3], slug: 'clothes' },
+    { title: 'Cosmetics', subtitle: 'Generic', count: 45, discount: '22%', card: 2, imgs: [4, 5, 6], slug: 'cosmetics' },
+    { title: 'Shoes', subtitle: 'Stylish', count: 58, discount: '65%', card: 3, imgs: [7, 8, 9], slug: 'shoes' },
+    { title: 'Watches', subtitle: 'Digital', count: 64, discount: '45%', card: 4, imgs: [10, 11, 12], slug: 'watches' },
+    { title: 'Belts', subtitle: 'Leather', count: 75, discount: '63%', card: 5, imgs: [13, 14, 15], slug: 'belts' },
+    { title: 'Bags', subtitle: 'Cotton', count: 15, discount: '23%', card: 6, imgs: [16, 17, 18], slug: 'bags' },
+];
+
 export default function Index({
     navCategories = [],
     featuredCategories = [],
@@ -14,6 +23,23 @@ export default function Index({
     const siteName = settings.site_name || 'ORIO STYLE';
     const siteTagline = settings.site_tagline || 'Enterprise Single-Vendor E-Commerce Platform';
     const currencySymbol = settings.currency_symbol || '৳';
+
+    // Map dynamic categories to template structure with fallback to default mock categories
+    const categoriesToRender = featuredCategories && featuredCategories.length > 0
+        ? featuredCategories.slice(0, 6).map((cat, index) => {
+            const fallback = DEFAULT_CATEGORIES[index % DEFAULT_CATEGORIES.length];
+            return {
+                id: cat.id,
+                title: cat.name,
+                subtitle: fallback.subtitle,
+                count: cat.products_count || fallback.count,
+                discount: fallback.discount,
+                card: (index % 6) + 1,
+                slug: cat.slug || fallback.slug,
+                imgs: fallback.imgs,
+            };
+        })
+        : DEFAULT_CATEGORIES;
 
     return (
         <StorefrontLayout navCategories={navCategories}>
@@ -27,61 +53,10 @@ export default function Index({
 
                     {/* Category Cards Section */}
                     <section className="mn-category p-tb-15">
-                        <div className="row">
-                            {featuredCategories && featuredCategories.length > 0 ? (
-                                featuredCategories.slice(0, 6).map((cat, index) => {
-                                    const baseImgIdx = (index * 3) + 1;
-                                    const discounts = ['35%', '22%', '65%', '45%', '63%', '23%'];
-                                    const discount = discounts[index % discounts.length];
-
-                                    return (
-                                        <div key={cat.id} className="col-lg-2 col-md-4 col-sm-6 col-12 m-b-15">
-                                            <div className={`mn-cat-card cat-card-${(index % 6) + 1}`}>
-                                                <p className="lbl"><span>{discount}</span></p>
-                                                <span className="bg">{discount}</span>
-                                                <h4>Category</h4>
-                                                <h3>{cat.name}</h3>
-                                                <p>Items ({cat.products_count || 12})</p>
-                                                <ul>
-                                                    <li>
-                                                        <Link href={`/?category=${cat.slug}`}>
-                                                            <img
-                                                                src={cat.image || `/storefront/img/category/${baseImgIdx}.jpg`}
-                                                                alt={cat.name}
-                                                            />
-                                                        </Link>
-                                                    </li>
-                                                    <li>
-                                                        <Link href={`/?category=${cat.slug}`}>
-                                                            <img
-                                                                src={`/storefront/img/category/${baseImgIdx + 1}.jpg`}
-                                                                alt={cat.name}
-                                                            />
-                                                        </Link>
-                                                    </li>
-                                                    <li>
-                                                        <Link href={`/?category=${cat.slug}`}>
-                                                            <img
-                                                                src={`/storefront/img/category/${baseImgIdx + 2}.jpg`}
-                                                                alt={cat.name}
-                                                            />
-                                                        </Link>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    );
-                                })
-                            ) : (
-                                [
-                                    { title: 'Clothes', subtitle: 'Fashion', count: 16, discount: '35%', card: 1, imgs: [1, 2, 3] },
-                                    { title: 'Cosmetics', subtitle: 'Generic', count: 45, discount: '22%', card: 2, imgs: [4, 5, 6] },
-                                    { title: 'Shoes', subtitle: 'Stylish', count: 58, discount: '65%', card: 3, imgs: [7, 8, 9] },
-                                    { title: 'Watches', subtitle: 'Digital', count: 64, discount: '45%', card: 4, imgs: [10, 11, 12] },
-                                    { title: 'Belts', subtitle: 'Leather', count: 75, discount: '63%', card: 5, imgs: [13, 14, 15] },
-                                    { title: 'Bags', subtitle: 'Cotton', count: 15, discount: '23%', card: 6, imgs: [16, 17, 18] },
-                                ].map((cat) => (
-                                    <div key={cat.card} className="col-lg-2 col-md-4 col-sm-6 col-12 m-b-15">
+                        <div className="mn-cat">
+                            <div className="row">
+                                {categoriesToRender.map((cat) => (
+                                    <div key={cat.id || cat.card} className="col-lg-2 col-md-4 col-sm-6 col-12 m-b-15">
                                         <div className={`mn-cat-card cat-card-${cat.card}`}>
                                             <p className="lbl"><span>{cat.discount}</span></p>
                                             <span className="bg">{cat.discount}</span>
@@ -90,17 +65,21 @@ export default function Index({
                                             <p>Items ({cat.count})</p>
                                             <ul>
                                                 {cat.imgs.map((imgNum) => (
-                                                    <li key={imgNum}>
-                                                        <Link href="/?category=all">
-                                                            <img src={`/storefront/img/category/${imgNum}.jpg`} alt={cat.title} />
+                                                    <li key={imgNum} style={{ width: '33.33%' }}>
+                                                        <Link href={`/?category=${cat.slug}`}>
+                                                            <img
+                                                                src={`/storefront/img/category/${imgNum}.jpg`}
+                                                                alt={cat.title}
+                                                                className="img-fluid"
+                                                            />
                                                         </Link>
                                                     </li>
                                                 ))}
                                             </ul>
                                         </div>
                                     </div>
-                                ))
-                            )}
+                                ))}
+                            </div>
                         </div>
                     </section>
 
