@@ -10,7 +10,8 @@ use App\Services\Catalog\BrandService;
 use App\Services\Catalog\CategoryService;
 use App\Services\Catalog\ProductService;
 use App\Services\Settings\SettingService;
-use Illuminate\View\View;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class HomeController extends Controller
 {
@@ -22,9 +23,9 @@ class HomeController extends Controller
     ) {}
 
     /**
-     * Display Storefront Landing / Homepage.
+     * Display Storefront Landing Homepage via Inertia React.
      */
-    public function index(): View
+    public function index(): Response
     {
         $navCategories = $this->categoryService->getStorefrontNavTree();
 
@@ -85,13 +86,13 @@ class HomeController extends Controller
 
         $settings = $this->settingService->getSettings();
 
-        return view('storefront.index', compact(
-            'navCategories',
-            'featuredCategories',
-            'featuredProducts',
-            'newArrivals',
-            'brands',
-            'settings'
-        ));
+        return Inertia::render('Storefront/Index', [
+            'navCategories' => $navCategories,
+            'featuredCategories' => $featuredCategories,
+            'featuredProducts' => $featuredProducts,
+            'newArrivals' => $newArrivals,
+            'brands' => $brands,
+            'settings' => $settings,
+        ]);
     }
 }

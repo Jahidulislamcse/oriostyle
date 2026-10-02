@@ -85,8 +85,7 @@ class Phase1BaselineSetupTest extends TestCase
     {
         $response = $this->get('/');
 
-        $response->assertStatus(200);
-        $response->assertViewIs('storefront.index');
+        $response->assertInertia(fn (Assert $page) => $page->component('Storefront/Index'));
     }
 
     /**

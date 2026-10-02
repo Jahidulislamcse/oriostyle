@@ -197,9 +197,9 @@ class Phase5SettingsTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertOk();
-        $response->assertViewIs('storefront.index');
-        $response->assertViewHas('settings', function ($settings) {
-            return ($settings['site_name'] ?? '') === 'ORIO COUTURE';
-        });
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Storefront/Index')
+            ->where('settings.site_name', 'ORIO COUTURE')
+        );
     }
 }

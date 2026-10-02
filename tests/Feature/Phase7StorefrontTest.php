@@ -6,13 +6,14 @@ use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Inertia\Testing\AssertableInertia as Assert;
 use Tests\TestCase;
 
 class Phase7StorefrontTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_storefront_homepage_renders_successfully_with_isolated_layout(): void
+    public function test_storefront_homepage_renders_successfully_via_react_inertia(): void
     {
         $category = Category::create([
             'name' => 'Fashion',
@@ -43,11 +44,14 @@ class Phase7StorefrontTest extends TestCase
         $response = $this->get('/');
 
         $response->assertStatus(200);
-        $response->assertViewIs('storefront.index');
-        $response->assertViewHasAll(['navCategories', 'featuredCategories', 'featuredProducts', 'newArrivals', 'brands', 'settings']);
-        $response->assertSee('Fashion');
-        $response->assertSee('Premium Shirt');
-        $response->assertSee('storefront/css/style.css');
-        $response->assertSee('storefront/js/main.js');
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Storefront/Index')
+            ->has('navCategories')
+            ->has('featuredCategories')
+            ->has('featuredProducts')
+            ->has('newArrivals')
+            ->has('brands')
+            ->has('settings')
+        );
     }
 }
