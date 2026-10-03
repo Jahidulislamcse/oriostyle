@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Catalog\CategoryService;
 use App\Services\Settings\SettingService;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
@@ -45,6 +46,7 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'appName' => $settings['site_name'] ?? config('app.name', 'ORIO STYLE'),
             'settings' => $settings,
+            'navCategories' => fn () => app(CategoryService::class)->getStorefrontNavTree(),
             'auth' => [
                 'user' => $request->user() ? [
                     'id' => $request->user()->id,

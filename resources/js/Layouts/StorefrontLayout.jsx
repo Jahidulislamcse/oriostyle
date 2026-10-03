@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 
-export default function StorefrontLayout({ children, navCategories = [] }) {
-    const { settings = {}, auth = {} } = usePage().props;
+export default function StorefrontLayout({ children, navCategories: directNavCategories }) {
+    const { settings = {}, auth = {}, navCategories: sharedNavCategories = [] } = usePage().props;
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isWishlistOpen, setIsWishlistOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [openSubMenus, setOpenSubMenus] = useState({});
+
+    const categories = (directNavCategories && directNavCategories.length > 0)
+        ? directNavCategories
+        : (sharedNavCategories || []);
 
     const siteName = settings.site_name || 'ORIO STYLE';
     const siteLogo = settings.site_logo || '/storefront/img/logo/logo.png';
@@ -54,159 +58,97 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                     </button>
                     <ul className="mn-sb-list">
                         <li className="mn-sb-title condense">
-                            <span>FASHION</span>
+                            <span>Categories</span>
                         </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['clothes'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('clothes')}
-                            >
-                                <img src="/storefront/img/icons/clothes-2.svg" alt="Clothes" />
-                                <span className="condense">
-                                    Clothes
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['clothes'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['clothes'] ? 'block' : 'none' }}>
-                                <li className="list">
-                                    <Link href="/?category=t-shirts" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>T-shirts</Link>
-                                </li>
-                                <li className="list">
-                                    <Link href="/?category=shirts" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Shirts</Link>
-                                </li>
-                                <li className="list">
-                                    <Link href="/?category=dresses" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Dresses</Link>
-                                </li>
-                                <li className="list">
-                                    <Link href="/?category=jeans" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Jeans</Link>
-                                </li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=shoes" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
-                                <img src="/storefront/img/icons/shoes.svg" alt="Shoes" />
-                                <span className="condense">Shoes</span>
-                            </Link>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=glasses" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
-                                <img src="/storefront/img/icons/glasses.svg" alt="Glasses" />
-                                <span className="condense">Glasses</span>
-                            </Link>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['bags'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('bags')}
-                            >
-                                <img src="/storefront/img/icons/bag.svg" alt="Bags" />
-                                <span className="condense">
-                                    Bags
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['bags'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['bags'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=handbags" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Handbags</Link></li>
-                                <li className="list"><Link href="/?category=backpacks" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Backpacks</Link></li>
-                                <li className="list"><Link href="/?category=wallets" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Wallets</Link></li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=hat" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
-                                <img src="/storefront/img/icons/hat.svg" alt="Hat" />
-                                <span className="condense">Hat</span>
-                            </Link>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['makeup'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('makeup')}
-                            >
-                                <img src="/storefront/img/icons/makeup.svg" alt="Makeup" />
-                                <span className="condense">
-                                    Makeup
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['makeup'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['makeup'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=lipstick" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Lipstick</Link></li>
-                                <li className="list"><Link href="/?category=eyeliner" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Eye Liner</Link></li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['cosmetics'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('cosmetics')}
-                            >
-                                <img src="/storefront/img/icons/cosmetics.svg" alt="Cosmetics" />
-                                <span className="condense">
-                                    Cosmetics
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['cosmetics'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['cosmetics'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=shampoo" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Shampoo</Link></li>
-                                <li className="list"><Link href="/?category=skincare" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Skin Care</Link></li>
-                            </ul>
-                        </li>
+                        {categories.length > 0 ? (
+                            categories.map((cat) => {
+                                const hasChildren = cat.children && cat.children.length > 0;
+                                const isOpen = Boolean(openSubMenus[cat.id]);
+                                const catImg = cat.image_url || (cat.images && cat.images[0]?.image_url) || cat.icon || null;
 
-                        <li className="mn-sb-title condense">
-                            <span>BAKERY</span>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['cake'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('cake')}
-                            >
-                                <img src="/storefront/img/icons/cake.svg" alt="Cake" />
-                                <span className="condense">
-                                    Cake
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['cake'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['cake'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=cupcake" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Cup Cake</Link></li>
-                                <li className="list"><Link href="/?category=pastry" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Pastry</Link></li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=bread" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
-                                <img src="/storefront/img/icons/bread.svg" alt="Bread" />
-                                <span className="condense">Bread</span>
-                            </Link>
-                        </li>
+                                if (hasChildren) {
+                                    return (
+                                        <li key={cat.id} className="mn-sb-item sb-drop-item">
+                                            <a
+                                                href="javascript:void(0)"
+                                                className={`mn-drop-toggle ${isOpen ? 'active-nav' : ''}`}
+                                                onClick={() => toggleSubMenu(cat.id)}
+                                            >
+                                                {catImg ? (
+                                                    <img src={catImg} alt={cat.name} className="cat-sidebar-img" />
+                                                ) : (
+                                                    <i className="ri-folder-3-line cat-sidebar-icon" />
+                                                )}
+                                                <span className="condense">
+                                                    {cat.name}
+                                                    <i className={`drop-arrow ri-arrow-${isOpen ? 'up' : 'down'}-s-line`} />
+                                                </span>
+                                            </a>
+                                            <ul className="mn-sb-drop" style={{ display: isOpen ? 'block' : 'none' }}>
+                                                <li className="list">
+                                                    <Link
+                                                        href={`/?category=${cat.slug}`}
+                                                        className="mn-page-link drop"
+                                                        onClick={() => setSidebarCollapsed(false)}
+                                                    >
+                                                        All {cat.name}
+                                                    </Link>
+                                                </li>
+                                                {cat.children.map((subCat) => {
+                                                    const subImg = subCat.image_url || (subCat.images && subCat.images[0]?.image_url) || subCat.icon || null;
+                                                    return (
+                                                        <li key={subCat.id} className="list">
+                                                            <Link
+                                                                href={`/?category=${subCat.slug}`}
+                                                                className="mn-page-link drop d-flex align-items-center gap-2"
+                                                                onClick={() => setSidebarCollapsed(false)}
+                                                            >
+                                                                {subImg && (
+                                                                    <img
+                                                                        src={subImg}
+                                                                        alt={subCat.name}
+                                                                        className="cat-sidebar-sub-img"
+                                                                    />
+                                                                )}
+                                                                <span>{subCat.name}</span>
+                                                            </Link>
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        </li>
+                                    );
+                                }
 
-                        <li className="mn-sb-title condense">
-                            <span>VEGETABLES</span>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['tuber'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('tuber')}
-                            >
-                                <img src="/storefront/img/icons/tuber.svg" alt="Tuber Root" />
-                                <span className="condense">
-                                    Tuber Root
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['tuber'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['tuber'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=potato" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Sweet Potato</Link></li>
-                                <li className="list"><Link href="/?category=ginger" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Ginger</Link></li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=tomato" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
-                                <img src="/storefront/img/icons/tomato.svg" alt="Tomato" />
-                                <span className="condense">Tomato</span>
-                            </Link>
-                        </li>
+                                return (
+                                    <li key={cat.id} className="mn-sb-item sb-drop-item">
+                                        <Link
+                                            href={`/?category=${cat.slug}`}
+                                            className="mn-drop-toggle"
+                                            onClick={() => setSidebarCollapsed(false)}
+                                        >
+                                            {catImg ? (
+                                                <img src={catImg} alt={cat.name} className="cat-sidebar-img" />
+                                            ) : (
+                                                <i className="ri-folder-3-line cat-sidebar-icon" />
+                                            )}
+                                            <span className="condense">{cat.name}</span>
+                                        </Link>
+                                    </li>
+                                );
+                            })
+                        ) : (
+                            <li className="mn-sb-item sb-drop-item">
+                                <Link
+                                    href="/"
+                                    className="mn-drop-toggle"
+                                    onClick={() => setSidebarCollapsed(false)}
+                                >
+                                    <i className="ri-store-2-line cat-sidebar-icon" />
+                                    <span className="condense">All Products</span>
+                                </Link>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>
@@ -256,26 +198,28 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                                             Categories<i className="ri-arrow-down-s-line" />
                                                         </a>
                                                         <ul className="mega-menu d-block">
-                                                            <li className="d-flex">
+                                                            <li className="d-flex flex-wrap gap-4">
                                                                 <span className="bg" />
-                                                                <ul className="d-block mega-block">
-                                                                    <li className="menu_title">
-                                                                        <a href="javascript:void(0)">Fashion</a>
-                                                                    </li>
-                                                                    <li><Link href="/?category=clothes">Clothes</Link></li>
-                                                                    <li><Link href="/?category=shoes">Shoes</Link></li>
-                                                                    <li><Link href="/?category=glasses">Glasses</Link></li>
-                                                                    <li><Link href="/?category=bags">Bags</Link></li>
-                                                                </ul>
-                                                                <ul className="d-block mega-block">
-                                                                    <li className="menu_title">
-                                                                        <a href="javascript:void(0)">Lifestyle</a>
-                                                                    </li>
-                                                                    <li><Link href="/?category=cosmetics">Cosmetics</Link></li>
-                                                                    <li><Link href="/?category=makeup">Makeup</Link></li>
-                                                                    <li><Link href="/?category=bakery">Bakery</Link></li>
-                                                                    <li><Link href="/?category=vegetables">Vegetables</Link></li>
-                                                                </ul>
+                                                                {categories.length > 0 ? (
+                                                                    categories.slice(0, 4).map((cat) => (
+                                                                        <ul key={cat.id} className="d-block mega-block">
+                                                                            <li className="menu_title">
+                                                                                <Link href={`/?category=${cat.slug}`}>{cat.name}</Link>
+                                                                            </li>
+                                                                            {cat.children && cat.children.slice(0, 6).map((subCat) => (
+                                                                                <li key={subCat.id}>
+                                                                                    <Link href={`/?category=${subCat.slug}`}>{subCat.name}</Link>
+                                                                                </li>
+                                                                            ))}
+                                                                        </ul>
+                                                                    ))
+                                                                ) : (
+                                                                    <ul className="d-block mega-block">
+                                                                        <li className="menu_title">
+                                                                            <Link href="/">All Categories</Link>
+                                                                        </li>
+                                                                    </ul>
+                                                                )}
                                                             </li>
                                                         </ul>
                                                     </li>

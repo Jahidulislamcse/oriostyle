@@ -55,6 +55,45 @@ class Category extends Model
         ];
     }
 
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var list<string>
+     */
+    protected $appends = [
+        'image_url',
+    ];
+
+    /**
+     * Accessor for full public category image URL.
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if ($this->relationLoaded('featuredImage') && $this->featuredImage) {
+            return $this->featuredImage->image_url;
+        }
+
+        if ($this->relationLoaded('images') && $this->images->isNotEmpty()) {
+            return $this->images->first()->image_url;
+        }
+
+        if (!empty($this->image)) {
+            if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+                return $this->image;
+            }
+            return asset('storage/' . ltrim($this->image, '/'));
+        }
+
+        if (!empty($this->icon)) {
+            if (str_starts_with($this->icon, 'http://') || str_starts_with($this->icon, 'https://') || str_starts_with($this->icon, '/')) {
+                return $this->icon;
+            }
+            return asset('storage/' . ltrim($this->icon, '/'));
+        }
+
+        return null;
+    }
+
     /*
     |--------------------------------------------------------------------------
     | Self-Referencing Eloquent Relationships

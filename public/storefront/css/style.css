@@ -2888,17 +2888,17 @@ header {
   border-radius: 5px;
 }
 .mn-sidebar .side-close {
-  -webkit-transition: all 0.2s ease-in-out;
-  transition: all 0.2s ease-in-out;
-  width: 32px;
-  height: 32px;
+  -webkit-transition: all 0.25s ease-in-out;
+  transition: all 0.25s ease-in-out;
+  width: 42px;
+  height: 42px;
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 14px;
+  right: 14px;
   border: 0;
-  background-color: rgba(224, 78, 78, 0.85);
+  background-color: #ef4444;
   color: #ffffff;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   z-index: 50;
   display: none;
@@ -2908,14 +2908,21 @@ header {
   -webkit-box-pack: center;
   -ms-flex-pack: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 24px;
   line-height: 1;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.45);
 }
 .mn-sidebar .side-close:hover {
-  background-color: rgb(224, 78, 78);
-  -webkit-transform: scale(1.05);
-  transform: scale(1.05);
+  background-color: #dc2626;
+  -webkit-transform: scale(1.08);
+  transform: scale(1.08);
+  box-shadow: 0 6px 18px rgba(220, 38, 38, 0.6);
+}
+.mn-sidebar .side-close i {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  display: block;
 }
 .mn-sidebar .mn-sidebar-body {
   -webkit-transition: all 0.1s ease-in-out;
@@ -2937,24 +2944,88 @@ header {
   margin: -15px 0;
 }
 .mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle {
-  padding: 15px 0;
+  padding: 12px 0;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   color: #b9c2d0;
-  font-size: 16px;
+  font-size: 15px;
   position: relative;
   text-transform: capitalize;
 }
 .mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle:hover {
   color: #ffd783;
 }
-.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle > svg, .mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle > img {
+.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle > svg,
+.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle > img,
+.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle .cat-sidebar-img {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
-  margin-right: 10px;
-  width: 24px;
-  height: 24px;
+  margin-right: 12px;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  background-color: #293343;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+}
+.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle .cat-sidebar-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  margin-right: 12px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-size: 18px;
+  color: #b9c2d0;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle:hover .cat-sidebar-icon {
+  color: #ffd783;
+  border-color: rgba(255, 215, 131, 0.35);
+  background-color: rgba(255, 215, 131, 0.1);
+}
+.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-sb-drop .list .cat-sidebar-sub-img {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  margin-right: 8px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  background-color: #293343;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle .condense {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 0;
 }
 .mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle .condense > i {
   margin-right: -5px;
