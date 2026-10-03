@@ -3,9 +3,11 @@ import { Link, usePage, router } from '@inertiajs/react';
 
 export default function StorefrontLayout({ children, navCategories = [] }) {
     const { settings = {}, auth = {} } = usePage().props;
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(
-        typeof window !== 'undefined' ? window.innerWidth < 992 : false
-    );
+    
+    // Explicitly separated mobile drawer vs desktop collapse states
+    const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+    const [isDesktopSidebarCollapsed, setIsDesktopSidebarCollapsed] = useState(false);
+    
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isWishlistOpen, setIsWishlistOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -19,17 +21,28 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
 
     useEffect(() => {
         const handleResize = () => {
-            if (window.innerWidth < 992) {
-                setSidebarCollapsed(true);
+            if (window.innerWidth >= 992) {
+                setIsMobileSidebarOpen(false);
             }
         };
-        handleResize();
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     const toggleSubMenu = (id) => {
         setOpenSubMenus((prev) => ({ ...prev, [id]: !prev[id] }));
+    };
+
+    const handleToggleSidebar = () => {
+        if (typeof window !== 'undefined' && window.innerWidth < 992) {
+            setIsMobileSidebarOpen((prev) => !prev);
+        } else {
+            setIsDesktopSidebarCollapsed((prev) => !prev);
+        }
+    };
+
+    const closeMobileSidebar = () => {
+        setIsMobileSidebarOpen(false);
     };
 
     const handleSearchSubmit = (e) => {
@@ -62,24 +75,27 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
 
     return (
         <div className="wrapper sb-default">
-            {/* Sidebar Overlay (Mobile & Tablet) */}
-            {!sidebarCollapsed && (
+            {/* Mobile Sidebar Overlay */}
+            {isMobileSidebarOpen && (
                 <div
                     className="mn-sidebar-overlay"
                     style={{ display: 'block' }}
-                    onClick={() => setSidebarCollapsed(true)}
+                    onClick={closeMobileSidebar}
                 />
             )}
 
             {/* Left Category Sidebar */}
-            <div className={`mn-sidebar ${sidebarCollapsed ? 'sidebar-hide' : ''}`}>
+            <div className={`mn-sidebar ${isMobileSidebarOpen ? 'open mn-sidebar-open' : ''} ${isDesktopSidebarCollapsed ? 'sidebar-hide' : ''}`}>
                 <div className="mn-sidebar-body">
                     <button
                         type="button"
                         className="side-close"
                         title="Close Sidebar"
-                        onClick={() => setSidebarCollapsed(true)}
-                    />
+                        onClick={closeMobileSidebar}
+                        aria-label="Close Sidebar"
+                    >
+                        ✕
+                    </button>
                     <ul className="mn-sb-list">
                         <li className="mn-sb-title condense">
                             <span>CATEGORIES</span>
@@ -92,7 +108,7 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                             if (!hasChildren) {
                                 return (
                                     <li key={cat.id} className="mn-sb-item sb-drop-item">
-                                        <Link href={`/?category=${cat.slug}`} className="mn-drop-toggle" onClick={() => window.innerWidth < 992 && setSidebarCollapsed(true)}>
+                                        <Link href={`/?category=${cat.slug}`} className="mn-drop-toggle" onClick={closeMobileSidebar}>
                                             <img src={iconSrc} alt={cat.name} onError={(e) => { e.target.src = '/storefront/img/icons/clothes-2.svg'; }} />
                                             <span className="condense">{cat.name}</span>
                                         </Link>
@@ -119,7 +135,7 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                                 <Link
                                                     href={`/?category=${sub.slug}`}
                                                     className="mn-page-link drop"
-                                                    onClick={() => window.innerWidth < 992 && setSidebarCollapsed(true)}
+                                                    onClick={closeMobileSidebar}
                                                 >
                                                     {sub.name}
                                                 </Link>
@@ -134,15 +150,15 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
             </div>
 
             {/* Header */}
-            <header className={sidebarCollapsed ? 'sb-hide' : ''}>
+            <header className={isDesktopSidebarCollapsed ? 'sb-hide' : ''}>
                 <div className="mn-header">
                     <div className="mn-header-items">
                         <div className="left-header d-flex align-items-center">
                             <a
                                 href="javascript:void(0)"
-                                className={`mn-toggle-sidebar ${sidebarCollapsed ? 'active-toggle' : ''}`}
-                                title="Toggle Sidebar"
-                                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                                className={`mn-toggle-sidebar ${isDesktopSidebarCollapsed || isMobileSidebarOpen ? 'active-toggle' : ''}`}
+                                title="Toggle Categories"
+                                onClick={handleToggleSidebar}
                             >
                                 <span className="outer-ring">
                                     <span className="inner-ring" />
@@ -327,7 +343,7 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                         {auth?.user ? (
                             <div>
                                 <div className="d-flex align-items-center gap-2 mb-2">
-                                    <div className="w-8 h-8 rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style={{ width: 34, height: 34 }}>
+                                    <div className="rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style={{ width: 34, height: 34 }}>
                                         {auth.user.name?.charAt(0) || 'U'}
                                     </div>
                                     <div>
@@ -454,7 +470,7 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                     ✕
                                 </button>
                             </div>
-                            <div className="d-flex flex-wrap gap-1.5 align-items-center">
+                            <div className="d-flex flex-wrap gap-1 align-items-center">
                                 <span className="small text-muted me-1">Popular:</span>
                                 {['Clothes', 'Shoes', 'Watches', 'Bags', 'Cosmetics'].map((term) => (
                                     <button
@@ -477,12 +493,12 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
             )}
 
             {/* Main Content Area */}
-            <main className={`mn-main-content ${sidebarCollapsed ? 'sb-hide' : ''}`}>
+            <main className={`mn-main-content ${isDesktopSidebarCollapsed ? 'sb-hide' : ''}`}>
                 {children}
             </main>
 
             {/* Footer */}
-            <footer className={sidebarCollapsed ? 'sb-hide' : ''}>
+            <footer className={isDesktopSidebarCollapsed ? 'sb-hide' : ''}>
                 <div className="mn-footer">
                     <div className="container-fluid">
                         <div className="row">
@@ -559,8 +575,8 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                 </Link>
                 <button
                     type="button"
-                    className="mn-bottom-nav-item"
-                    onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                    className={`mn-bottom-nav-item ${isMobileSidebarOpen ? 'active' : ''}`}
+                    onClick={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
                 >
                     <i className="ri-grid-fill" />
                     <span>Categories</span>
