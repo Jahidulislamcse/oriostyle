@@ -58,7 +58,8 @@ class BrandService
             $data['logo'] = $this->uploadLogo($logoFile);
         }
 
-        $brand = Brand::create($data);
+        $brandData = array_diff_key($data, array_flip(['remove_logo']));
+        $brand = Brand::create($brandData);
         $this->flushCache();
 
         return $brand;
@@ -76,6 +77,7 @@ class BrandService
             $data['slug'] = $this->generateUniqueSlug($data['name'], $brand->id);
         }
 
+        $removeLogo = $removeLogo || !empty($data['remove_logo']);
         if ($removeLogo && $brand->logo) {
             $this->deleteLogo($brand->logo);
             $data['logo'] = null;
@@ -88,7 +90,8 @@ class BrandService
             $data['logo'] = $this->uploadLogo($logoFile);
         }
 
-        $brand->update($data);
+        $brandData = array_diff_key($data, array_flip(['remove_logo']));
+        $brand->update($brandData);
         $this->flushCache();
 
         return $brand;

@@ -123,6 +123,33 @@ class Phase6BrandsAndProductsTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_update_brand_and_remove_logo(): void
+    {
+        Storage::fake('public');
+
+        $brand = Brand::create([
+            'name' => 'Nike Sports',
+            'slug' => 'nike-sports',
+            'logo' => '/storage/brands/fake_nike.png',
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->adminUser)
+            ->put(route('admin.brands.update', $brand->id), [
+                'name' => 'Nike Pro',
+                'slug' => 'nike-pro',
+                'remove_logo' => true,
+            ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('brands', [
+            'id' => $brand->id,
+            'name' => 'Nike Pro',
+            'slug' => 'nike-pro',
+            'logo' => null,
+        ]);
+    }
+
     public function test_admin_can_delete_brand(): void
     {
         $brand = Brand::create([
