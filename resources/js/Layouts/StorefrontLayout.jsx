@@ -396,7 +396,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                 <div className="mn-footer-widget">
                                     <h4 className="mn-footer-heading">Categories</h4>
                                     <ul className="mn-footer-links">
-                                        {navCategories && navCategories.slice(0, 5).map((cat) => (
+                                        {categories && categories.slice(0, 5).map((cat) => (
                                             <li key={cat.id}>
                                                 <Link href={`/?category=${cat.slug}`}>{cat.name}</Link>
                                             </li>
