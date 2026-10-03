@@ -88,7 +88,9 @@ class Category extends Model
             if (str_starts_with($this->icon, 'http://') || str_starts_with($this->icon, 'https://') || str_starts_with($this->icon, '/')) {
                 return $this->icon;
             }
-            return asset('storage/' . ltrim($this->icon, '/'));
+            if (preg_match('/\.(png|jpe?g|webp|svg|gif|avif)$/i', $this->icon)) {
+                return asset('storage/' . ltrim($this->icon, '/'));
+            }
         }
 
         return null;

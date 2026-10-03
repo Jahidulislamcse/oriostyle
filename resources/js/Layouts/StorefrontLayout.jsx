@@ -1,6 +1,55 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 
+function getValidImageUrl(c) {
+    const raw = c?.image_url || (c?.images && c?.images[0]?.image_url) || null;
+    if (raw && typeof raw === 'string') {
+        if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/') || /\.(png|jpe?g|webp|svg|gif|avif)$/i.test(raw)) {
+            return raw;
+        }
+    }
+    return null;
+}
+
+function getCategoryIconClass(c, isSub = false) {
+    if (c?.icon && typeof c.icon === 'string') {
+        if (c.icon.startsWith('ri-')) return c.icon;
+        const iconLower = c.icon.toLowerCase();
+        if (iconLower === 'shirt') return 'ri-t-shirt-line';
+        if (iconLower === 'sparkles') return 'ri-sparkling-line';
+        if (iconLower === 'footprints') return 'ri-footprint-line';
+        if (iconLower === 'watch') return 'ri-time-line';
+        if (iconLower === 'bag' || iconLower === 'handbag') return 'ri-handbag-line';
+        if (iconLower === 'home') return 'ri-home-4-line';
+        if (iconLower === 'phone' || iconLower === 'smartphone') return 'ri-smartphone-line';
+    }
+
+    const nameLower = (c?.name || c?.slug || '').toLowerCase();
+    if (nameLower.includes('shirt') || nameLower.includes('polo') || nameLower.includes('pant') || nameLower.includes('trouser') || nameLower.includes('fashion') || nameLower.includes('men') || nameLower.includes('clothing') || nameLower.includes('denim')) {
+        return 'ri-t-shirt-line';
+    }
+    if (nameLower.includes('women') || nameLower.includes('saree') || nameLower.includes('kurti') || nameLower.includes('dress') || nameLower.includes('beauty') || nameLower.includes('cosmetic') || nameLower.includes('jewel')) {
+        return 'ri-sparkling-line';
+    }
+    if (nameLower.includes('shoe') || nameLower.includes('sneaker') || nameLower.includes('foot') || nameLower.includes('sandal') || nameLower.includes('boot')) {
+        return 'ri-footprint-line';
+    }
+    if (nameLower.includes('watch') || nameLower.includes('clock') || nameLower.includes('time') || nameLower.includes('accessory') || nameLower.includes('belt') || nameLower.includes('wallet')) {
+        return 'ri-time-line';
+    }
+    if (nameLower.includes('bag') || nameLower.includes('backpack') || nameLower.includes('luggage')) {
+        return 'ri-handbag-line';
+    }
+    if (nameLower.includes('tech') || nameLower.includes('electronic') || nameLower.includes('phone') || nameLower.includes('gadget') || nameLower.includes('headphone')) {
+        return 'ri-smartphone-line';
+    }
+    if (nameLower.includes('home') || nameLower.includes('living') || nameLower.includes('kitchen') || nameLower.includes('decor')) {
+        return 'ri-home-4-line';
+    }
+
+    return isSub ? 'ri-price-tag-3-line' : 'ri-folder-3-line';
+}
+
 export default function StorefrontLayout({ children, navCategories: directNavCategories }) {
     const { settings = {}, auth = {}, navCategories: sharedNavCategories = [] } = usePage().props;
     const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -64,7 +113,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             categories.map((cat) => {
                                 const hasChildren = cat.children && cat.children.length > 0;
                                 const isOpen = Boolean(openSubMenus[cat.id]);
-                                const catImg = cat.image_url || (cat.images && cat.images[0]?.image_url) || cat.icon || null;
+                                const catImg = getValidImageUrl(cat);
 
                                 if (hasChildren) {
                                     return (
@@ -77,7 +126,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                                 {catImg ? (
                                                     <img src={catImg} alt={cat.name} className="cat-sidebar-img" />
                                                 ) : (
-                                                    <i className="ri-folder-3-line cat-sidebar-icon" />
+                                                    <i className={`${getCategoryIconClass(cat, false)} cat-sidebar-icon`} />
                                                 )}
                                                 <span className="condense">
                                                     {cat.name}
@@ -88,14 +137,15 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                                 <li className="list">
                                                     <Link
                                                         href={`/?category=${cat.slug}`}
-                                                        className="mn-page-link drop"
+                                                        className="mn-page-link drop d-flex align-items-center gap-2"
                                                         onClick={() => setSidebarCollapsed(false)}
                                                     >
-                                                        All {cat.name}
+                                                        <i className="ri-apps-2-line cat-sidebar-sub-icon" />
+                                                        <span>All {cat.name}</span>
                                                     </Link>
                                                 </li>
                                                 {cat.children.map((subCat) => {
-                                                    const subImg = subCat.image_url || (subCat.images && subCat.images[0]?.image_url) || subCat.icon || null;
+                                                    const subImg = getValidImageUrl(subCat);
                                                     return (
                                                         <li key={subCat.id} className="list">
                                                             <Link
@@ -103,12 +153,14 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                                                 className="mn-page-link drop d-flex align-items-center gap-2"
                                                                 onClick={() => setSidebarCollapsed(false)}
                                                             >
-                                                                {subImg && (
+                                                                {subImg ? (
                                                                     <img
                                                                         src={subImg}
                                                                         alt={subCat.name}
                                                                         className="cat-sidebar-sub-img"
                                                                     />
+                                                                ) : (
+                                                                    <i className={`${getCategoryIconClass(subCat, true)} cat-sidebar-sub-icon`} />
                                                                 )}
                                                                 <span>{subCat.name}</span>
                                                             </Link>
@@ -130,7 +182,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                             {catImg ? (
                                                 <img src={catImg} alt={cat.name} className="cat-sidebar-img" />
                                             ) : (
-                                                <i className="ri-folder-3-line cat-sidebar-icon" />
+                                                <i className={`${getCategoryIconClass(cat, false)} cat-sidebar-icon`} />
                                             )}
                                             <span className="condense">{cat.name}</span>
                                         </Link>

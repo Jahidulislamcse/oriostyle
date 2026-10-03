@@ -3004,6 +3004,34 @@ header {
   background-color: #293343;
   border: 1.5px solid rgba(255, 255, 255, 0.15);
 }
+.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-sb-drop .list .cat-sidebar-sub-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  margin-right: 10px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #9ba6b7;
+  background-color: rgba(255, 255, 255, 0.06);
+  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+}
+.mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-sb-drop .list a:hover .cat-sidebar-sub-icon {
+  color: #ffd783;
+  border-color: rgba(255, 215, 131, 0.4);
+  background-color: rgba(255, 215, 131, 0.1);
+}
 .mn-sidebar .mn-sidebar-body .mn-sb-list .mn-sb-item .mn-drop-toggle .condense {
   display: -webkit-box;
   display: -ms-flexbox;
