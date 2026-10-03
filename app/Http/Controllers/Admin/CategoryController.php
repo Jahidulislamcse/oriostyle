@@ -99,8 +99,17 @@ class CategoryController extends Controller
     /**
      * Remove the specified category from storage.
      */
-    public function destroy(Category $category): RedirectResponse
+    public function destroy(Request $request, Category|string|null $category = null): RedirectResponse
     {
+        if (!($category instanceof Category)) {
+            $categoryId = $request->input('id') ?? ($category !== 'destroy' ? $category : null) ?? $request->route('category');
+            $category = $categoryId ? Category::find($categoryId) : null;
+        }
+
+        if (!$category) {
+            return redirect()->back()->with('error', 'Category not found or already removed.');
+        }
+
         $name = $category->name;
         $this->categoryService->deleteCategory($category);
 

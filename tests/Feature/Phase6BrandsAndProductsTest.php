@@ -139,6 +139,24 @@ class Phase6BrandsAndProductsTest extends TestCase
         ]);
     }
 
+    public function test_admin_can_delete_brand_via_destroy_endpoint_with_id_payload(): void
+    {
+        $brand = Brand::create([
+            'name' => 'Reebok',
+            'slug' => 'reebok',
+        ]);
+
+        $response = $this->actingAs($this->adminUser)
+            ->delete('/admin/brands/destroy', [
+                'id' => $brand->id,
+            ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseMissing('brands', [
+            'id' => $brand->id,
+        ]);
+    }
+
     public function test_products_index_renders_with_metrics_and_filters(): void
     {
         $category = Category::create(['name' => 'Watches', 'slug' => 'watches']);

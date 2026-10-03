@@ -64,7 +64,12 @@ export default function ProductIndex({
 
     const confirmDelete = () => {
         if (!deletingProduct) return;
-        router.delete(route('admin.products.destroy', deletingProduct.id), {
+        const productId = (typeof deletingProduct === 'object') ? deletingProduct.id : deletingProduct;
+        if (!productId) return;
+
+        router.delete(`/admin/products/${productId}`, {
+            data: { id: productId },
+            preserveScroll: true,
             onSuccess: () => setDeletingProduct(null),
         });
     };

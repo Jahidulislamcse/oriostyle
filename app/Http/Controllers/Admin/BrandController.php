@@ -119,8 +119,17 @@ class BrandController extends Controller
     /**
      * Delete brand.
      */
-    public function destroy(Brand $brand): RedirectResponse
+    public function destroy(Request $request, Brand|string|null $brand = null): RedirectResponse
     {
+        if (!($brand instanceof Brand)) {
+            $brandId = $request->input('id') ?? ($brand !== 'destroy' ? $brand : null) ?? $request->route('brand');
+            $brand = $brandId ? Brand::find($brandId) : null;
+        }
+
+        if (!$brand) {
+            return redirect()->back()->with('error', 'Brand not found or already removed.');
+        }
+
         $name = $brand->name;
         $this->brandService->deleteBrand($brand);
 

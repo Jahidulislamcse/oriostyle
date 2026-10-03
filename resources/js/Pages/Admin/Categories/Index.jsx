@@ -291,7 +291,12 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
 
     const submitDelete = () => {
         if (!deletingCategory) return;
-        router.delete(route('admin.categories.destroy', deletingCategory.id), {
+        const categoryId = (typeof deletingCategory === 'object') ? deletingCategory.id : deletingCategory;
+        if (!categoryId) return;
+
+        router.delete(`/admin/categories/${categoryId}`, {
+            data: { id: categoryId },
+            preserveScroll: true,
             onSuccess: () => setDeletingCategory(null),
         });
     };

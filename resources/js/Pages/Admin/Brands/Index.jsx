@@ -148,7 +148,12 @@ export default function BrandIndex({ brands = { data: [] }, stats = {}, filters 
 
     const confirmDelete = () => {
         if (!deletingBrand) return;
-        router.delete(route('admin.brands.destroy', deletingBrand.id), {
+        const brandId = (typeof deletingBrand === 'object') ? deletingBrand.id : deletingBrand;
+        if (!brandId) return;
+
+        router.delete(`/admin/brands/${brandId}`, {
+            data: { id: brandId },
+            preserveScroll: true,
             onSuccess: () => setDeletingBrand(null),
         });
     };

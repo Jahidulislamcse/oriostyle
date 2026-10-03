@@ -200,8 +200,17 @@ class ProductController extends Controller
     /**
      * Delete product.
      */
-    public function destroy(Product $product): RedirectResponse
+    public function destroy(Request $request, Product|string|null $product = null): RedirectResponse
     {
+        if (!($product instanceof Product)) {
+            $productId = $request->input('id') ?? ($product !== 'destroy' ? $product : null) ?? $request->route('product');
+            $product = $productId ? Product::find($productId) : null;
+        }
+
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found or already removed.');
+        }
+
         $name = $product->name;
         $this->productService->deleteProduct($product);
 
