@@ -28,8 +28,8 @@ export default function CategoryScrollSection({ categories = [] }) {
         if (!trackRef.current) return;
         const container = trackRef.current;
         const firstCard = container.querySelector('.mn-cat-slide-item');
-        const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : 260;
-        const gap = window.innerWidth < 768 ? 10 : 16;
+        const cardWidth = firstCard ? firstCard.getBoundingClientRect().width : 280;
+        const gap = window.innerWidth < 768 ? 12 : 16;
         const visibleCount = window.innerWidth < 768 ? 2 : window.innerWidth < 992 ? 3 : 4;
         const scrollAmount = (cardWidth + gap) * visibleCount;
 
@@ -39,9 +39,11 @@ export default function CategoryScrollSection({ categories = [] }) {
         });
     };
 
+    // Drag-to-scroll functionality for mouse users
     const handleMouseDown = (e) => {
         if (!trackRef.current) return;
-        if (e.target.closest('button') || e.target.closest('a')) return;
+        // Don't drag if clicking directly on a button or nested interactive element
+        if (e.target.closest('button')) return;
 
         setIsDragging(true);
         setHasDragged(false);
@@ -75,13 +77,13 @@ export default function CategoryScrollSection({ categories = [] }) {
 
     return (
         <section className="mn-category p-tb-15">
-            <div className="mn-cat-scroll-container position-relative">
+            <div className="mn-cat-scroll-container">
                 {/* Left Navigation Arrow */}
                 {canScrollLeft && (
                     <button
                         type="button"
                         onClick={() => handleScrollClick('left')}
-                        className="mn-cat-nav-btn prev-btn d-none d-md-flex"
+                        className="mn-cat-nav-btn prev-btn"
                         aria-label="Scroll Left"
                     >
                         <i className="ri-arrow-left-s-line" />
@@ -97,18 +99,10 @@ export default function CategoryScrollSection({ categories = [] }) {
                     onMouseUp={handleMouseUpOrLeave}
                     onMouseLeave={handleMouseUpOrLeave}
                     className={`mn-cat-scroll-track ${isDragging ? 'is-dragging' : ''}`}
-                    style={{
-                        cursor: isDragging ? 'grabbing' : 'grab',
-                        WebkitOverflowScrolling: 'touch',
-                        scrollSnapType: isDragging ? 'none' : 'x mandatory',
-                    }}
+                    style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
                 >
                     {categories.map((cat) => (
-                        <div
-                            key={cat.id || cat.card}
-                            className="mn-cat-slide-item"
-                            style={{ scrollSnapAlign: 'start' }}
-                        >
+                        <div key={cat.id || cat.card} className="mn-cat-slide-item">
                             <div className={`mn-cat-card cat-card-${cat.card} w-100`}>
                                 <div>
                                     {cat.discount && (
@@ -148,7 +142,7 @@ export default function CategoryScrollSection({ categories = [] }) {
                     <button
                         type="button"
                         onClick={() => handleScrollClick('right')}
-                        className="mn-cat-nav-btn next-btn d-none d-md-flex"
+                        className="mn-cat-nav-btn next-btn"
                         aria-label="Scroll Right"
                     >
                         <i className="ri-arrow-right-s-line" />
