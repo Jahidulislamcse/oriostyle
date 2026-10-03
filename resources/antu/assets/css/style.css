@@ -5017,8 +5017,8 @@ button.btn-close.qty_close {
 }
 /** Category section css **/
 .mn-cat .mn-cat-card {
-  padding: 15px;
-  border-radius: 15px;
+  padding: 12px 12px 10px 12px;
+  border-radius: 14px;
   position: relative;
   overflow: hidden;
   background-color: #e1e5e9;
@@ -5030,10 +5030,10 @@ button.btn-close.qty_close {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  min-height: 255px;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  min-height: auto;
 }
 .mn-cat .mn-cat-card:hover:after {
   bottom: -100px;
@@ -5043,43 +5043,48 @@ button.btn-close.qty_close {
   transition: all 0.3s ease-in-out;
   content: "";
   width: 100%;
-  height: 100px;
-  background: -webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.15)), to(rgba(0, 0, 0, 0)));
-  background: linear-gradient(0deg, rgba(0, 0, 0, 0.15) 0%, rgba(0, 0, 0, 0) 100%);
+  height: 80px;
+  background: -webkit-gradient(linear, left bottom, left top, from(rgba(0, 0, 0, 0.12)), to(rgba(0, 0, 0, 0)));
+  background: linear-gradient(0deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0) 100%);
   position: absolute;
   bottom: 0;
   left: 0;
 }
 .mn-cat .mn-cat-card h3 {
-  font-size: 22px;
-  font-weight: 700;
-  color: #313b50;
-  text-transform: capitalize;
-  position: relative;
-  z-index: 2;
-  margin-bottom: 4px;
-  line-height: 1.25;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 48px;
-}
-.mn-cat .mn-cat-card h4 {
-  margin: 0;
   font-size: 16px;
   font-weight: 700;
   color: #313b50;
   text-transform: capitalize;
   position: relative;
   z-index: 2;
+  margin-top: 1px;
+  margin-bottom: 2px;
+  line-height: 1.2;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: auto;
+}
+.mn-cat .mn-cat-card h4 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  color: #55627a;
+  text-transform: capitalize;
+  position: relative;
+  z-index: 2;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.2;
 }
 .mn-cat .mn-cat-card p {
-  color: #313b50;
-  margin-bottom: 8px;
+  color: #64748b;
+  font-size: 11.5px;
+  margin-top: 1px;
+  margin-bottom: 4px;
+  line-height: 1.2;
 }
 .mn-cat .mn-cat-card .bg {
   position: absolute;
@@ -5093,9 +5098,9 @@ button.btn-close.qty_close {
   z-index: 0;
 }
 .mn-cat .mn-cat-card .lbl {
-  height: 30px;
-  margin-bottom: 12px;
-  padding: 3px 6px 3px 10px;
+  height: 22px;
+  margin-bottom: 6px;
+  padding: 1px 5px 1px 7px;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -5104,27 +5109,27 @@ button.btn-close.qty_close {
           align-items: center;
   background-color: #313b50;
   color: #fff;
-  border-radius: 15px 0 0 15px;
+  border-radius: 12px 0 0 12px;
   position: relative;
 }
 .mn-cat .mn-cat-card .lbl span {
-  font-size: 14px;
+  font-size: 11px;
   z-index: 2;
 }
 .mn-cat .mn-cat-card .lbl:before {
   content: "";
-  width: 15px;
-  height: 15px;
+  width: 11px;
+  height: 11px;
   position: absolute;
   top: 0;
-  right: -10px;
-  border: 15px solid #313b50;
-  border-right: 10px solid transparent;
+  right: -8px;
+  border: 11px solid #313b50;
+  border-right: 8px solid transparent;
   z-index: 0;
 }
 .mn-cat .mn-cat-card ul {
-  margin: -5px;
-  margin-top: auto;
+  margin: -3px;
+  margin-top: 4px;
   padding: 0;
   list-style: none;
   display: -webkit-box;
@@ -5135,10 +5140,10 @@ button.btn-close.qty_close {
   z-index: 5;
 }
 .mn-cat .mn-cat-card ul li {
-  margin: 5px;
-  padding: 5px;
+  margin: 3px;
+  padding: 3px;
   background-color: #f1f0f4;
-  border-radius: 15px;
+  border-radius: 10px;
   -webkit-box-flex: 1;
       -ms-flex: 1 1 33.33%;
           flex: 1 1 33.33%;
@@ -5165,7 +5170,7 @@ button.btn-close.qty_close {
   height: 100%;
   -o-object-fit: cover;
      object-fit: cover;
-  border-radius: 10px;
+  border-radius: 7px;
 }
 
 /* Responsive Category css */
