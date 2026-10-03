@@ -5295,24 +5295,32 @@ button.btn-close.qty_close {
 @media only screen and (max-width: 991px) {
   .mn-cat .mn-cat-card,
   .mn-cat-slide-item .mn-cat-card {
-    min-height: 170px;
-    padding: 12px 12px 10px 12px;
+    min-height: auto;
+    height: auto;
+    padding: 10px 12px 8px 12px;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
   }
   .mn-cat .mn-cat-card h3,
   .mn-cat-slide-item .mn-cat-card h3 {
-    font-size: 18px;
+    font-size: 15px;
   }
   .mn-cat .mn-cat-card h4,
   .mn-cat-slide-item .mn-cat-card h4 {
-    font-size: 13px;
+    font-size: 12px;
   }
 }
 @media only screen and (max-width: 767px) {
   .mn-cat .mn-cat-card,
   .mn-cat-slide-item .mn-cat-card {
-    min-height: 140px;
-    padding: 10px 10px 8px 10px;
+    min-height: auto;
+    height: auto;
+    padding: 8px 8px 6px 8px;
     border-radius: 12px;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
   }
   .mn-cat .mn-cat-card h3,
   .mn-cat-slide-item .mn-cat-card h3 {
@@ -5328,15 +5336,15 @@ button.btn-close.qty_close {
   }
   .mn-cat .mn-cat-card p,
   .mn-cat-slide-item .mn-cat-card p {
-    font-size: 11px;
+    font-size: 10.5px;
     margin-top: 1px;
-    margin-bottom: 4px;
+    margin-bottom: 3px;
     line-height: 1.1;
   }
   .mn-cat .mn-cat-card ul,
   .mn-cat-slide-item .mn-cat-card ul {
     margin: -2px;
-    margin-top: 4px;
+    margin-top: 3px;
   }
   .mn-cat .mn-cat-card ul li,
   .mn-cat-slide-item .mn-cat-card ul li {
@@ -5352,9 +5360,13 @@ button.btn-close.qty_close {
 @media only screen and (max-width: 575px) {
   .mn-cat .mn-cat-card,
   .mn-cat-slide-item .mn-cat-card {
-    min-height: 125px;
-    padding: 8px 8px 6px 8px;
+    min-height: auto;
+    height: auto;
+    padding: 6px 6px 5px 6px;
     border-radius: 10px;
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
   }
   .mn-cat .mn-cat-card h3,
   .mn-cat-slide-item .mn-cat-card h3 {
@@ -5362,22 +5374,22 @@ button.btn-close.qty_close {
   }
   .mn-cat .mn-cat-card h4,
   .mn-cat-slide-item .mn-cat-card h4 {
-    font-size: 10.5px;
+    font-size: 10px;
   }
   .mn-cat .mn-cat-card p,
   .mn-cat-slide-item .mn-cat-card p {
-    font-size: 10px;
-    margin-bottom: 3px;
+    font-size: 9.5px;
+    margin-bottom: 2px;
   }
   .mn-cat .mn-cat-card ul,
   .mn-cat-slide-item .mn-cat-card ul {
     margin: -1.5px;
-    margin-top: 3px;
+    margin-top: 2px;
   }
   .mn-cat .mn-cat-card ul li,
   .mn-cat-slide-item .mn-cat-card ul li {
     margin: 1.5px;
-    padding: 2px;
+    padding: 1.5px;
     border-radius: 6px;
   }
 }

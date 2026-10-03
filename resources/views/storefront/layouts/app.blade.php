@@ -31,7 +31,7 @@
 	<link href="{{ asset('storefront/css/vendor/nouislider.css') }}" rel="stylesheet">
 
 	<!-- Storefront Isolated Main CSS -->
-	<link id="mainCss" href="{{ asset('storefront/css/style.css') }}" rel="stylesheet">
+	<link id="mainCss" href="{{ asset('storefront/css/style.css') }}?v={{ file_exists(public_path('storefront/css/style.css')) ? filemtime(public_path('storefront/css/style.css')) : time() }}" rel="stylesheet">
 
 	@stack('styles')
 </head>

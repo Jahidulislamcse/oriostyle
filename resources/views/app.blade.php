@@ -40,7 +40,7 @@
         <link href="{{ asset('storefront/css/vendor/slick.min.css') }}" rel="stylesheet">
         <link href="{{ asset('storefront/css/vendor/swiper-bundle.min.css') }}" rel="stylesheet">
         <link href="{{ asset('storefront/css/vendor/nouislider.css') }}" rel="stylesheet">
-        <link id="mainCss" href="{{ asset('storefront/css/style.css') }}" rel="stylesheet">
+        <link id="mainCss" href="{{ asset('storefront/css/style.css') }}?v={{ file_exists(public_path('storefront/css/style.css')) ? filemtime(public_path('storefront/css/style.css')) : time() }}" rel="stylesheet">
         @routes
         @viteReactRefresh
         @vite(['resources/js/app.jsx'])
