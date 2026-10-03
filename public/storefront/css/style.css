@@ -5120,8 +5120,8 @@ button.btn-close.qty_close {
 
 .mn-cat .mn-cat-card,
 .mn-cat-slide-item .mn-cat-card {
-  padding: 12px 12px 10px 12px;
-  border-radius: 14px;
+  padding: 15px 15px 14px 15px;
+  border-radius: 16px;
   position: relative;
   overflow: hidden;
   background-color: #e1e5e9;
@@ -5134,10 +5134,10 @@ button.btn-close.qty_close {
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
-  min-height: auto;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  min-height: 165px;
   box-sizing: border-box;
 }
 .mn-cat .mn-cat-card:hover:after,
@@ -5159,15 +5159,15 @@ button.btn-close.qty_close {
 }
 .mn-cat .mn-cat-card h3,
 .mn-cat-slide-item .mn-cat-card h3 {
-  font-size: 16px;
+  font-size: 17px;
   font-weight: 700;
   color: #313b50;
   text-transform: capitalize;
   position: relative;
   z-index: 2;
-  margin-top: 1px;
-  margin-bottom: 2px;
-  line-height: 1.2;
+  margin-top: 2px;
+  margin-bottom: 3px;
+  line-height: 1.25;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -5177,8 +5177,8 @@ button.btn-close.qty_close {
 .mn-cat .mn-cat-card h4,
 .mn-cat-slide-item .mn-cat-card h4 {
   margin: 0;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   color: #55627a;
   text-transform: capitalize;
   position: relative;
@@ -5191,9 +5191,9 @@ button.btn-close.qty_close {
 .mn-cat .mn-cat-card p,
 .mn-cat-slide-item .mn-cat-card p {
   color: #64748b;
-  font-size: 11.5px;
-  margin-top: 1px;
-  margin-bottom: 4px;
+  font-size: 12px;
+  margin-top: 2px;
+  margin-bottom: 0;
   line-height: 1.2;
 }
 .mn-cat .mn-cat-card .bg,
@@ -5244,7 +5244,7 @@ button.btn-close.qty_close {
 .mn-cat .mn-cat-card ul,
 .mn-cat-slide-item .mn-cat-card ul {
   margin: -3px;
-  margin-top: 4px;
+  margin-top: 10px;
   padding: 0;
   list-style: none;
   display: -webkit-box;
@@ -5295,16 +5295,12 @@ button.btn-close.qty_close {
 @media only screen and (max-width: 991px) {
   .mn-cat .mn-cat-card,
   .mn-cat-slide-item .mn-cat-card {
-    min-height: auto;
-    height: auto;
-    padding: 10px 12px 8px 12px;
-    -webkit-box-pack: start;
-    -ms-flex-pack: start;
-    justify-content: flex-start;
+    min-height: 155px;
+    padding: 13px 13px 11px 13px;
   }
   .mn-cat .mn-cat-card h3,
   .mn-cat-slide-item .mn-cat-card h3 {
-    font-size: 15px;
+    font-size: 16px;
   }
   .mn-cat .mn-cat-card h4,
   .mn-cat-slide-item .mn-cat-card h4 {
@@ -5314,42 +5310,38 @@ button.btn-close.qty_close {
 @media only screen and (max-width: 767px) {
   .mn-cat .mn-cat-card,
   .mn-cat-slide-item .mn-cat-card {
-    min-height: auto;
-    height: auto;
-    padding: 8px 8px 6px 8px;
-    border-radius: 12px;
-    -webkit-box-pack: start;
-    -ms-flex-pack: start;
-    justify-content: flex-start;
+    min-height: 145px;
+    padding: 11px 11px 10px 11px;
+    border-radius: 14px;
   }
   .mn-cat .mn-cat-card h3,
   .mn-cat-slide-item .mn-cat-card h3 {
-    font-size: 14px;
+    font-size: 14.5px;
     line-height: 1.2;
     margin-top: 1px;
-    margin-bottom: 1px;
+    margin-bottom: 2px;
   }
   .mn-cat .mn-cat-card h4,
   .mn-cat-slide-item .mn-cat-card h4 {
-    font-size: 11px;
+    font-size: 11.5px;
     line-height: 1.1;
   }
   .mn-cat .mn-cat-card p,
   .mn-cat-slide-item .mn-cat-card p {
-    font-size: 10.5px;
+    font-size: 11px;
     margin-top: 1px;
-    margin-bottom: 3px;
+    margin-bottom: 0;
     line-height: 1.1;
   }
   .mn-cat .mn-cat-card ul,
   .mn-cat-slide-item .mn-cat-card ul {
     margin: -2px;
-    margin-top: 3px;
+    margin-top: 8px;
   }
   .mn-cat .mn-cat-card ul li,
   .mn-cat-slide-item .mn-cat-card ul li {
     margin: 2px;
-    padding: 2px;
+    padding: 2.5px;
     border-radius: 8px;
   }
   .mn-cat .mn-cat-card ul li img,
@@ -5360,37 +5352,33 @@ button.btn-close.qty_close {
 @media only screen and (max-width: 575px) {
   .mn-cat .mn-cat-card,
   .mn-cat-slide-item .mn-cat-card {
-    min-height: auto;
-    height: auto;
-    padding: 6px 6px 5px 6px;
-    border-radius: 10px;
-    -webkit-box-pack: start;
-    -ms-flex-pack: start;
-    justify-content: flex-start;
+    min-height: 135px;
+    padding: 10px 10px 8px 10px;
+    border-radius: 12px;
   }
   .mn-cat .mn-cat-card h3,
   .mn-cat-slide-item .mn-cat-card h3 {
-    font-size: 13px;
+    font-size: 13.5px;
   }
   .mn-cat .mn-cat-card h4,
   .mn-cat-slide-item .mn-cat-card h4 {
-    font-size: 10px;
+    font-size: 11px;
   }
   .mn-cat .mn-cat-card p,
   .mn-cat-slide-item .mn-cat-card p {
-    font-size: 9.5px;
-    margin-bottom: 2px;
+    font-size: 10.5px;
+    margin-bottom: 0;
   }
   .mn-cat .mn-cat-card ul,
   .mn-cat-slide-item .mn-cat-card ul {
-    margin: -1.5px;
-    margin-top: 2px;
+    margin: -2px;
+    margin-top: 6px;
   }
   .mn-cat .mn-cat-card ul li,
   .mn-cat-slide-item .mn-cat-card ul li {
-    margin: 1.5px;
-    padding: 1.5px;
-    border-radius: 6px;
+    margin: 2px;
+    padding: 2px;
+    border-radius: 7px;
   }
 }
 /** Product section css **/

@@ -103,10 +103,7 @@ export default function CategoryScrollSection({ categories = [] }) {
                 >
                     {categories.map((cat) => (
                         <div key={cat.id || cat.card} className="mn-cat-slide-item">
-                            <div
-                                className={`mn-cat-card cat-card-${cat.card} w-100 d-flex flex-column justify-content-start`}
-                                style={{ minHeight: 'unset', height: 'auto' }}
-                            >
+                            <div className={`mn-cat-card cat-card-${cat.card} w-100`}>
                                 <div>
                                     {cat.discount && (
                                         <>
@@ -118,7 +115,7 @@ export default function CategoryScrollSection({ categories = [] }) {
                                     <h3 title={cat.title}>{cat.title}</h3>
                                     <p>Items ({cat.count})</p>
                                 </div>
-                                <ul style={{ marginTop: '4px' }}>
+                                <ul>
                                     {cat.images.map((imgSrc, imgIdx) => (
                                         <li key={imgIdx} style={{ width: '33.33%' }}>
                                             <Link
