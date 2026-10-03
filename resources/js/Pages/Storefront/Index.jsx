@@ -77,14 +77,14 @@ export default function Index({
                             <div className="mn-title mb-4">
                                 <h2>Featured <span>Products</span></h2>
                             </div>
-                            <div className="row">
+                            <div className="row g-2 g-md-3">
                                 {featuredProducts.map((product) => {
                                     const primaryImg = product.primary_image?.image_path || '/storefront/img/product/1.jpg';
                                     const price = parseFloat(product.base_price || 0).toFixed(2);
                                     const comparePrice = product.sale_price ? parseFloat(product.sale_price).toFixed(2) : null;
 
                                     return (
-                                        <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 m-b-30">
+                                        <div key={product.id} className="col-6 col-md-4 col-lg-3 m-b-15 m-b-md-30">
                                             <div className="mn-product-card">
                                                 <div className="mn-product-img">
                                                     {comparePrice ? (
@@ -141,14 +141,14 @@ export default function Index({
                             <div className="mn-title mb-4">
                                 <h2>New <span>Arrivals</span></h2>
                             </div>
-                            <div className="row">
+                            <div className="row g-2 g-md-3">
                                 {newArrivals.map((product) => {
                                     const primaryImg = product.primary_image?.image_path || '/storefront/img/product/5.jpg';
                                     const price = parseFloat(product.base_price || 0).toFixed(2);
                                     const comparePrice = product.sale_price ? parseFloat(product.sale_price).toFixed(2) : null;
 
                                     return (
-                                        <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 m-b-30">
+                                        <div key={product.id} className="col-6 col-md-4 col-lg-3 m-b-15 m-b-md-30">
                                             <div className="mn-product-card">
                                                 <div className="mn-product-img">
                                                     <div className="lbl">

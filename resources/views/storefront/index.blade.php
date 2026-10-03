@@ -66,9 +66,9 @@
 					<div class="mn-title">
 						<h2>Featured <span>Products</span></h2>
 					</div>
-					<div class="row">
+					<div class="row g-2 g-md-3">
 						@foreach($featuredProducts as $product)
-							<div class="col-lg-3 col-md-4 col-sm-6 m-b-30">
+							<div class="col-6 col-md-4 col-lg-3 m-b-15 m-b-md-30">
 								<div class="mn-product-card">
 									<div class="mn-product-img">
 										@if($product->compare_price && $product->compare_price > $product->price)
@@ -126,9 +126,9 @@
 					<div class="mn-title">
 						<h2>New <span>Arrivals</span></h2>
 					</div>
-					<div class="row">
+					<div class="row g-2 g-md-3">
 						@foreach($newArrivals as $product)
-							<div class="col-lg-3 col-md-4 col-sm-6 m-b-30">
+							<div class="col-6 col-md-4 col-lg-3 m-b-15 m-b-md-30">
 								<div class="mn-product-card">
 									<div class="mn-product-img">
 										<div class="lbl">

@@ -5631,8 +5631,52 @@ button.btn-close.qty_close {
 }
 /* Responsive product css */
 @media only screen and (max-width: 575px) {
+  .mn-product-card {
+    padding: 10px;
+    border-radius: 12px;
+    height: 100%;
+  }
+  .mn-product-card .mn-product-img {
+    margin-bottom: 10px;
+  }
+  .mn-product-card .mn-product-img img {
+    border-radius: 10px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
   .mn-product-card .mn-product-img .mn-img .mn-options {
     opacity: 1;
+  }
+  .mn-product-card .mn-product-img .mn-img .mn-options ul li a {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+  }
+  .mn-product-card .mn-product-img .mn-img .mn-options ul li a i {
+    font-size: 15px;
+  }
+  .mn-product-card .mn-product-detail .cat {
+    margin-bottom: 2px;
+  }
+  .mn-product-card .mn-product-detail .cat a {
+    font-size: 11px;
+  }
+  .mn-product-card .mn-product-detail h5 a {
+    font-size: 13px;
+    line-height: 18px;
+    height: 36px;
+    margin-bottom: 4px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .mn-product-card .mn-product-detail .mn-price .mn-price-new {
+    font-size: 14px;
+    margin-right: 6px;
+  }
+  .mn-product-card .mn-product-detail .mn-price .mn-price-old {
+    font-size: 12px;
   }
 }
 /**  Start Service Section  **/
