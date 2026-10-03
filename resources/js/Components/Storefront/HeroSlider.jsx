@@ -41,8 +41,12 @@ const SLIDES = [
 ];
 
 export default function HeroSlider() {
-    const [currentSlide, setCurrentSlide] = useState(1); // Start with slide 2 (Men's fashion matching image 2) or 0
+    const [currentSlide, setCurrentSlide] = useState(1);
     const [isHovered, setIsHovered] = useState(false);
+    const [touchStartX, setTouchStartX] = useState(null);
+    const [touchEndX, setTouchEndX] = useState(null);
+
+    const minSwipeDistance = 45;
 
     useEffect(() => {
         if (isHovered) return;
@@ -60,6 +64,25 @@ export default function HeroSlider() {
         setCurrentSlide((prev) => (prev + 1) % SLIDES.length);
     };
 
+    const onTouchStart = (e) => {
+        setTouchEndX(null);
+        setTouchStartX(e.targetTouches[0].clientX);
+    };
+
+    const onTouchMove = (e) => {
+        setTouchEndX(e.targetTouches[0].clientX);
+    };
+
+    const onTouchEnd = () => {
+        if (!touchStartX || !touchEndX) return;
+        const distance = touchStartX - touchEndX;
+        if (distance > minSwipeDistance) {
+            nextSlide();
+        } else if (distance < -minSwipeDistance) {
+            prevSlide();
+        }
+    };
+
     const slide = SLIDES[currentSlide];
 
     return (
@@ -67,6 +90,9 @@ export default function HeroSlider() {
             className="mn-hero swiper-container m-b-15 position-relative"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
         >
             <div className="mn-hero-slider w-100 position-relative">
                 <div
@@ -82,7 +108,7 @@ export default function HeroSlider() {
                             <span style={{ whiteSpace: 'pre-line' }}>{slide.badge}</span>
                         </p>
                         <h2 style={{ whiteSpace: 'pre-line' }}>{slide.title}</h2>
-                        <p>{slide.subtitle}</p>
+                        <p className="d-none d-sm-block">{slide.subtitle}</p>
                         <a href={slide.link} className="mn-btn-2">
                             <span>Shop Now</span>
                         </a>
@@ -97,6 +123,7 @@ export default function HeroSlider() {
                         className="owl-prev border-0"
                         onClick={prevSlide}
                         title="Previous Slide"
+                        aria-label="Previous Slide"
                     />
                     <button
                         type="button"
@@ -104,6 +131,7 @@ export default function HeroSlider() {
                         className="owl-next border-0"
                         onClick={nextSlide}
                         title="Next Slide"
+                        aria-label="Next Slide"
                     />
                 </div>
 
@@ -116,6 +144,7 @@ export default function HeroSlider() {
                             role="button"
                             className={`owl-dot ${index === currentSlide ? 'active' : ''}`}
                             onClick={() => setCurrentSlide(index)}
+                            aria-label={`Slide ${index + 1}`}
                         />
                     ))}
                 </div>

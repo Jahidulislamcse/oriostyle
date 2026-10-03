@@ -74,18 +74,18 @@ export default function Index({
                     {/* Featured Products Section */}
                     {featuredProducts && featuredProducts.length > 0 && (
                         <section id="featured-products" className="mn-new-product p-tb-15">
-                            <div className="mn-title mb-4">
+                            <div className="mn-title mb-3 mb-md-4">
                                 <h2>Featured <span>Products</span></h2>
                             </div>
-                            <div className="row">
+                            <div className="row g-2 g-md-3">
                                 {featuredProducts.map((product) => {
                                     const primaryImg = product.primary_image?.image_path || '/storefront/img/product/1.jpg';
                                     const price = parseFloat(product.base_price || 0).toFixed(2);
                                     const comparePrice = product.sale_price ? parseFloat(product.sale_price).toFixed(2) : null;
 
                                     return (
-                                        <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 m-b-30">
-                                            <div className="mn-product-card">
+                                        <div key={product.id} className="col-6 col-md-4 col-lg-3">
+                                            <div className="mn-product-card h-100 d-flex flex-column">
                                                 <div className="mn-product-img">
                                                     {comparePrice ? (
                                                         <div className="lbl">
@@ -97,7 +97,7 @@ export default function Index({
                                                         </div>
                                                     ) : null}
                                                     <div className="mn-img">
-                                                        <Link href="/" className="image">
+                                                        <Link href="/" className="image d-block">
                                                             <img className="main-img" src={primaryImg} alt={product.name} />
                                                         </Link>
                                                         <div className="mn-options">
@@ -111,16 +111,18 @@ export default function Index({
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="mn-product-detail">
-                                                    <div className="cat">
-                                                        <Link href={`/?category=${product.category?.slug || ''}`}>
-                                                            {product.category?.name || 'General'}
-                                                        </Link>
+                                                <div className="mn-product-detail flex-grow-1 d-flex flex-column justify-content-between">
+                                                    <div>
+                                                        <div className="cat">
+                                                            <Link href={`/?category=${product.category?.slug || ''}`}>
+                                                                {product.category?.name || 'General'}
+                                                            </Link>
+                                                        </div>
+                                                        <h5>
+                                                            <Link href="/">{product.name}</Link>
+                                                        </h5>
                                                     </div>
-                                                    <h5>
-                                                        <Link href="/">{product.name}</Link>
-                                                    </h5>
-                                                    <div className="mn-price">
+                                                    <div className="mn-price mt-auto">
                                                         <div className="mn-price-new">{currencySymbol}{price}</div>
                                                         {comparePrice && (
                                                             <div className="mn-price-old">{currencySymbol}{comparePrice}</div>
@@ -138,24 +140,24 @@ export default function Index({
                     {/* New Arrivals Section */}
                     {newArrivals && newArrivals.length > 0 && (
                         <section id="new-arrivals" className="mn-new-product p-tb-15">
-                            <div className="mn-title mb-4">
+                            <div className="mn-title mb-3 mb-md-4">
                                 <h2>New <span>Arrivals</span></h2>
                             </div>
-                            <div className="row">
+                            <div className="row g-2 g-md-3">
                                 {newArrivals.map((product) => {
                                     const primaryImg = product.primary_image?.image_path || '/storefront/img/product/5.jpg';
                                     const price = parseFloat(product.base_price || 0).toFixed(2);
                                     const comparePrice = product.sale_price ? parseFloat(product.sale_price).toFixed(2) : null;
 
                                     return (
-                                        <div key={product.id} className="col-lg-3 col-md-4 col-sm-6 m-b-30">
-                                            <div className="mn-product-card">
+                                        <div key={product.id} className="col-6 col-md-4 col-lg-3">
+                                            <div className="mn-product-card h-100 d-flex flex-column">
                                                 <div className="mn-product-img">
                                                     <div className="lbl">
                                                         <span className="new">New</span>
                                                     </div>
                                                     <div className="mn-img">
-                                                        <Link href="/" className="image">
+                                                        <Link href="/" className="image d-block">
                                                             <img className="main-img" src={primaryImg} alt={product.name} />
                                                         </Link>
                                                         <div className="mn-options">
@@ -169,16 +171,18 @@ export default function Index({
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div className="mn-product-detail">
-                                                    <div className="cat">
-                                                        <Link href={`/?category=${product.category?.slug || ''}`}>
-                                                            {product.category?.name || 'General'}
-                                                        </Link>
+                                                <div className="mn-product-detail flex-grow-1 d-flex flex-column justify-content-between">
+                                                    <div>
+                                                        <div className="cat">
+                                                            <Link href={`/?category=${product.category?.slug || ''}`}>
+                                                                {product.category?.name || 'General'}
+                                                            </Link>
+                                                        </div>
+                                                        <h5>
+                                                            <Link href="/">{product.name}</Link>
+                                                        </h5>
                                                     </div>
-                                                    <h5>
-                                                        <Link href="/">{product.name}</Link>
-                                                    </h5>
-                                                    <div className="mn-price">
+                                                    <div className="mn-price mt-auto">
                                                         <div className="mn-price-new">{currencySymbol}{price}</div>
                                                         {comparePrice && (
                                                             <div className="mn-price-old">{currencySymbol}{comparePrice}</div>
@@ -194,34 +198,34 @@ export default function Index({
                     )}
 
                     {/* Service Highlights Section */}
-                    <section className="mn-service p-tb-15 my-4">
-                        <div className="row">
-                            <div className="col-lg-3 col-sm-6 m-b-15">
-                                <div className="mn-service-box p-3 border rounded text-center">
+                    <section className="mn-service p-tb-15 my-3 my-md-4">
+                        <div className="row g-2 g-md-3">
+                            <div className="col-6 col-md-3">
+                                <div className="mn-service-box h-100 p-3 border rounded text-center">
                                     <i className="ri-truck-line display-6 text-primary mb-2" />
                                     <h5>Fast Delivery</h5>
-                                    <p className="text-muted mb-0">Inside city: {settings.estimated_delivery_inside || '24-48 Hours'}</p>
+                                    <p className="text-muted mb-0">{settings.estimated_delivery_inside || '24-48 Hours'}</p>
                                 </div>
                             </div>
-                            <div className="col-lg-3 col-sm-6 m-b-15">
-                                <div className="mn-service-box p-3 border rounded text-center">
+                            <div className="col-6 col-md-3">
+                                <div className="mn-service-box h-100 p-3 border rounded text-center">
                                     <i className="ri-shield-check-line display-6 text-primary mb-2" />
                                     <h5>100% Genuine</h5>
-                                    <p className="text-muted mb-0">Authentic products directly from brands</p>
+                                    <p className="text-muted mb-0">Direct from brands</p>
                                 </div>
                             </div>
-                            <div className="col-lg-3 col-sm-6 m-b-15">
-                                <div className="mn-service-box p-3 border rounded text-center">
+                            <div className="col-6 col-md-3">
+                                <div className="mn-service-box h-100 p-3 border rounded text-center">
                                     <i className="ri-customer-service-2-line display-6 text-primary mb-2" />
                                     <h5>24/7 Support</h5>
-                                    <p className="text-muted mb-0">Dedicated customer care assistance</p>
+                                    <p className="text-muted mb-0">Help assistance</p>
                                 </div>
                             </div>
-                            <div className="col-lg-3 col-sm-6 m-b-15">
-                                <div className="mn-service-box p-3 border rounded text-center">
+                            <div className="col-6 col-md-3">
+                                <div className="mn-service-box h-100 p-3 border rounded text-center">
                                     <i className="ri-secure-payment-line display-6 text-primary mb-2" />
-                                    <h5>Secure Payment</h5>
-                                    <p className="text-muted mb-0">COD & encrypted payment processing</p>
+                                    <h5>Secure Pay</h5>
+                                    <p className="text-muted mb-0">COD & Cards</p>
                                 </div>
                             </div>
                         </div>

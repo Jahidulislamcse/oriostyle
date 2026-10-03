@@ -1,30 +1,73 @@
-import React, { useState } from 'react';
-import { Link, usePage } from '@inertiajs/react';
+import React, { useState, useEffect } from 'react';
+import { Link, usePage, router } from '@inertiajs/react';
 
 export default function StorefrontLayout({ children, navCategories = [] }) {
     const { settings = {}, auth = {} } = usePage().props;
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(
+        typeof window !== 'undefined' ? window.innerWidth < 992 : false
+    );
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isWishlistOpen, setIsWishlistOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
     const [openSubMenus, setOpenSubMenus] = useState({});
 
     const siteName = settings.site_name || 'ORIO STYLE';
     const siteLogo = settings.site_logo || '/storefront/img/logo/logo.png';
     const currencySymbol = settings.currency_symbol || '৳';
 
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth < 992) {
+                setSidebarCollapsed(true);
+            }
+        };
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const toggleSubMenu = (id) => {
         setOpenSubMenus((prev) => ({ ...prev, [id]: !prev[id] }));
     };
 
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (!searchQuery.trim()) return;
+        setIsSearchOpen(false);
+        router.get('/', { search: searchQuery.trim() });
+    };
+
+    // Fallback category items if dynamic categories not yet loaded
+    const fallbackCategories = [
+        { id: 'fashion', name: 'Fashion', slug: 'fashion', icon: '/storefront/img/icons/clothes-2.svg', activeChildren: [
+            { id: 'clothes', name: 'Clothes', slug: 'clothes' },
+            { id: 'shoes', name: 'Shoes', slug: 'shoes' },
+            { id: 'glasses', name: 'Glasses', slug: 'glasses' },
+            { id: 'bags', name: 'Bags', slug: 'bags' },
+        ]},
+        { id: 'lifestyle', name: 'Lifestyle', slug: 'lifestyle', icon: '/storefront/img/icons/makeup.svg', activeChildren: [
+            { id: 'cosmetics', name: 'Cosmetics', slug: 'cosmetics' },
+            { id: 'makeup', name: 'Makeup', slug: 'makeup' },
+            { id: 'watches', name: 'Watches', slug: 'watches' },
+        ]},
+        { id: 'bakery', name: 'Bakery', slug: 'bakery', icon: '/storefront/img/icons/cake.svg', activeChildren: [
+            { id: 'cake', name: 'Cake', slug: 'cake' },
+            { id: 'bread', name: 'Bread', slug: 'bread' },
+        ]},
+    ];
+
+    const displayCategories = (navCategories && navCategories.length > 0) ? navCategories : fallbackCategories;
+
     return (
         <div className="wrapper sb-default">
-            {/* Sidebar Overlay */}
-            {sidebarCollapsed && (
+            {/* Sidebar Overlay (Mobile & Tablet) */}
+            {!sidebarCollapsed && (
                 <div
                     className="mn-sidebar-overlay"
                     style={{ display: 'block' }}
-                    onClick={() => setSidebarCollapsed(false)}
+                    onClick={() => setSidebarCollapsed(true)}
                 />
             )}
 
@@ -34,164 +77,58 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                     <button
                         type="button"
                         className="side-close"
-                        title="Close"
+                        title="Close Sidebar"
                         onClick={() => setSidebarCollapsed(true)}
                     />
                     <ul className="mn-sb-list">
                         <li className="mn-sb-title condense">
-                            <span>FASHION</span>
+                            <span>CATEGORIES</span>
                         </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['clothes'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('clothes')}
-                            >
-                                <img src="/storefront/img/icons/clothes-2.svg" alt="Clothes" />
-                                <span className="condense">
-                                    Clothes
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['clothes'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['clothes'] ? 'block' : 'none' }}>
-                                <li className="list">
-                                    <Link href="/?category=t-shirts" className="mn-page-link drop">T-shirts</Link>
-                                </li>
-                                <li className="list">
-                                    <Link href="/?category=shirts" className="mn-page-link drop">Shirts</Link>
-                                </li>
-                                <li className="list">
-                                    <Link href="/?category=dresses" className="mn-page-link drop">Dresses</Link>
-                                </li>
-                                <li className="list">
-                                    <Link href="/?category=jeans" className="mn-page-link drop">Jeans</Link>
-                                </li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=shoes" className="mn-drop-toggle">
-                                <img src="/storefront/img/icons/shoes.svg" alt="Shoes" />
-                                <span className="condense">Shoes</span>
-                            </Link>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=glasses" className="mn-drop-toggle">
-                                <img src="/storefront/img/icons/glasses.svg" alt="Glasses" />
-                                <span className="condense">Glasses</span>
-                            </Link>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['bags'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('bags')}
-                            >
-                                <img src="/storefront/img/icons/bag.svg" alt="Bags" />
-                                <span className="condense">
-                                    Bags
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['bags'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['bags'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=handbags" className="mn-page-link drop">Handbags</Link></li>
-                                <li className="list"><Link href="/?category=backpacks" className="mn-page-link drop">Backpacks</Link></li>
-                                <li className="list"><Link href="/?category=wallets" className="mn-page-link drop">Wallets</Link></li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=hat" className="mn-drop-toggle">
-                                <img src="/storefront/img/icons/hat.svg" alt="Hat" />
-                                <span className="condense">Hat</span>
-                            </Link>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['makeup'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('makeup')}
-                            >
-                                <img src="/storefront/img/icons/makeup.svg" alt="Makeup" />
-                                <span className="condense">
-                                    Makeup
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['makeup'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['makeup'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=lipstick" className="mn-page-link drop">Lipstick</Link></li>
-                                <li className="list"><Link href="/?category=eyeliner" className="mn-page-link drop">Eye Liner</Link></li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['cosmetics'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('cosmetics')}
-                            >
-                                <img src="/storefront/img/icons/cosmetics.svg" alt="Cosmetics" />
-                                <span className="condense">
-                                    Cosmetics
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['cosmetics'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['cosmetics'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=shampoo" className="mn-page-link drop">Shampoo</Link></li>
-                                <li className="list"><Link href="/?category=skincare" className="mn-page-link drop">Skin Care</Link></li>
-                            </ul>
-                        </li>
+                        {displayCategories.map((cat) => {
+                            const hasChildren = cat.activeChildren && cat.activeChildren.length > 0;
+                            const isSubOpen = Boolean(openSubMenus[cat.id]);
+                            const iconSrc = cat.icon || '/storefront/img/icons/clothes-2.svg';
 
-                        <li className="mn-sb-title condense">
-                            <span>BAKERY</span>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['cake'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('cake')}
-                            >
-                                <img src="/storefront/img/icons/cake.svg" alt="Cake" />
-                                <span className="condense">
-                                    Cake
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['cake'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['cake'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=cupcake" className="mn-page-link drop">Cup Cake</Link></li>
-                                <li className="list"><Link href="/?category=pastry" className="mn-page-link drop">Pastry</Link></li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=bread" className="mn-drop-toggle">
-                                <img src="/storefront/img/icons/bread.svg" alt="Bread" />
-                                <span className="condense">Bread</span>
-                            </Link>
-                        </li>
+                            if (!hasChildren) {
+                                return (
+                                    <li key={cat.id} className="mn-sb-item sb-drop-item">
+                                        <Link href={`/?category=${cat.slug}`} className="mn-drop-toggle" onClick={() => window.innerWidth < 992 && setSidebarCollapsed(true)}>
+                                            <img src={iconSrc} alt={cat.name} onError={(e) => { e.target.src = '/storefront/img/icons/clothes-2.svg'; }} />
+                                            <span className="condense">{cat.name}</span>
+                                        </Link>
+                                    </li>
+                                );
+                            }
 
-                        <li className="mn-sb-title condense">
-                            <span>VEGETABLES</span>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <a
-                                href="javascript:void(0)"
-                                className={`mn-drop-toggle ${openSubMenus['tuber'] ? 'active-nav' : ''}`}
-                                onClick={() => toggleSubMenu('tuber')}
-                            >
-                                <img src="/storefront/img/icons/tuber.svg" alt="Tuber Root" />
-                                <span className="condense">
-                                    Tuber Root
-                                    <i className={`drop-arrow ri-arrow-${openSubMenus['tuber'] ? 'up' : 'down'}-s-line`} />
-                                </span>
-                            </a>
-                            <ul className="mn-sb-drop" style={{ display: openSubMenus['tuber'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=potato" className="mn-page-link drop">Sweet Potato</Link></li>
-                                <li className="list"><Link href="/?category=ginger" className="mn-page-link drop">Ginger</Link></li>
-                            </ul>
-                        </li>
-                        <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=tomato" className="mn-drop-toggle">
-                                <img src="/storefront/img/icons/tomato.svg" alt="Tomato" />
-                                <span className="condense">Tomato</span>
-                            </Link>
-                        </li>
+                            return (
+                                <li key={cat.id} className="mn-sb-item sb-drop-item">
+                                    <a
+                                        href="javascript:void(0)"
+                                        className={`mn-drop-toggle ${isSubOpen ? 'active-nav' : ''}`}
+                                        onClick={() => toggleSubMenu(cat.id)}
+                                    >
+                                        <img src={iconSrc} alt={cat.name} onError={(e) => { e.target.src = '/storefront/img/icons/clothes-2.svg'; }} />
+                                        <span className="condense">
+                                            {cat.name}
+                                            <i className={`drop-arrow ri-arrow-${isSubOpen ? 'up' : 'down'}-s-line`} />
+                                        </span>
+                                    </a>
+                                    <ul className="mn-sb-drop" style={{ display: isSubOpen ? 'block' : 'none' }}>
+                                        {cat.activeChildren.map((sub) => (
+                                            <li key={sub.id} className="list">
+                                                <Link
+                                                    href={`/?category=${sub.slug}`}
+                                                    className="mn-page-link drop"
+                                                    onClick={() => window.innerWidth < 992 && setSidebarCollapsed(true)}
+                                                >
+                                                    {sub.name}
+                                                </Link>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </li>
+                            );
+                        })}
                     </ul>
                 </div>
             </div>
@@ -200,7 +137,7 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
             <header className={sidebarCollapsed ? 'sb-hide' : ''}>
                 <div className="mn-header">
                     <div className="mn-header-items">
-                        <div className="left-header">
+                        <div className="left-header d-flex align-items-center">
                             <a
                                 href="javascript:void(0)"
                                 className={`mn-toggle-sidebar ${sidebarCollapsed ? 'active-toggle' : ''}`}
@@ -211,13 +148,14 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                     <span className="inner-ring" />
                                 </span>
                             </a>
-                            <Link href="/" className="logo">
+                            <Link href="/" className="logo ms-2">
                                 <img src={siteLogo} alt={siteName} />
                             </Link>
                             <a
                                 href="javascript:void(0)"
-                                className="mn-toggle-menu"
+                                className="mn-toggle-menu d-lg-none ms-2"
                                 onClick={() => setIsMobileMenuOpen(true)}
+                                title="Open Menu"
                             >
                                 <div className="header-icon">
                                     <i className="ri-menu-3-fill" />
@@ -238,35 +176,29 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                                     </li>
                                                     <li className="dropdown drop-list">
                                                         <a href="javascript:void(0)" className="dropdown-arrow">
-                                                            Categories<i className="ri-arrow-down-s-line" />
+                                                            Categories<i className="ri-arrow-down-s-line ms-1" />
                                                         </a>
                                                         <ul className="mega-menu d-block">
                                                             <li className="d-flex">
                                                                 <span className="bg" />
-                                                                <ul className="d-block mega-block">
-                                                                    <li className="menu_title">
-                                                                        <a href="javascript:void(0)">Fashion</a>
-                                                                    </li>
-                                                                    <li><Link href="/?category=clothes">Clothes</Link></li>
-                                                                    <li><Link href="/?category=shoes">Shoes</Link></li>
-                                                                    <li><Link href="/?category=glasses">Glasses</Link></li>
-                                                                    <li><Link href="/?category=bags">Bags</Link></li>
-                                                                </ul>
-                                                                <ul className="d-block mega-block">
-                                                                    <li className="menu_title">
-                                                                        <a href="javascript:void(0)">Lifestyle</a>
-                                                                    </li>
-                                                                    <li><Link href="/?category=cosmetics">Cosmetics</Link></li>
-                                                                    <li><Link href="/?category=makeup">Makeup</Link></li>
-                                                                    <li><Link href="/?category=bakery">Bakery</Link></li>
-                                                                    <li><Link href="/?category=vegetables">Vegetables</Link></li>
-                                                                </ul>
+                                                                {displayCategories.slice(0, 4).map((root) => (
+                                                                    <ul key={root.id} className="d-block mega-block">
+                                                                        <li className="menu_title">
+                                                                            <Link href={`/?category=${root.slug}`}>{root.name}</Link>
+                                                                        </li>
+                                                                        {root.activeChildren && root.activeChildren.slice(0, 5).map((child) => (
+                                                                            <li key={child.id}>
+                                                                                <Link href={`/?category=${child.slug}`}>{child.name}</Link>
+                                                                            </li>
+                                                                        ))}
+                                                                    </ul>
+                                                                ))}
                                                             </li>
                                                         </ul>
                                                     </li>
                                                     <li className="dropdown drop-list">
                                                         <a href="javascript:void(0)" className="dropdown-arrow">
-                                                            Products<i className="ri-arrow-down-s-line" />
+                                                            Products<i className="ri-arrow-down-s-line ms-1" />
                                                         </a>
                                                         <ul className="sub-menu">
                                                             <li><a href="#featured-products">Featured Products</a></li>
@@ -275,13 +207,25 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                                     </li>
                                                     <li className="dropdown drop-list">
                                                         <a href="javascript:void(0)" className="dropdown-arrow">
-                                                            Pages<i className="ri-arrow-down-s-line" />
+                                                            Account<i className="ri-arrow-down-s-line ms-1" />
                                                         </a>
                                                         <ul className="sub-menu">
-                                                            <li><Link href="/login">Login</Link></li>
-                                                            <li><Link href="/register">Register</Link></li>
-                                                            {auth?.user && (auth.user.role === 'admin' || auth.user.role === 'staff') && (
-                                                                <li><Link href="/admin/dashboard">Admin Dashboard</Link></li>
+                                                            {auth?.user ? (
+                                                                <>
+                                                                    {auth.user.role === 'admin' || auth.user.role === 'staff' ? (
+                                                                        <li><Link href="/admin/dashboard">Admin Dashboard</Link></li>
+                                                                    ) : null}
+                                                                    <li>
+                                                                        <Link href="/logout" method="post" as="button" className="w-100 text-start border-0 bg-transparent py-1">
+                                                                            Logout ({auth.user.name})
+                                                                        </Link>
+                                                                    </li>
+                                                                </>
+                                                            ) : (
+                                                                <>
+                                                                    <li><Link href="/login">Login</Link></li>
+                                                                    <li><Link href="/register">Register</Link></li>
+                                                                </>
                                                             )}
                                                         </ul>
                                                     </li>
@@ -292,52 +236,21 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                 </div>
                             </div>
 
-                            {/* Mobile Menu Overlay */}
-                            <div
-                                className="mn-mobile-menu-overlay"
-                                style={{ display: isMobileMenuOpen ? 'block' : 'none' }}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            />
-                            <div className={`mn-mobile-menu ${isMobileMenuOpen ? 'mn-menu-open' : ''}`}>
-                                <div className="mn-menu-title">
-                                    <span className="menu_title">My Menu</span>
-                                    <button
-                                        type="button"
-                                        className="mn-close-menu"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                                <div className="mn-menu-inner">
-                                    <div className="mn-menu-content">
-                                        <ul>
-                                            <li><Link href="/">Home</Link></li>
-                                            <li><a href="#featured-products">Featured</a></li>
-                                            <li><a href="#new-arrivals">New Arrivals</a></li>
-                                            <li><Link href="/login">Login</Link></li>
-                                            <li><Link href="/register">Register</Link></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
                             {/* Main Menu Tool Icons */}
                             <div className="mn-tool-icons">
                                 <div className="mn-tool-search">
-                                    <a href="javascript:void(0)" className="mn-main-search mn-search-toggle" title="Search">
-                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="512" height="512" viewBox="0 0 612.01 612.01" style={{ enableBackground: 'new 0 0 512 512' }} xmlSpace="preserve">
-                                            <g>
-                                                <path d="M606.209 578.714 448.198 423.228C489.576 378.272 515 318.817 515 253.393 514.98 113.439 399.704 0 257.493 0S.006 113.439.006 253.393s115.276 253.393 257.487 253.393c61.445 0 117.801-21.253 162.068-56.586l158.624 156.099c7.729 7.614 20.277 7.614 28.006 0a19.291 19.291 0 0 0 .018-27.585zM257.493 467.8c-120.326 0-217.869-95.993-217.869-214.407S137.167 38.986 257.493 38.986c120.327 0 217.869 95.993 217.869 214.407S377.82 467.8 257.493 467.8z" fill="#000000" opacity="1" data-original="#000000" />
-                                            </g>
-                                        </svg>
+                                    <a
+                                        href="javascript:void(0)"
+                                        className="mn-main-search mn-search-toggle"
+                                        title="Search Products"
+                                        onClick={() => setIsSearchOpen(true)}
+                                    >
+                                        <i className="ri-search-line" style={{ fontSize: '20px' }} />
                                     </a>
                                 </div>
-                                <div className="mn-tool-user">
+                                <div className="mn-tool-user d-none d-sm-block">
                                     <a href="javascript:void(0)" className="mn-main-user" title="Account">
-                                        <svg className="svg-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M512.476 648.247c-170.169 0-308.118-136.411-308.118-304.681 0-168.271 137.949-304.681 308.118-304.681 170.169 0 308.119 136.411 308.119 304.681C820.594 511.837 682.645 648.247 512.476 648.247L512.476 648.247zM512.476 100.186c-135.713 0-246.12 109.178-246.12 243.381 0 134.202 110.407 243.381 246.12 243.381 135.719 0 246.126-109.179 246.126-243.381C758.602 209.364 648.195 100.186 512.476 100.186L512.476 100.186zM935.867 985.115l-26.164 0c-9.648 0-17.779-6.941-19.384-16.35-2.646-15.426-6.277-30.52-11.142-44.95-24.769-87.686-81.337-164.13-159.104-214.266-63.232 35.203-134.235 53.64-207.597 53.64-73.555 0-144.73-18.537-208.084-53.922-78 50.131-134.75 126.68-159.564 214.549 0 0-4.893 18.172-11.795 46.4-2.136 8.723-10.035 14.9-19.112 14.9L88.133 985.116c-9.415 0-16.693-8.214-15.47-17.452C91.698 824.084 181.099 702.474 305.51 637.615c58.682 40.472 129.996 64.267 206.966 64.267 76.799 0 147.968-23.684 206.584-63.991 124.123 64.932 213.281 186.403 232.277 329.772C952.56 976.901 945.287 985.115 935.867 985.115L935.867 985.115z" />
-                                        </svg>
+                                        <i className="ri-user-3-line" style={{ fontSize: '20px' }} />
                                     </a>
                                     <ul className="sub-menu">
                                         {auth?.user ? (
@@ -366,12 +279,8 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                         title="Wishlist"
                                         onClick={() => setIsWishlistOpen(true)}
                                     >
-                                        <span className="label lbl-1">3</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="512" height="512" viewBox="0 0 512 512" style={{ enableBackground: 'new 0 0 512 512' }} xmlSpace="preserve">
-                                            <g>
-                                                <path d="M474.644 74.27C449.391 45.616 414.358 29.836 376 29.836c-53.948 0-88.103 32.22-107.255 59.25-4.969 7.014-9.196 14.047-12.745 20.665-3.549-6.618-7.775-13.651-12.745-20.665-19.152-27.03-53.307-59.25-107.255-59.25-38.358 0-73.391 15.781-98.645 44.435C13.267 101.605 0 138.213 0 177.351c0 42.603 16.633 82.228 52.345 124.7 31.917 37.96 77.834 77.088 131.005 122.397 19.813 16.884 40.302 34.344 62.115 53.429l.655.574c2.828 2.476 6.354 3.713 9.88 3.713s7.052-1.238 9.88-3.713l.655-.574c21.813-19.085 42.302-36.544 62.118-53.431 53.168-45.306 99.085-84.434 131.002-122.395C495.367 259.578 512 219.954 512 177.351c0-39.138-13.267-75.746-37.356-103.081zM309.193 401.614c-17.08 14.554-34.658 29.533-53.193 45.646-18.534-16.111-36.113-31.091-53.196-45.648C98.745 312.939 30 254.358 30 177.351c0-31.83 10.605-61.394 29.862-83.245C79.34 72.007 106.379 59.836 136 59.836c41.129 0 67.716 25.338 82.776 46.594 13.509 19.064 20.558 38.282 22.962 45.659a15 15 0 0 0 28.524 0c2.404-7.377 9.453-26.595 22.962-45.66 15.06-21.255 41.647-46.593 82.776-46.593 29.621 0 56.66 12.171 76.137 34.27C471.395 115.957 482 145.521 482 177.351c0 77.007-68.745 135.588-172.807 224.263z" fill="#000000" opacity="1" data-original="#000000" />
-                                            </g>
-                                        </svg>
+                                        <span className="label lbl-1">0</span>
+                                        <i className="ri-heart-line" style={{ fontSize: '20px' }} />
                                     </a>
                                 </div>
                                 <div className="mn-tool-cart">
@@ -381,10 +290,8 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                         title="Cart"
                                         onClick={() => setIsCartOpen(true)}
                                     >
-                                        <span className="label lbl-2">4</span>
-                                        <svg className="svg-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M351.552 831.424c-35.328 0-63.968 28.64-63.968 63.968 0 35.328 28.64 63.968 63.968 63.968 35.328 0 63.968-28.64 63.968-63.968C415.52 860.064 386.88 831.424 351.552 831.424L351.552 831.424 351.552 831.424zM799.296 831.424c-35.328 0-63.968 28.64-63.968 63.968 0 35.328 28.64 63.968 63.968 63.968 35.328 0 63.968-28.64 63.968-63.968C863.264 860.064 834.624 831.424 799.296 831.424L799.296 831.424 799.296 831.424zM862.752 799.456 343.264 799.456c-46.08 0-86.592-36.448-92.224-83.008L196.8 334.592 165.92 156.128c-1.92-15.584-16.128-28.288-29.984-28.288L95.2 127.84c-17.664 0-32-14.336-32-31.968 0-17.664 14.336-32 32-32l40.736 0c46.656 0 87.616 36.448 93.28 83.008l30.784 177.792 54.464 383.488c1.792 14.848 15.232 27.36 28.768 27.36l519.488 0c17.696 0 32 14.304 32 31.968S880.416 799.456 862.752 799.456L862.752 799.456zM383.232 671.52c-16.608 0-30.624-12.8-31.872-29.632-1.312-17.632 11.936-32.928 29.504-34.208l433.856-31.968c15.936-0.096 29.344-12.608 31.104-26.816l50.368-288.224c1.28-10.752-1.696-22.528-8.128-29.792-4.128-4.672-9.312-7.04-15.36-7.04L319.04 223.84c-17.664 0-32-14.336-32-31.968 0-17.664 14.336-31.968 32-31.968l553.728 0c24.448 0 46.88 10.144 63.232 28.608 18.688 21.088 27.264 50.784 23.52 81.568l-50.4 288.256c-5.44 44.832-45.92 81.28-92 81.28L385.6 671.424C384.8 671.488 384 671.52 383.232 671.52L383.232 671.52zM383.232 671.52" />
-                                        </svg>
+                                        <span className="label lbl-2">0</span>
+                                        <i className="ri-shopping-cart-line" style={{ fontSize: '20px' }} />
                                     </a>
                                 </div>
                             </div>
@@ -392,6 +299,182 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                     </div>
                 </div>
             </header>
+
+            {/* Mobile Menu Slide-Out Drawer */}
+            {isMobileMenuOpen && (
+                <div
+                    className="mn-mobile-menu-overlay"
+                    style={{ display: 'block' }}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+            <div className={`mn-mobile-menu ${isMobileMenuOpen ? 'mn-menu-open' : ''}`}>
+                <div className="mn-menu-title d-flex justify-content-between align-items-center px-3 py-3 border-bottom">
+                    <div className="d-flex align-items-center gap-2">
+                        <img src={siteLogo} alt={siteName} style={{ maxHeight: '28px' }} />
+                        <span className="menu_title fw-bold text-dark">{siteName}</span>
+                    </div>
+                    <button
+                        type="button"
+                        className="btn-close"
+                        aria-label="Close"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                </div>
+                <div className="mn-menu-inner p-3">
+                    {/* User Profile Card */}
+                    <div className="bg-light p-3 rounded-3 mb-3 border">
+                        {auth?.user ? (
+                            <div>
+                                <div className="d-flex align-items-center gap-2 mb-2">
+                                    <div className="w-8 h-8 rounded-circle bg-primary text-white d-flex align-items-center justify-content-center fw-bold" style={{ width: 34, height: 34 }}>
+                                        {auth.user.name?.charAt(0) || 'U'}
+                                    </div>
+                                    <div>
+                                        <div className="fw-bold text-dark text-truncate" style={{ maxWidth: 180 }}>{auth.user.name}</div>
+                                        <div className="text-muted small">{auth.user.email}</div>
+                                    </div>
+                                </div>
+                                <div className="d-flex gap-2 mt-2">
+                                    {auth.user.role === 'admin' || auth.user.role === 'staff' ? (
+                                        <Link href="/admin/dashboard" className="btn btn-sm btn-outline-primary flex-fill">
+                                            Admin
+                                        </Link>
+                                    ) : null}
+                                    <Link href="/logout" method="post" as="button" className="btn btn-sm btn-outline-danger flex-fill">
+                                        Logout
+                                    </Link>
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="d-flex gap-2">
+                                <Link href="/login" className="btn btn-sm btn-primary flex-fill" onClick={() => setIsMobileMenuOpen(false)}>
+                                    Sign In
+                                </Link>
+                                <Link href="/register" className="btn btn-sm btn-outline-secondary flex-fill" onClick={() => setIsMobileMenuOpen(false)}>
+                                    Register
+                                </Link>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Navigation Links */}
+                    <div className="mn-menu-content">
+                        <ul className="list-unstyled mb-4">
+                            <li className="mb-2">
+                                <Link href="/" className="text-dark fw-semibold text-decoration-none d-block py-1" onClick={() => setIsMobileMenuOpen(false)}>
+                                    <i className="ri-home-4-line me-2 text-primary" /> Home
+                                </Link>
+                            </li>
+                            <li className="mb-2">
+                                <a href="#featured-products" className="text-dark fw-semibold text-decoration-none d-block py-1" onClick={() => setIsMobileMenuOpen(false)}>
+                                    <i className="ri-star-line me-2 text-warning" /> Featured Products
+                                </a>
+                            </li>
+                            <li className="mb-2">
+                                <a href="#new-arrivals" className="text-dark fw-semibold text-decoration-none d-block py-1" onClick={() => setIsMobileMenuOpen(false)}>
+                                    <i className="ri-sparkling-line me-2 text-info" /> New Arrivals
+                                </a>
+                            </li>
+                        </ul>
+
+                        {/* Mobile Categories Accordion */}
+                        <div className="fw-bold text-uppercase small text-muted mb-2">Shop by Category</div>
+                        <ul className="list-unstyled">
+                            {displayCategories.map((cat) => (
+                                <li key={cat.id} className="border-bottom py-2">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <Link
+                                            href={`/?category=${cat.slug}`}
+                                            className="text-dark text-decoration-none fw-medium"
+                                            onClick={() => setIsMobileMenuOpen(false)}
+                                        >
+                                            {cat.name}
+                                        </Link>
+                                        {cat.activeChildren && cat.activeChildren.length > 0 && (
+                                            <button
+                                                type="button"
+                                                className="btn btn-sm p-0 text-muted"
+                                                onClick={() => toggleSubMenu(`mobile-${cat.id}`)}
+                                            >
+                                                <i className={`ri-arrow-${openSubMenus[`mobile-${cat.id}`] ? 'up' : 'down'}-s-line fs-5`} />
+                                            </button>
+                                        )}
+                                    </div>
+                                    {cat.activeChildren && cat.activeChildren.length > 0 && openSubMenus[`mobile-${cat.id}`] && (
+                                        <ul className="list-unstyled ps-3 pt-2 text-muted small">
+                                            {cat.activeChildren.map((sub) => (
+                                                <li key={sub.id} className="py-1">
+                                                    <Link
+                                                        href={`/?category=${sub.slug}`}
+                                                        className="text-muted text-decoration-none"
+                                                        onClick={() => setIsMobileMenuOpen(false)}
+                                                    >
+                                                        {sub.name}
+                                                    </Link>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            {/* Interactive Search Overlay Modal */}
+            {isSearchOpen && (
+                <div className="mn-search-modal-overlay" onClick={() => setIsSearchOpen(false)}>
+                    <div className="mn-search-modal-box" onClick={(e) => e.stopPropagation()}>
+                        <form onSubmit={handleSearchSubmit} className="p-3">
+                            <div className="d-flex align-items-center gap-2 mb-3">
+                                <div className="input-group">
+                                    <span className="input-group-text bg-light border-0">
+                                        <i className="ri-search-line text-muted" />
+                                    </span>
+                                    <input
+                                        type="search"
+                                        className="form-control bg-light border-0 shadow-none"
+                                        placeholder="Search clothes, shoes, cosmetics, watches..."
+                                        value={searchQuery}
+                                        onChange={(e) => setSearchQuery(e.target.value)}
+                                        autoFocus
+                                    />
+                                </div>
+                                <button type="submit" className="btn btn-primary px-3">
+                                    Search
+                                </button>
+                                <button
+                                    type="button"
+                                    className="btn btn-light rounded-circle"
+                                    onClick={() => setIsSearchOpen(false)}
+                                    style={{ width: 38, height: 38 }}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                            <div className="d-flex flex-wrap gap-1.5 align-items-center">
+                                <span className="small text-muted me-1">Popular:</span>
+                                {['Clothes', 'Shoes', 'Watches', 'Bags', 'Cosmetics'].map((term) => (
+                                    <button
+                                        key={term}
+                                        type="button"
+                                        className="btn btn-sm btn-outline-secondary py-0 px-2 rounded-pill small"
+                                        style={{ fontSize: '11px' }}
+                                        onClick={() => {
+                                            setIsSearchOpen(false);
+                                            router.get('/', { search: term });
+                                        }}
+                                    >
+                                        {term}
+                                    </button>
+                                ))}
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
 
             {/* Main Content Area */}
             <main className={`mn-main-content ${sidebarCollapsed ? 'sb-hide' : ''}`}>
@@ -437,7 +520,7 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                 <div className="mn-footer-widget">
                                     <h4 className="mn-footer-heading">Categories</h4>
                                     <ul className="mn-footer-links">
-                                        {navCategories && navCategories.slice(0, 5).map((cat) => (
+                                        {displayCategories && displayCategories.slice(0, 5).map((cat) => (
                                             <li key={cat.id}>
                                                 <Link href={`/?category=${cat.slug}`}>{cat.name}</Link>
                                             </li>
@@ -457,16 +540,58 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                             </div>
                         </div>
                         <div className="row pt-4 border-top">
-                            <div className="col-md-6">
-                                <p className="mb-0 text-muted">{settings.copyright_text || '© 2026 ORIO STYLE LTD. All rights reserved.'}</p>
+                            <div className="col-md-6 text-center text-md-start mb-2 mb-md-0">
+                                <p className="mb-0 text-muted small">{settings.copyright_text || '© 2026 ORIO STYLE LTD. All rights reserved.'}</p>
                             </div>
-                            <div className="col-md-6 text-md-end">
-                                <img src="/storefront/img/banner/payment.png" alt="Payment Methods" style={{ maxHeight: '30px' }} />
+                            <div className="col-md-6 text-center text-md-end">
+                                <img src="/storefront/img/banner/payment.png" alt="Payment Methods" style={{ maxHeight: '26px' }} />
                             </div>
                         </div>
                     </div>
                 </div>
             </footer>
+
+            {/* Sticky Mobile Bottom Navigation Bar */}
+            <div className="mn-bottom-nav d-flex d-lg-none">
+                <Link href="/" className="mn-bottom-nav-item active">
+                    <i className="ri-home-4-line" />
+                    <span>Home</span>
+                </Link>
+                <button
+                    type="button"
+                    className="mn-bottom-nav-item"
+                    onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                >
+                    <i className="ri-grid-fill" />
+                    <span>Categories</span>
+                </button>
+                <button
+                    type="button"
+                    className="mn-bottom-nav-item"
+                    onClick={() => setIsSearchOpen(true)}
+                >
+                    <i className="ri-search-line" />
+                    <span>Search</span>
+                </button>
+                <button
+                    type="button"
+                    className="mn-bottom-nav-item"
+                    onClick={() => setIsWishlistOpen(true)}
+                >
+                    <span className="nav-badge">0</span>
+                    <i className="ri-heart-line" />
+                    <span>Wishlist</span>
+                </button>
+                <button
+                    type="button"
+                    className="mn-bottom-nav-item"
+                    onClick={() => setIsCartOpen(true)}
+                >
+                    <span className="nav-badge">0</span>
+                    <i className="ri-shopping-cart-line" />
+                    <span>Cart</span>
+                </button>
+            </div>
 
             {/* Cart Slide-over Drawer */}
             {isCartOpen && <div className="mn-side-cart-overlay active" style={{ display: 'block' }} onClick={() => setIsCartOpen(false)} />}
@@ -480,7 +605,8 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                             </a>
                         </div>
                         <ul className="mn-cart-pro-items">
-                            <li className="cart-sidebar-list text-center text-muted py-4">
+                            <li className="cart-sidebar-list text-center text-muted py-5">
+                                <i className="ri-shopping-cart-2-line display-4 text-muted mb-2 d-block opacity-50" />
                                 <p className="mb-0">Your shopping cart is currently empty.</p>
                             </li>
                         </ul>
@@ -511,7 +637,8 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                             </a>
                         </div>
                         <ul className="mn-wishlist-pro-items">
-                            <li className="wishlist-sidebar-list text-center text-muted py-4">
+                            <li className="wishlist-sidebar-list text-center text-muted py-5">
+                                <i className="ri-heart-3-line display-4 text-muted mb-2 d-block opacity-50" />
                                 <p className="mb-0">Your wishlist is currently empty.</p>
                             </li>
                         </ul>
