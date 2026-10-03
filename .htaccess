@@ -1,6 +1,6 @@
 <IfModule mod_rewrite.c>
     <IfModule mod_negotiation.c>
-        Options -MultiViews -Indexes
+        Options -MultiViews -Indexes +FollowSymLinks
     </IfModule>
 
     RewriteEngine On
@@ -15,6 +15,14 @@
     RewriteRule ^storage/logs/ - [F,L,NC]
     RewriteRule ^storage/framework/ - [F,L,NC]
     RewriteRule ^bootstrap/cache/ - [F,L,NC]
+
+    # Directly serve public storage files if storage/app/public exists
+    RewriteCond %{DOCUMENT_ROOT}/storage/app/public/$1 -f
+    RewriteRule ^storage/(.*)$ storage/app/public/$1 [L]
+
+    # Directly serve public assets from public folder if they exist
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f
+    RewriteRule ^(.*)$ public/$1 [L]
 
     # Seamlessly forward all web traffic to the public directory
     RewriteCond %{REQUEST_URI} !^/public/

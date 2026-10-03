@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\Storefront\HomeController;
+use App\Http\Controllers\StorageFileController;
+
+/*
+|--------------------------------------------------------------------------
+| Storage Static File Fallback Delivery (Guarantees 200 OK across Shared Hosting & Symlinks)
+|--------------------------------------------------------------------------
+*/
+Route::get('/storage/{path}', [StorageFileController::class, 'show'])
+    ->where('path', '.*')
+    ->name('storage.local');
 
 /*
 |--------------------------------------------------------------------------
