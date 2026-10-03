@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 
 export default function StorefrontLayout({ children, navCategories = [] }) {
@@ -12,6 +12,19 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
     const siteName = settings.site_name || 'ORIO STYLE';
     const siteLogo = settings.site_logo || '/storefront/img/logo/logo.png';
     const currencySymbol = settings.currency_symbol || '৳';
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                setSidebarCollapsed(false);
+                setIsCartOpen(false);
+                setIsWishlistOpen(false);
+                setIsMobileMenuOpen(false);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
 
     const toggleSubMenu = (id) => {
         setOpenSubMenus((prev) => ({ ...prev, [id]: !prev[id] }));
@@ -29,14 +42,16 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
             )}
 
             {/* Left Category Sidebar */}
-            <div className={`mn-sidebar ${sidebarCollapsed ? 'sidebar-hide' : ''}`}>
+            <div className={`mn-sidebar ${sidebarCollapsed ? 'sidebar-hide sidebar-open' : ''}`}>
                 <div className="mn-sidebar-body">
                     <button
                         type="button"
                         className="side-close"
-                        title="Close"
-                        onClick={() => setSidebarCollapsed(true)}
-                    />
+                        title="Close Category Sidebar"
+                        onClick={() => setSidebarCollapsed(false)}
+                    >
+                        <i className="ri-close-line" />
+                    </button>
                     <ul className="mn-sb-list">
                         <li className="mn-sb-title condense">
                             <span>FASHION</span>
@@ -55,27 +70,27 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                             </a>
                             <ul className="mn-sb-drop" style={{ display: openSubMenus['clothes'] ? 'block' : 'none' }}>
                                 <li className="list">
-                                    <Link href="/?category=t-shirts" className="mn-page-link drop">T-shirts</Link>
+                                    <Link href="/?category=t-shirts" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>T-shirts</Link>
                                 </li>
                                 <li className="list">
-                                    <Link href="/?category=shirts" className="mn-page-link drop">Shirts</Link>
+                                    <Link href="/?category=shirts" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Shirts</Link>
                                 </li>
                                 <li className="list">
-                                    <Link href="/?category=dresses" className="mn-page-link drop">Dresses</Link>
+                                    <Link href="/?category=dresses" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Dresses</Link>
                                 </li>
                                 <li className="list">
-                                    <Link href="/?category=jeans" className="mn-page-link drop">Jeans</Link>
+                                    <Link href="/?category=jeans" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Jeans</Link>
                                 </li>
                             </ul>
                         </li>
                         <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=shoes" className="mn-drop-toggle">
+                            <Link href="/?category=shoes" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
                                 <img src="/storefront/img/icons/shoes.svg" alt="Shoes" />
                                 <span className="condense">Shoes</span>
                             </Link>
                         </li>
                         <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=glasses" className="mn-drop-toggle">
+                            <Link href="/?category=glasses" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
                                 <img src="/storefront/img/icons/glasses.svg" alt="Glasses" />
                                 <span className="condense">Glasses</span>
                             </Link>
@@ -93,13 +108,13 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                 </span>
                             </a>
                             <ul className="mn-sb-drop" style={{ display: openSubMenus['bags'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=handbags" className="mn-page-link drop">Handbags</Link></li>
-                                <li className="list"><Link href="/?category=backpacks" className="mn-page-link drop">Backpacks</Link></li>
-                                <li className="list"><Link href="/?category=wallets" className="mn-page-link drop">Wallets</Link></li>
+                                <li className="list"><Link href="/?category=handbags" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Handbags</Link></li>
+                                <li className="list"><Link href="/?category=backpacks" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Backpacks</Link></li>
+                                <li className="list"><Link href="/?category=wallets" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Wallets</Link></li>
                             </ul>
                         </li>
                         <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=hat" className="mn-drop-toggle">
+                            <Link href="/?category=hat" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
                                 <img src="/storefront/img/icons/hat.svg" alt="Hat" />
                                 <span className="condense">Hat</span>
                             </Link>
@@ -117,8 +132,8 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                 </span>
                             </a>
                             <ul className="mn-sb-drop" style={{ display: openSubMenus['makeup'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=lipstick" className="mn-page-link drop">Lipstick</Link></li>
-                                <li className="list"><Link href="/?category=eyeliner" className="mn-page-link drop">Eye Liner</Link></li>
+                                <li className="list"><Link href="/?category=lipstick" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Lipstick</Link></li>
+                                <li className="list"><Link href="/?category=eyeliner" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Eye Liner</Link></li>
                             </ul>
                         </li>
                         <li className="mn-sb-item sb-drop-item">
@@ -134,8 +149,8 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                 </span>
                             </a>
                             <ul className="mn-sb-drop" style={{ display: openSubMenus['cosmetics'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=shampoo" className="mn-page-link drop">Shampoo</Link></li>
-                                <li className="list"><Link href="/?category=skincare" className="mn-page-link drop">Skin Care</Link></li>
+                                <li className="list"><Link href="/?category=shampoo" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Shampoo</Link></li>
+                                <li className="list"><Link href="/?category=skincare" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Skin Care</Link></li>
                             </ul>
                         </li>
 
@@ -155,12 +170,12 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                 </span>
                             </a>
                             <ul className="mn-sb-drop" style={{ display: openSubMenus['cake'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=cupcake" className="mn-page-link drop">Cup Cake</Link></li>
-                                <li className="list"><Link href="/?category=pastry" className="mn-page-link drop">Pastry</Link></li>
+                                <li className="list"><Link href="/?category=cupcake" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Cup Cake</Link></li>
+                                <li className="list"><Link href="/?category=pastry" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Pastry</Link></li>
                             </ul>
                         </li>
                         <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=bread" className="mn-drop-toggle">
+                            <Link href="/?category=bread" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
                                 <img src="/storefront/img/icons/bread.svg" alt="Bread" />
                                 <span className="condense">Bread</span>
                             </Link>
@@ -182,12 +197,12 @@ export default function StorefrontLayout({ children, navCategories = [] }) {
                                 </span>
                             </a>
                             <ul className="mn-sb-drop" style={{ display: openSubMenus['tuber'] ? 'block' : 'none' }}>
-                                <li className="list"><Link href="/?category=potato" className="mn-page-link drop">Sweet Potato</Link></li>
-                                <li className="list"><Link href="/?category=ginger" className="mn-page-link drop">Ginger</Link></li>
+                                <li className="list"><Link href="/?category=potato" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Sweet Potato</Link></li>
+                                <li className="list"><Link href="/?category=ginger" className="mn-page-link drop" onClick={() => setSidebarCollapsed(false)}>Ginger</Link></li>
                             </ul>
                         </li>
                         <li className="mn-sb-item sb-drop-item">
-                            <Link href="/?category=tomato" className="mn-drop-toggle">
+                            <Link href="/?category=tomato" className="mn-drop-toggle" onClick={() => setSidebarCollapsed(false)}>
                                 <img src="/storefront/img/icons/tomato.svg" alt="Tomato" />
                                 <span className="condense">Tomato</span>
                             </Link>
