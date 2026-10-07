@@ -27,8 +27,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 16px 32px;
-    max-width: 1600px;
+    padding: 18px 40px;
+    max-width: 100%;
     margin: 0 auto;
     width: 100%;
 }
@@ -37,21 +37,22 @@
     display: flex;
     align-items: center;
     text-decoration: none;
+    margin-right: 40px;
 }
 
 .oubd-brand-logo img {
-    max-height: 42px;
+    max-height: 52px;
     width: auto;
     object-fit: contain;
 }
 
 .oubd-brand-logo .brand-text {
-    font-size: 24px;
+    font-size: 30px;
     font-weight: 900;
-    letter-spacing: 2px;
+    letter-spacing: 2.5px;
     color: #ffffff;
     text-transform: uppercase;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 /* Desktop Main Menu */
@@ -229,10 +230,14 @@
 
 .oubd-mobile-header .brand-text {
     color: #ffffff;
-    font-size: 20px;
+    font-size: 24px;
     font-weight: 900;
-    letter-spacing: 1.5px;
+    letter-spacing: 2px;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.oubd-mobile-header .oubd-brand-logo img {
+    max-height: 42px;
 }
 
 .oubd-mobile-header .oubd-action-btn {
