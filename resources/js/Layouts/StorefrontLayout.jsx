@@ -182,26 +182,24 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                 </div>
             </header>
 
-            {/* --- Mobile Header --- */}
+            {/* --- Mobile Header (Matching Mobile Reference Screenshot) --- */}
             <div className={`oubd-mobile-header ${isScrolled ? 'scrolled' : ''}`}>
-                <div className="d-flex align-items-center gap-2.5">
-                    <button
-                        type="button"
-                        className="oubd-mobile-toggle p-0"
-                        aria-label="Open Menu"
-                        onClick={() => setIsMobileMenuOpen(true)}
-                    >
-                        <i className="ri-menu-line" />
-                    </button>
+                <button
+                    type="button"
+                    className="oubd-mobile-toggle p-0"
+                    aria-label="Open Menu"
+                    onClick={() => setIsMobileMenuOpen(true)}
+                >
+                    <i className="ri-menu-line" />
+                </button>
 
-                    <Link href="/" className="oubd-brand-logo">
-                        {siteLogo ? (
-                            <img src={siteLogo} alt={siteName} style={{ maxHeight: '42px' }} />
-                        ) : (
-                            <span className="brand-text" style={{ fontSize: '26px' }}>{siteName}</span>
-                        )}
-                    </Link>
-                </div>
+                <Link href="/" className="oubd-brand-logo mx-auto">
+                    {siteLogo ? (
+                        <img src={siteLogo} alt={siteName} style={{ maxHeight: '38px' }} />
+                    ) : (
+                        <span className="brand-text" style={{ fontSize: '24px' }}>{siteName}</span>
+                    )}
+                </Link>
 
                 <div className="d-flex align-items-center gap-3">
                     <button
