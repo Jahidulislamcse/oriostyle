@@ -20,7 +20,8 @@ import {
     ExternalLink, 
     Search,
     Store,
-    Shield
+    Shield,
+    Image as ImageIcon
 } from 'lucide-react';
 import ToastContainer from '@/Components/Common/ToastContainer';
 import Badge from '@/Components/Common/Badge';
@@ -53,6 +54,7 @@ export default function AdminLayout({ title = '', children }) {
                 { name: 'Categories Tree', href: '/admin/categories', icon: FolderTree, current: route().current('admin.categories.*') },
                 { name: 'Brands & Media', href: '/admin/brands', icon: Tag, current: route().current('admin.brands.*') },
                 { name: 'Products Catalog', href: '/admin/products', icon: Package, current: route().current('admin.products.*') },
+                { name: 'Banners & Sliders', href: '/admin/banners', icon: ImageIcon, current: route().current('admin.banners.*') },
                 { name: 'Variant Matrix', href: '/admin/variants', icon: Boxes, current: route().current('admin.variants.*') },
             ],
         },

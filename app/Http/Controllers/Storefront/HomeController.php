@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Storefront;
 
 use App\Http\Controllers\Controller;
+use App\Models\Banner;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\Catalog\BannerService;
 use App\Services\Catalog\BrandService;
 use App\Services\Catalog\CategoryService;
 use App\Services\Catalog\ProductService;
@@ -19,7 +21,8 @@ class HomeController extends Controller
         protected CategoryService $categoryService,
         protected ProductService $productService,
         protected BrandService $brandService,
-        protected SettingService $settingService
+        protected SettingService $settingService,
+        protected BannerService $bannerService
     ) {}
 
     /**
@@ -100,6 +103,11 @@ class HomeController extends Controller
 
         $settings = $this->settingService->getSettings();
 
+        $bannersGrouped = $this->bannerService->getActiveStorefrontBanners();
+        $heroBanners = $bannersGrouped->get('hero', collect())->values();
+        $splitBanners = $bannersGrouped->get('split', collect())->values();
+        $promoBanners = $bannersGrouped->get('promo', collect())->values();
+
         return Inertia::render('Storefront/Index', [
             'navCategories' => $navCategories,
             'featuredCategories' => $featuredCategories,
@@ -107,6 +115,9 @@ class HomeController extends Controller
             'newArrivals' => $newArrivals,
             'brands' => $brands,
             'settings' => $settings,
+            'heroBanners' => $heroBanners,
+            'splitBanners' => $splitBanners,
+            'promoBanners' => $promoBanners,
         ]);
     }
 }

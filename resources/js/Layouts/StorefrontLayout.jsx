@@ -11,53 +11,20 @@ function getValidImageUrl(c) {
     return null;
 }
 
-function getCategoryIconClass(c, isSub = false) {
-    if (c?.icon && typeof c.icon === 'string') {
-        if (c.icon.startsWith('ri-')) return c.icon;
-        const iconLower = c.icon.toLowerCase();
-        if (iconLower === 'shirt') return 'ri-t-shirt-line';
-        if (iconLower === 'sparkles') return 'ri-sparkling-line';
-        if (iconLower === 'footprints') return 'ri-footprint-line';
-        if (iconLower === 'watch') return 'ri-time-line';
-        if (iconLower === 'bag' || iconLower === 'handbag') return 'ri-handbag-line';
-        if (iconLower === 'home') return 'ri-home-4-line';
-        if (iconLower === 'phone' || iconLower === 'smartphone') return 'ri-smartphone-line';
-    }
-
-    const nameLower = (c?.name || c?.slug || '').toLowerCase();
-    if (nameLower.includes('shirt') || nameLower.includes('polo') || nameLower.includes('pant') || nameLower.includes('trouser') || nameLower.includes('fashion') || nameLower.includes('men') || nameLower.includes('clothing') || nameLower.includes('denim')) {
-        return 'ri-t-shirt-line';
-    }
-    if (nameLower.includes('women') || nameLower.includes('saree') || nameLower.includes('kurti') || nameLower.includes('dress') || nameLower.includes('beauty') || nameLower.includes('cosmetic') || nameLower.includes('jewel')) {
-        return 'ri-sparkling-line';
-    }
-    if (nameLower.includes('shoe') || nameLower.includes('sneaker') || nameLower.includes('foot') || nameLower.includes('sandal') || nameLower.includes('boot')) {
-        return 'ri-footprint-line';
-    }
-    if (nameLower.includes('watch') || nameLower.includes('clock') || nameLower.includes('time') || nameLower.includes('accessory') || nameLower.includes('belt') || nameLower.includes('wallet')) {
-        return 'ri-time-line';
-    }
-    if (nameLower.includes('bag') || nameLower.includes('backpack') || nameLower.includes('luggage')) {
-        return 'ri-handbag-line';
-    }
-    if (nameLower.includes('tech') || nameLower.includes('electronic') || nameLower.includes('phone') || nameLower.includes('gadget') || nameLower.includes('headphone')) {
-        return 'ri-smartphone-line';
-    }
-    if (nameLower.includes('home') || nameLower.includes('living') || nameLower.includes('kitchen') || nameLower.includes('decor')) {
-        return 'ri-home-4-line';
-    }
-
-    return isSub ? 'ri-price-tag-3-line' : 'ri-folder-3-line';
-}
-
 export default function StorefrontLayout({ children, navCategories: directNavCategories }) {
     const { settings = {}, auth = {}, navCategories: sharedNavCategories = [] } = usePage().props;
     const [isCartOpen, setIsCartOpen] = useState(false);
-    const [isWishlistOpen, setIsWishlistOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
     const [showBackToTop, setShowBackToTop] = useState(false);
+
+    // Mobile Footer Accordion States
+    const [mobileFooterOpen, setMobileFooterOpen] = useState({});
+
+    const toggleFooterSection = (key) => {
+        setMobileFooterOpen((prev) => ({ ...prev, [key]: !prev[key] }));
+    };
 
     const categories = (directNavCategories && directNavCategories.length > 0)
         ? directNavCategories
@@ -67,16 +34,18 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
     const siteLogo = settings.site_logo || null;
     const currencySymbol = settings.currency_symbol || '৳';
 
+    const [isScrolled, setIsScrolled] = useState(false);
+
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
                 setIsCartOpen(false);
-                setIsWishlistOpen(false);
                 setIsMobileMenuOpen(false);
                 setIsSearchOpen(false);
             }
         };
         const handleScroll = () => {
+            setIsScrolled(window.scrollY > 30);
             if (window.scrollY > 300) {
                 setShowBackToTop(true);
             } else {
@@ -107,7 +76,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
         <div className="oubd-wrapper" style={{ backgroundColor: '#ffffff', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             
             {/* --- Desktop Main Header --- */}
-            <header className="oubd-header">
+            <header className={`oubd-header ${isScrolled ? 'scrolled' : ''}`}>
                 <div className="oubd-header-inner">
                     {/* Left Brand Logo */}
                     <Link href="/" className="oubd-brand-logo">
@@ -214,7 +183,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
             </header>
 
             {/* --- Mobile Header --- */}
-            <div className="oubd-mobile-header">
+            <div className={`oubd-mobile-header ${isScrolled ? 'scrolled' : ''}`}>
                 <button
                     type="button"
                     className="oubd-mobile-toggle"
@@ -362,64 +331,120 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                 {children}
             </main>
 
-            {/* --- Modern Footer --- */}
-            <footer style={{ backgroundColor: '#111111', color: '#aaaaaa', padding: '50px 0 20px 0', marginTop: 'auto' }}>
+            {/* --- Modern Footer matching Screenshots --- */}
+            <footer style={{ backgroundColor: '#ffffff', color: '#111111', borderTop: '1px solid #eeeeee', padding: '50px 0 24px 0', marginTop: 'auto' }}>
                 <div className="container-fluid" style={{ maxWidth: '1600px' }}>
-                    <div className="row g-4 mb-5">
-                        <div className="col-lg-4 col-md-6">
-                            <h4 className="text-white fw-bold mb-3 text-uppercase font-size-16">{siteName}</h4>
-                            <p className="font-size-14 line-height-24 text-muted mb-4">
-                                {settings.site_tagline || 'Purpose & Style with Premium Quality Collections.'}
+                    <div className="row g-4">
+                        {/* Column 1: Logo, Investment Blurb, Social Media */}
+                        <div className="col-lg-4 col-md-12 mb-3">
+                            <Link href="/" className="oubd-brand-logo mb-3">
+                                {siteLogo ? (
+                                    <img src={siteLogo} alt={siteName} style={{ maxHeight: '38px' }} />
+                                ) : (
+                                    <span className="brand-text" style={{ fontSize: '26px' }}>{siteName}</span>
+                                )}
+                            </Link>
+                            <p className="font-size-13 text-muted line-height-22 mb-2" style={{ maxWidth: '380px' }}>
+                                Partner with One Ummah BD through our profit-sharing opportunities designed with AAOIFI (Accounting and Auditing Organization for Islamic Financial Institutions) standard clarity and trust.
                             </p>
-                            <ul className="list-unstyled font-size-13 text-muted">
-                                {settings.store_address && (
-                                    <li className="mb-2"><i className="ri-map-pin-line me-2 text-white" />{settings.store_address}</li>
-                                )}
-                                {settings.support_phone && (
-                                    <li className="mb-2"><i className="ri-phone-line me-2 text-white" /><a href={`tel:${settings.support_phone}`} className="text-muted text-decoration-none">{settings.support_phone}</a></li>
-                                )}
-                                {settings.support_email && (
-                                    <li><i className="ri-mail-line me-2 text-white" /><a href={`mailto:${settings.support_email}`} className="text-muted text-decoration-none">{settings.support_email}</a></li>
-                                )}
-                            </ul>
+                            <div className="mb-3">
+                                <a href="javascript:void(0)" className="text-dark fw-bold font-size-13 text-decoration-underline">
+                                    Click for investment Details ↗
+                                </a>
+                            </div>
+
+                            {/* Circular Social Icons */}
+                            <div className="oubd-social-links">
+                                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="oubd-social-icon text-dark" style={{ borderColor: '#222' }}>
+                                    <i className="ri-facebook-fill" />
+                                </a>
+                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="oubd-social-icon text-dark" style={{ borderColor: '#222' }}>
+                                    <i className="ri-instagram-line" />
+                                </a>
+                                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="oubd-social-icon text-dark" style={{ borderColor: '#222' }}>
+                                    <i className="ri-youtube-fill" />
+                                </a>
+                                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="oubd-social-icon text-dark" style={{ borderColor: '#222' }}>
+                                    <i className="ri-linkedin-fill" />
+                                </a>
+                            </div>
                         </div>
 
-                        <div className="col-lg-2 col-md-6 col-6">
-                            <h5 className="text-white fw-bold mb-3 text-uppercase font-size-14">Quick Links</h5>
-                            <ul className="list-unstyled font-size-13">
-                                <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Home</Link></li>
-                                <li className="mb-2"><a href="#new-arrivals" className="text-muted text-decoration-none">New Arrivals</a></li>
-                                <li className="mb-2"><a href="#featured-products" className="text-muted text-decoration-none">Featured</a></li>
-                                <li><Link href="/login" className="text-muted text-decoration-none">My Account</Link></li>
-                            </ul>
+                        {/* Column 2: Quick Links */}
+                        <div className="col-lg-2 col-md-4 col-12">
+                            <div className="d-flex justify-content-between align-items-center mb-2 d-md-block">
+                                <h5 className="fw-bold font-size-14 text-uppercase mb-0 mb-md-3">Quick Links</h5>
+                                <button
+                                    type="button"
+                                    className="d-md-none btn btn-sm border-0 p-0 text-dark fs-5"
+                                    onClick={() => toggleFooterSection('quickLinks')}
+                                >
+                                    {mobileFooterOpen.quickLinks ? '−' : '+'}
+                                </button>
+                            </div>
+                            <div className={`d-md-block ${mobileFooterOpen.quickLinks ? 'd-block' : 'd-none'}`}>
+                                <ul className="list-unstyled font-size-13">
+                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Store Locator</Link></li>
+                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Ummah-funds</Link></li>
+                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Blogs</Link></li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <div className="col-lg-3 col-md-6 col-6">
-                            <h5 className="text-white fw-bold mb-3 text-uppercase font-size-14">Collections</h5>
-                            <ul className="list-unstyled font-size-13">
-                                {categories && categories.slice(0, 6).map((cat) => (
-                                    <li key={cat.id} className="mb-2">
-                                        <Link href={`/?category=${cat.slug}`} className="text-muted text-decoration-none text-capitalize">
-                                            {cat.name}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
+                        {/* Column 3: Terms of Use */}
+                        <div className="col-lg-2 col-md-4 col-12">
+                            <div className="d-flex justify-content-between align-items-center mb-2 d-md-block">
+                                <h5 className="fw-bold font-size-14 text-uppercase mb-0 mb-md-3">Terms of Use</h5>
+                                <button
+                                    type="button"
+                                    className="d-md-none btn btn-sm border-0 p-0 text-dark fs-5"
+                                    onClick={() => toggleFooterSection('terms')}
+                                >
+                                    {mobileFooterOpen.terms ? '−' : '+'}
+                                </button>
+                            </div>
+                            <div className={`d-md-block ${mobileFooterOpen.terms ? 'd-block' : 'd-none'}`}>
+                                <ul className="list-unstyled font-size-13">
+                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Terms of Service</Link></li>
+                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Privacy Policy</Link></li>
+                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Refund Policy</Link></li>
+                                </ul>
+                            </div>
                         </div>
 
-                        <div className="col-lg-3 col-md-6">
-                            <h5 className="text-white fw-bold mb-3 text-uppercase font-size-14">Customer Support</h5>
-                            <ul className="list-unstyled font-size-13 text-muted">
-                                <li className="mb-2">Hours: {settings.business_hours || 'Sat - Thu: 9:00 AM - 9:00 PM'}</li>
-                                <li className="mb-2">Inside City Delivery: {currencySymbol}{parseFloat(settings.shipping_charge_inside || 70).toFixed(2)}</li>
-                                <li>Outside City Delivery: {currencySymbol}{parseFloat(settings.shipping_charge_outside || 130).toFixed(2)}</li>
-                            </ul>
+                        {/* Column 4: Sign Up for Email */}
+                        <div className="col-lg-4 col-md-4 col-12">
+                            <div className="d-flex justify-content-between align-items-center mb-2 d-md-block">
+                                <h5 className="fw-bold font-size-14 text-uppercase mb-0 mb-md-3">Sign Up for Email</h5>
+                                <button
+                                    type="button"
+                                    className="d-md-none btn btn-sm border-0 p-0 text-dark fs-5"
+                                    onClick={() => toggleFooterSection('email')}
+                                >
+                                    {mobileFooterOpen.email ? '−' : '+'}
+                                </button>
+                            </div>
+                            <div className={`d-md-block ${mobileFooterOpen.email ? 'd-block' : 'd-none'}`}>
+                                <p className="font-size-13 text-muted mb-3">
+                                    Sign up to get first dibs on new arrivals, sales, exclusive content, events and more!
+                                </p>
+                                <form onSubmit={(e) => e.preventDefault()} className="d-flex">
+                                    <input
+                                        type="email"
+                                        className="form-control rounded-0 font-size-13"
+                                        placeholder="Enter email add..."
+                                        style={{ borderColor: '#111' }}
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="btn btn-dark rounded-0 px-4 fw-bold font-size-12 text-uppercase"
+                                        style={{ backgroundColor: '#111111' }}
+                                    >
+                                        Subscribe
+                                    </button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-
-                    <div className="border-top border-secondary pt-3 d-flex flex-wrap justify-content-between align-items-center font-size-12 text-muted">
-                        <p className="mb-0">{settings.copyright_text || '© 2026 ORIO STYLE LTD. All rights reserved.'}</p>
-                        <p className="mb-0">Secure Shopping & Fast Delivery</p>
                     </div>
                 </div>
             </footer>
@@ -463,6 +488,45 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                         Continue Shopping
                     </button>
                 </div>
+            </div>
+
+            {/* --- Mobile Fixed Bottom Navigation Bar --- */}
+            <div className="oubd-bottom-nav">
+                <a
+                    href="https://wa.me/8801700000000"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="oubd-bottom-nav-item"
+                    title="WhatsApp"
+                >
+                    <i className="ri-whatsapp-line" style={{ color: '#25D366' }} />
+                </a>
+
+                <button
+                    type="button"
+                    className="oubd-bottom-nav-item bg-transparent border-0"
+                    onClick={() => setIsCartOpen(true)}
+                    title="Cart"
+                >
+                    <i className="ri-shopping-bag-line" />
+                    <span className="oubd-cart-badge">0</span>
+                </button>
+
+                <Link
+                    href="/"
+                    className="oubd-bottom-nav-item"
+                    title="Store Locator"
+                >
+                    <i className="ri-map-pin-line" />
+                </Link>
+
+                <Link
+                    href="/login"
+                    className="oubd-bottom-nav-item"
+                    title="Account"
+                >
+                    <i className="ri-user-line" />
+                </Link>
             </div>
 
             {/* --- Floating Back to Top Button --- */}

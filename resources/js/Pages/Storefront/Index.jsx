@@ -4,6 +4,10 @@ import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import HeroSlider from '@/Components/Storefront/HeroSlider';
 import CategoryLookbookSection from '@/Components/Storefront/CategoryLookbookSection';
 import ProductCard from '@/Components/Storefront/ProductCard';
+import SplitPromoBanners from '@/Components/Storefront/SplitPromoBanners';
+import TrustFeaturesSection from '@/Components/Storefront/TrustFeaturesSection';
+import FaqAndSupportSection from '@/Components/Storefront/FaqAndSupportSection';
+import BrandStorySection from '@/Components/Storefront/BrandStorySection';
 
 const DEFAULT_LOOKBOOK_CATEGORIES = [
     { id: 1, title: 'THOBE', slug: 'thobe', images: ['/storefront/img/category/1.jpg'] },
@@ -21,6 +25,9 @@ export default function Index({
     newArrivals = [],
     brands = [],
     settings = {},
+    heroBanners = [],
+    splitBanners = [],
+    promoBanners = [],
 }) {
     const siteName = settings.site_name || 'OUBD';
     const siteTagline = settings.site_tagline || 'Purpose & Style with Premium Quality Collections';
@@ -88,9 +95,9 @@ export default function Index({
             <Head title={`${siteName} - ${siteTagline}`} />
 
             {/* 1. Full-Width Hero Slider */}
-            <HeroSlider />
+            <HeroSlider banners={heroBanners} />
 
-            {/* 2. High-Impact Collection Lookbook Grid (2-col mobile, 4/3-col desktop) */}
+            {/* 2. High-Impact Collection Lookbook Grid (4/3-col desktop, 2-col mobile) */}
             <CategoryLookbookSection categories={lookbookCategories} />
 
             {/* 3. New Arrivals Product Grid Section (6-col desktop, 2-col mobile) */}
@@ -173,29 +180,17 @@ export default function Index({
                 </div>
             </section>
 
-            {/* 6. Partner Brands Section */}
-            {brands && brands.length > 0 && (
-                <section className="oubd-products-section border-top pt-4">
-                    <div className="container-fluid" style={{ maxWidth: '1600px' }}>
-                        <div className="row align-items-center justify-content-center text-center g-3">
-                            {brands.map((brand) => (
-                                <div key={brand.id} className="col-lg-2 col-md-3 col-4">
-                                    {brand.logo ? (
-                                        <img
-                                            src={brand.logo}
-                                            alt={brand.name}
-                                            style={{ maxHeight: '42px', filter: 'grayscale(100%)', opacity: 0.7 }}
-                                            className="img-fluid"
-                                        />
-                                    ) : (
-                                        <span className="fw-bold text-uppercase text-muted font-size-13">{brand.name}</span>
-                                    )}
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </section>
-            )}
+            {/* 6. Dual Split Promotional Banners */}
+            <SplitPromoBanners banners={splitBanners} />
+
+            {/* 7. Trust & Feature Badges (Cash on Delivery, Flexible Payment, 07 Day Returns, Premium Support) */}
+            <TrustFeaturesSection />
+
+            {/* 8. Interactive FAQ & Customer Support / Refund Card */}
+            <FaqAndSupportSection />
+
+            {/* 9. Brand Story / Mission & Vision Section */}
+            <BrandStorySection />
         </StorefrontLayout>
     );
 }

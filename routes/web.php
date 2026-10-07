@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -106,6 +107,16 @@ Route::prefix('admin')
         Route::patch('/products/toggle-featured', fn () => redirect()->route('admin.products.index'));
         Route::patch('/products/update-stock', fn () => redirect()->route('admin.products.index'));
         Route::match(['post', 'put'], '/products/update', fn () => redirect()->route('admin.products.index'));
+
+        // Dynamic Banners & Sliders CMS
+        Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');
+        Route::get('/banners/index', fn () => redirect()->route('admin.banners.index'));
+        Route::post('/banners', [BannerController::class, 'store'])->name('banners.store');
+        Route::post('/banners/store', [BannerController::class, 'store']);
+        Route::delete('/banners/destroy', [BannerController::class, 'destroy']);
+        Route::put('/banners/{banner}', [BannerController::class, 'update'])->name('banners.update');
+        Route::delete('/banners/{banner}', [BannerController::class, 'destroy'])->name('banners.destroy');
+        Route::patch('/banners/{banner}/toggle-active', [BannerController::class, 'toggleActive'])->name('banners.toggle-active');
 
         // Dynamic System Settings & CMS Identity
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
