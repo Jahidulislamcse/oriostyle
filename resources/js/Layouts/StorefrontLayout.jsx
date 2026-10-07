@@ -52,490 +52,431 @@ function getCategoryIconClass(c, isSub = false) {
 
 export default function StorefrontLayout({ children, navCategories: directNavCategories }) {
     const { settings = {}, auth = {}, navCategories: sharedNavCategories = [] } = usePage().props;
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isWishlistOpen, setIsWishlistOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const [openSubMenus, setOpenSubMenus] = useState({});
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [showBackToTop, setShowBackToTop] = useState(false);
 
     const categories = (directNavCategories && directNavCategories.length > 0)
         ? directNavCategories
         : (sharedNavCategories || []);
 
-    const siteName = settings.site_name || 'ORIO STYLE';
-    const siteLogo = settings.site_logo || '/storefront/img/logo/logo.png';
+    const siteName = settings.site_name || 'OUBD';
+    const siteLogo = settings.site_logo || null;
     const currencySymbol = settings.currency_symbol || '৳';
 
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (e.key === 'Escape') {
-                setSidebarCollapsed(false);
                 setIsCartOpen(false);
                 setIsWishlistOpen(false);
                 setIsMobileMenuOpen(false);
+                setIsSearchOpen(false);
             }
         };
+        const handleScroll = () => {
+            if (window.scrollY > 300) {
+                setShowBackToTop(true);
+            } else {
+                setShowBackToTop(false);
+            }
+        };
+
         window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('scroll', handleScroll);
+        };
     }, []);
 
-    const toggleSubMenu = (id) => {
-        setOpenSubMenus((prev) => ({ ...prev, [id]: !prev[id] }));
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        if (searchQuery.trim()) {
+            window.location.href = `/?search=${encodeURIComponent(searchQuery.trim())}`;
+        }
     };
 
     return (
-        <div className="wrapper sb-default">
-            {/* Sidebar Overlay */}
-            {sidebarCollapsed && (
-                <div
-                    className="mn-sidebar-overlay"
-                    style={{ display: 'block' }}
-                    onClick={() => setSidebarCollapsed(false)}
-                />
-            )}
+        <div className="oubd-wrapper" style={{ backgroundColor: '#ffffff', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+            
+            {/* --- Desktop Main Header --- */}
+            <header className="oubd-header">
+                <div className="oubd-header-inner">
+                    {/* Left Brand Logo */}
+                    <Link href="/" className="oubd-brand-logo">
+                        {siteLogo ? (
+                            <img src={siteLogo} alt={siteName} />
+                        ) : (
+                            <span className="brand-text">{siteName}</span>
+                        )}
+                    </Link>
 
-            {/* Left Category Sidebar */}
-            <div className={`mn-sidebar ${sidebarCollapsed ? 'sidebar-hide sidebar-open' : ''}`}>
-                <div className="mn-sidebar-body">
-                    <button
-                        type="button"
-                        className="side-close"
-                        title="Close Category Sidebar"
-                        onClick={() => setSidebarCollapsed(false)}
-                    >
-                        <i className="ri-close-line" />
-                    </button>
-                    <ul className="mn-sb-list">
-                        <li className="mn-sb-title condense">
-                            <span>Categories</span>
-                        </li>
-                        {categories.length > 0 ? (
-                            categories.map((cat) => {
+                    {/* Center Navigation Menu */}
+                    <nav>
+                        <ul className="oubd-nav-menu">
+                            <li className="active">
+                                <Link href="/">HOME</Link>
+                            </li>
+
+                            {categories && categories.slice(0, 4).map((cat) => {
                                 const hasChildren = cat.children && cat.children.length > 0;
-                                const isOpen = Boolean(openSubMenus[cat.id]);
-                                const catImg = getValidImageUrl(cat);
-
-                                if (hasChildren) {
-                                    return (
-                                        <li key={cat.id} className="mn-sb-item sb-drop-item">
-                                            <a
-                                                href="javascript:void(0)"
-                                                className={`mn-drop-toggle ${isOpen ? 'active-nav' : ''}`}
-                                                onClick={() => toggleSubMenu(cat.id)}
-                                            >
-                                                {catImg ? (
-                                                    <img src={catImg} alt={cat.name} className="cat-sidebar-img" />
-                                                ) : (
-                                                    <i className={`${getCategoryIconClass(cat, false)} cat-sidebar-icon`} />
-                                                )}
-                                                <span className="condense">
-                                                    {cat.name}
-                                                    <i className={`drop-arrow ri-arrow-${isOpen ? 'up' : 'down'}-s-line`} />
-                                                </span>
-                                            </a>
-                                            <ul className="mn-sb-drop" style={{ display: isOpen ? 'block' : 'none' }}>
-                                                <li className="list">
-                                                    <Link
-                                                        href={`/?category=${cat.slug}`}
-                                                        className="mn-page-link drop d-flex align-items-center gap-2"
-                                                        onClick={() => setSidebarCollapsed(false)}
-                                                    >
-                                                        <i className="ri-apps-2-line cat-sidebar-sub-icon" />
-                                                        <span>All {cat.name}</span>
-                                                    </Link>
-                                                </li>
-                                                {cat.children.map((subCat) => {
-                                                    const subImg = getValidImageUrl(subCat);
-                                                    return (
-                                                        <li key={subCat.id} className="list">
-                                                            <Link
-                                                                href={`/?category=${subCat.slug}`}
-                                                                className="mn-page-link drop d-flex align-items-center gap-2"
-                                                                onClick={() => setSidebarCollapsed(false)}
-                                                            >
-                                                                {subImg ? (
-                                                                    <img
-                                                                        src={subImg}
-                                                                        alt={subCat.name}
-                                                                        className="cat-sidebar-sub-img"
-                                                                    />
-                                                                ) : (
-                                                                    <i className={`${getCategoryIconClass(subCat, true)} cat-sidebar-sub-icon`} />
-                                                                )}
-                                                                <span>{subCat.name}</span>
-                                                            </Link>
-                                                        </li>
-                                                    );
-                                                })}
-                                            </ul>
-                                        </li>
-                                    );
-                                }
-
                                 return (
-                                    <li key={cat.id} className="mn-sb-item sb-drop-item">
-                                        <Link
-                                            href={`/?category=${cat.slug}`}
-                                            className="mn-drop-toggle"
-                                            onClick={() => setSidebarCollapsed(false)}
-                                        >
-                                            {catImg ? (
-                                                <img src={catImg} alt={cat.name} className="cat-sidebar-img" />
-                                            ) : (
-                                                <i className={`${getCategoryIconClass(cat, false)} cat-sidebar-icon`} />
-                                            )}
-                                            <span className="condense">{cat.name}</span>
+                                    <li key={cat.id}>
+                                        <Link href={`/?category=${cat.slug}`}>
+                                            {cat.name}
+                                            {hasChildren && <i className="ri-arrow-down-s-line" />}
                                         </Link>
+
+                                        {hasChildren && (
+                                            <ul className="oubd-dropdown">
+                                                <li>
+                                                    <Link href={`/?category=${cat.slug}`}>All {cat.name}</Link>
+                                                </li>
+                                                {cat.children.map((sub) => (
+                                                    <li key={sub.id}>
+                                                        <Link href={`/?category=${sub.slug}`}>{sub.name}</Link>
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
                                     </li>
                                 );
-                            })
-                        ) : (
-                            <li className="mn-sb-item sb-drop-item">
-                                <Link
-                                    href="/"
-                                    className="mn-drop-toggle"
-                                    onClick={() => setSidebarCollapsed(false)}
-                                >
-                                    <i className="ri-store-2-line cat-sidebar-icon" />
-                                    <span className="condense">All Products</span>
-                                </Link>
+                            })}
+
+                            <li>
+                                <Link href="/#featured-products">ALL PRODUCTS</Link>
                             </li>
-                        )}
-                    </ul>
-                </div>
-            </div>
+                        </ul>
+                    </nav>
 
-            {/* Header */}
-            <header className={sidebarCollapsed ? 'sb-hide' : ''}>
-                <div className="mn-header">
-                    <div className="mn-header-items">
-                        <div className="left-header">
+                    {/* Right Utility Icons */}
+                    <div className="oubd-header-actions">
+                        <button
+                            type="button"
+                            className="oubd-action-btn"
+                            title="Search"
+                            onClick={() => setIsSearchOpen(true)}
+                        >
+                            <i className="ri-search-line" />
+                        </button>
+
+                        <div className="position-relative dropdown">
                             <a
                                 href="javascript:void(0)"
-                                className={`mn-toggle-sidebar ${sidebarCollapsed ? 'active-toggle' : ''}`}
-                                title="Toggle Sidebar"
-                                onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                                className="oubd-action-btn"
+                                title="Account"
+                                data-bs-toggle="dropdown"
                             >
-                                <span className="outer-ring">
-                                    <span className="inner-ring" />
-                                </span>
+                                <i className="ri-user-line" />
                             </a>
-                            <Link href="/" className="logo">
-                                <img src={siteLogo} alt={siteName} />
-                            </Link>
-                            <a
-                                href="javascript:void(0)"
-                                className="mn-toggle-menu"
-                                onClick={() => setIsMobileMenuOpen(true)}
-                            >
-                                <div className="header-icon">
-                                    <i className="ri-menu-3-fill" />
-                                </div>
-                            </a>
+                            <ul className="dropdown-menu dropdown-menu-end shadow-sm border-0 py-2" style={{ minWidth: '180px' }}>
+                                {auth?.user ? (
+                                    <>
+                                        <li className="px-3 py-1 fw-bold text-muted font-size-12">
+                                            {auth.user.name}
+                                        </li>
+                                        {auth.user.role === 'admin' || auth.user.role === 'staff' ? (
+                                            <li>
+                                                <Link href="/admin/dashboard" className="dropdown-item py-2">Admin Dashboard</Link>
+                                            </li>
+                                        ) : null}
+                                        <li>
+                                            <Link href="/logout" method="post" as="button" className="dropdown-item py-2 text-danger">Logout</Link>
+                                        </li>
+                                    </>
+                                ) : (
+                                    <>
+                                        <li><Link href="/login" className="dropdown-item py-2">Login</Link></li>
+                                        <li><Link href="/register" className="dropdown-item py-2">Register</Link></li>
+                                    </>
+                                )}
+                            </ul>
                         </div>
 
-                        <div className="right-header">
-                            {/* Main Desktop Menu */}
-                            <div id="mn-main-menu-desk" className="d-none d-lg-block sticky-nav">
-                                <div className="nav-desk">
-                                    <div className="row">
-                                        <div className="col-md-12 align-self-center">
-                                            <div className="mn-main-menu">
-                                                <ul>
-                                                    <li className="non-drop">
-                                                        <Link href="/">Home</Link>
-                                                    </li>
-                                                    <li className="dropdown drop-list">
-                                                        <a href="javascript:void(0)" className="dropdown-arrow">
-                                                            Categories<i className="ri-arrow-down-s-line" />
-                                                        </a>
-                                                        <ul className="mega-menu d-block">
-                                                            <li className="d-flex flex-wrap gap-4">
-                                                                <span className="bg" />
-                                                                {categories.length > 0 ? (
-                                                                    categories.slice(0, 4).map((cat) => (
-                                                                        <ul key={cat.id} className="d-block mega-block">
-                                                                            <li className="menu_title">
-                                                                                <Link href={`/?category=${cat.slug}`}>{cat.name}</Link>
-                                                                            </li>
-                                                                            {cat.children && cat.children.slice(0, 6).map((subCat) => (
-                                                                                <li key={subCat.id}>
-                                                                                    <Link href={`/?category=${subCat.slug}`}>{subCat.name}</Link>
-                                                                                </li>
-                                                                            ))}
-                                                                        </ul>
-                                                                    ))
-                                                                ) : (
-                                                                    <ul className="d-block mega-block">
-                                                                        <li className="menu_title">
-                                                                            <Link href="/">All Categories</Link>
-                                                                        </li>
-                                                                    </ul>
-                                                                )}
-                                                            </li>
-                                                        </ul>
-                                                    </li>
-                                                    <li className="dropdown drop-list">
-                                                        <a href="javascript:void(0)" className="dropdown-arrow">
-                                                            Products<i className="ri-arrow-down-s-line" />
-                                                        </a>
-                                                        <ul className="sub-menu">
-                                                            <li><a href="#featured-products">Featured Products</a></li>
-                                                            <li><a href="#new-arrivals">New Arrivals</a></li>
-                                                        </ul>
-                                                    </li>
-                                                    <li className="dropdown drop-list">
-                                                        <a href="javascript:void(0)" className="dropdown-arrow">
-                                                            Pages<i className="ri-arrow-down-s-line" />
-                                                        </a>
-                                                        <ul className="sub-menu">
-                                                            <li><Link href="/login">Login</Link></li>
-                                                            <li><Link href="/register">Register</Link></li>
-                                                            {auth?.user && (auth.user.role === 'admin' || auth.user.role === 'staff') && (
-                                                                <li><Link href="/admin/dashboard">Admin Dashboard</Link></li>
-                                                            )}
-                                                        </ul>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Mobile Menu Overlay */}
-                            <div
-                                className="mn-mobile-menu-overlay"
-                                style={{ display: isMobileMenuOpen ? 'block' : 'none' }}
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            />
-                            <div className={`mn-mobile-menu ${isMobileMenuOpen ? 'mn-menu-open' : ''}`}>
-                                <div className="mn-menu-title">
-                                    <span className="menu_title">My Menu</span>
-                                    <button
-                                        type="button"
-                                        className="mn-close-menu"
-                                        onClick={() => setIsMobileMenuOpen(false)}
-                                    >
-                                        ×
-                                    </button>
-                                </div>
-                                <div className="mn-menu-inner">
-                                    <div className="mn-menu-content">
-                                        <ul>
-                                            <li><Link href="/">Home</Link></li>
-                                            <li><a href="#featured-products">Featured</a></li>
-                                            <li><a href="#new-arrivals">New Arrivals</a></li>
-                                            <li><Link href="/login">Login</Link></li>
-                                            <li><Link href="/register">Register</Link></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-
-                            {/* Main Menu Tool Icons */}
-                            <div className="mn-tool-icons">
-                                <div className="mn-tool-search">
-                                    <a href="javascript:void(0)" className="mn-main-search mn-search-toggle" title="Search">
-                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="512" height="512" viewBox="0 0 612.01 612.01" style={{ enableBackground: 'new 0 0 512 512' }} xmlSpace="preserve">
-                                            <g>
-                                                <path d="M606.209 578.714 448.198 423.228C489.576 378.272 515 318.817 515 253.393 514.98 113.439 399.704 0 257.493 0S.006 113.439.006 253.393s115.276 253.393 257.487 253.393c61.445 0 117.801-21.253 162.068-56.586l158.624 156.099c7.729 7.614 20.277 7.614 28.006 0a19.291 19.291 0 0 0 .018-27.585zM257.493 467.8c-120.326 0-217.869-95.993-217.869-214.407S137.167 38.986 257.493 38.986c120.327 0 217.869 95.993 217.869 214.407S377.82 467.8 257.493 467.8z" fill="#000000" opacity="1" data-original="#000000" />
-                                            </g>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="mn-tool-user">
-                                    <a href="javascript:void(0)" className="mn-main-user" title="Account">
-                                        <svg className="svg-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M512.476 648.247c-170.169 0-308.118-136.411-308.118-304.681 0-168.271 137.949-304.681 308.118-304.681 170.169 0 308.119 136.411 308.119 304.681C820.594 511.837 682.645 648.247 512.476 648.247L512.476 648.247zM512.476 100.186c-135.713 0-246.12 109.178-246.12 243.381 0 134.202 110.407 243.381 246.12 243.381 135.719 0 246.126-109.179 246.126-243.381C758.602 209.364 648.195 100.186 512.476 100.186L512.476 100.186zM935.867 985.115l-26.164 0c-9.648 0-17.779-6.941-19.384-16.35-2.646-15.426-6.277-30.52-11.142-44.95-24.769-87.686-81.337-164.13-159.104-214.266-63.232 35.203-134.235 53.64-207.597 53.64-73.555 0-144.73-18.537-208.084-53.922-78 50.131-134.75 126.68-159.564 214.549 0 0-4.893 18.172-11.795 46.4-2.136 8.723-10.035 14.9-19.112 14.9L88.133 985.116c-9.415 0-16.693-8.214-15.47-17.452C91.698 824.084 181.099 702.474 305.51 637.615c58.682 40.472 129.996 64.267 206.966 64.267 76.799 0 147.968-23.684 206.584-63.991 124.123 64.932 213.281 186.403 232.277 329.772C952.56 976.901 945.287 985.115 935.867 985.115L935.867 985.115z" />
-                                        </svg>
-                                    </a>
-                                    <ul className="sub-menu">
-                                        {auth?.user ? (
-                                            <>
-                                                {auth.user.role === 'admin' || auth.user.role === 'staff' ? (
-                                                    <li><Link href="/admin/dashboard">Admin Dashboard</Link></li>
-                                                ) : null}
-                                                <li>
-                                                    <Link href="/logout" method="post" as="button" className="w-100 text-start border-0 bg-transparent">
-                                                        Logout
-                                                    </Link>
-                                                </li>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <li><Link href="/login">Login</Link></li>
-                                                <li><Link href="/register">Register</Link></li>
-                                            </>
-                                        )}
-                                    </ul>
-                                </div>
-                                <div className="mn-tool-wish">
-                                    <a
-                                        href="javascript:void(0)"
-                                        className="mn-main-wishlist mn-wishlist-toggle"
-                                        title="Wishlist"
-                                        onClick={() => setIsWishlistOpen(true)}
-                                    >
-                                        <span className="label lbl-1">3</span>
-                                        <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="512" height="512" viewBox="0 0 512 512" style={{ enableBackground: 'new 0 0 512 512' }} xmlSpace="preserve">
-                                            <g>
-                                                <path d="M474.644 74.27C449.391 45.616 414.358 29.836 376 29.836c-53.948 0-88.103 32.22-107.255 59.25-4.969 7.014-9.196 14.047-12.745 20.665-3.549-6.618-7.775-13.651-12.745-20.665-19.152-27.03-53.307-59.25-107.255-59.25-38.358 0-73.391 15.781-98.645 44.435C13.267 101.605 0 138.213 0 177.351c0 42.603 16.633 82.228 52.345 124.7 31.917 37.96 77.834 77.088 131.005 122.397 19.813 16.884 40.302 34.344 62.115 53.429l.655.574c2.828 2.476 6.354 3.713 9.88 3.713s7.052-1.238 9.88-3.713l.655-.574c21.813-19.085 42.302-36.544 62.118-53.431 53.168-45.306 99.085-84.434 131.002-122.395C495.367 259.578 512 219.954 512 177.351c0-39.138-13.267-75.746-37.356-103.081zM309.193 401.614c-17.08 14.554-34.658 29.533-53.193 45.646-18.534-16.111-36.113-31.091-53.196-45.648C98.745 312.939 30 254.358 30 177.351c0-31.83 10.605-61.394 29.862-83.245C79.34 72.007 106.379 59.836 136 59.836c41.129 0 67.716 25.338 82.776 46.594 13.509 19.064 20.558 38.282 22.962 45.659a15 15 0 0 0 28.524 0c2.404-7.377 9.453-26.595 22.962-45.66 15.06-21.255 41.647-46.593 82.776-46.593 29.621 0 56.66 12.171 76.137 34.27C471.395 115.957 482 145.521 482 177.351c0 77.007-68.745 135.588-172.807 224.263z" fill="#000000" opacity="1" data-original="#000000" />
-                                            </g>
-                                        </svg>
-                                    </a>
-                                </div>
-                                <div className="mn-tool-cart">
-                                    <a
-                                        href="javascript:void(0)"
-                                        className="mn-main-cart mn-cart-toggle"
-                                        title="Cart"
-                                        onClick={() => setIsCartOpen(true)}
-                                    >
-                                        <span className="label lbl-2">4</span>
-                                        <svg className="svg-icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M351.552 831.424c-35.328 0-63.968 28.64-63.968 63.968 0 35.328 28.64 63.968 63.968 63.968 35.328 0 63.968-28.64 63.968-63.968C415.52 860.064 386.88 831.424 351.552 831.424L351.552 831.424 351.552 831.424zM799.296 831.424c-35.328 0-63.968 28.64-63.968 63.968 0 35.328 28.64 63.968 63.968 63.968 35.328 0 63.968-28.64 63.968-63.968C863.264 860.064 834.624 831.424 799.296 831.424L799.296 831.424 799.296 831.424zM862.752 799.456 343.264 799.456c-46.08 0-86.592-36.448-92.224-83.008L196.8 334.592 165.92 156.128c-1.92-15.584-16.128-28.288-29.984-28.288L95.2 127.84c-17.664 0-32-14.336-32-31.968 0-17.664 14.336-32 32-32l40.736 0c46.656 0 87.616 36.448 93.28 83.008l30.784 177.792 54.464 383.488c1.792 14.848 15.232 27.36 28.768 27.36l519.488 0c17.696 0 32 14.304 32 31.968S880.416 799.456 862.752 799.456L862.752 799.456zM383.232 671.52c-16.608 0-30.624-12.8-31.872-29.632-1.312-17.632 11.936-32.928 29.504-34.208l433.856-31.968c15.936-0.096 29.344-12.608 31.104-26.816l50.368-288.224c1.28-10.752-1.696-22.528-8.128-29.792-4.128-4.672-9.312-7.04-15.36-7.04L319.04 223.84c-17.664 0-32-14.336-32-31.968 0-17.664 14.336-31.968 32-31.968l553.728 0c24.448 0 46.88 10.144 63.232 28.608 18.688 21.088 27.264 50.784 23.52 81.568l-50.4 288.256c-5.44 44.832-45.92 81.28-92 81.28L385.6 671.424C384.8 671.488 384 671.52 383.232 671.52L383.232 671.52zM383.232 671.52" />
-                                        </svg>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                        <button
+                            type="button"
+                            className="oubd-action-btn"
+                            title="Cart"
+                            onClick={() => setIsCartOpen(true)}
+                        >
+                            <i className="ri-shopping-bag-line" />
+                            <span className="oubd-cart-badge">0</span>
+                        </button>
                     </div>
                 </div>
             </header>
 
-            {/* Main Content Area */}
-            <main className={`mn-main-content ${sidebarCollapsed ? 'sb-hide' : ''}`}>
-                {children}
-            </main>
+            {/* --- Mobile Header --- */}
+            <div className="oubd-mobile-header">
+                <button
+                    type="button"
+                    className="oubd-mobile-toggle"
+                    aria-label="Open Menu"
+                    onClick={() => setIsMobileMenuOpen(true)}
+                >
+                    <i className="ri-menu-line" />
+                </button>
 
-            {/* Footer */}
-            <footer className={sidebarCollapsed ? 'sb-hide' : ''}>
-                <div className="mn-footer">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-lg-3 col-sm-6 m-b-30">
-                                <div className="mn-footer-widget">
-                                    <h4 className="mn-footer-heading">About Us</h4>
-                                    <p className="mn-footer-text">
-                                        {settings.site_tagline || 'Enterprise Single-Vendor E-Commerce Platform'}
-                                    </p>
-                                    <ul className="mn-footer-links">
-                                        {settings.store_address && (
-                                            <li><i className="ri-map-pin-line me-2" />{settings.store_address}</li>
-                                        )}
-                                        {settings.support_phone && (
-                                            <li><i className="ri-phone-line me-2" /><a href={`tel:${settings.support_phone}`}>{settings.support_phone}</a></li>
-                                        )}
-                                        {settings.support_email && (
-                                            <li><i className="ri-mail-line me-2" /><a href={`mailto:${settings.support_email}`}>{settings.support_email}</a></li>
-                                        )}
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className="col-lg-3 col-sm-6 m-b-30">
-                                <div className="mn-footer-widget">
-                                    <h4 className="mn-footer-heading">Quick Links</h4>
-                                    <ul className="mn-footer-links">
-                                        <li><Link href="/">Home</Link></li>
-                                        <li><a href="#featured-products">Featured Products</a></li>
-                                        <li><a href="#new-arrivals">New Arrivals</a></li>
-                                        <li><Link href="/login">My Account</Link></li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className="col-lg-3 col-sm-6 m-b-30">
-                                <div className="mn-footer-widget">
-                                    <h4 className="mn-footer-heading">Categories</h4>
-                                    <ul className="mn-footer-links">
-                                        {categories && categories.slice(0, 5).map((cat) => (
-                                            <li key={cat.id}>
-                                                <Link href={`/?category=${cat.slug}`}>{cat.name}</Link>
+                <Link href="/" className="oubd-brand-logo">
+                    {siteLogo ? (
+                        <img src={siteLogo} alt={siteName} style={{ maxHeight: '32px' }} />
+                    ) : (
+                        <span className="brand-text" style={{ fontSize: '20px' }}>{siteName}</span>
+                    )}
+                </Link>
+
+                <div className="d-flex align-items-center gap-3">
+                    <button
+                        type="button"
+                        className="oubd-action-btn"
+                        onClick={() => setIsSearchOpen(true)}
+                        aria-label="Search"
+                    >
+                        <i className="ri-search-line" />
+                    </button>
+                    <button
+                        type="button"
+                        className="oubd-action-btn position-relative"
+                        onClick={() => setIsCartOpen(true)}
+                        aria-label="Cart"
+                    >
+                        <i className="ri-shopping-bag-line" />
+                        <span className="oubd-cart-badge">0</span>
+                    </button>
+                </div>
+            </div>
+
+            {/* --- Mobile Drawer Menu --- */}
+            {isMobileMenuOpen && (
+                <div
+                    className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
+                    style={{ zIndex: 1100 }}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                />
+            )}
+            <div
+                className={`position-fixed top-0 start-0 h-100 bg-white shadow-lg d-flex flex-column`}
+                style={{
+                    width: '300px',
+                    maxWidth: '85vw',
+                    zIndex: 1110,
+                    transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(-100%)',
+                    transition: 'transform 0.3s ease-in-out',
+                }}
+            >
+                <div className="d-flex align-items-center justify-content-between p-3 border-bottom">
+                    <span className="fw-bold fs-6 text-uppercase letter-spacing-1">{siteName}</span>
+                    <button
+                        type="button"
+                        className="btn-close"
+                        aria-label="Close"
+                        onClick={() => setIsMobileMenuOpen(false)}
+                    />
+                </div>
+                <div className="overflow-y-auto p-3 flex-grow-1">
+                    <ul className="list-unstyled mb-0">
+                        <li className="mb-2">
+                            <Link href="/" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
+                                HOME
+                            </Link>
+                        </li>
+                        {categories && categories.map((cat) => (
+                            <li key={cat.id} className="mb-2">
+                                <Link
+                                    href={`/?category=${cat.slug}`}
+                                    className="d-block py-2 fw-bold text-dark text-decoration-none text-uppercase"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    {cat.name}
+                                </Link>
+                                {cat.children && cat.children.length > 0 && (
+                                    <ul className="list-unstyled ps-3 mt-1">
+                                        {cat.children.map((sub) => (
+                                            <li key={sub.id} className="mb-1">
+                                                <Link
+                                                    href={`/?category=${sub.slug}`}
+                                                    className="d-block py-1 text-muted text-decoration-none text-uppercase font-size-13"
+                                                    onClick={() => setIsMobileMenuOpen(false)}
+                                                >
+                                                    {sub.name}
+                                                </Link>
                                             </li>
                                         ))}
                                     </ul>
-                                </div>
-                            </div>
-                            <div className="col-lg-3 col-sm-6 m-b-30">
-                                <div className="mn-footer-widget">
-                                    <h4 className="mn-footer-heading">Customer Care</h4>
-                                    <ul className="mn-footer-links">
-                                        <li><span>Hours: {settings.business_hours || 'Sat - Thu: 9:00 AM - 9:00 PM'}</span></li>
-                                        <li><span>Inside City Shipping: {currencySymbol}{parseFloat(settings.shipping_charge_inside || 70).toFixed(2)}</span></li>
-                                        <li><span>Outside City Shipping: {currencySymbol}{parseFloat(settings.shipping_charge_outside || 130).toFixed(2)}</span></li>
-                                    </ul>
-                                </div>
-                            </div>
+                                )}
+                            </li>
+                        ))}
+                        <li className="mt-3 pt-3 border-top">
+                            <Link href="/#featured-products" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
+                                ALL PRODUCTS
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            {/* --- Search Overlay Modal --- */}
+            {isSearchOpen && (
+                <div
+                    className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center p-3"
+                    style={{ zIndex: 1200 }}
+                    onClick={() => setIsSearchOpen(false)}
+                >
+                    <div
+                        className="bg-white p-4 shadow-lg w-100 position-relative"
+                        style={{ maxWidth: '600px', borderRadius: '4px' }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button
+                            type="button"
+                            className="btn-close position-absolute top-0 end-0 m-3"
+                            onClick={() => setIsSearchOpen(false)}
+                        />
+                        <h4 className="fw-bold mb-3 text-uppercase font-size-16">Search Products</h4>
+                        <form onSubmit={handleSearchSubmit} className="d-flex gap-2">
+                            <input
+                                type="text"
+                                className="form-control"
+                                placeholder="Search by product name, category, or keyword..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                                autoFocus
+                            />
+                            <button type="submit" className="btn btn-dark px-4 text-uppercase fw-bold font-size-13">
+                                Search
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {/* --- Main Body Content --- */}
+            <main className="flex-grow-1" style={{ width: '100%' }}>
+                {children}
+            </main>
+
+            {/* --- Modern Footer --- */}
+            <footer style={{ backgroundColor: '#111111', color: '#aaaaaa', padding: '50px 0 20px 0', marginTop: 'auto' }}>
+                <div className="container-fluid" style={{ maxWidth: '1600px' }}>
+                    <div className="row g-4 mb-5">
+                        <div className="col-lg-4 col-md-6">
+                            <h4 className="text-white fw-bold mb-3 text-uppercase font-size-16">{siteName}</h4>
+                            <p className="font-size-14 line-height-24 text-muted mb-4">
+                                {settings.site_tagline || 'Purpose & Style with Premium Quality Collections.'}
+                            </p>
+                            <ul className="list-unstyled font-size-13 text-muted">
+                                {settings.store_address && (
+                                    <li className="mb-2"><i className="ri-map-pin-line me-2 text-white" />{settings.store_address}</li>
+                                )}
+                                {settings.support_phone && (
+                                    <li className="mb-2"><i className="ri-phone-line me-2 text-white" /><a href={`tel:${settings.support_phone}`} className="text-muted text-decoration-none">{settings.support_phone}</a></li>
+                                )}
+                                {settings.support_email && (
+                                    <li><i className="ri-mail-line me-2 text-white" /><a href={`mailto:${settings.support_email}`} className="text-muted text-decoration-none">{settings.support_email}</a></li>
+                                )}
+                            </ul>
                         </div>
-                        <div className="row pt-4 border-top">
-                            <div className="col-md-6">
-                                <p className="mb-0 text-muted">{settings.copyright_text || '© 2026 ORIO STYLE LTD. All rights reserved.'}</p>
-                            </div>
-                            <div className="col-md-6 text-md-end">
-                                <img src="/storefront/img/banner/payment.png" alt="Payment Methods" style={{ maxHeight: '30px' }} />
-                            </div>
+
+                        <div className="col-lg-2 col-md-6 col-6">
+                            <h5 className="text-white fw-bold mb-3 text-uppercase font-size-14">Quick Links</h5>
+                            <ul className="list-unstyled font-size-13">
+                                <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Home</Link></li>
+                                <li className="mb-2"><a href="#new-arrivals" className="text-muted text-decoration-none">New Arrivals</a></li>
+                                <li className="mb-2"><a href="#featured-products" className="text-muted text-decoration-none">Featured</a></li>
+                                <li><Link href="/login" className="text-muted text-decoration-none">My Account</Link></li>
+                            </ul>
                         </div>
+
+                        <div className="col-lg-3 col-md-6 col-6">
+                            <h5 className="text-white fw-bold mb-3 text-uppercase font-size-14">Collections</h5>
+                            <ul className="list-unstyled font-size-13">
+                                {categories && categories.slice(0, 6).map((cat) => (
+                                    <li key={cat.id} className="mb-2">
+                                        <Link href={`/?category=${cat.slug}`} className="text-muted text-decoration-none text-capitalize">
+                                            {cat.name}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="col-lg-3 col-md-6">
+                            <h5 className="text-white fw-bold mb-3 text-uppercase font-size-14">Customer Support</h5>
+                            <ul className="list-unstyled font-size-13 text-muted">
+                                <li className="mb-2">Hours: {settings.business_hours || 'Sat - Thu: 9:00 AM - 9:00 PM'}</li>
+                                <li className="mb-2">Inside City Delivery: {currencySymbol}{parseFloat(settings.shipping_charge_inside || 70).toFixed(2)}</li>
+                                <li>Outside City Delivery: {currencySymbol}{parseFloat(settings.shipping_charge_outside || 130).toFixed(2)}</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div className="border-top border-secondary pt-3 d-flex flex-wrap justify-content-between align-items-center font-size-12 text-muted">
+                        <p className="mb-0">{settings.copyright_text || '© 2026 ORIO STYLE LTD. All rights reserved.'}</p>
+                        <p className="mb-0">Secure Shopping & Fast Delivery</p>
                     </div>
                 </div>
             </footer>
 
-            {/* Cart Slide-over Drawer */}
-            {isCartOpen && <div className="mn-side-cart-overlay active" style={{ display: 'block' }} onClick={() => setIsCartOpen(false)} />}
-            <div id="mn-side-cart" className={`mn-side-cart ${isCartOpen ? 'mn-open-cart' : ''}`}>
-                <div className="mn-cart-inner">
-                    <div className="mn-cart-top">
-                        <div className="mn-cart-title">
-                            <span className="cart_title">My Cart</span>
-                            <a href="javascript:void(0)" className="mn-cart-close" onClick={() => setIsCartOpen(false)}>
-                                <i className="ri-close-line" />
-                            </a>
-                        </div>
-                        <ul className="mn-cart-pro-items">
-                            <li className="cart-sidebar-list text-center text-muted py-4">
-                                <p className="mb-0">Your shopping cart is currently empty.</p>
-                            </li>
-                        </ul>
+            {/* --- Cart Slide-over Drawer --- */}
+            {isCartOpen && (
+                <div
+                    className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50"
+                    style={{ zIndex: 1150 }}
+                    onClick={() => setIsCartOpen(false)}
+                />
+            )}
+            <div
+                className="position-fixed top-0 end-0 h-100 bg-white shadow-lg d-flex flex-column"
+                style={{
+                    width: '360px',
+                    maxWidth: '90vw',
+                    zIndex: 1160,
+                    transform: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
+                    transition: 'transform 0.3s ease-in-out',
+                }}
+            >
+                <div className="d-flex align-items-center justify-content-between p-3 border-bottom">
+                    <span className="fw-bold fs-6 text-uppercase">Shopping Cart</span>
+                    <button type="button" className="btn-close" onClick={() => setIsCartOpen(false)} />
+                </div>
+                <div className="flex-grow-1 p-4 d-flex flex-column align-items-center justify-content-center text-center text-muted">
+                    <i className="ri-shopping-bag-line display-4 text-muted mb-2" />
+                    <p className="mb-0 font-size-14">Your shopping cart is currently empty.</p>
+                </div>
+                <div className="p-3 border-top bg-light">
+                    <div className="d-flex justify-content-between font-size-14 fw-bold mb-3">
+                        <span>Subtotal:</span>
+                        <span>{currencySymbol}0.00</span>
                     </div>
-                    <div className="mn-cart-bottom">
-                        <div className="cart-sub-total d-flex justify-content-between my-3">
-                            <span className="text-muted">Subtotal:</span>
-                            <span className="cart-sub-total-amount fw-bold">{currencySymbol}0.00</span>
-                        </div>
-                        <div className="cart_btn">
-                            <a href="javascript:void(0)" className="mn-btn-1 w-100 text-center" onClick={() => setIsCartOpen(false)}>
-                                <span>Continue Shopping<i className="ri-arrow-right-s-line" /></span>
-                            </a>
-                        </div>
-                    </div>
+                    <button
+                        type="button"
+                        className="btn btn-dark w-100 py-2 text-uppercase fw-bold font-size-13"
+                        onClick={() => setIsCartOpen(false)}
+                    >
+                        Continue Shopping
+                    </button>
                 </div>
             </div>
 
-            {/* Wishlist Slide-over Drawer */}
-            {isWishlistOpen && <div className="mn-side-wishlist-overlay active" style={{ display: 'block' }} onClick={() => setIsWishlistOpen(false)} />}
-            <div id="mn-side-wishlist" className={`mn-side-wishlist ${isWishlistOpen ? 'mn-open-wishlist' : ''}`}>
-                <div className="mn-wishlist-inner">
-                    <div className="mn-wishlist-top">
-                        <div className="mn-wishlist-title">
-                            <span className="wishlist_title">My Wishlist</span>
-                            <a href="javascript:void(0)" className="mn-wishlist-close" onClick={() => setIsWishlistOpen(false)}>
-                                <i className="ri-close-line" />
-                            </a>
-                        </div>
-                        <ul className="mn-wishlist-pro-items">
-                            <li className="wishlist-sidebar-list text-center text-muted py-4">
-                                <p className="mb-0">Your wishlist is currently empty.</p>
-                            </li>
-                        </ul>
-                    </div>
-                    <div className="mn-wishlist-bottom">
-                        <div className="wishlist_btn">
-                            <a href="javascript:void(0)" className="mn-btn-1 w-100 text-center" onClick={() => setIsWishlistOpen(false)}>
-                                <span>Explore Shop<i className="ri-arrow-right-s-line" /></span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {/* --- Floating Back to Top Button --- */}
+            {showBackToTop && (
+                <button
+                    type="button"
+                    className="oubd-back-to-top"
+                    onClick={scrollToTop}
+                    title="Back to Top"
+                    aria-label="Back to Top"
+                >
+                    <i className="ri-arrow-up-s-line" />
+                </button>
+            )}
         </div>
     );
 }

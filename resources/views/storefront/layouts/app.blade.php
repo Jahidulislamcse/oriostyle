@@ -32,6 +32,7 @@
 
 	<!-- Storefront Isolated Main CSS -->
 	<link id="mainCss" href="{{ asset('storefront/css/style.css') }}?v={{ file_exists(public_path('storefront/css/style.css')) ? filemtime(public_path('storefront/css/style.css')) : time() }}" rel="stylesheet">
+	<link href="{{ asset('storefront/css/custom-modern.css') }}?v={{ file_exists(public_path('storefront/css/custom-modern.css')) ? filemtime(public_path('storefront/css/custom-modern.css')) : time() }}" rel="stylesheet">
 
 	@stack('styles')
 </head>
