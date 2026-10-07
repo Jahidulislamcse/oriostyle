@@ -27,23 +27,26 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 12px 50px;
+    padding: 8px 50px;
     max-width: 100%;
     margin: 0;
     width: 100%;
 }
 
 .oubd-brand-logo {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     text-decoration: none;
-    margin-right: 40px;
+    margin-right: auto;
+    margin-left: 0;
+    flex-shrink: 0;
 }
 
 .oubd-brand-logo img {
-    max-height: 80px;
+    max-height: 84px;
     width: auto;
     object-fit: contain;
+    display: block;
 }
 
 .oubd-brand-logo .brand-text {
@@ -53,6 +56,7 @@
     color: #ffffff;
     text-transform: uppercase;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+    line-height: 1;
 }
 
 /* Desktop Main Menu */
