@@ -320,101 +320,179 @@
     background-color: #ffffff;
 }
 
-/* --- Featured Category Lookbook Grid --- */
-.oubd-lookbook-section {
-    padding: 24px 0 36px 0;
-    max-width: 1600px;
-    margin: 0 auto;
+/* --- Bento Mosaic Category Lookbook Showcase (Matching Reference Bento) --- */
+.oubd-bento-lookbook-section {
+    padding: 8px 0 20px 0;
     width: 100%;
 }
 
-.oubd-lookbook-grid {
+.oubd-bento-container {
+    max-width: 100%;
+    margin: 0 auto;
+    padding: 0 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+@media (min-width: 1600px) {
+    .oubd-bento-container {
+        padding: 0 16px;
+    }
+}
+
+/* 3-Column Bento Mosaic Layout */
+.oubd-bento-mosaic {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    padding: 0 12px;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+    width: 100%;
 }
 
-@media (max-width: 1199px) {
-    .oubd-lookbook-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
+.oubd-bento-col {
+    display: flex;
+    width: 100%;
 }
 
-@media (max-width: 767px) {
-    .oubd-lookbook-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 8px;
-        padding: 0 8px;
-    }
+.oubd-bento-col-tall {
+    height: 640px;
 }
 
-.oubd-lookbook-card {
+.oubd-bento-col-stacked {
+    height: 640px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* 2-Column Wide Banner Row */
+.oubd-bento-wide-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+}
+
+/* Base Bento Card */
+.oubd-bento-card {
     position: relative;
     overflow: hidden;
-    border-radius: 0;
-    aspect-ratio: 3 / 4;
-    background-color: #f5f5f5;
-    cursor: pointer;
+    background-color: #111111;
     display: block;
     text-decoration: none;
+    cursor: pointer;
 }
 
-@media (min-width: 768px) {
-    .oubd-lookbook-card {
-        aspect-ratio: 4 / 5;
-    }
+.oubd-bento-card-tall {
+    width: 100%;
+    height: 100%;
 }
 
-.oubd-lookbook-card img {
+.oubd-bento-card-half {
+    width: 100%;
+    height: calc(50% - 4px);
+    flex: 1;
+}
+
+.oubd-bento-card-wide {
+    width: 100%;
+    height: 290px;
+}
+
+.oubd-bento-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: top center;
-    transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    object-position: center;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
     display: block;
 }
 
-.oubd-lookbook-card:hover img {
-    transform: scale(1.05);
+.oubd-bento-card:hover img {
+    transform: scale(1.04);
 }
 
-/* Floating White Title Badge */
-.oubd-lookbook-badge {
+/* Floating Badges */
+.oubd-bento-badge {
     position: absolute;
-    bottom: 20px;
+    bottom: 24px;
     left: 50%;
     transform: translateX(-50%);
-    background-color: #ffffff;
-    color: #111111;
-    padding: 10px 20px;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 1px;
+    padding: 10px 22px;
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
     text-transform: uppercase;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
     white-space: nowrap;
-    max-width: 90%;
-    overflow: hidden;
-    text-overflow: ellipsis;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 6px;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     z-index: 5;
+    text-decoration: none;
 }
 
-.oubd-lookbook-card:hover .oubd-lookbook-badge {
+.oubd-bento-badge.badge-light {
+    background-color: #ffffff;
+    color: #111111;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+}
+
+.oubd-bento-badge.badge-dark {
     background-color: #111111;
     color: #ffffff;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.oubd-bento-card:hover .oubd-bento-badge {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    transform: translateX(-50%) translateY(-2px);
+}
+
+.oubd-bento-badge i {
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* Responsive Rules for Lookbook Grid */
+@media (max-width: 1199px) {
+    .oubd-bento-col-tall,
+    .oubd-bento-col-stacked {
+        height: 520px;
+    }
+    .oubd-bento-card-wide {
+        height: 240px;
+    }
 }
 
 @media (max-width: 767px) {
-    .oubd-lookbook-badge {
-        bottom: 12px;
-        padding: 6px 12px;
-        font-size: 11px;
-        letter-spacing: 0.5px;
+    .oubd-bento-mosaic {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .oubd-bento-col-tall {
+        height: 380px;
+    }
+    .oubd-bento-col-stacked {
+        height: auto;
+        gap: 8px;
+    }
+    .oubd-bento-card-half {
+        height: 240px;
+        flex: none;
+    }
+    .oubd-bento-wide-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+    .oubd-bento-card-wide {
+        height: 200px;
+    }
+    .oubd-bento-badge {
+        bottom: 16px;
+        padding: 8px 16px;
+        font-size: 10.5px;
     }
 }
 
