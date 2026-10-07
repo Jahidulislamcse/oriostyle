@@ -27,9 +27,9 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 40px;
+    padding: 12px 50px;
     max-width: 100%;
-    margin: 0 auto;
+    margin: 0;
     width: 100%;
 }
 
@@ -41,15 +41,15 @@
 }
 
 .oubd-brand-logo img {
-    max-height: 52px;
+    max-height: 80px;
     width: auto;
     object-fit: contain;
 }
 
 .oubd-brand-logo .brand-text {
-    font-size: 30px;
+    font-size: 44px;
     font-weight: 900;
-    letter-spacing: 2.5px;
+    letter-spacing: 3px;
     color: #ffffff;
     text-transform: uppercase;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
