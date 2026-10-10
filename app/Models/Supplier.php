@@ -39,6 +39,14 @@ class Supplier extends Model
     }
 
     /**
+     * Purchase orders associated with this supplier.
+     */
+    public function purchaseOrders(): HasMany
+    {
+        return $this->hasMany(PurchaseOrder::class)->orderBy('order_date', 'desc');
+    }
+
+    /**
      * Scope for active suppliers.
      */
     public function scopeActive($query)

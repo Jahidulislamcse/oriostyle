@@ -62,7 +62,7 @@ export default function AdminLayout({ title = '', children }) {
             group: 'Procurement & Stock',
             items: [
                 { name: 'Suppliers Ledger', href: '/admin/suppliers', icon: Truck, current: route().current('admin.suppliers.*') },
-                { name: 'Stock-In Purchases', href: '/admin/purchases', icon: Boxes, current: route().current('admin.purchases.*') },
+                { name: 'Stock-In PO', href: '/admin/purchase-orders', icon: Boxes, current: route().current('admin.purchase-orders.*') },
                 { name: 'Inventory Control', href: '/admin/inventory', icon: Package, current: route().current('admin.inventory.*') },
             ],
         },
