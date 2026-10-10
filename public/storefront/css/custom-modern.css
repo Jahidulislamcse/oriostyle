@@ -32,7 +32,7 @@ header.oubd-header.scrolled,
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: 2px 25px !important;
+    padding: 6px 45px !important;
     max-width: 100% !important;
     margin: 0 !important;
     width: 100% !important;
@@ -44,19 +44,17 @@ header.oubd-header.scrolled,
     align-items: center !important;
     text-decoration: none !important;
     flex-shrink: 0 !important;
-    padding: 0 !important;
-    margin: 0 !important;
 }
 
 .oubd-brand-logo img {
-    max-height: 104px !important;
+    max-height: 52px !important;
     width: auto !important;
     object-fit: contain !important;
     display: block !important;
 }
 
 .oubd-brand-logo .brand-text {
-    font-size: 52px !important;
+    font-size: 32px !important;
     font-weight: 900 !important;
     letter-spacing: 2px !important;
     color: #ffffff !important;
@@ -71,7 +69,7 @@ header.oubd-header.scrolled,
     justify-content: center;
     align-items: center;
     flex: 1;
-    margin: 0 15px;
+    margin: 0 20px;
 }
 
 /* Desktop Main Menu */

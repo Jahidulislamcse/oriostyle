@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
@@ -107,6 +108,17 @@ Route::prefix('admin')
         Route::patch('/products/toggle-featured', fn () => redirect()->route('admin.products.index'));
         Route::patch('/products/update-stock', fn () => redirect()->route('admin.products.index'));
         Route::match(['post', 'put'], '/products/update', fn () => redirect()->route('admin.products.index'));
+
+        // Phase 8: Supplier Directory & Payable Balance Ledger
+        Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
+        Route::get('/suppliers/index', fn () => redirect()->route('admin.suppliers.index'));
+        Route::post('/suppliers', [SupplierController::class, 'store'])->name('suppliers.store');
+        Route::post('/suppliers/store', [SupplierController::class, 'store']);
+        Route::get('/suppliers/{supplier}', [SupplierController::class, 'show'])->name('suppliers.show');
+        Route::put('/suppliers/{supplier}', [SupplierController::class, 'update'])->name('suppliers.update');
+        Route::delete('/suppliers/{supplier}', [SupplierController::class, 'destroy'])->name('suppliers.destroy');
+        Route::patch('/suppliers/{supplier}/toggle-active', [SupplierController::class, 'toggleActive'])->name('suppliers.toggle-active');
+        Route::post('/suppliers/{supplier}/payments', [SupplierController::class, 'recordPayment'])->name('suppliers.record-payment');
 
         // Dynamic Banners & Sliders CMS
         Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');
