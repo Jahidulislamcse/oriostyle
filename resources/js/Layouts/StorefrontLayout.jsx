@@ -195,9 +195,9 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
 
                 <Link href="/" className="oubd-brand-logo mx-auto">
                     {siteLogo ? (
-                        <img src={siteLogo} alt={siteName} style={{ maxHeight: '30px' }} />
+                        <img src={siteLogo} alt={siteName} style={{ maxHeight: '42px' }} />
                     ) : (
-                        <span className="brand-text" style={{ fontSize: '20px' }}>{siteName}</span>
+                        <span className="brand-text" style={{ fontSize: '24px' }}>{siteName}</span>
                     )}
                 </Link>
 
