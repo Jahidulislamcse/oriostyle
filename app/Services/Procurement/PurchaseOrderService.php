@@ -50,8 +50,8 @@ class PurchaseOrderService
                 'supplier:id,name,company_name,phone',
                 'creator:id,name',
                 'receiver:id,name',
-                'items.product:id,name,sku',
-                'items.variant:id,sku,size,color',
+                'items.product:id,name,sku,base_price,sale_price,cost_price,stock_quantity',
+                'items.variant:id,sku,size,color,stock_quantity',
             ])
             ->orderBy('id', 'desc');
 

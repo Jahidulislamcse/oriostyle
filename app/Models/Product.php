@@ -141,9 +141,12 @@ class Product extends Model
      */
     public function getEffectivePriceAttribute(): float
     {
-        return ($this->sale_price !== null && $this->sale_price > 0 && $this->sale_price < $this->base_price)
-            ? $this->sale_price
-            : $this->base_price;
+        $salePrice = array_key_exists('sale_price', $this->attributes) ? $this->attributes['sale_price'] : null;
+        $basePrice = array_key_exists('base_price', $this->attributes) ? (float) $this->attributes['base_price'] : 0.0;
+
+        return ($salePrice !== null && (float) $salePrice > 0 && (float) $salePrice < $basePrice)
+            ? (float) $salePrice
+            : $basePrice;
     }
 
     /**
@@ -159,7 +162,9 @@ class Product extends Model
      */
     public function getComparePriceAttribute(): ?float
     {
-        return $this->is_on_sale ? $this->base_price : null;
+        return $this->is_on_sale
+            ? (array_key_exists('base_price', $this->attributes) ? (float) $this->attributes['base_price'] : null)
+            : null;
     }
 
     /**
@@ -167,6 +172,13 @@ class Product extends Model
      */
     public function getIsOnSaleAttribute(): bool
     {
-        return $this->sale_price !== null && $this->sale_price > 0 && $this->sale_price < $this->base_price;
+        if (!array_key_exists('sale_price', $this->attributes) || !array_key_exists('base_price', $this->attributes)) {
+            return false;
+        }
+
+        $salePrice = $this->attributes['sale_price'];
+        $basePrice = (float) $this->attributes['base_price'];
+
+        return $salePrice !== null && (float) $salePrice > 0 && (float) $salePrice < $basePrice;
     }
 }

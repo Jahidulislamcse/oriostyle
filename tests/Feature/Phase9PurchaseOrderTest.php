@@ -67,7 +67,7 @@ class Phase9PurchaseOrderTest extends TestCase
 
     public function test_purchase_orders_index_renders_with_metrics_for_admin(): void
     {
-        PurchaseOrder::create([
+        $po = PurchaseOrder::create([
             'po_number' => 'PO-2026-0001',
             'supplier_id' => $this->supplier->id,
             'status' => PurchaseOrder::STATUS_ORDERED,
@@ -75,6 +75,13 @@ class Phase9PurchaseOrderTest extends TestCase
             'subtotal' => 5000.00,
             'total_amount' => 5000.00,
             'created_by' => $this->adminUser->id,
+        ]);
+
+        $po->items()->create([
+            'product_id' => $this->product->id,
+            'quantity_ordered' => 5,
+            'unit_cost' => 1000.00,
+            'subtotal' => 5000.00,
         ]);
 
         $response = $this->actingAs($this->adminUser)
