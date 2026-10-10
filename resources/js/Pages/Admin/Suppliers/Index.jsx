@@ -7,6 +7,7 @@ import FormInput from '@/Components/Common/FormInput';
 import FormSelect from '@/Components/Common/FormSelect';
 import Modal from '@/Components/Common/Modal';
 import ConfirmDialog from '@/Components/Common/ConfirmDialog';
+import DataTable from '@/Components/Common/DataTable';
 import {
     Truck,
     Plus,
@@ -24,7 +25,7 @@ import {
     ArrowUpRight,
     ArrowDownLeft,
     ShieldCheck,
-    Wallet
+    MapPin
 } from 'lucide-react';
 
 export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, filters = {} }) {
@@ -173,314 +174,272 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
         return '৳' + Number(amount || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     };
 
+    const columns = [
+        {
+            key: 'name',
+            label: 'Supplier & Entity',
+            render: (val, row) => {
+                const item = row || val || {};
+                return (
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-xl bg-navy-950 border border-gold-500/20 flex items-center justify-center font-bold text-gold-400 text-sm flex-shrink-0">
+                            {(item.name || 'S').substring(0, 2).toUpperCase()}
+                        </div>
+                        <div>
+                            <div className="font-semibold text-slate-100">{item.name || 'N/A'}</div>
+                            {item.company_name && (
+                                <div className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
+                                    <Building2 className="w-3 h-3 text-gold-400" />
+                                    <span>{item.company_name}</span>
+                                </div>
+                            )}
+                            {item.city && (
+                                <div className="text-[11px] text-slate-500 flex items-center gap-1">
+                                    <MapPin className="w-2.5 h-2.5" />
+                                    <span>{item.city}, {item.country || 'Bangladesh'}</span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                );
+            },
+        },
+        {
+            key: 'contact',
+            label: 'Contact Info',
+            render: (val, row) => {
+                const item = row || val || {};
+                return (
+                    <div className="space-y-1 text-xs">
+                        <div className="flex items-center gap-1.5 text-slate-200 font-mono">
+                            <Phone className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>{item.phone || '—'}</span>
+                        </div>
+                        {item.email && (
+                            <div className="flex items-center gap-1.5 text-slate-400">
+                                <Mail className="w-3.5 h-3.5 text-slate-500" />
+                                <span>{item.email}</span>
+                            </div>
+                        )}
+                    </div>
+                );
+            },
+        },
+        {
+            key: 'current_balance',
+            label: 'Payable Balance',
+            render: (val, row) => {
+                const item = row || val || {};
+                const payable = Number(item.current_balance || 0);
+
+                return (
+                    <div className="font-mono">
+                        {payable > 0 ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold bg-rose-500/10 text-rose-400 border border-rose-500/30">
+                                <ArrowUpRight className="w-3 h-3" />
+                                {formatCurrency(payable)}
+                            </span>
+                        ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                <CheckCircle2 className="w-3 h-3" />
+                                {formatCurrency(payable)}
+                            </span>
+                        )}
+                    </div>
+                );
+            },
+        },
+        {
+            key: 'is_active',
+            label: 'Status',
+            render: (val, row) => {
+                const item = row || val || {};
+                return (
+                    <button
+                        type="button"
+                        onClick={() => handleToggleActive(item)}
+                        className="cursor-pointer focus:outline-none transition-transform active:scale-95"
+                        title="Click to toggle active status"
+                    >
+                        <Badge variant={item.is_active ? 'success' : 'secondary'}>
+                            {item.is_active ? 'Active' : 'Inactive'}
+                        </Badge>
+                    </button>
+                );
+            },
+        },
+        {
+            key: 'actions',
+            label: 'Actions',
+            sortable: false,
+            className: 'text-right',
+            render: (val, row) => {
+                const item = row || val || {};
+                return (
+                    <div className="flex items-center justify-end gap-1.5">
+                        <Link
+                            href={route('admin.suppliers.show', item.id)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
+                            title="View Statement & Ledger"
+                        >
+                            <FileText className="w-4 h-4" />
+                        </Link>
+
+                        <button
+                            type="button"
+                            onClick={() => openPaymentModal(item)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-400 hover:bg-navy-800 transition-colors"
+                            title="Record Payment / Transaction"
+                        >
+                            <CreditCard className="w-4 h-4" />
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => openEditModal(item)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-navy-800 transition-colors"
+                            title="Edit Supplier"
+                        >
+                            <Edit3 className="w-4 h-4" />
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => setDeletingSupplier(item)}
+                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-navy-800 transition-colors"
+                            title="Delete Supplier"
+                        >
+                            <Trash2 className="w-4 h-4" />
+                        </button>
+                    </div>
+                );
+            },
+        },
+    ];
+
+    const supplierList = suppliers.data || [];
+
     return (
         <AdminLayout title="Suppliers Directory & Ledger">
             <Head title="Suppliers Ledger - Procurement & Stock" />
 
             <div className="space-y-6">
-                {/* Header & Main Call to Action */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                {/* Header section matching Brands & Products */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
-                        <div className="flex items-center gap-3">
-                            <div className="p-2.5 rounded-xl bg-[#D4AF37]/15 text-[#926F18] dark:text-[#EBD495]">
-                                <Truck className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <h1 className="text-2xl font-black tracking-tight text-[#0E2038] dark:text-white">
-                                    Suppliers Directory & Ledger
-                                </h1>
-                                <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
-                                    Manage vendor partnerships, purchase invoices, and running payable balances.
-                                </p>
-                            </div>
-                        </div>
+                        <h1 className="text-2xl font-bold text-slate-100 flex items-center gap-3">
+                            <Truck className="w-7 h-7 text-gold-400" />
+                            Suppliers Directory & Ledger
+                        </h1>
+                        <p className="text-sm text-slate-400 mt-1">
+                            Manage vendor directory, purchase statements, and running payable balances.
+                        </p>
                     </div>
-
-                    <Button
-                        type="button"
-                        onClick={openCreateModal}
-                        className="bg-[#D4AF37] hover:bg-[#B89628] text-[#071324] font-bold shadow-sm"
-                    >
-                        <Plus className="w-4 h-4 mr-2" />
+                    <Button onClick={openCreateModal} variant="primary" icon={<Plus className="w-4 h-4" />}>
                         Add New Supplier
                     </Button>
                 </div>
 
-                {/* Metrics Summary Strip */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4.5 shadow-xs">
+                {/* Metrics Cards */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-navy-900/60 border border-gold-500/20 rounded-xl p-4 backdrop-blur-sm">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400">
-                                Total Suppliers
-                            </span>
-                            <div className="p-2 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400">
-                                <Truck className="w-4 h-4" />
-                            </div>
+                            <span className="text-xs text-slate-400 font-medium">Total Suppliers</span>
+                            <Truck className="w-4 h-4 text-gold-400" />
                         </div>
-                        <div className="mt-2 text-2xl font-black text-[#0E2038] dark:text-white">
+                        <div className="text-2xl font-bold text-slate-100 mt-2 font-mono">
                             {metrics.total_suppliers || 0}
                         </div>
-                        <span className="text-xs text-slate-400 mt-1 block">Registered vendor directory</span>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4.5 shadow-xs">
+                    <div className="bg-navy-900/60 border border-gold-500/20 rounded-xl p-4 backdrop-blur-sm">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-rose-500">
-                                Total Outstanding Payable
-                            </span>
-                            <div className="p-2 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400">
-                                <ArrowUpRight className="w-4 h-4" />
-                            </div>
+                            <span className="text-xs text-slate-400 font-medium">Outstanding Payable</span>
+                            <ArrowUpRight className="w-4 h-4 text-rose-400" />
                         </div>
-                        <div className="mt-2 text-2xl font-black text-rose-600 dark:text-rose-400">
+                        <div className="text-2xl font-bold text-rose-400 mt-2 font-mono">
                             {formatCurrency(metrics.total_payable)}
                         </div>
-                        <span className="text-xs text-slate-400 mt-1 block">Total balance owed to suppliers</span>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4.5 shadow-xs">
+                    <div className="bg-navy-900/60 border border-gold-500/20 rounded-xl p-4 backdrop-blur-sm">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-emerald-500">
-                                Active Accounts
-                            </span>
-                            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                                <CheckCircle2 className="w-4 h-4" />
-                            </div>
+                            <span className="text-xs text-slate-400 font-medium">Active Suppliers</span>
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                         </div>
-                        <div className="mt-2 text-2xl font-black text-emerald-600 dark:text-emerald-400">
+                        <div className="text-2xl font-bold text-emerald-400 mt-2 font-mono">
                             {metrics.active_suppliers || 0}
                         </div>
-                        <span className="text-xs text-slate-400 mt-1 block">Operational suppliers</span>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4.5 shadow-xs">
+                    <div className="bg-navy-900/60 border border-gold-500/20 rounded-xl p-4 backdrop-blur-sm">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                                Settled / Cleared
-                            </span>
-                            <div className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300">
-                                <ShieldCheck className="w-4 h-4" />
-                            </div>
+                            <span className="text-xs text-slate-400 font-medium">Cleared / Settled</span>
+                            <ShieldCheck className="w-4 h-4 text-slate-400" />
                         </div>
-                        <div className="mt-2 text-2xl font-black text-[#0E2038] dark:text-white">
+                        <div className="text-2xl font-bold text-slate-300 mt-2 font-mono">
                             {metrics.cleared_suppliers || 0}
                         </div>
-                        <span className="text-xs text-slate-400 mt-1 block">Zero or settled balance</span>
                     </div>
                 </div>
 
-                {/* Filters Strip */}
-                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 shadow-xs">
-                    <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
+                {/* Filters Toolbar */}
+                <div className="bg-navy-900/80 border border-gold-500/20 rounded-xl p-4 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <form onSubmit={handleSearchSubmit} className="flex-1 w-full md:w-auto flex items-center gap-3">
                         <div className="relative flex-1">
-                            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+                            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                             <input
                                 type="text"
-                                placeholder="Search by name, company, phone, or email..."
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
-                                className="w-full pl-10 pr-4 py-2 text-sm bg-slate-50 dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63]/70 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#D4AF37] text-slate-800 dark:text-slate-100"
+                                placeholder="Search by name, company, phone, or email..."
+                                className="w-full bg-navy-950/80 border border-slate-700/80 rounded-lg pl-9 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-gold-500/50"
                             />
                         </div>
+                        <Button type="submit" variant="secondary" className="px-4">
+                            Filter
+                        </Button>
+                    </form>
 
-                        <select
+                    <div className="flex items-center gap-3 w-full md:w-auto justify-end">
+                        <FormSelect
                             value={balanceFilter}
                             onChange={(e) => {
                                 setBalanceFilter(e.target.value);
                                 applyFilters(searchQuery, statusFilter, e.target.value);
                             }}
-                            className="px-3 py-2 text-sm bg-slate-50 dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63]/70 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#D4AF37] text-slate-800 dark:text-slate-100"
-                        >
-                            <option value="all">All Balances</option>
-                            <option value="payable">Outstanding Payable (&gt; 0)</option>
-                            <option value="cleared">Cleared / Settled (0.00)</option>
-                        </select>
+                            className="w-48 text-sm"
+                            options={[
+                                { label: 'All Balances', value: 'all' },
+                                { label: 'Payable Only (> 0)', value: 'payable' },
+                                { label: 'Cleared Only (0.00)', value: 'cleared' },
+                            ]}
+                        />
 
-                        <select
+                        <FormSelect
                             value={statusFilter}
                             onChange={(e) => {
                                 setStatusFilter(e.target.value);
                                 applyFilters(searchQuery, e.target.value, balanceFilter);
                             }}
-                            className="px-3 py-2 text-sm bg-slate-50 dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63]/70 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#D4AF37] text-slate-800 dark:text-slate-100"
-                        >
-                            <option value="all">All Status</option>
-                            <option value="true">Active Only</option>
-                            <option value="false">Inactive</option>
-                        </select>
-
-                        <Button type="submit" variant="secondary" className="px-5">
-                            Filter
-                        </Button>
-                    </form>
-                </div>
-
-                {/* Suppliers Table */}
-                <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl shadow-xs overflow-hidden">
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-left text-sm text-slate-600 dark:text-slate-300">
-                            <thead className="bg-slate-50 dark:bg-[#071324]/60 text-xs font-bold uppercase tracking-wider text-slate-400 dark:text-slate-400 border-b border-slate-200 dark:border-[#1C3E63]/70">
-                                <tr>
-                                    <th className="py-3.5 px-4">Supplier & Company</th>
-                                    <th className="py-3.5 px-4">Contact Info</th>
-                                    <th className="py-3.5 px-4 text-right">Payable Balance</th>
-                                    <th className="py-3.5 px-4 text-center">Status</th>
-                                    <th className="py-3.5 px-4 text-right">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-slate-100 dark:divide-[#1C3E63]/40 font-medium">
-                                {suppliers.data && suppliers.data.length > 0 ? (
-                                    suppliers.data.map((supplier) => {
-                                        const payable = Number(supplier.current_balance || 0);
-
-                                        return (
-                                            <tr key={supplier.id} className="hover:bg-slate-50/50 dark:hover:bg-[#071324]/30 transition">
-                                                <td className="py-3.5 px-4">
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63]/60 flex items-center justify-center font-black text-slate-700 dark:text-slate-200 text-xs">
-                                                            {supplier.name.substring(0, 2).toUpperCase()}
-                                                        </div>
-                                                        <div>
-                                                            <div className="font-bold text-[#0E2038] dark:text-white">
-                                                                {supplier.name}
-                                                            </div>
-                                                            {supplier.company_name && (
-                                                                <div className="text-xs text-slate-400 flex items-center gap-1 mt-0.5">
-                                                                    <Building2 className="w-3 h-3 text-[#D4AF37]" />
-                                                                    {supplier.company_name}
-                                                                </div>
-                                                            )}
-                                                            {supplier.city && (
-                                                                <div className="text-[11px] text-slate-400">
-                                                                    {supplier.city}, {supplier.country}
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </div>
-                                                </td>
-
-                                                <td className="py-3.5 px-4">
-                                                    <div className="space-y-1 text-xs">
-                                                        <div className="flex items-center gap-1.5 text-slate-700 dark:text-slate-300 font-semibold">
-                                                            <Phone className="w-3 h-3 text-slate-400" />
-                                                            {supplier.phone}
-                                                        </div>
-                                                        {supplier.email && (
-                                                            <div className="flex items-center gap-1.5 text-slate-400">
-                                                                <Mail className="w-3 h-3 text-slate-400" />
-                                                                {supplier.email}
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </td>
-
-                                                <td className="py-3.5 px-4 text-right">
-                                                    <span
-                                                        className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-extrabold ${
-                                                            payable > 0
-                                                                ? 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20'
-                                                                : 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20'
-                                                        }`}
-                                                    >
-                                                        {formatCurrency(payable)}
-                                                    </span>
-                                                </td>
-
-                                                <td className="py-3.5 px-4 text-center">
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => handleToggleActive(supplier)}
-                                                        className="cursor-pointer focus:outline-hidden"
-                                                        title="Click to toggle active status"
-                                                    >
-                                                        {supplier.is_active ? (
-                                                            <Badge variant="success" className="text-xs">Active</Badge>
-                                                        ) : (
-                                                            <Badge variant="danger" className="text-xs">Inactive</Badge>
-                                                        )}
-                                                    </button>
-                                                </td>
-
-                                                <td className="py-3.5 px-4 text-right">
-                                                    <div className="flex items-center justify-end gap-1.5">
-                                                        <Link
-                                                            href={route('admin.suppliers.show', supplier.id)}
-                                                            className="p-1.5 text-slate-500 hover:text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-lg transition"
-                                                            title="View Ledger Statement"
-                                                        >
-                                                            <FileText className="w-4 h-4" />
-                                                        </Link>
-
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => openPaymentModal(supplier)}
-                                                            className="p-1.5 text-slate-500 hover:text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 rounded-lg transition"
-                                                            title="Record Payment / Transaction"
-                                                        >
-                                                            <CreditCard className="w-4 h-4" />
-                                                        </button>
-
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => openEditModal(supplier)}
-                                                            className="p-1.5 text-slate-500 hover:text-[#926F18] dark:hover:text-[#EBD495] hover:bg-amber-50 dark:hover:bg-amber-900/20 rounded-lg transition"
-                                                            title="Edit Supplier"
-                                                        >
-                                                            <Edit3 className="w-4 h-4" />
-                                                        </button>
-
-                                                        <button
-                                                            type="button"
-                                                            onClick={() => setDeletingSupplier(supplier)}
-                                                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/20 rounded-lg transition"
-                                                            title="Delete Supplier"
-                                                        >
-                                                            <Trash2 className="w-4 h-4" />
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                ) : (
-                                    <tr>
-                                        <td colSpan="5" className="py-12 text-center text-slate-400">
-                                            <Truck className="w-10 h-10 mx-auto text-slate-300 dark:text-slate-600 mb-2 stroke-1" />
-                                            <p className="font-semibold">No suppliers found.</p>
-                                            <p className="text-xs text-slate-400 mt-1">Get started by creating your first supplier vendor record.</p>
-                                        </td>
-                                    </tr>
-                                )}
-                            </tbody>
-                        </table>
+                            className="w-36 text-sm"
+                            options={[
+                                { label: 'All Status', value: 'all' },
+                                { label: 'Active Only', value: 'true' },
+                                { label: 'Inactive Only', value: 'false' },
+                            ]}
+                        />
                     </div>
-
-                    {/* Pagination Links */}
-                    {suppliers.links && suppliers.links.length > 3 && (
-                        <div className="p-4 border-t border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between">
-                            <span className="text-xs text-slate-400">
-                                Showing {suppliers.from || 0} to {suppliers.to || 0} of {suppliers.total || 0} suppliers
-                            </span>
-                            <div className="flex gap-1">
-                                {suppliers.links.map((link, idx) => (
-                                    <button
-                                        key={idx}
-                                        disabled={!link.url}
-                                        onClick={() => link.url && router.get(link.url, {}, { preserveState: true })}
-                                        dangerouslySetInnerHTML={{ __html: link.label }}
-                                        className={`px-3 py-1 text-xs rounded-lg font-bold ${
-                                            link.active
-                                                ? 'bg-[#D4AF37] text-[#071324]'
-                                                : link.url
-                                                ? 'bg-slate-100 dark:bg-[#071324] text-slate-700 dark:text-slate-300 hover:bg-slate-200'
-                                                : 'text-slate-400 opacity-50 cursor-not-allowed'
-                                        }`}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    )}
                 </div>
+
+                {/* Data Table */}
+                <DataTable
+                    columns={columns}
+                    data={supplierList}
+                    searchable={false}
+                    emptyMessage="No suppliers found in directory. Click 'Add New Supplier' to onboard your first vendor."
+                    pagination={suppliers}
+                />
             </div>
 
             {/* Create Supplier Modal */}
@@ -536,7 +495,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                             value={formData.opening_balance}
                             onChange={(e) => setFormData('opening_balance', e.target.value)}
                             error={formErrors.opening_balance}
-                            helperText="Positive amount indicates current payable balance to supplier"
+                            helpText="Positive amount indicates current payable balance to supplier"
                         />
                     </div>
 
@@ -559,7 +518,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3] mb-1.5 block">
                             Office Address
                         </label>
                         <textarea
@@ -567,7 +526,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                             value={formData.address}
                             onChange={(e) => setFormData('address', e.target.value)}
                             placeholder="Street, industrial area, plot/building..."
-                            className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63]/70 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#D4AF37] text-slate-800 dark:text-slate-100"
+                            className="block w-full py-2 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] text-xs sm:text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37]"
                         />
                     </div>
 
@@ -577,7 +536,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                             id="create_is_active"
                             checked={formData.is_active}
                             onChange={(e) => setFormData('is_active', e.target.checked)}
-                            className="w-4 h-4 rounded-sm text-[#D4AF37] focus:ring-[#D4AF37]"
+                            className="w-4 h-4 rounded text-gold-500 focus:ring-gold-500"
                         />
                         <label htmlFor="create_is_active" className="text-xs font-bold text-slate-700 dark:text-slate-300">
                             Supplier account is active and eligible for purchase orders
@@ -588,7 +547,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                         <Button type="button" variant="secondary" onClick={() => setIsCreateModalOpen(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit" loading={formProcessing} className="bg-[#D4AF37] text-[#071324] font-bold">
+                        <Button type="submit" loading={formProcessing} variant="primary">
                             Save Supplier
                         </Button>
                     </div>
@@ -646,14 +605,14 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3] mb-1.5 block">
                             Office Address
                         </label>
                         <textarea
                             rows="2"
                             value={formData.address}
                             onChange={(e) => setFormData('address', e.target.value)}
-                            className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63]/70 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#D4AF37] text-slate-800 dark:text-slate-100"
+                            className="block w-full py-2 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] text-xs sm:text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37]"
                         />
                     </div>
 
@@ -663,7 +622,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                             id="edit_is_active"
                             checked={formData.is_active}
                             onChange={(e) => setFormData('is_active', e.target.checked)}
-                            className="w-4 h-4 rounded-sm text-[#D4AF37] focus:ring-[#D4AF37]"
+                            className="w-4 h-4 rounded text-gold-500 focus:ring-gold-500"
                         />
                         <label htmlFor="edit_is_active" className="text-xs font-bold text-slate-700 dark:text-slate-300">
                             Supplier account is active
@@ -674,7 +633,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                         <Button type="button" variant="secondary" onClick={() => setIsEditModalOpen(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit" loading={formProcessing} className="bg-[#D4AF37] text-[#071324] font-bold">
+                        <Button type="submit" loading={formProcessing} variant="primary">
                             Update Details
                         </Button>
                     </div>
@@ -689,14 +648,14 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                 maxWidth="md"
             >
                 <form onSubmit={handlePaymentSubmit} className="space-y-4">
-                    <div className="p-3 rounded-xl bg-slate-50 dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between">
+                    <div className="p-3.5 rounded-xl bg-navy-950 border border-gold-500/20 flex items-center justify-between">
                         <div>
                             <span className="text-xs text-slate-400 block font-bold uppercase">Current Payable Balance</span>
-                            <span className="text-lg font-black text-rose-600 dark:text-rose-400">
+                            <span className="text-lg font-black text-rose-400 font-mono">
                                 {formatCurrency(activeSupplier?.current_balance)}
                             </span>
                         </div>
-                        <Badge variant="secondary">Running Ledger</Badge>
+                        <Badge variant="warning">Running Ledger</Badge>
                     </div>
 
                     <FormSelect
@@ -759,7 +718,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                     </div>
 
                     <div className="space-y-1">
-                        <label className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                        <label className="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-[#BACDE3] mb-1.5 block">
                             Notes & Description
                         </label>
                         <textarea
@@ -767,7 +726,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                             value={paymentData.notes}
                             onChange={(e) => setPaymentData('notes', e.target.value)}
                             placeholder="Reason or invoice reference details..."
-                            className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63]/70 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-[#D4AF37] text-slate-800 dark:text-slate-100"
+                            className="block w-full py-2 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#5E8CB6] text-xs sm:text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37]"
                         />
                     </div>
 
@@ -775,7 +734,7 @@ export default function SupplierIndex({ suppliers = { data: [] }, metrics = {}, 
                         <Button type="button" variant="secondary" onClick={() => setIsPaymentModalOpen(false)}>
                             Cancel
                         </Button>
-                        <Button type="submit" loading={paymentProcessing} className="bg-emerald-600 hover:bg-emerald-700 text-white font-bold">
+                        <Button type="submit" loading={paymentProcessing} variant="primary">
                             Post to Ledger
                         </Button>
                     </div>
