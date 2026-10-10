@@ -12,6 +12,18 @@ class SettingSeeder extends Seeder
      */
     public function run(SettingService $settingService): void
     {
-        $settingService->setMany(SettingService::DEFAULTS);
+        $defaults = SettingService::DEFAULTS;
+
+        if (file_exists(storage_path('app/public/settings/site_logo_1790606099.png'))) {
+            $defaults['site_logo'] = 'settings/site_logo_1790606099.png';
+        }
+        if (file_exists(storage_path('app/public/settings/site_logo_white_1790596902.png'))) {
+            $defaults['site_logo_white'] = 'settings/site_logo_white_1790596902.png';
+        }
+        if (file_exists(storage_path('app/public/settings/site_favicon_1790606099.png'))) {
+            $defaults['site_favicon'] = 'settings/site_favicon_1790606099.png';
+        }
+
+        $settingService->setMany($defaults);
     }
 }

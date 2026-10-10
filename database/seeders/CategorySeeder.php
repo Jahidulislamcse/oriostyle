@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Category;
+use App\Models\CategoryImage;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -172,21 +173,52 @@ class CategorySeeder extends Seeder
             ],
         ];
 
+        $imgIndex = 1;
         foreach ($categoriesData as $rootData) {
             $children = $rootData['children'] ?? [];
             unset($rootData['children']);
+
+            $rootImgPath = 'categories/' . (($imgIndex % 18) ?: 18) . '.jpg';
+            $rootData['image'] = $rootImgPath;
 
             $rootCategory = Category::updateOrCreate(
                 ['slug' => $rootData['slug']],
                 $rootData
             );
 
+            CategoryImage::updateOrCreate(
+                ['category_id' => $rootCategory->id, 'image_path' => $rootImgPath],
+                [
+                    'category_id' => $rootCategory->id,
+                    'image_path' => $rootImgPath,
+                    'is_featured' => true,
+                    'display_order' => 1,
+                ]
+            );
+
+            $imgIndex++;
+
             foreach ($children as $childData) {
+                $childImgPath = 'categories/' . (($imgIndex % 18) ?: 18) . '.jpg';
                 $childData['parent_id'] = $rootCategory->id;
-                Category::updateOrCreate(
+                $childData['image'] = $childImgPath;
+
+                $childCategory = Category::updateOrCreate(
                     ['slug' => $childData['slug']],
                     $childData
                 );
+
+                CategoryImage::updateOrCreate(
+                    ['category_id' => $childCategory->id, 'image_path' => $childImgPath],
+                    [
+                        'category_id' => $childCategory->id,
+                        'image_path' => $childImgPath,
+                        'is_featured' => true,
+                        'display_order' => 1,
+                    ]
+                );
+
+                $imgIndex++;
             }
         }
     }
