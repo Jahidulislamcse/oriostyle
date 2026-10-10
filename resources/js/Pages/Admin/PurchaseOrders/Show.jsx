@@ -111,8 +111,9 @@ export default function PurchaseOrderShow({ purchaseOrder }) {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <Link
-                            href={route('admin.purchase-orders.index')}
-                            className="p-2 rounded-lg bg-navy-900 border border-gold-500/20 text-slate-300 hover:text-gold-400 hover:border-gold-500/50 transition-colors"
+                            href="/admin/purchase-orders"
+                            className="p-2 rounded-lg bg-navy-900 border border-gold-500/20 text-slate-300 hover:text-gold-400 hover:border-gold-500/50 transition-colors cursor-pointer"
+                            title="Back to Purchase Orders"
                         >
                             <ArrowLeft className="w-5 h-5" />
                         </Link>
@@ -175,14 +176,12 @@ export default function PurchaseOrderShow({ purchaseOrder }) {
 
                         {/* Edit Button (Draft only) */}
                         {purchaseOrder.status === 'draft' && (
-                            <Link href={route('admin.purchase-orders.edit', purchaseOrder.id)}>
-                                <Button
-                                    type="button"
-                                    variant="secondary"
-                                    icon={<Edit3 className="w-4 h-4" />}
-                                >
-                                    Edit PO
-                                </Button>
+                            <Link
+                                href={`/admin/purchase-orders/${purchaseOrder.id}/edit`}
+                                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-white hover:bg-slate-50 dark:bg-[#142C49] dark:hover:bg-[#1C3E63] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#1C3E63] shadow-2xs transition-all cursor-pointer"
+                            >
+                                <Edit3 className="w-4 h-4" />
+                                <span>Edit PO</span>
                             </Link>
                         )}
 

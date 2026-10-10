@@ -113,7 +113,7 @@ export default function DataTable({
                             filteredData.map((row, rowIdx) => (
                                 <tr key={rowIdx} className="hover:bg-[#FDFBF5]/60 dark:hover:bg-[#142C49]/60 transition">
                                     {columns.map((col, colIdx) => (
-                                        <td key={colIdx} className={`px-5 py-3.5 whitespace-nowrap ${col.cellClassName || ''}`}>
+                                        <td key={colIdx} className={`px-5 py-3.5 whitespace-nowrap ${col.cellClassName || col.className || ''}`}>
                                             {col.render ? col.render(row[col.key], row) : row[col.key]}
                                         </td>
                                     ))}

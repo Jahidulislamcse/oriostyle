@@ -145,143 +145,181 @@ export default function PurchaseOrderIndex({
         {
             key: 'po_number',
             label: 'PO Number & Date',
-            render: (val, row) => (
-                <div>
-                    <Link
-                        href={route('admin.purchase-orders.show', row.id)}
-                        className="font-mono text-sm font-bold text-gold-400 hover:text-gold-300 hover:underline flex items-center gap-1"
-                    >
-                        {row.po_number}
-                        <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
-                    </Link>
-                    <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
-                        <Calendar className="w-3 h-3" />
-                        <span>Ordered: {row.order_date}</span>
+            render: (val, row) => {
+                const item = row || val || {};
+                return (
+                    <div>
+                        <Link
+                            href={`/admin/purchase-orders/${item.id}`}
+                            className="font-mono text-sm font-bold text-gold-400 hover:text-gold-300 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                        >
+                            {item.po_number}
+                            <ArrowUpRight className="w-3.5 h-3.5 opacity-70" />
+                        </Link>
+                        <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-1">
+                            <Calendar className="w-3 h-3 text-slate-500" />
+                            <span>Ordered: {item.order_date || '—'}</span>
+                        </div>
                     </div>
-                </div>
-            ),
+                );
+            },
         },
         {
             key: 'supplier',
             label: 'Vendor / Supplier',
-            render: (val, row) => (
-                <div>
-                    <div className="font-bold text-slate-200 text-sm flex items-center gap-1.5">
-                        <Building2 className="w-3.5 h-3.5 text-gold-400" />
-                        {row.supplier?.name || '—'}
+            render: (val, row) => {
+                const item = row || val || {};
+                const supplier = item.supplier || {};
+                return (
+                    <div>
+                        <div className="font-bold text-slate-100 text-sm flex items-center gap-1.5">
+                            <Building2 className="w-3.5 h-3.5 text-gold-400 flex-shrink-0" />
+                            <span>{supplier.name || '—'}</span>
+                        </div>
+                        {supplier.company_name && (
+                            <span className="text-xs text-slate-400 block mt-0.5 pl-5">
+                                {supplier.company_name}
+                            </span>
+                        )}
                     </div>
-                    {row.supplier?.company_name && (
-                        <span className="text-xs text-slate-400 block mt-0.5">
-                            {row.supplier.company_name}
-                        </span>
-                    )}
-                </div>
-            ),
+                );
+            },
         },
         {
             key: 'status',
             label: 'Status',
-            render: (val, row) => getStatusBadge(row.status),
+            render: (val, row) => {
+                const item = row || val || {};
+                return getStatusBadge(item.status);
+            },
         },
         {
             key: 'items_count',
             label: 'Line Items',
-            render: (val, row) => (
-                <div className="text-xs">
-                    <span className="font-bold text-slate-200">
-                        {row.items?.length || 0} Products
-                    </span>
-                    <span className="text-slate-400 block mt-0.5">
-                        {row.items?.reduce((sum, item) => sum + (item.quantity_ordered || 0), 0)} Total Units
-                    </span>
-                </div>
-            ),
+            render: (val, row) => {
+                const item = row || val || {};
+                const items = item.items || [];
+                const totalUnits = items.reduce((sum, it) => sum + (Number(it.quantity_ordered) || 0), 0);
+                return (
+                    <div className="text-xs">
+                        <span className="font-bold text-slate-200 block">
+                            {items.length} {items.length === 1 ? 'Product' : 'Products'}
+                        </span>
+                        <span className="text-slate-400 block mt-0.5">
+                            {totalUnits} Units
+                        </span>
+                    </div>
+                );
+            },
         },
         {
             key: 'total_amount',
             label: 'Total PO Value',
             className: 'text-right',
-            render: (val, row) => (
-                <div className="text-right">
-                    <span className="font-mono text-sm font-black text-emerald-400 block">
-                        {formatCurrency(row.total_amount)}
-                    </span>
-                    <span className="text-[11px] text-slate-400">
-                        Subtotal: {formatCurrency(row.subtotal)}
-                    </span>
-                </div>
-            ),
+            cellClassName: 'text-right',
+            render: (val, row) => {
+                const item = row || val || {};
+                return (
+                    <div className="text-right">
+                        <span className="font-mono text-sm font-black text-emerald-400 block">
+                            {formatCurrency(item.total_amount)}
+                        </span>
+                        <span className="text-[11px] text-slate-400">
+                            Subtotal: {formatCurrency(item.subtotal)}
+                        </span>
+                    </div>
+                );
+            },
         },
         {
             key: 'actions',
             label: 'Actions',
             sortable: false,
             className: 'text-right',
-            render: (val, row) => (
-                <div className="flex items-center justify-end gap-1">
-                    {/* View Details */}
-                    <Link
-                        href={route('admin.purchase-orders.show', row.id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-navy-800 transition-colors"
-                        title="View PO Details"
-                    >
-                        <Eye className="w-4 h-4" />
-                    </Link>
+            cellClassName: 'text-right',
+            render: (val, row) => {
+                const item = row || val || {};
+                const poId = item.id;
+                const isDraft = item.status === 'draft';
+                const isOrdered = item.status === 'ordered';
+                const isReceived = item.status === 'received';
+                const isCancelled = item.status === 'cancelled';
 
-                    {/* Receive Stock button if draft or ordered */}
-                    {(row.status === 'draft' || row.status === 'ordered') && (
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setReceivingPo(row);
-                                setReceivedDate(new Date().toISOString().split('T')[0]);
-                            }}
-                            className="p-1.5 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 transition-colors"
-                            title="Receive Stock & Update Inventory"
-                        >
-                            <PackageCheck className="w-4 h-4" />
-                        </button>
-                    )}
-
-                    {/* Edit button if draft */}
-                    {row.status === 'draft' && (
+                return (
+                    <div className="inline-flex items-center justify-end gap-1.5">
+                        {/* View PO Details */}
                         <Link
-                            href={route('admin.purchase-orders.edit', row.id)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-blue-400 hover:bg-navy-800 transition-colors"
-                            title="Edit Draft Order"
+                            href={`/admin/purchase-orders/${poId}`}
+                            className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-gold-400 hover:bg-gold-500/10 border border-transparent hover:border-gold-500/30 transition-all cursor-pointer"
+                            title="View PO Details & Line Items"
                         >
-                            <Edit3 className="w-4 h-4" />
+                            <Eye className="w-4 h-4" />
                         </Link>
-                    )}
 
-                    {/* Cancel button if draft or ordered */}
-                    {(row.status === 'draft' || row.status === 'ordered') && (
-                        <button
-                            type="button"
-                            onClick={() => {
-                                setCancellingPo(row);
-                                setCancelReason('');
-                            }}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 transition-colors"
-                            title="Cancel Purchase Order"
-                        >
-                            <XCircle className="w-4 h-4" />
-                        </button>
-                    )}
+                        {/* Receive Stock (Draft or Ordered) */}
+                        {(isDraft || isOrdered) && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setReceivingPo(item);
+                                    setReceivedDate(new Date().toISOString().split('T')[0]);
+                                }}
+                                className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 border border-transparent hover:border-emerald-500/30 transition-all cursor-pointer"
+                                title="Receive Stock & Hydrate Inventory"
+                            >
+                                <PackageCheck className="w-4 h-4" />
+                            </button>
+                        )}
 
-                    {/* Delete button if draft or cancelled */}
-                    {(row.status === 'draft' || row.status === 'cancelled') && (
-                        <button
-                            type="button"
-                            onClick={() => setDeletingPo(row)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-navy-800 transition-colors"
-                            title="Delete Record"
-                        >
-                            <Trash2 className="w-4 h-4" />
-                        </button>
-                    )}
-                </div>
-            ),
+                        {/* Edit PO (Drafts editable; non-drafts disabled with tooltip) */}
+                        {isDraft ? (
+                            <Link
+                                href={`/admin/purchase-orders/${poId}/edit`}
+                                className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-blue-400 hover:text-blue-300 hover:bg-blue-500/10 border border-transparent hover:border-blue-500/30 transition-all cursor-pointer"
+                                title="Edit Draft Purchase Order"
+                            >
+                                <Edit3 className="w-4 h-4" />
+                            </Link>
+                        ) : (
+                            <button
+                                type="button"
+                                disabled
+                                className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-600 dark:text-slate-600 cursor-not-allowed opacity-30"
+                                title={`Cannot edit ${item.status} PO (only drafts can be edited)`}
+                            >
+                                <Edit3 className="w-4 h-4" />
+                            </button>
+                        )}
+
+                        {/* Cancel PO (Draft or Ordered) */}
+                        {(isDraft || isOrdered) && (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setCancellingPo(item);
+                                    setCancelReason('');
+                                }}
+                                className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-amber-400 hover:bg-amber-500/10 border border-transparent hover:border-amber-500/30 transition-all cursor-pointer"
+                                title="Cancel Purchase Order"
+                            >
+                                <XCircle className="w-4 h-4" />
+                            </button>
+                        )}
+
+                        {/* Delete PO (Draft or Cancelled) */}
+                        {(isDraft || isCancelled) && (
+                            <button
+                                type="button"
+                                onClick={() => setDeletingPo(item)}
+                                className="inline-flex items-center justify-center w-8 h-8 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/30 transition-all cursor-pointer"
+                                title="Delete PO Record"
+                            >
+                                <Trash2 className="w-4 h-4" />
+                            </button>
+                        )}
+                    </div>
+                );
+            },
         },
     ];
 
@@ -304,19 +342,21 @@ export default function PurchaseOrderIndex({
                         </p>
                     </div>
 
-                    <Link href={route('admin.purchase-orders.create')}>
-                        <Button variant="primary" icon={<Plus className="w-4 h-4" />}>
-                            Create Purchase Order
-                        </Button>
+                    <Link
+                        href="/admin/purchase-orders/create"
+                        className="inline-flex items-center justify-center gap-2 px-4 py-2.5 text-xs sm:text-sm font-semibold rounded-xl bg-gold-500 hover:bg-gold-600 active:bg-gold-700 text-navy-950 shadow-xs transition-all cursor-pointer flex-shrink-0"
+                    >
+                        <Plus className="w-4 h-4" />
+                        <span>Create Purchase Order</span>
                     </Link>
                 </div>
 
                 {/* Metrics Summary Strip */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-navy-900/60 border border-gold-500/20 rounded-xl p-4.5 backdrop-blur-sm">
+                    <div className="bg-navy-900/70 border border-gold-500/20 rounded-xl p-4 sm:p-5 backdrop-blur-sm shadow-xs hover:border-gold-500/40 transition">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Purchase Orders</span>
-                            <div className="p-2 rounded-lg bg-gold-500/10 text-gold-400">
+                            <div className="p-2 rounded-lg bg-gold-500/10 text-gold-400 border border-gold-500/20">
                                 <Boxes className="w-5 h-5" />
                             </div>
                         </div>
@@ -328,10 +368,10 @@ export default function PurchaseOrderIndex({
                         </span>
                     </div>
 
-                    <div className="bg-navy-900/60 border border-amber-500/30 rounded-xl p-4.5 backdrop-blur-sm">
+                    <div className="bg-navy-900/70 border border-amber-500/30 rounded-xl p-4 sm:p-5 backdrop-blur-sm shadow-xs hover:border-amber-500/50 transition">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-amber-300">In-Transit / Ordered</span>
-                            <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400">
+                            <div className="p-2 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
                                 <Clock className="w-5 h-5" />
                             </div>
                         </div>
@@ -343,10 +383,10 @@ export default function PurchaseOrderIndex({
                         </span>
                     </div>
 
-                    <div className="bg-navy-900/60 border border-emerald-500/30 rounded-xl p-4.5 backdrop-blur-sm">
+                    <div className="bg-navy-900/70 border border-emerald-500/30 rounded-xl p-4 sm:p-5 backdrop-blur-sm shadow-xs hover:border-emerald-500/50 transition">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-emerald-300">Received & Hydrated</span>
-                            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400">
+                            <div className="p-2 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                 <CheckCircle2 className="w-5 h-5" />
                             </div>
                         </div>
@@ -358,10 +398,10 @@ export default function PurchaseOrderIndex({
                         </span>
                     </div>
 
-                    <div className="bg-navy-900/60 border border-blue-500/30 rounded-xl p-4.5 backdrop-blur-sm">
+                    <div className="bg-navy-900/70 border border-blue-500/30 rounded-xl p-4 sm:p-5 backdrop-blur-sm shadow-xs hover:border-blue-500/50 transition">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-blue-300">Draft Orders</span>
-                            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400">
+                            <div className="p-2 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                 <FileText className="w-5 h-5" />
                             </div>
                         </div>
@@ -375,7 +415,7 @@ export default function PurchaseOrderIndex({
                 </div>
 
                 {/* Filter and Search Bar */}
-                <div className="bg-navy-900/60 border border-gold-500/20 rounded-xl p-4 backdrop-blur-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+                <div className="bg-navy-900/80 border border-gold-500/20 rounded-xl p-4 backdrop-blur-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
                     <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 flex-1 max-w-md">
                         <div className="relative flex-1">
                             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
@@ -384,7 +424,7 @@ export default function PurchaseOrderIndex({
                                 value={searchQuery}
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 placeholder="Search by PO# or supplier..."
-                                className="w-full pl-9 pr-3 py-2 bg-navy-950 border border-slate-700 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-gold-500"
+                                className="w-full pl-9 pr-3 py-2 bg-navy-950/80 border border-slate-700/80 rounded-lg text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-gold-500"
                             />
                         </div>
                         <Button type="submit" variant="secondary" size="sm">Search</Button>

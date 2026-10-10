@@ -144,8 +144,9 @@ export default function PurchaseOrderCreate({
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div className="flex items-center gap-3">
                         <Link
-                            href={route('admin.purchase-orders.index')}
-                            className="p-2 rounded-lg bg-navy-900 border border-gold-500/20 text-slate-300 hover:text-gold-400 hover:border-gold-500/50 transition-colors"
+                            href="/admin/purchase-orders"
+                            className="p-2 rounded-lg bg-navy-900 border border-gold-500/20 text-slate-300 hover:text-gold-400 hover:border-gold-500/50 transition-colors cursor-pointer"
+                            title="Back to Purchase Orders"
                         >
                             <ArrowLeft className="w-5 h-5" />
                         </Link>
