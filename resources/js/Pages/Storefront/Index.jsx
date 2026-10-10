@@ -46,6 +46,12 @@ export default function Index({
                 dynamicImg = `/storefront/img/category/${(index % 18) + 1}.jpg`;
             }
 
+            if (dynamicImg && typeof dynamicImg === 'string') {
+                if (!dynamicImg.startsWith('http://') && !dynamicImg.startsWith('https://') && !dynamicImg.startsWith('/')) {
+                    dynamicImg = `/storage/${dynamicImg}`;
+                }
+            }
+
             return {
                 id: cat.id,
                 title: cat.name,

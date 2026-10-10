@@ -2,10 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 
 function getValidImageUrl(c) {
-    const raw = c?.image_url || (c?.images && c?.images[0]?.image_url) || null;
+    const raw = c?.image_url || (c?.images && c?.images[0]?.image_url) || c?.image || (c?.images && c?.images[0]?.image_path) || null;
     if (raw && typeof raw === 'string') {
-        if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/') || /\.(png|jpe?g|webp|svg|gif|avif)$/i.test(raw)) {
+        if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/')) {
             return raw;
+        }
+        if (/\.(png|jpe?g|webp|svg|gif|avif)$/i.test(raw)) {
+            return `/storage/${raw}`;
         }
     }
     return null;

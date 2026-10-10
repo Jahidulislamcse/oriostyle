@@ -105,6 +105,12 @@ export default function CategoryLookbookSection({ categories = [] }) {
             dynamicImg = cat.image_url;
         }
 
+        if (dynamicImg && typeof dynamicImg === 'string') {
+            if (!dynamicImg.startsWith('http://') && !dynamicImg.startsWith('https://') && !dynamicImg.startsWith('/')) {
+                dynamicImg = `/storage/${dynamicImg}`;
+            }
+        }
+
         return {
             title: cat.name || cat.title || defaultDef.title,
             slug: cat.slug || defaultDef.slug,

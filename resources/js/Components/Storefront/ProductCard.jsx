@@ -8,7 +8,21 @@ export default function ProductCard({
 }) {
     if (!product) return null;
 
-    const primaryImg = product.primary_image?.image_path || product.primary_image?.image_url || '/storefront/img/product/1.jpg';
+    let primaryImg = product.primary_image_url
+        || product.primary_image?.image_url
+        || product.images?.[0]?.image_url
+        || product.primary_image?.image_path
+        || product.images?.[0]?.image_path
+        || product.image
+        || '/storefront/img/product/1.jpg';
+
+    if (primaryImg && typeof primaryImg === 'string') {
+        if (!primaryImg.startsWith('http://') && !primaryImg.startsWith('https://') && !primaryImg.startsWith('/')) {
+            primaryImg = `/storage/${primaryImg}`;
+        }
+    } else {
+        primaryImg = '/storefront/img/product/1.jpg';
+    }
     const priceNum = parseFloat(product.base_price || 0);
     const salePriceNum = product.sale_price ? parseFloat(product.sale_price) : null;
     
