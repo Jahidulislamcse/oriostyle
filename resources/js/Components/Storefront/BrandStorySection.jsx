@@ -10,7 +10,7 @@ export default function BrandStorySection() {
                 <div className="oubd-story-img-wrap">
                     <img
                         src="/storefront/img/banner/1.jpg"
-                        alt="One Ummah Retail Store"
+                        alt="ORIO STYLE Flagship Store"
                         loading="lazy"
                     />
                 </div>
@@ -35,13 +35,13 @@ export default function BrandStorySection() {
                     </div>
 
                     <h2 className="oubd-story-title">
-                        {activeTab === 'mission' ? 'Faith in Every Choice' : 'Inspiring Global Ummah'}
+                        {activeTab === 'mission' ? 'Elegance in Every Choice' : 'Inspiring Modern Luxury'}
                     </h2>
 
                     <p className="oubd-story-desc">
                         {activeTab === 'mission'
-                            ? 'We aim to inspire Muslims to live with confidence and purpose through meaningful lifestyle products that reflect faith, modesty, and modern style while spreading Dawah in a simple and natural way.'
-                            : 'To become a globally recognized modest lifestyle and apparel brand that blends contemporary craftsmanship with authentic ethical values.'}
+                            ? 'At ORIO STYLE, we aim to inspire individuals to dress with effortless confidence, refined modesty, and modern sophistication through premium apparel crafted with uncompromising attention to detail.'
+                            : 'To become the premier contemporary lifestyle brand, pioneering sustainable craftsmanship, ethical standards, and timeless luxury for discerning customers worldwide.'}
                     </p>
                 </div>
             </div>

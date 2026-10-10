@@ -35,6 +35,7 @@ class CategoryStoreRequest extends FormRequest
             'is_featured' => ['nullable', 'boolean'],
             'meta_title' => ['nullable', 'string', 'max:255'],
             'meta_description' => ['nullable', 'string', 'max:1000'],
+            'banner' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:5120'],
             'images' => ['nullable', 'array', 'max:3'],
             'images.*' => ['nullable', 'image', 'mimes:jpeg,png,jpg,webp,svg', 'max:3072'],
             'featured_image_index' => ['nullable', 'integer', 'min:0', 'max:2'],

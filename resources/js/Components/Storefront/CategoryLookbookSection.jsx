@@ -11,9 +11,9 @@ const DEFAULT_ITEMS = [
         darkBadge: false,
     },
     {
-        key: 'dawah-tshirt',
-        title: 'DAWAH T-SHIRT (PREMIUM)',
-        slug: 'dawah-t-shirt',
+        key: 'premium-tshirt',
+        title: 'PREMIUM T-SHIRT',
+        slug: 'premium-t-shirt',
         fallbackImg: '/storefront/img/category/2.jpg',
         hasArrow: false,
         darkBadge: false,
@@ -149,7 +149,7 @@ export default function CategoryLookbookSection({ bentoSlots = {}, categories = 
     const allItems = DEFAULT_ITEMS.map((def, idx) => getItem(idx, def));
 
     const itemThobe = allItems[0];
-    const itemDawah = allItems[1];
+    const itemTshirt = allItems[1];
     const itemDropShoulder = allItems[2];
     const itemVisor = allItems[3];
     const itemRegular = allItems[4];
@@ -180,16 +180,16 @@ export default function CategoryLookbookSection({ bentoSlots = {}, categories = 
                             </Link>
                         </div>
 
-                        {/* Middle Column: 2 Stacked Cards (DAWAH T-SHIRT + VISOR CAP) */}
+                        {/* Middle Column: 2 Stacked Cards (PREMIUM T-SHIRT + VISOR CAP) */}
                         <div className="oubd-bento-col oubd-bento-col-stacked">
                             <Link
-                                href={`/?category=${itemDawah.slug}`}
+                                href={`/?category=${itemTshirt.slug}`}
                                 className="oubd-bento-card oubd-bento-card-half"
                             >
-                                <img src={itemDawah.image} alt={itemDawah.title} loading="lazy" />
-                                <div className={`oubd-bento-badge ${itemDawah.darkBadge ? 'badge-dark' : 'badge-light'}`}>
-                                    <span>{itemDawah.title}</span>
-                                    {itemDawah.hasArrow && <i className="ri-arrow-right-up-line" />}
+                                <img src={itemTshirt.image} alt={itemTshirt.title} loading="lazy" />
+                                <div className={`oubd-bento-badge ${itemTshirt.darkBadge ? 'badge-dark' : 'badge-light'}`}>
+                                    <span>{itemTshirt.title}</span>
+                                    {itemTshirt.hasArrow && <i className="ri-arrow-right-up-line" />}
                                 </div>
                             </Link>
 

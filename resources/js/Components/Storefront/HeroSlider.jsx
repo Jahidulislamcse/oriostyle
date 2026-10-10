@@ -4,22 +4,22 @@ import { Link } from '@inertiajs/react';
 const DEFAULT_SLIDES = [
     {
         id: 1,
-        title: "Glorious 10 Years",
-        subtitle: 'Purpose & Style with Premium Quality',
+        title: "ORIO STYLE Luxury Collection",
+        subtitle: 'Elegance & Modern Distinction with Artisan Tailoring',
         link_url: '#new-arrivals',
         image_url: '/storefront/img/hero/2.jpg',
     },
     {
         id: 2,
-        title: "Premium Dawah Collection",
-        subtitle: 'Elevate your everyday look with modern thobes and shirts',
+        title: "ORIO STYLE Signature Edition",
+        subtitle: 'Elevate your wardrobe with bespoke shirts, thobes and panjabis',
         link_url: '#featured-products',
         image_url: '/storefront/img/hero/1.jpg',
     },
     {
         id: 3,
-        title: "Signature Accessories",
-        subtitle: 'Special suede visor caps and essential accessories',
+        title: "Signature Accessories & Caps",
+        subtitle: 'Handcrafted leather goods, visor caps and timeless essentials',
         link_url: '#featured-products',
         image_url: '/storefront/img/hero/3.jpg',
     },

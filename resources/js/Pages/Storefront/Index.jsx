@@ -11,7 +11,7 @@ import BrandStorySection from '@/Components/Storefront/BrandStorySection';
 
 const DEFAULT_LOOKBOOK_CATEGORIES = [
     { id: 1, title: 'THOBE', slug: 'thobe', images: ['/storefront/img/category/1.jpg'] },
-    { id: 2, title: 'DAWAH T-SHIRT (PREMIUM)', slug: 'dawah-t-shirt', images: ['/storefront/img/category/2.jpg'] },
+    { id: 2, title: 'PREMIUM T-SHIRT', slug: 'premium-t-shirt', images: ['/storefront/img/category/2.jpg'] },
     { id: 3, title: 'DROP SHOULDER T-SHIRT', slug: 'drop-shoulder-t-shirt', images: ['/storefront/img/category/3.jpg'] },
     { id: 4, title: 'VISOR CAP', slug: 'visor-cap', images: ['/storefront/img/category/4.jpg'] },
     { id: 5, title: 'REGULAR T-SHIRT (PREMIUM)', slug: 'regular-t-shirt', images: ['/storefront/img/category/5.jpg'] },
@@ -29,9 +29,10 @@ export default function Index({
     splitBanners = [],
     promoBanners = [],
     bentoSlots = {},
+    categoryShowcases = [],
 }) {
-    const siteName = settings.site_name || 'OUBD';
-    const siteTagline = settings.site_tagline || 'Purpose & Style with Premium Quality Collections';
+    const siteName = settings.site_name || 'ORIO STYLE';
+    const siteTagline = settings.site_tagline || 'Elevate Your Everyday Luxury & Contemporary Fashion';
     const currencySymbol = settings.currency_symbol || '৳';
 
     // Map dynamic categories to lookbook format
@@ -67,34 +68,34 @@ export default function Index({
     const displayNewArrivals = newArrivals && newArrivals.length > 0
         ? newArrivals
         : [
-            { id: 101, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 1600, primary_image: { image_path: '/storefront/img/product/1.jpg' }, brand: { name: 'OUBD' } },
-            { id: 102, name: 'MENS DROPSHOULDER T-SHIRT', base_price: 1650, primary_image: { image_path: '/storefront/img/product/2.jpg' }, brand: { name: 'OUBD' } },
-            { id: 103, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 2150, primary_image: { image_path: '/storefront/img/product/3.jpg' }, brand: { name: 'OUBD' } },
-            { id: 104, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 2150, primary_image: { image_path: '/storefront/img/product/5.jpg' }, brand: { name: 'OUBD' } },
-            { id: 105, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 2150, primary_image: { image_path: '/storefront/img/product/6.jpg' }, brand: { name: 'OUBD' } },
-            { id: 106, name: 'MENS PATCHWORK T-SHIRT', base_price: 1050, primary_image: { image_path: '/storefront/img/product/9.jpg' }, brand: { name: 'OUBD' } },
+            { id: 101, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 1600, primary_image: { image_path: '/storefront/img/product/1.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 102, name: 'MENS DROPSHOULDER T-SHIRT', base_price: 1650, primary_image: { image_path: '/storefront/img/product/2.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 103, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 2150, primary_image: { image_path: '/storefront/img/product/3.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 104, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 2150, primary_image: { image_path: '/storefront/img/product/5.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 105, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 2150, primary_image: { image_path: '/storefront/img/product/6.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 106, name: 'MENS PATCHWORK T-SHIRT', base_price: 1050, primary_image: { image_path: '/storefront/img/product/9.jpg' }, brand: { name: 'ORIO STYLE' } },
         ];
 
     // Display items for Visor Cap / Accessories collection
     const visorCapProducts = [
-        { id: 201, name: 'SPECIAL SUEDE VISOR CAP – SABR', base_price: 550, primary_image: { image_path: '/storefront/img/product/10.jpg' }, brand: { name: 'OUBD' } },
-        { id: 202, name: 'SPECIAL SUEDE VISOR CAP SOLID', base_price: 550, primary_image: { image_path: '/storefront/img/product/11.jpg' }, brand: { name: 'OUBD' } },
-        { id: 203, name: 'SPECIAL CORDUROY VISOR CAP – INSAF', base_price: 550, sale_price: 440, primary_image: { image_path: '/storefront/img/product/12.jpg' }, brand: { name: 'OUBD' } },
-        { id: 204, name: 'SPECIAL SUEDE VISOR CAP RIDE TO HEAL', base_price: 550, primary_image: { image_path: '/storefront/img/product/13.jpg' }, brand: { name: 'OUBD' } },
-        { id: 205, name: 'SPECIAL SUEDE VISOR CAP ZUHD', base_price: 550, primary_image: { image_path: '/storefront/img/product/14.jpg' }, brand: { name: 'OUBD' } },
-        { id: 206, name: 'SPECIAL TWILL VISOR CAP – HOPE', base_price: 550, primary_image: { image_path: '/storefront/img/product/15.jpg' }, brand: { name: 'OUBD' } },
+        { id: 201, name: 'SPECIAL SUEDE VISOR CAP – SABR', base_price: 550, primary_image: { image_path: '/storefront/img/product/10.jpg' }, brand: { name: 'ORIO STYLE' } },
+        { id: 202, name: 'SPECIAL SUEDE VISOR CAP SOLID', base_price: 550, primary_image: { image_path: '/storefront/img/product/11.jpg' }, brand: { name: 'ORIO STYLE' } },
+        { id: 203, name: 'SPECIAL CORDUROY VISOR CAP – INSAF', base_price: 550, sale_price: 440, primary_image: { image_path: '/storefront/img/product/12.jpg' }, brand: { name: 'ORIO STYLE' } },
+        { id: 204, name: 'SPECIAL SUEDE VISOR CAP RIDE TO HEAL', base_price: 550, primary_image: { image_path: '/storefront/img/product/13.jpg' }, brand: { name: 'ORIO STYLE' } },
+        { id: 205, name: 'SPECIAL SUEDE VISOR CAP ZUHD', base_price: 550, primary_image: { image_path: '/storefront/img/product/14.jpg' }, brand: { name: 'ORIO STYLE' } },
+        { id: 206, name: 'SPECIAL TWILL VISOR CAP – HOPE', base_price: 550, primary_image: { image_path: '/storefront/img/product/15.jpg' }, brand: { name: 'ORIO STYLE' } },
     ];
 
     // Display items for Thobe / Panjabi collection
     const thobeProducts = featuredProducts && featuredProducts.length > 0
         ? featuredProducts
         : [
-            { id: 301, name: 'PREMIUM EMBROIDERED THOBE', base_price: 3450, primary_image: { image_path: '/storefront/img/product/16.jpg' }, brand: { name: 'OUBD' } },
-            { id: 302, name: 'CLASSIC SHORT SLEEVE THOBE', base_price: 2950, primary_image: { image_path: '/storefront/img/product/17.jpg' }, brand: { name: 'OUBD' } },
-            { id: 303, name: 'EXCLUSIVE ARABIAN THOBE', base_price: 3850, sale_price: 3250, primary_image: { image_path: '/storefront/img/product/18.jpg' }, brand: { name: 'OUBD' } },
-            { id: 304, name: 'CASUAL COTTON THOBE', base_price: 2650, primary_image: { image_path: '/storefront/img/product/21.jpg' }, brand: { name: 'OUBD' } },
-            { id: 305, name: 'MENS EXECUTIVE THOBE', base_price: 3200, primary_image: { image_path: '/storefront/img/product/23.jpg' }, brand: { name: 'OUBD' } },
-            { id: 306, name: 'ROYAL EMBROIDERED THOBE', base_price: 4100, primary_image: { image_path: '/storefront/img/product/24.jpg' }, brand: { name: 'OUBD' } },
+            { id: 301, name: 'PREMIUM EMBROIDERED THOBE', base_price: 3450, primary_image: { image_path: '/storefront/img/product/16.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 302, name: 'CLASSIC SHORT SLEEVE THOBE', base_price: 2950, primary_image: { image_path: '/storefront/img/product/17.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 303, name: 'EXCLUSIVE ARABIAN THOBE', base_price: 3850, sale_price: 3250, primary_image: { image_path: '/storefront/img/product/18.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 304, name: 'CASUAL COTTON THOBE', base_price: 2650, primary_image: { image_path: '/storefront/img/product/21.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 305, name: 'MENS EXECUTIVE THOBE', base_price: 3200, primary_image: { image_path: '/storefront/img/product/23.jpg' }, brand: { name: 'ORIO STYLE' } },
+            { id: 306, name: 'ROYAL EMBROIDERED THOBE', base_price: 4100, primary_image: { image_path: '/storefront/img/product/24.jpg' }, brand: { name: 'ORIO STYLE' } },
         ];
 
     return (
@@ -127,65 +128,68 @@ export default function Index({
                 </div>
             </section>
 
-            {/* 4. Promotional Collection Showcase 1 (Half Sleeve Thobe) */}
-            <section className="oubd-collection-section">
-                <div className="oubd-collection-banner-wrap">
-                    <img
-                        src="/storefront/img/banner/1.jpg"
-                        alt="Mens Thobe Collection"
-                        loading="lazy"
-                    />
-                </div>
+            {/* 4 & 5. Promotional Collection Showcases with Dynamic Category Banners */}
+            {((categoryShowcases && categoryShowcases.length > 0)
+                ? categoryShowcases
+                : [
+                    {
+                        id: 1,
+                        name: 'Half Sleeve Thobe',
+                        slug: 'thobe',
+                        banner: '/storefront/img/banner/1.jpg',
+                        banner_url: '/storefront/img/banner/1.jpg',
+                        products: thobeProducts,
+                    },
+                    {
+                        id: 2,
+                        name: 'Visor Cap',
+                        slug: 'visor-cap',
+                        banner: '/storefront/img/banner/2.jpg',
+                        banner_url: '/storefront/img/banner/2.jpg',
+                        products: visorCapProducts,
+                    },
+                ]
+            ).map((catItem, idx) => {
+                const bannerSrc = catItem.banner_url || catItem.banner || (idx % 2 === 0 ? '/storefront/img/banner/1.jpg' : '/storefront/img/banner/2.jpg');
+                const catProducts = (catItem.products && catItem.products.length > 0)
+                    ? catItem.products
+                    : (catItem.slug === 'visor-cap' ? visorCapProducts : thobeProducts);
 
-                <h2 className="oubd-collection-title">HALF SLEEVE THOBE</h2>
+                return (
+                    <section key={catItem.id || idx} className="oubd-collection-section">
+                        {bannerSrc && (
+                            <div className="oubd-collection-banner-wrap">
+                                <Link href={`/?category=${catItem.slug || ''}`}>
+                                    <img
+                                        src={bannerSrc}
+                                        alt={`${catItem.name || 'Category'} Collection Banner`}
+                                        loading="lazy"
+                                    />
+                                </Link>
+                            </div>
+                        )}
 
-                <div className="oubd-product-grid">
-                    {thobeProducts.slice(0, 6).map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            currencySymbol={currencySymbol}
-                            isNew={false}
-                        />
-                    ))}
-                </div>
+                        <h2 className="oubd-collection-title">{(catItem.name || 'COLLECTION').toUpperCase()}</h2>
 
-                <div className="oubd-btn-container">
-                    <Link href="/?category=thobe" className="oubd-outline-btn">
-                        VIEW ALL THOBE
-                    </Link>
-                </div>
-            </section>
+                        <div className="oubd-product-grid">
+                            {catProducts.slice(0, 6).map((product) => (
+                                <ProductCard
+                                    key={product.id}
+                                    product={product}
+                                    currencySymbol={currencySymbol}
+                                    isNew={false}
+                                />
+                            ))}
+                        </div>
 
-            {/* 5. Promotional Collection Showcase 2 (Visor Cap) */}
-            <section className="oubd-collection-section">
-                <div className="oubd-collection-banner-wrap">
-                    <img
-                        src="/storefront/img/banner/2.jpg"
-                        alt="Special Suede Visor Cap Collection"
-                        loading="lazy"
-                    />
-                </div>
-
-                <h2 className="oubd-collection-title">VISOR CAP</h2>
-
-                <div className="oubd-product-grid">
-                    {visorCapProducts.slice(0, 6).map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            currencySymbol={currencySymbol}
-                            isNew={false}
-                        />
-                    ))}
-                </div>
-
-                <div className="oubd-btn-container">
-                    <Link href="/?category=visor-cap" className="oubd-outline-btn">
-                        VIEW ALL VISOR CAP
-                    </Link>
-                </div>
-            </section>
+                        <div className="oubd-btn-container">
+                            <Link href={`/?category=${catItem.slug || ''}`} className="oubd-outline-btn">
+                                VIEW ALL {(catItem.name || 'COLLECTION').toUpperCase()}
+                            </Link>
+                        </div>
+                    </section>
+                );
+            })}
 
             {/* 6. Dual Split Promotional Banners */}
             <SplitPromoBanners banners={splitBanners} />

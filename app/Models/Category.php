@@ -31,6 +31,7 @@ class Category extends Model
         'name',
         'slug',
         'image',
+        'banner',
         'icon',
         'description',
         'discount',
@@ -62,7 +63,26 @@ class Category extends Model
      */
     protected $appends = [
         'image_url',
+        'banner_url',
     ];
+
+    /**
+     * Accessor for full public category banner image URL.
+     */
+    public function getBannerUrlAttribute(): ?string
+    {
+        if (!empty($this->banner)) {
+            if (str_starts_with($this->banner, 'http://') || str_starts_with($this->banner, 'https://')) {
+                return $this->banner;
+            }
+            if (str_starts_with($this->banner, '/')) {
+                return $this->banner;
+            }
+            return asset('storage/' . ltrim($this->banner, '/'));
+        }
+
+        return null;
+    }
 
     /**
      * Accessor for full public category image URL.

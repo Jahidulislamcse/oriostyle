@@ -15,9 +15,9 @@ class BannerSeeder extends Seeder
         $banners = [
             // Hero Banners
             [
-                'title' => 'Glorious 10 Years',
-                'subtitle' => 'Purpose & Style with Premium Quality',
-                'badge_text' => 'ANNIVERSARY',
+                'title' => 'ORIO STYLE Luxury Collection',
+                'subtitle' => 'Elegance & Modern Distinction with Artisan Tailoring',
+                'badge_text' => 'SIGNATURE',
                 'button_text' => 'EXPLORE NOW',
                 'link_url' => '/#new-arrivals',
                 'image_path' => '/storefront/img/hero/2.jpg',
@@ -26,10 +26,10 @@ class BannerSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'title' => 'Premium Dawah Collection',
-                'subtitle' => 'Elevate your everyday look with modern thobes and shirts',
+                'title' => 'ORIO STYLE Signature Edition',
+                'subtitle' => 'Elevate your wardrobe with bespoke shirts, thobes and panjabis',
                 'badge_text' => 'NEW DROP',
-                'button_text' => 'SHOP DAWAH',
+                'button_text' => 'SHOP COLLECTION',
                 'link_url' => '/#featured-products',
                 'image_path' => '/storefront/img/hero/1.jpg',
                 'type' => 'hero',
@@ -37,8 +37,8 @@ class BannerSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'title' => 'Signature Accessories',
-                'subtitle' => 'Special suede visor caps and essential accessories',
+                'title' => 'Signature Accessories & Caps',
+                'subtitle' => 'Handcrafted leather goods, visor caps and timeless essentials',
                 'badge_text' => 'ACCESSORIES',
                 'button_text' => 'DISCOVER',
                 'link_url' => '/#featured-products',
@@ -51,8 +51,8 @@ class BannerSeeder extends Seeder
             // Split Promo Banners
             [
                 'title' => 'TIMELESS ELEGANCE',
-                'subtitle' => 'Exclusive Luxury Thobes & Jubbas crafted for modesty and distinction.',
-                'badge_text' => 'SUMMER COLLECTION',
+                'subtitle' => 'Exclusive formal attire, luxury panjabis & tailored menswear designed for distinction.',
+                'badge_text' => 'SEASONAL COLLECTION',
                 'button_text' => 'EXPLORE COLLECTION',
                 'link_url' => '/#featured-products',
                 'image_path' => '/storefront/img/hero/2.jpg',
@@ -61,8 +61,8 @@ class BannerSeeder extends Seeder
                 'is_active' => true,
             ],
             [
-                'title' => 'URBAN MODESTY',
-                'subtitle' => 'Contemporary drop-shoulder tees and everyday essentials with premium cotton.',
+                'title' => 'URBAN SOPHISTICATION',
+                'subtitle' => 'Contemporary drop-shoulder tees and everyday essentials crafted from organic combed cotton.',
                 'badge_text' => 'NEW ARRIVALS',
                 'button_text' => 'SHOP NOW',
                 'link_url' => '/#featured-products',

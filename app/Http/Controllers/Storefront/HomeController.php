@@ -111,6 +111,20 @@ class HomeController extends Controller
         $promoBanners = $bannersGrouped->get('promo', collect())->values();
         $bentoSlots = $this->bentoService->getActiveSlotsForStorefront();
 
+        // Fetch categories with banners for promotional showcase collections
+        $categoryShowcases = Category::query()
+            ->active()
+            ->where(function ($q) {
+                $q->whereNotNull('banner')
+                  ->orWhereIn('slug', ['thobe', 'visor-cap']);
+            })
+            ->with(['products' => function ($q) {
+                $q->active()->with(['category:id,name,slug', 'brand:id,name,slug', 'primaryImage'])->take(6);
+            }])
+            ->orderBy('display_order')
+            ->take(6)
+            ->get();
+
         return Inertia::render('Storefront/Index', [
             'navCategories' => $navCategories,
             'featuredCategories' => $featuredCategories,
@@ -122,6 +136,7 @@ class HomeController extends Controller
             'splitBanners' => $splitBanners,
             'promoBanners' => $promoBanners,
             'bentoSlots' => $bentoSlots,
+            'categoryShowcases' => $categoryShowcases,
         ]);
     }
 }

@@ -43,7 +43,7 @@ export default function ProductCard({
             <div className="oubd-product-img-wrap">
                 {/* Brand Tag watermark */}
                 <span className="oubd-product-brand-tag">
-                    {product.brand?.name || 'OUBD'}
+                    {product.brand?.name || 'ORIO STYLE'}
                 </span>
 
                 {/* Badges */}

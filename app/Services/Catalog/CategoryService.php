@@ -158,6 +158,11 @@ class CategoryService
                 $featuredIndex = is_numeric($data['featured_image_index']) ? (int) $data['featured_image_index'] : null;
             }
 
+            // Handle banner upload
+            if (isset($data['banner']) && $data['banner'] instanceof UploadedFile) {
+                $data['banner'] = $data['banner']->store('categories/banners', 'public');
+            }
+
             $categoryData = array_diff_key($data, array_flip(['images', 'featured_image_index', 'featured_image_id', 'deleted_image_ids']));
             $category = Category::create($categoryData);
 
@@ -218,7 +223,20 @@ class CategoryService
                 $deletedImageIds = $data['deleted_image_ids'];
             }
 
-            $categoryData = array_diff_key($data, array_flip(['images', 'featured_image_index', 'featured_image_id', 'deleted_image_ids']));
+            // Handle banner upload or removal
+            if (!empty($data['remove_banner'])) {
+                if (!empty($category->banner) && !str_starts_with($category->banner, '/') && !str_starts_with($category->banner, 'http')) {
+                    Storage::disk('public')->delete($category->banner);
+                }
+                $data['banner'] = null;
+            } elseif (isset($data['banner']) && $data['banner'] instanceof UploadedFile) {
+                if (!empty($category->banner) && !str_starts_with($category->banner, '/') && !str_starts_with($category->banner, 'http')) {
+                    Storage::disk('public')->delete($category->banner);
+                }
+                $data['banner'] = $data['banner']->store('categories/banners', 'public');
+            }
+
+            $categoryData = array_diff_key($data, array_flip(['images', 'featured_image_index', 'featured_image_id', 'deleted_image_ids', 'remove_banner']));
             $category->update($categoryData);
 
             // 1. Delete requested images

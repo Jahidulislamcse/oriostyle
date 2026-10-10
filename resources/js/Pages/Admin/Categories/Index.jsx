@@ -56,6 +56,12 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
     const [featuredNewIndex, setFeaturedNewIndex] = useState(0);
     const [deletedImageIds, setDeletedImageIds] = useState([]);
 
+    // Category Showcase Banner state
+    const [bannerFile, setBannerFile] = useState(null);
+    const [bannerPreview, setBannerPreview] = useState(null);
+    const [existingBanner, setExistingBanner] = useState(null);
+    const [removeBanner, setRemoveBanner] = useState(false);
+
     // Inertia Form for Create/Edit
     const {
         data,
@@ -113,6 +119,10 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         setFeaturedImageId(null);
         setFeaturedNewIndex(0);
         setDeletedImageIds([]);
+        setBannerFile(null);
+        setBannerPreview(null);
+        setExistingBanner(null);
+        setRemoveBanner(false);
 
         setData({
             name: '',
@@ -146,6 +156,10 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         setNewImages([]);
         setNewImagePreviews([]);
         setDeletedImageIds([]);
+        setBannerFile(null);
+        setBannerPreview(null);
+        setExistingBanner(category.banner_url || category.banner || null);
+        setRemoveBanner(false);
 
         setData({
             name: category.name || '',
@@ -243,6 +257,22 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         setFeaturedImageId(null);
     };
 
+    const handleBannerSelection = (e) => {
+        const file = e.target.files?.[0];
+        if (file) {
+            setBannerFile(file);
+            setBannerPreview(URL.createObjectURL(file));
+            setRemoveBanner(false);
+        }
+    };
+
+    const handleRemoveBanner = () => {
+        setBannerFile(null);
+        setBannerPreview(null);
+        setExistingBanner(null);
+        setRemoveBanner(true);
+    };
+
     const submitCreate = (e) => {
         e.preventDefault();
         
@@ -250,6 +280,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
             ...data,
             images: newImages,
             featured_image_index: featuredNewIndex !== null ? featuredNewIndex : 0,
+            banner: bannerFile,
         };
 
         router.post(route('admin.categories.store'), payload, {
@@ -259,6 +290,10 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                 reset();
                 setNewImages([]);
                 setNewImagePreviews([]);
+                setBannerFile(null);
+                setBannerPreview(null);
+                setExistingBanner(null);
+                setRemoveBanner(false);
             },
         });
     };
@@ -274,6 +309,8 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
             featured_image_index: featuredNewIndex,
             featured_image_id: featuredImageId,
             deleted_image_ids: deletedImageIds,
+            banner: bannerFile,
+            remove_banner: removeBanner ? 1 : 0,
         };
 
         router.post(route('admin.categories.update', editingCategory.id), payload, {
@@ -285,6 +322,10 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                 setNewImages([]);
                 setNewImagePreviews([]);
                 setDeletedImageIds([]);
+                setBannerFile(null);
+                setBannerPreview(null);
+                setExistingBanner(null);
+                setRemoveBanner(false);
             },
         });
     };
@@ -788,6 +829,11 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                     <ImageIcon className="w-2.5 h-2.5" /> {root.images.length} {root.images.length === 1 ? 'img' : 'imgs'}
                                                                 </span>
                                                             )}
+                                                            {root.banner && (
+                                                                <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                                                                    🖼️ Banner
+                                                                </span>
+                                                            )}
                                                         </div>
                                                         <p className="text-[11px] sm:text-xs text-slate-500 dark:text-[#8EB0CF] mt-0.5 line-clamp-1 font-normal">
                                                             {root.description || 'No description provided.'}
@@ -916,6 +962,11 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                                                                 {sub.images && sub.images.length > 0 && (
                                                                                     <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-slate-100 dark:bg-[#071324] text-slate-500 dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
                                                                                         <ImageIcon className="w-2.5 h-2.5" /> {sub.images.length} {sub.images.length === 1 ? 'img' : 'imgs'}
+                                                                                    </span>
+                                                                                )}
+                                                                                {sub.banner && (
+                                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                                                                                        🖼️ Banner
                                                                                     </span>
                                                                                 )}
                                                                             </div>
@@ -1169,6 +1220,67 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 </label>
                             )}
                         </div>
+                    </div>
+
+                    {/* Category Wide Showcase Banner (Storefront Collection Banner) */}
+                    <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324]/70 rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white block">
+                                    Category Showcase Banner
+                                </span>
+                                <span className="text-xs text-slate-500 dark:text-[#8EB0CF]">
+                                    Panoramic banner displayed above this category's collection showcase on the storefront homepage (e.g. Visor Cap, Thobe, Formal Shirts).
+                                </span>
+                            </div>
+                            <span className="text-[11px] font-mono text-slate-400 dark:text-[#5E8CB6]">
+                                ~1920 × 450px
+                            </span>
+                        </div>
+
+                        {(bannerPreview || (existingBanner && !removeBanner)) ? (
+                            <div className="relative group rounded-xl overflow-hidden border border-slate-200 dark:border-[#1C3E63] bg-navy-950">
+                                <div className="aspect-[4/1] w-full overflow-hidden bg-slate-100 dark:bg-[#071324]/80 flex items-center justify-center">
+                                    <img
+                                        src={bannerPreview || existingBanner}
+                                        alt="Category Banner Preview"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                                <div className="absolute top-2 right-2 flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveBanner}
+                                        className="p-1.5 rounded-lg bg-rose-600/90 text-white hover:bg-rose-600 transition shadow cursor-pointer"
+                                        title="Remove Banner"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                                <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded bg-black/70 text-gold-400 text-[11px] font-bold backdrop-blur-sm">
+                                    Wide Collection Banner Active
+                                </div>
+                            </div>
+                        ) : (
+                            <label className="border-2 border-dashed border-slate-300 dark:border-[#1C3E63] rounded-xl py-6 flex flex-col items-center justify-center text-center p-4 cursor-pointer hover:border-[#D4AF37] dark:hover:border-[#D4AF37] hover:bg-white/80 dark:hover:bg-[#071324]/80 transition group">
+                                <input
+                                    type="file"
+                                    accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
+                                    onChange={handleBannerSelection}
+                                    className="hidden"
+                                />
+                                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-[#071324] flex items-center justify-center text-slate-400 dark:text-[#5E8CB6] group-hover:text-[#926F18] dark:group-hover:text-[#EBD495] group-hover:bg-[#FDFBF5] mb-2 transition">
+                                    <UploadCloud className="w-5 h-5" />
+                                </div>
+                                <span className="text-xs sm:text-sm font-bold text-slate-700 dark:text-[#BACDE3] group-hover:text-[#926F18] dark:group-hover:text-[#EBD495] transition block">
+                                    Upload Wide Category Banner
+                                </span>
+                                <span className="text-xs text-slate-400 dark:text-[#5E8CB6] mt-0.5">
+                                    Supports JPG, PNG, WebP up to 5MB
+                                </span>
+                            </label>
+                        )}
+                        {errors.banner && <p className="mt-1 text-xs text-rose-500 font-medium">{errors.banner}</p>}
                     </div>
 
                     {/* Status Toggles */}
@@ -1428,6 +1540,67 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                 </label>
                             )}
                         </div>
+                    </div>
+
+                    {/* Category Wide Showcase Banner (Storefront Collection Banner) */}
+                    <div className="p-4 bg-[#F4F7FB] dark:bg-[#071324]/70 rounded-xl border border-slate-200 dark:border-[#1C3E63] space-y-3">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white block">
+                                    Category Showcase Banner
+                                </span>
+                                <span className="text-xs text-slate-500 dark:text-[#8EB0CF]">
+                                    Panoramic banner displayed above this category's collection showcase on the storefront homepage (e.g. Visor Cap, Thobe, Formal Shirts).
+                                </span>
+                            </div>
+                            <span className="text-[11px] font-mono text-slate-400 dark:text-[#5E8CB6]">
+                                ~1920 × 450px
+                            </span>
+                        </div>
+
+                        {(bannerPreview || (existingBanner && !removeBanner)) ? (
+                            <div className="relative group rounded-xl overflow-hidden border border-slate-200 dark:border-[#1C3E63] bg-navy-950">
+                                <div className="aspect-[4/1] w-full overflow-hidden bg-slate-100 dark:bg-[#071324]/80 flex items-center justify-center">
+                                    <img
+                                        src={bannerPreview || existingBanner}
+                                        alt="Category Banner Preview"
+                                        className="w-full h-full object-cover"
+                                    />
+                                </div>
+                                <div className="absolute top-2 right-2 flex items-center gap-2">
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveBanner}
+                                        className="p-1.5 rounded-lg bg-rose-600/90 text-white hover:bg-rose-600 transition shadow cursor-pointer"
+                                        title="Remove Banner"
+                                    >
+                                        <Trash2 className="w-4 h-4" />
+                                    </button>
+                                </div>
+                                <div className="absolute bottom-2 left-2 px-2.5 py-1 rounded bg-black/70 text-gold-400 text-[11px] font-bold backdrop-blur-sm">
+                                    Wide Collection Banner Active
+                                </div>
+                            </div>
+                        ) : (
+                            <label className="border-2 border-dashed border-slate-300 dark:border-[#1C3E63] rounded-xl py-6 flex flex-col items-center justify-center text-center p-4 cursor-pointer hover:border-[#D4AF37] dark:hover:border-[#D4AF37] hover:bg-white/80 dark:hover:bg-[#071324]/80 transition group">
+                                <input
+                                    type="file"
+                                    accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
+                                    onChange={handleBannerSelection}
+                                    className="hidden"
+                                />
+                                <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-[#071324] flex items-center justify-center text-slate-400 dark:text-[#5E8CB6] group-hover:text-[#926F18] dark:group-hover:text-[#EBD495] group-hover:bg-[#FDFBF5] mb-2 transition">
+                                    <UploadCloud className="w-5 h-5" />
+                                </div>
+                                <span className="text-xs sm:text-sm font-bold text-slate-700 dark:text-[#BACDE3] group-hover:text-[#926F18] dark:group-hover:text-[#EBD495] transition block">
+                                    Upload Wide Category Banner
+                                </span>
+                                <span className="text-xs text-slate-400 dark:text-[#5E8CB6] mt-0.5">
+                                    Supports JPG, PNG, WebP up to 5MB
+                                </span>
+                            </label>
+                        )}
+                        {errors.banner && <p className="mt-1 text-xs text-rose-500 font-medium">{errors.banner}</p>}
                     </div>
 
                     {/* Status Toggles */}

@@ -397,4 +397,74 @@ class Phase4CategoryTest extends TestCase
 
         $this->assertFalse(Cache::has(CategoryService::CACHE_STOREFRONT_TREE_KEY));
     }
+
+    public function test_admin_can_create_category_with_showcase_banner(): void
+    {
+        Storage::fake('public');
+
+        $bannerFile = UploadedFile::fake()->image('visor_cap_banner.jpg', 1920, 450);
+
+        $response = $this->actingAs($this->adminUser)
+            ->post(route('admin.categories.store'), [
+                'name' => 'Visor Cap Collection',
+                'slug' => 'visor-cap-collection',
+                'is_active' => true,
+                'banner' => $bannerFile,
+            ]);
+
+        $response->assertRedirect();
+
+        $category = Category::where('slug', 'visor-cap-collection')->first();
+        $this->assertNotNull($category);
+        $this->assertNotNull($category->banner);
+        $this->assertStringContainsString('categories/banners/', $category->banner);
+        $this->assertNotNull($category->banner_url);
+        Storage::disk('public')->assertExists($category->banner);
+    }
+
+    public function test_admin_can_update_and_remove_category_banner(): void
+    {
+        Storage::fake('public');
+
+        $initialBanner = UploadedFile::fake()->image('initial_banner.jpg', 1200, 400);
+
+        $category = Category::create([
+            'name' => 'Headwear & Caps',
+            'slug' => 'headwear-caps',
+            'banner' => $initialBanner->store('categories/banners', 'public'),
+            'is_active' => true,
+        ]);
+
+        $this->assertNotNull($category->banner);
+        Storage::disk('public')->assertExists($category->banner);
+
+        // Update with new banner
+        $newBanner = UploadedFile::fake()->image('new_panoramic_banner.jpg', 1920, 450);
+        $oldPath = $category->banner;
+
+        $response = $this->actingAs($this->adminUser)
+            ->put(route('admin.categories.update', $category->id), [
+                'name' => 'Headwear & Caps',
+                'banner' => $newBanner,
+            ]);
+
+        $response->assertRedirect();
+        $category->refresh();
+
+        Storage::disk('public')->assertMissing($oldPath);
+        Storage::disk('public')->assertExists($category->banner);
+
+        // Now remove the banner
+        $responseRemove = $this->actingAs($this->adminUser)
+            ->put(route('admin.categories.update', $category->id), [
+                'name' => 'Headwear & Caps',
+                'remove_banner' => 1,
+            ]);
+
+        $responseRemove->assertRedirect();
+        $category->refresh();
+
+        $this->assertNull($category->banner);
+        $this->assertNull($category->banner_url);
+    }
 }

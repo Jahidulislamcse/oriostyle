@@ -33,7 +33,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
         ? directNavCategories
         : (sharedNavCategories || []);
 
-    const siteName = settings.site_name || 'OUBD';
+    const siteName = settings.site_name || 'ORIO STYLE';
     const siteLogo = settings.site_logo || null;
     const currencySymbol = settings.currency_symbol || '৳';
 
@@ -348,11 +348,11 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                 )}
                             </Link>
                             <p className="font-size-13 text-muted line-height-22 mb-2" style={{ maxWidth: '380px' }}>
-                                Partner with One Ummah BD through our profit-sharing opportunities designed with AAOIFI (Accounting and Auditing Organization for Islamic Financial Institutions) standard clarity and trust.
+                                Experience premium lifestyle and contemporary fashion curated by ORIO STYLE. Uncompromising craftsmanship, refined aesthetics, and everyday luxury.
                             </p>
                             <div className="mb-3">
                                 <a href="javascript:void(0)" className="text-dark fw-bold font-size-13 text-decoration-underline">
-                                    Click for investment Details ↗
+                                    Discover Our Brand Story ↗
                                 </a>
                             </div>
 
@@ -388,8 +388,8 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             <div className={`d-md-block ${mobileFooterOpen.quickLinks ? 'd-block' : 'd-none'}`}>
                                 <ul className="list-unstyled font-size-13">
                                     <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Store Locator</Link></li>
-                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Ummah-funds</Link></li>
-                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Blogs</Link></li>
+                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">About ORIO STYLE</Link></li>
+                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Blogs & Editorial</Link></li>
                                 </ul>
                             </div>
                         </div>
