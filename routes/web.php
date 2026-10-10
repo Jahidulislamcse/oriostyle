@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PurchaseOrderController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -133,6 +134,12 @@ Route::prefix('admin')
         Route::patch('/purchase-orders/{purchaseOrder}/order', [PurchaseOrderController::class, 'markOrdered'])->name('purchase-orders.order');
         Route::post('/purchase-orders/{purchaseOrder}/receive', [PurchaseOrderController::class, 'receive'])->name('purchase-orders.receive');
         Route::post('/purchase-orders/{purchaseOrder}/cancel', [PurchaseOrderController::class, 'cancel'])->name('purchase-orders.cancel');
+
+        // Phase 10: Inventory Ledger & Adjustments
+        Route::get('/inventory', [InventoryController::class, 'index'])->name('inventory.index');
+        Route::post('/inventory/adjust', [InventoryController::class, 'adjust'])->name('inventory.adjust');
+        Route::post('/inventory/damage', [InventoryController::class, 'logDamage'])->name('inventory.damage');
+        Route::patch('/inventory/products/{product}/threshold', [InventoryController::class, 'updateThreshold'])->name('inventory.threshold');
 
         // Dynamic Banners & Sliders CMS
         Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');

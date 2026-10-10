@@ -286,6 +286,23 @@ class PurchaseOrderService
 
                 // 3. Mark item received quantity
                 $item->update(['quantity_received' => $qty]);
+
+                // 4. Record Inventory Movement in Ledger
+                \App\Models\InventoryMovement::create([
+                    'product_id' => $item->product_id,
+                    'product_variant_id' => $item->product_variant_id,
+                    'type' => \App\Models\InventoryMovement::TYPE_PURCHASE_IN,
+                    'quantity' => $qty,
+                    'quantity_before' => $currentStock,
+                    'quantity_after' => $currentStock + $qty,
+                    'unit_cost' => $unitCost,
+                    'total_cost' => round($qty * $unitCost, 2),
+                    'reason' => "PO Intake: {$purchaseOrder->po_number}",
+                    'reference_type' => PurchaseOrder::class,
+                    'reference_id' => $purchaseOrder->id,
+                    'notes' => "Stock hydrated from PO {$purchaseOrder->po_number}",
+                    'created_by' => $userId,
+                ]);
             }
 
             // 4. Update PO status and receiver metadata

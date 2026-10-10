@@ -96,6 +96,22 @@ class Product extends Model
     }
 
     /**
+     * Relationship: Inventory movements ledger
+     */
+    public function inventoryMovements(): HasMany
+    {
+        return $this->hasMany(InventoryMovement::class, 'product_id')->latest();
+    }
+
+    /**
+     * Relationship: Damage logs
+     */
+    public function damageLogs(): HasMany
+    {
+        return $this->hasMany(DamageLog::class, 'product_id')->latest();
+    }
+
+    /**
      * Scope: Only active products
      */
     public function scopeActive(Builder $query): Builder
