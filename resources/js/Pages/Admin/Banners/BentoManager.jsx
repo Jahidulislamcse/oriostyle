@@ -106,17 +106,25 @@ export default function BentoManager({ slots = [], categories = [] }) {
 
     // Render individual interactive slot card preview
     const renderSlotCard = (slot, className = '') => {
+        if (!slot) return null;
+
         const isTall = slot.aspect_ratio === 'tall';
         const isHalf = slot.aspect_ratio === 'half';
         const isWide = slot.aspect_ratio === 'wide';
 
+        const minHeightClass = isTall
+            ? 'min-h-[380px] md:min-h-[480px]'
+            : isHalf
+            ? 'min-h-[180px] md:min-h-[232px]'
+            : 'min-h-[180px] md:min-h-[230px]';
+
         return (
             <div
                 onClick={() => openEditModal(slot)}
-                className={`group relative overflow-hidden rounded-xl border border-gold-500/30 bg-navy-950 cursor-pointer transition-all duration-200 hover:border-gold-400 hover:shadow-lg hover:shadow-gold-500/10 ${className}`}
+                className={`group relative overflow-hidden rounded-2xl border border-gold-500/30 bg-navy-950 cursor-pointer transition-all duration-200 hover:border-gold-400 hover:shadow-xl hover:shadow-gold-500/10 flex flex-col justify-between ${minHeightClass} ${className}`}
             >
-                {/* Image Background */}
-                <div className="w-full h-full absolute inset-0 bg-navy-900">
+                {/* Background Image */}
+                <div className="absolute inset-0 w-full h-full bg-navy-900 z-0">
                     {slot.image_url ? (
                         <img
                             src={slot.image_url}
@@ -131,18 +139,18 @@ export default function BentoManager({ slots = [], categories = [] }) {
                 </div>
 
                 {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/20 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-navy-950/90 via-navy-950/20 to-transparent pointer-events-none z-0" />
 
                 {/* Top Toolbar Badges */}
-                <div className="absolute top-2.5 left-2.5 right-2.5 flex items-center justify-between z-10 pointer-events-none">
-                    <span className="px-2 py-0.5 rounded text-[11px] font-bold font-mono bg-navy-950/80 text-gold-400 border border-gold-500/30 backdrop-blur-sm">
+                <div className="relative z-10 p-3 flex items-center justify-between pointer-events-none">
+                    <span className="px-2.5 py-1 rounded-md text-[11px] font-bold font-mono bg-navy-950/90 text-gold-400 border border-gold-500/30 backdrop-blur-sm shadow">
                         Slot #{slot.display_order} • {slot.recommended_dimensions}
                     </span>
 
                     <button
                         type="button"
                         onClick={(e) => toggleSlotActive(slot, e)}
-                        className={`pointer-events-auto p-1 rounded-md text-xs backdrop-blur-sm transition ${
+                        className={`pointer-events-auto p-1.5 rounded-lg text-xs backdrop-blur-sm shadow transition ${
                             slot.is_active
                                 ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/30'
                                 : 'bg-rose-500/20 text-rose-400 border border-rose-500/40 hover:bg-rose-500/30'
@@ -154,7 +162,7 @@ export default function BentoManager({ slots = [], categories = [] }) {
                 </div>
 
                 {/* Bottom Storefront Lookbook Pill Mockup */}
-                <div className="absolute bottom-3 left-3 right-3 flex items-end justify-between z-10">
+                <div className="relative z-10 p-3 flex items-end justify-between">
                     <div
                         className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold tracking-wider uppercase backdrop-blur-md shadow-md ${
                             slot.dark_badge
@@ -166,8 +174,8 @@ export default function BentoManager({ slots = [], categories = [] }) {
                         {slot.has_arrow && <ArrowUpRight className="w-3.5 h-3.5" />}
                     </div>
 
-                    <div className="p-1.5 rounded-lg bg-gold-500 text-navy-950 opacity-0 group-hover:opacity-100 transition-opacity">
-                        <Edit3 className="w-3.5 h-3.5" />
+                    <div className="p-2 rounded-lg bg-gold-500 text-navy-950 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                        <Edit3 className="w-4 h-4" />
                     </div>
                 </div>
             </div>
@@ -247,58 +255,58 @@ export default function BentoManager({ slots = [], categories = [] }) {
                     </div>
 
                     {/* SECTION 1: Top 3-Column Bento */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-auto md:h-[480px]">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* Slot 1: Tall Left */}
-                        <div className="h-64 md:h-full">
-                            {renderSlotCard(s1, 'h-full')}
+                        <div className="h-[380px] md:h-[480px]">
+                            {renderSlotCard(s1, 'w-full h-full')}
                         </div>
 
                         {/* Slot 2 & Slot 3: Stacked Center */}
-                        <div className="grid grid-rows-2 gap-4 h-64 md:h-full">
-                            <div className="h-full">
-                                {renderSlotCard(s2, 'h-full')}
+                        <div className="flex flex-col gap-4 h-[380px] md:h-[480px]">
+                            <div className="flex-1 min-h-0 h-full">
+                                {renderSlotCard(s2, 'w-full h-full')}
                             </div>
-                            <div className="h-full">
-                                {renderSlotCard(s3, 'h-full')}
+                            <div className="flex-1 min-h-0 h-full">
+                                {renderSlotCard(s3, 'w-full h-full')}
                             </div>
                         </div>
 
                         {/* Slot 4: Tall Right */}
-                        <div className="h-64 md:h-full">
-                            {renderSlotCard(s4, 'h-full')}
+                        <div className="h-[380px] md:h-[480px]">
+                            {renderSlotCard(s4, 'w-full h-full')}
                         </div>
                     </div>
 
                     {/* SECTION 2: Wide 2-Column Banner Row */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-auto md:h-[260px]">
-                        <div className="h-48 md:h-full">
-                            {renderSlotCard(s5, 'h-full')}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="h-[200px] md:h-[230px]">
+                            {renderSlotCard(s5, 'w-full h-full')}
                         </div>
-                        <div className="h-48 md:h-full">
-                            {renderSlotCard(s6, 'h-full')}
+                        <div className="h-[200px] md:h-[230px]">
+                            {renderSlotCard(s6, 'w-full h-full')}
                         </div>
                     </div>
 
                     {/* SECTION 3: Bottom 3-Column Bento */}
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 h-auto md:h-[480px]">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         {/* Slot 7: Tall Left */}
-                        <div className="h-64 md:h-full">
-                            {renderSlotCard(s7, 'h-full')}
+                        <div className="h-[380px] md:h-[480px]">
+                            {renderSlotCard(s7, 'w-full h-full')}
                         </div>
 
                         {/* Slot 8 & Slot 9: Stacked Center */}
-                        <div className="grid grid-rows-2 gap-4 h-64 md:h-full">
-                            <div className="h-full">
-                                {renderSlotCard(s8, 'h-full')}
+                        <div className="flex flex-col gap-4 h-[380px] md:h-[480px]">
+                            <div className="flex-1 min-h-0 h-full">
+                                {renderSlotCard(s8, 'w-full h-full')}
                             </div>
-                            <div className="h-full">
-                                {renderSlotCard(s9, 'h-full')}
+                            <div className="flex-1 min-h-0 h-full">
+                                {renderSlotCard(s9, 'w-full h-full')}
                             </div>
                         </div>
 
                         {/* Slot 10: Tall Right */}
-                        <div className="h-64 md:h-full">
-                            {renderSlotCard(s10, 'h-full')}
+                        <div className="h-[380px] md:h-[480px]">
+                            {renderSlotCard(s10, 'w-full h-full')}
                         </div>
                     </div>
                 </div>
