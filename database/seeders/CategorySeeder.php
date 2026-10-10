@@ -171,6 +171,26 @@ class CategorySeeder extends Seeder
                     ],
                 ],
             ],
+            [
+                'name' => 'Half Sleeve Thobe',
+                'slug' => 'thobe',
+                'icon' => 'Shirt',
+                'description' => 'Luxury Islamic designer thobes crafted from lightweight breathable fabrics.',
+                'display_order' => 5,
+                'is_active' => true,
+                'is_featured' => true,
+                'banner' => '/storefront/img/banner/1.jpg',
+            ],
+            [
+                'name' => 'Visor Cap',
+                'slug' => 'visor-cap',
+                'icon' => 'Sparkles',
+                'description' => 'Curated collection of urban luxury visor caps and headwear.',
+                'display_order' => 6,
+                'is_active' => true,
+                'is_featured' => true,
+                'banner' => '/storefront/img/banner/2.jpg',
+            ],
         ];
 
         $imgIndex = 1;
