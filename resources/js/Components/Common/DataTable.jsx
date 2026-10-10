@@ -1,5 +1,6 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, isValidElement } from 'react';
 import { Search, ChevronDown, ChevronUp, ChevronsUpDown, Inbox } from 'lucide-react';
+import Pagination from './Pagination';
 
 export default function DataTable({
     columns = [],
@@ -135,7 +136,11 @@ export default function DataTable({
             {/* Pagination */}
             {pagination && (
                 <div className="p-4 sm:p-5 border-t border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between text-xs text-slate-600 dark:text-[#BACDE3] bg-[#F4F7FB]/70 dark:bg-[#071324]">
-                    {pagination}
+                    {isValidElement(pagination) ? (
+                        pagination
+                    ) : typeof pagination === 'object' && pagination?.links ? (
+                        <Pagination pagination={pagination} />
+                    ) : null}
                 </div>
             )}
         </div>
