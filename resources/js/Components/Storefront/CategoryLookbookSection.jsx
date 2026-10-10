@@ -84,9 +84,35 @@ const DEFAULT_ITEMS = [
     },
 ];
 
-export default function CategoryLookbookSection({ categories = [] }) {
-    // Helper to resolve card item with dynamic backend category data
+const SLOT_KEYS = [
+    'top_left_tall',       // 0 -> Tall Left
+    'top_mid_upper_half',  // 1 -> Top Middle Upper
+    'top_right_tall',      // 2 -> Tall Right
+    'top_mid_lower_half',  // 3 -> Top Middle Lower
+    'mid_wide_left',       // 4 -> Wide Left
+    'mid_wide_right',      // 5 -> Wide Right
+    'bot_left_tall',       // 6 -> Bottom Left
+    'bot_mid_upper_half',  // 7 -> Bottom Middle Upper
+    'bot_mid_lower_half',  // 8 -> Bottom Middle Lower
+    'bot_right_tall',      // 9 -> Bottom Right
+];
+
+export default function CategoryLookbookSection({ bentoSlots = {}, categories = [] }) {
+    // Helper to resolve card item with dynamic backend bento slot or category data
     const getItem = (index, defaultDef) => {
+        const slotKey = SLOT_KEYS[index];
+        const slot = bentoSlots && (bentoSlots[slotKey] || bentoSlots[index]);
+
+        if (slot) {
+            return {
+                title: slot.display_title || slot.title || defaultDef.title,
+                slug: slot.category_slug || slot.category?.slug || defaultDef.slug,
+                image: slot.image_url || defaultDef.fallbackImg,
+                hasArrow: slot.has_arrow !== undefined ? slot.has_arrow : defaultDef.hasArrow,
+                darkBadge: slot.dark_badge !== undefined ? slot.dark_badge : defaultDef.darkBadge,
+            };
+        }
+
         const cat = categories && categories[index];
         if (!cat) {
             return {

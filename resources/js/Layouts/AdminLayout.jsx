@@ -21,7 +21,8 @@ import {
     Search,
     Store,
     Shield,
-    Image as ImageIcon
+    Image as ImageIcon,
+    LayoutGrid
 } from 'lucide-react';
 import ToastContainer from '@/Components/Common/ToastContainer';
 import Badge from '@/Components/Common/Badge';
@@ -55,6 +56,7 @@ export default function AdminLayout({ title = '', children }) {
                 { name: 'Brands & Media', href: '/admin/brands', icon: Tag, current: route().current('admin.brands.*') },
                 { name: 'Products Catalog', href: '/admin/products', icon: Package, current: route().current('admin.products.*') },
                 { name: 'Banners & Sliders', href: '/admin/banners', icon: ImageIcon, current: route().current('admin.banners.*') },
+                { name: 'Bento Mosaic Grid', href: '/admin/homepage-bento', icon: LayoutGrid, current: route().current('admin.homepage-bento.*') },
                 { name: 'Variant Matrix', href: '/admin/variants', icon: Boxes, current: route().current('admin.variants.*') },
             ],
         },

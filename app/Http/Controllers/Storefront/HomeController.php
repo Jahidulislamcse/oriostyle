@@ -12,6 +12,7 @@ use App\Services\Catalog\BrandService;
 use App\Services\Catalog\CategoryService;
 use App\Services\Catalog\ProductService;
 use App\Services\Settings\SettingService;
+use App\Services\Storefront\HomepageBentoService;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -22,7 +23,8 @@ class HomeController extends Controller
         protected ProductService $productService,
         protected BrandService $brandService,
         protected SettingService $settingService,
-        protected BannerService $bannerService
+        protected BannerService $bannerService,
+        protected HomepageBentoService $bentoService
     ) {}
 
     /**
@@ -107,6 +109,7 @@ class HomeController extends Controller
         $heroBanners = $bannersGrouped->get('hero', collect())->values();
         $splitBanners = $bannersGrouped->get('split', collect())->values();
         $promoBanners = $bannersGrouped->get('promo', collect())->values();
+        $bentoSlots = $this->bentoService->getActiveSlotsForStorefront();
 
         return Inertia::render('Storefront/Index', [
             'navCategories' => $navCategories,
@@ -118,6 +121,7 @@ class HomeController extends Controller
             'heroBanners' => $heroBanners,
             'splitBanners' => $splitBanners,
             'promoBanners' => $promoBanners,
+            'bentoSlots' => $bentoSlots,
         ]);
     }
 }

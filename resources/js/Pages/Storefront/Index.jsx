@@ -28,6 +28,7 @@ export default function Index({
     heroBanners = [],
     splitBanners = [],
     promoBanners = [],
+    bentoSlots = {},
 }) {
     const siteName = settings.site_name || 'OUBD';
     const siteTagline = settings.site_tagline || 'Purpose & Style with Premium Quality Collections';
@@ -104,7 +105,7 @@ export default function Index({
             <HeroSlider banners={heroBanners} />
 
             {/* 2. High-Impact Collection Lookbook Grid (4/3-col desktop, 2-col mobile) */}
-            <CategoryLookbookSection categories={lookbookCategories} />
+            <CategoryLookbookSection bentoSlots={bentoSlots} categories={lookbookCategories} />
 
             {/* 3. New Arrivals Product Grid Section (6-col desktop, 2-col mobile) */}
             <section id="new-arrivals" className="oubd-products-section">

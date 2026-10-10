@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\HomepageBentoController;
 use App\Http\Controllers\Admin\InventoryController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PurchaseOrderController;
@@ -150,6 +151,11 @@ Route::prefix('admin')
         Route::put('/banners/{banner}', [BannerController::class, 'update'])->name('banners.update');
         Route::delete('/banners/{banner}', [BannerController::class, 'destroy'])->name('banners.destroy');
         Route::patch('/banners/{banner}/toggle-active', [BannerController::class, 'toggleActive'])->name('banners.toggle-active');
+
+        // Homepage Bento Mosaic Manager
+        Route::get('/homepage-bento', [HomepageBentoController::class, 'index'])->name('homepage-bento.index');
+        Route::post('/homepage-bento/{slot}', [HomepageBentoController::class, 'update'])->name('homepage-bento.update');
+        Route::patch('/homepage-bento/{slot}/toggle-active', [HomepageBentoController::class, 'toggleActive'])->name('homepage-bento.toggle-active');
 
         // Dynamic System Settings & CMS Identity
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
