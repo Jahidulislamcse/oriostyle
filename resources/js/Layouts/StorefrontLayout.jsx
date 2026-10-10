@@ -88,7 +88,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     </Link>
 
                     {/* Center Navigation Menu */}
-                    <nav>
+                    <nav className="oubd-nav-wrap">
                         <ul className="oubd-nav-menu">
                             <li className="active">
                                 <Link href="/">HOME</Link>
