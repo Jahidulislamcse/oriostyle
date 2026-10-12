@@ -53,7 +53,7 @@ export default function ProductCard({
                     <span className="oubd-badge oubd-badge-new">New</span>
                 ) : null}
 
-                <Link href={`/?category=${product.category?.slug || ''}`}>
+                <Link href={product.slug ? `/products/${product.slug}` : '/shop'}>
                     <img
                         src={primaryImg}
                         alt={product.name}
@@ -64,7 +64,7 @@ export default function ProductCard({
 
             <div className="oubd-product-info">
                 <h3 className="oubd-product-title">
-                    <Link href={`/?category=${product.category?.slug || ''}`} className="text-dark text-decoration-none">
+                    <Link href={product.slug ? `/products/${product.slug}` : '/shop'} className="text-dark text-decoration-none">
                         {product.name}
                     </Link>
                 </h3>
