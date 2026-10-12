@@ -19,7 +19,7 @@ class HomepageBentoService
     public function getAllSlots(): Collection
     {
         return HomepageBentoSlot::query()
-            ->with(['category:id,name,slug'])
+            ->with(['category.images', 'category.featuredImage'])
             ->orderBy('display_order', 'asc')
             ->get();
     }
@@ -32,7 +32,7 @@ class HomepageBentoService
         return Cache::remember(self::CACHE_KEY, self::CACHE_TTL, function () {
             return HomepageBentoSlot::query()
                 ->active()
-                ->with(['category:id,name,slug'])
+                ->with(['category.images', 'category.featuredImage'])
                 ->get()
                 ->keyBy('slot_key');
         });
@@ -63,7 +63,7 @@ class HomepageBentoService
         $slot->update($data);
         $this->flushCache();
 
-        return $slot->fresh(['category:id,name,slug']);
+        return $slot->fresh(['category.images', 'category.featuredImage']);
     }
 
     /**

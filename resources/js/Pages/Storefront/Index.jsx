@@ -159,7 +159,7 @@ export default function Index({
                     <section key={catItem.id || idx} className="oubd-collection-section">
                         {bannerSrc && (
                             <div className="oubd-collection-banner-wrap">
-                                <Link href={`/?category=${catItem.slug || ''}`}>
+                                <Link href={catItem.slug ? `/shop?category=${encodeURIComponent(catItem.slug)}` : '/shop'}>
                                     <img
                                         src={bannerSrc}
                                         alt={`${catItem.name || 'Category'} Collection Banner`}
@@ -183,7 +183,10 @@ export default function Index({
                         </div>
 
                         <div className="oubd-btn-container">
-                            <Link href={`/?category=${catItem.slug || ''}`} className="oubd-outline-btn">
+                            <Link
+                                href={catItem.slug ? `/shop?category=${encodeURIComponent(catItem.slug)}` : '/shop'}
+                                className="oubd-outline-btn"
+                            >
                                 VIEW ALL {(catItem.name || 'COLLECTION').toUpperCase()}
                             </Link>
                         </div>

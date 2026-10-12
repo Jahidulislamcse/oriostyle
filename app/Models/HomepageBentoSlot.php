@@ -52,15 +52,19 @@ class HomepageBentoSlot extends Model
      */
     public function getImageUrlAttribute(): ?string
     {
-        if (empty($this->image_path)) {
-            return null;
+        if (!empty($this->image_path)) {
+            if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://') || str_starts_with($this->image_path, '/')) {
+                return $this->image_path;
+            }
+
+            return '/storage/' . ltrim($this->image_path, '/');
         }
 
-        if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://') || str_starts_with($this->image_path, '/')) {
-            return $this->image_path;
+        if ($this->relationLoaded('category') && $this->category) {
+            return $this->category->banner_url ?? $this->category->image_url ?? null;
         }
 
-        return '/storage/' . ltrim($this->image_path, '/');
+        return null;
     }
 
     /**
@@ -76,7 +80,7 @@ class HomepageBentoSlot extends Model
             return $this->category->name;
         }
 
-        return $this->category?->name ?? 'Featured Collection';
+        return 'Featured Collection';
     }
 
     /**
@@ -88,7 +92,7 @@ class HomepageBentoSlot extends Model
             return $this->category->slug ?? '';
         }
 
-        return $this->category?->slug ?? '';
+        return '';
     }
 
     /**

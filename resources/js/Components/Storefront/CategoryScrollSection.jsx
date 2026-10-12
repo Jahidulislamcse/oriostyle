@@ -119,7 +119,7 @@ export default function CategoryScrollSection({ categories = [] }) {
                                     {cat.images.map((imgSrc, imgIdx) => (
                                         <li key={imgIdx} style={{ width: '33.33%' }}>
                                             <Link
-                                                href={`/?category=${cat.slug}`}
+                                                href={cat.slug ? `/shop?category=${encodeURIComponent(cat.slug)}` : '/shop'}
                                                 onClick={handleCardLinkClick}
                                             >
                                                 <img
