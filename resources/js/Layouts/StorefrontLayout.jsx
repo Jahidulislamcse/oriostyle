@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
+import axios from 'axios';
 
 function getValidImageUrl(c) {
     const raw = c?.image_url || (c?.images && c?.images[0]?.image_url) || c?.image || (c?.images && c?.images[0]?.image_path) || null;
@@ -14,12 +15,14 @@ function getValidImageUrl(c) {
     return null;
 }
 
-export default function StorefrontLayout({ children, navCategories: directNavCategories }) {
+export default function StorefrontLayout({ children, navCategories: directNavCategories, headerSolid = false }) {
     const { settings = {}, auth = {}, navCategories: sharedNavCategories = [] } = usePage().props;
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState({ products: [], categories: [] });
+    const [isSearching, setIsSearching] = useState(false);
     const [showBackToTop, setShowBackToTop] = useState(false);
 
     // Mobile Footer Accordion States
@@ -68,10 +71,35 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
         window.scrollTo({ top: 0, behavior: 'smooth' });
     };
 
+    // Live search autocomplete debounced effect
+    useEffect(() => {
+        if (!isSearchOpen || searchQuery.trim().length < 2) {
+            setSearchResults({ products: [], categories: [] });
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            setIsSearching(true);
+            axios.get(`/api/search?q=${encodeURIComponent(searchQuery.trim())}`)
+                .then(res => {
+                    setSearchResults(res.data || { products: [], categories: [] });
+                })
+                .catch(() => {
+                    setSearchResults({ products: [], categories: [] });
+                })
+                .finally(() => {
+                    setIsSearching(false);
+                });
+        }, 250);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery, isSearchOpen]);
+
     const handleSearchSubmit = (e) => {
         e.preventDefault();
         if (searchQuery.trim()) {
-            window.location.href = `/?search=${encodeURIComponent(searchQuery.trim())}`;
+            setIsSearchOpen(false);
+            window.location.href = `/shop?search=${encodeURIComponent(searchQuery.trim())}`;
         }
     };
 
@@ -79,7 +107,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
         <div className="oubd-wrapper" style={{ backgroundColor: '#ffffff', minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
             
             {/* --- Desktop Main Header --- */}
-            <header className={`oubd-header ${isScrolled ? 'scrolled' : ''}`}>
+            <header className={`oubd-header ${isScrolled || headerSolid ? 'scrolled' : ''}`}>
                 <div className="oubd-header-inner">
                     {/* Left Brand Logo */}
                     <Link href="/" className="oubd-brand-logo">
@@ -93,15 +121,19 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     {/* Center Navigation Menu */}
                     <nav className="oubd-nav-wrap">
                         <ul className="oubd-nav-menu">
-                            <li className="active">
+                            <li>
                                 <Link href="/">HOME</Link>
+                            </li>
+
+                            <li>
+                                <Link href="/shop">SHOP</Link>
                             </li>
 
                             {categories && categories.slice(0, 4).map((cat) => {
                                 const hasChildren = cat.children && cat.children.length > 0;
                                 return (
                                     <li key={cat.id}>
-                                        <Link href={`/?category=${cat.slug}`}>
+                                        <Link href={`/shop?category=${cat.slug}`}>
                                             {cat.name}
                                             {hasChildren && <i className="ri-arrow-down-s-line" />}
                                         </Link>
@@ -109,11 +141,11 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                         {hasChildren && (
                                             <ul className="oubd-dropdown">
                                                 <li>
-                                                    <Link href={`/?category=${cat.slug}`}>All {cat.name}</Link>
+                                                    <Link href={`/shop?category=${cat.slug}`}>All {cat.name}</Link>
                                                 </li>
                                                 {cat.children.map((sub) => (
                                                     <li key={sub.id}>
-                                                        <Link href={`/?category=${sub.slug}`}>{sub.name}</Link>
+                                                        <Link href={`/shop?category=${sub.slug}`}>{sub.name}</Link>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -123,7 +155,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             })}
 
                             <li>
-                                <Link href="/#featured-products">ALL PRODUCTS</Link>
+                                <Link href="/shop">ALL PRODUCTS</Link>
                             </li>
                         </ul>
                     </nav>
@@ -259,10 +291,15 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                 HOME
                             </Link>
                         </li>
+                        <li className="mb-2">
+                            <Link href="/shop" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
+                                SHOP
+                            </Link>
+                        </li>
                         {categories && categories.map((cat) => (
                             <li key={cat.id} className="mb-2">
                                 <Link
-                                    href={`/?category=${cat.slug}`}
+                                    href={`/shop?category=${cat.slug}`}
                                     className="d-block py-2 fw-bold text-dark text-decoration-none text-uppercase"
                                     onClick={() => setIsMobileMenuOpen(false)}
                                 >
@@ -273,7 +310,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                         {cat.children.map((sub) => (
                                             <li key={sub.id} className="mb-1">
                                                 <Link
-                                                    href={`/?category=${sub.slug}`}
+                                                    href={`/shop?category=${sub.slug}`}
                                                     className="d-block py-1 text-muted text-decoration-none text-uppercase font-size-13"
                                                     onClick={() => setIsMobileMenuOpen(false)}
                                                 >
@@ -286,7 +323,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             </li>
                         ))}
                         <li className="mt-3 pt-3 border-top">
-                            <Link href="/#featured-products" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
+                            <Link href="/shop" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
                                 ALL PRODUCTS
                             </Link>
                         </li>
@@ -294,7 +331,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                 </div>
             </div>
 
-            {/* --- Search Overlay Modal --- */}
+            {/* --- Live Search Overlay Modal --- */}
             {isSearchOpen && (
                 <div
                     className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-75 d-flex align-items-center justify-content-center p-3"
@@ -303,7 +340,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                 >
                     <div
                         className="bg-white p-4 shadow-lg w-100 position-relative"
-                        style={{ maxWidth: '600px', borderRadius: '4px' }}
+                        style={{ maxWidth: '650px', borderRadius: '8px' }}
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button
@@ -311,26 +348,117 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             className="btn-close position-absolute top-0 end-0 m-3"
                             onClick={() => setIsSearchOpen(false)}
                         />
-                        <h4 className="fw-bold mb-3 text-uppercase font-size-16">Search Products</h4>
-                        <form onSubmit={handleSearchSubmit} className="d-flex gap-2">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Search by product name, category, or keyword..."
-                                value={searchQuery}
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                                autoFocus
-                            />
-                            <button type="submit" className="btn btn-dark px-4 text-uppercase fw-bold font-size-13">
+                        <h4 className="fw-bold mb-3 text-uppercase font-size-15 tracking-wider text-dark d-flex align-items-center gap-2">
+                            <i className="ri-search-line text-warning" /> Search Catalog
+                        </h4>
+                        <form onSubmit={handleSearchSubmit} className="d-flex gap-2 mb-3">
+                            <div className="position-relative flex-grow-1">
+                                <input
+                                    type="text"
+                                    className="form-control form-control-lg font-size-14"
+                                    placeholder="Search by product name, SKU, or brand..."
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    autoFocus
+                                    style={{ paddingRight: isSearching ? '40px' : '15px' }}
+                                />
+                                {isSearching && (
+                                    <div className="position-absolute top-50 end-0 translate-middle-y me-3">
+                                        <div className="spinner-border spinner-border-sm text-warning" role="status">
+                                            <span className="visually-hidden">Loading...</span>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            <button type="submit" className="btn btn-dark px-4 text-uppercase fw-bold font-size-13 tracking-wider">
                                 Search
                             </button>
                         </form>
+
+                        {/* Live Results Autocomplete Container */}
+                        {searchQuery.trim().length >= 2 && (
+                            <div className="search-autocomplete-panel border-top pt-3" style={{ maxHeight: '400px', overflowY: 'auto' }}>
+                                {/* Category Suggestions */}
+                                {searchResults.categories && searchResults.categories.length > 0 && (
+                                    <div className="mb-3">
+                                        <span className="font-size-11 fw-bold text-muted text-uppercase tracking-wider d-block mb-1">
+                                            Suggested Categories
+                                        </span>
+                                        <div className="d-flex flex-wrap gap-1">
+                                            {searchResults.categories.map((sc) => (
+                                                <Link
+                                                    key={sc.id}
+                                                    href={`/shop?category=${sc.slug}`}
+                                                    className="badge bg-light text-dark text-decoration-none px-2 py-1 font-size-12 hover-bg-warning transition-all border"
+                                                    onClick={() => setIsSearchOpen(false)}
+                                                >
+                                                    {sc.name}
+                                                </Link>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Product Suggestions */}
+                                {searchResults.products && searchResults.products.length > 0 ? (
+                                    <div>
+                                        <span className="font-size-11 fw-bold text-muted text-uppercase tracking-wider d-block mb-2">
+                                            Matching Products ({searchResults.products.length})
+                                        </span>
+                                        <div className="d-flex flex-column gap-2 mb-3">
+                                            {searchResults.products.map((sp) => (
+                                                <Link
+                                                    key={sp.id}
+                                                    href={`/shop?search=${encodeURIComponent(sp.name)}`}
+                                                    className="d-flex align-items-center gap-3 p-2 rounded text-decoration-none text-dark hover-bg-light transition-all border-bottom"
+                                                    onClick={() => setIsSearchOpen(false)}
+                                                >
+                                                    <img
+                                                        src={sp.image_url}
+                                                        alt={sp.name}
+                                                        className="rounded"
+                                                        style={{ width: '45px', height: '45px', objectFit: 'cover' }}
+                                                    />
+                                                    <div className="flex-grow-1 min-width-0">
+                                                        <h6 className="font-size-13 fw-semibold text-truncate mb-0">
+                                                            {sp.name}
+                                                        </h6>
+                                                        <span className="font-size-11 text-muted">
+                                                            {sp.category_name} {sp.brand_name ? `• ${sp.brand_name}` : ''}
+                                                        </span>
+                                                    </div>
+                                                    <div className="text-end text-nowrap">
+                                                        <span className="fw-bold font-size-13 text-dark">
+                                                            {currencySymbol}{Number(sp.effective_price).toLocaleString()}
+                                                        </span>
+                                                    </div>
+                                                </Link>
+                                            ))}
+                                        </div>
+
+                                        <Link
+                                            href={`/shop?search=${encodeURIComponent(searchQuery.trim())}`}
+                                            className="btn btn-outline-dark btn-sm w-100 text-uppercase fw-bold font-size-12 py-2"
+                                            onClick={() => setIsSearchOpen(false)}
+                                        >
+                                            View All Results in Shop →
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    !isSearching && (
+                                        <p className="text-muted font-size-13 text-center my-3">
+                                            No products found matching "{searchQuery}".
+                                        </p>
+                                    )
+                                )}
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
 
             {/* --- Main Body Content --- */}
-            <main className="flex-grow-1" style={{ width: '100%' }}>
+            <main className="flex-grow-1" style={{ width: '100%', paddingTop: headerSolid ? '75px' : '0' }}>
                 {children}
             </main>
 

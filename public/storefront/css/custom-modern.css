@@ -1341,3 +1341,57 @@ header.oubd-header.scrolled,
     top: -2px;
     right: 4px;
 }
+
+/* ==========================================================================
+   Phase 12: Catalog Discovery, Live Search & Shop Page Enhancements
+   ========================================================================== */
+.font-size-10 { font-size: 10px !important; }
+.font-size-11 { font-size: 11px !important; }
+.font-size-12 { font-size: 12px !important; }
+.font-size-13 { font-size: 13px !important; }
+.font-size-14 { font-size: 14px !important; }
+.font-size-15 { font-size: 15px !important; }
+.font-size-16 { font-size: 16px !important; }
+.font-size-18 { font-size: 18px !important; }
+
+.cursor-pointer { cursor: pointer !important; }
+.tracking-wider { letter-spacing: 0.05em !important; }
+
+.hover-bg-light:hover {
+    background-color: #f8f9fa !important;
+}
+
+.hover-text-dark:hover {
+    color: #111111 !important;
+}
+
+.hover-text-white:hover {
+    color: #ffffff !important;
+}
+
+.hover-bg-warning:hover {
+    background-color: #ffc107 !important;
+    color: #111111 !important;
+}
+
+.transition-all {
+    transition: all 0.2s ease-in-out !important;
+}
+
+.oubd-shop-sidebar {
+    background: #ffffff;
+    border-radius: 6px;
+}
+
+.oubd-shop-sidebar .form-check-input:checked {
+    background-color: #0e1c2a;
+    border-color: #0e1c2a;
+}
+
+.oubd-shop-sidebar input[type="checkbox"]:focus,
+.oubd-shop-sidebar input[type="number"]:focus,
+.form-select:focus {
+    border-color: #0e1c2a !important;
+    box-shadow: 0 0 0 0.2rem rgba(14, 28, 42, 0.15) !important;
+}
+

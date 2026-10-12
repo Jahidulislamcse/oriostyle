@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\Storefront\HomeController;
+use App\Http\Controllers\Storefront\ShopController;
 use App\Http\Controllers\StorageFileController;
 
 /*
@@ -33,6 +34,8 @@ Route::get('/storage/{path}', [StorageFileController::class, 'show'])
 |--------------------------------------------------------------------------
 */
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
+Route::get('/api/search', [ShopController::class, 'search'])->name('shop.search');
 
 /*
 |--------------------------------------------------------------------------
