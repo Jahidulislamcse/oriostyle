@@ -210,17 +210,84 @@ class CartService
     }
 
     /**
+     * Apply a discount coupon to the cart.
+     */
+    public function applyCoupon(Cart $cart, string $code, ?User $user = null): array
+    {
+        $validation = app(CouponValidationService::class)->validate(
+            $code,
+            $cart->subtotal,
+            $user ?: $cart->user
+        );
+
+        if (!$validation['valid']) {
+            return $validation;
+        }
+
+        $cart->update(['coupon_code' => $validation['coupon']->code]);
+
+        return $validation;
+    }
+
+    /**
+     * Remove applied coupon from the cart.
+     */
+    public function removeCoupon(Cart $cart): Cart
+    {
+        $cart->update(['coupon_code' => null]);
+        return $cart;
+    }
+
+    /**
      * Format clean cart payload for JSON response or Inertia shared props.
      */
     public function formatCartPayload(Cart $cart): array
     {
         $this->getCartWithItems($cart);
 
+        $couponData = null;
+        $discountAmount = 0.00;
+        $couponMessage = null;
+        $couponError = null;
+
+        if (!empty($cart->coupon_code)) {
+            $validation = app(CouponValidationService::class)->validate(
+                $cart->coupon_code,
+                $cart->subtotal,
+                $cart->user
+            );
+
+            if ($validation['valid'] && $validation['coupon']) {
+                $coupon = $validation['coupon'];
+                $discountAmount = $validation['discount'];
+                $couponData = [
+                    'code' => $coupon->code,
+                    'name' => $coupon->name,
+                    'discount_type' => $coupon->discount_type,
+                    'discount_value' => $coupon->discount_value,
+                    'discount_amount' => $discountAmount,
+                    'formatted_discount' => '৳' . number_format($discountAmount, 2),
+                ];
+                $couponMessage = $validation['message'];
+            } else {
+                $couponError = $validation['error'];
+            }
+        }
+
+        $grandTotal = max(0.00, round($cart->subtotal - $discountAmount, 2));
+
         return [
             'id' => $cart->id,
             'count' => $cart->items_count,
             'subtotal' => $cart->subtotal,
             'formatted_subtotal' => '৳' . number_format($cart->subtotal, 2),
+            'discount_amount' => $discountAmount,
+            'formatted_discount_amount' => '৳' . number_format($discountAmount, 2),
+            'grand_total' => $grandTotal,
+            'formatted_grand_total' => '৳' . number_format($grandTotal, 2),
+            'coupon' => $couponData,
+            'coupon_error' => $couponError,
+            'coupon_message' => $couponMessage,
             'is_free_shipping' => $cart->is_free_shipping,
             'amount_for_free_shipping' => $cart->amount_for_free_shipping,
             'free_shipping_progress' => $cart->free_shipping_progress,

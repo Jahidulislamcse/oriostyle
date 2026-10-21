@@ -173,4 +173,74 @@ class CartController extends Controller
             'cart' => $payload,
         ]);
     }
+
+    /**
+     * Apply promo discount coupon to active cart.
+     */
+    public function applyCoupon(Request $request): JsonResponse|RedirectResponse
+    {
+        $validated = $request->validate([
+            'code' => ['required', 'string', 'max:50'],
+        ]);
+
+        $cart = $this->getCart($request);
+
+        $result = $this->cartService->applyCoupon($cart, $validated['code'], $request->user());
+
+        $payload = $this->cartService->formatCartPayload($cart->fresh());
+
+        if (!$result['valid']) {
+            if ($request->wantsJson() && !$request->header('X-Inertia')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => $result['message'],
+                    'error' => $result['error'],
+                    'cart' => $payload,
+                ], 422);
+            }
+
+            return back()->withErrors([
+                'coupon' => $result['message'],
+            ])->with('error', $result['message']);
+        }
+
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
+            return response()->json([
+                'success' => true,
+                'message' => $result['message'],
+                'discount' => $result['discount'],
+                'cart' => $payload,
+            ]);
+        }
+
+        return back()->with([
+            'success' => $result['message'],
+            'cart' => $payload,
+        ]);
+    }
+
+    /**
+     * Remove applied promo discount coupon from active cart.
+     */
+    public function removeCoupon(Request $request): JsonResponse|RedirectResponse
+    {
+        $cart = $this->getCart($request);
+
+        $this->cartService->removeCoupon($cart);
+
+        $payload = $this->cartService->formatCartPayload($cart->fresh());
+
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Coupon removed.',
+                'cart' => $payload,
+            ]);
+        }
+
+        return back()->with([
+            'success' => 'Coupon removed.',
+            'cart' => $payload,
+        ]);
+    }
 }

@@ -41,6 +41,9 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
     const currencySymbol = settings.currency_symbol || '৳';
 
     const [isScrolled, setIsScrolled] = useState(false);
+    const [couponInput, setCouponInput] = useState('');
+    const [isApplyingCoupon, setIsApplyingCoupon] = useState(false);
+    const [couponLocalError, setCouponLocalError] = useState(null);
 
     useEffect(() => {
         const handleKeyDown = (e) => {
@@ -93,6 +96,46 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                 { preserveScroll: true, preserveState: true }
             );
         }
+    };
+
+    const handleApplyCoupon = (e) => {
+        e.preventDefault();
+        if (!couponInput.trim() || isApplyingCoupon) return;
+
+        setIsApplyingCoupon(true);
+        setCouponLocalError(null);
+
+        router.post(
+            route('cart.coupon.apply'),
+            { code: couponInput.trim() },
+            {
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => {
+                    setCouponInput('');
+                    setCouponLocalError(null);
+                },
+                onError: (errors) => {
+                    setCouponLocalError(errors?.coupon || 'Failed to apply coupon.');
+                },
+                onFinish: () => {
+                    setIsApplyingCoupon(false);
+                },
+            }
+        );
+    };
+
+    const handleRemoveCoupon = () => {
+        router.delete(
+            route('cart.coupon.remove'),
+            {
+                preserveScroll: true,
+                preserveState: true,
+                onSuccess: () => {
+                    setCouponLocalError(null);
+                },
+            }
+        );
     };
 
     const scrollToTop = () => {
@@ -793,12 +836,90 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                 {/* Drawer Footer */}
                 {cart?.items && cart.items.length > 0 && (
                     <div className="p-3 border-top bg-light">
-                        <div className="d-flex justify-content-between font-size-14 fw-bold mb-1">
-                            <span className="text-uppercase text-muted font-size-12">Subtotal</span>
-                            <span className="font-mono text-dark font-size-16">
+                        {/* Promotional Coupon Box */}
+                        <div className="mb-3 pb-3 border-bottom">
+                            {cart.coupon ? (
+                                <div className="d-flex align-items-center justify-content-between p-2 rounded bg-white border border-success border-opacity-50">
+                                    <div className="d-flex align-items-center gap-2">
+                                        <i className="ri-coupon-3-fill text-success font-size-16" />
+                                        <div>
+                                            <span className="fw-bold text-success font-size-12 tracking-wider">
+                                                {cart.coupon.code}
+                                            </span>
+                                            <span className="text-muted font-size-11 d-block">
+                                                Saved {currencySymbol}{Number(cart.discount_amount || 0).toLocaleString()}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        onClick={handleRemoveCoupon}
+                                        className="btn btn-sm btn-link text-danger p-0 text-decoration-none"
+                                        title="Remove coupon"
+                                    >
+                                        <i className="ri-close-line font-size-18" />
+                                    </button>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleApplyCoupon} className="d-flex flex-column gap-1">
+                                    <div className="input-group input-group-sm">
+                                        <input
+                                            type="text"
+                                            className="form-control text-uppercase font-size-12"
+                                            placeholder="PROMO CODE (e.g. SAVE15)"
+                                            value={couponInput}
+                                            onChange={(e) => {
+                                                setCouponInput(e.target.value.toUpperCase());
+                                                setCouponLocalError(null);
+                                            }}
+                                            disabled={isApplyingCoupon}
+                                            style={{ letterSpacing: '0.5px' }}
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="btn btn-dark fw-bold font-size-11 text-uppercase px-3"
+                                            disabled={isApplyingCoupon || !couponInput.trim()}
+                                        >
+                                            {isApplyingCoupon ? (
+                                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true" />
+                                            ) : (
+                                                'Apply'
+                                            )}
+                                        </button>
+                                    </div>
+                                    {(couponLocalError || cart.coupon_error) && (
+                                        <span className="text-danger font-size-11 mt-1 d-block">
+                                            {couponLocalError || cart.coupon_error}
+                                        </span>
+                                    )}
+                                </form>
+                            )}
+                        </div>
+
+                        {/* Order Subtotal Breakdown */}
+                        <div className="d-flex justify-content-between font-size-13 text-muted mb-1">
+                            <span>Subtotal</span>
+                            <span className="font-mono text-dark">
                                 {currencySymbol}{Number(cart.subtotal || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </span>
                         </div>
+
+                        {Number(cart.discount_amount || 0) > 0 && (
+                            <div className="d-flex justify-content-between font-size-13 text-success mb-1">
+                                <span>Coupon Savings</span>
+                                <span className="font-mono">
+                                    -{currencySymbol}{Number(cart.discount_amount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                </span>
+                            </div>
+                        )}
+
+                        <div className="d-flex justify-content-between font-size-15 fw-bold mb-1 pt-2 border-top">
+                            <span className="text-uppercase text-dark font-size-12">Estimated Total</span>
+                            <span className="font-mono text-dark font-size-16">
+                                {currencySymbol}{Number(cart.grand_total || cart.subtotal || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            </span>
+                        </div>
+
                         <p className="font-size-11 text-muted mb-3">
                             Taxes and shipping calculated at checkout.
                         </p>

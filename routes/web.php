@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageBentoController;
 use App\Http\Controllers\Admin\InventoryController;
@@ -48,6 +49,10 @@ Route::post('/cart/items/store', [CartController::class, 'store']);
 Route::patch('/cart/items/{cartItem}', [CartController::class, 'update'])->whereNumber('cartItem')->name('cart.items.update');
 Route::delete('/cart/items/{cartItem}', [CartController::class, 'destroy'])->whereNumber('cartItem')->name('cart.items.destroy');
 Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
+
+// Phase 15: Discount Coupon Engine
+Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
+Route::delete('/cart/coupon', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
 
 /*
 |--------------------------------------------------------------------------
@@ -164,6 +169,13 @@ Route::prefix('admin')
         Route::patch('/orders/{order}/payment', [OrderController::class, 'updatePayment'])->name('orders.payment');
         Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice'])->name('orders.invoice');
         Route::get('/invoices', fn () => redirect()->route('admin.orders.index'))->name('invoices.index');
+
+        // Phase 15: Promotional Coupons Management
+        Route::get('/coupons', [CouponController::class, 'index'])->name('coupons.index');
+        Route::post('/coupons', [CouponController::class, 'store'])->name('coupons.store');
+        Route::put('/coupons/{coupon}', [CouponController::class, 'update'])->name('coupons.update');
+        Route::delete('/coupons/{coupon}', [CouponController::class, 'destroy'])->name('coupons.destroy');
+        Route::patch('/coupons/{coupon}/toggle-active', [CouponController::class, 'toggleActive'])->name('coupons.toggle-active');
 
         // Dynamic Banners & Sliders CMS
         Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');

@@ -22,7 +22,8 @@ import {
     Store,
     Shield,
     Image as ImageIcon,
-    LayoutGrid
+    LayoutGrid,
+    Ticket
 } from 'lucide-react';
 import ToastContainer from '@/Components/Common/ToastContainer';
 import Badge from '@/Components/Common/Badge';
@@ -73,6 +74,7 @@ export default function AdminLayout({ title = '', children }) {
             items: [
                 { name: 'Orders Management', href: '/admin/orders', icon: ShoppingBag, current: route().current('admin.orders.*') },
                 { name: 'Invoices & Thermal', href: '/admin/invoices', icon: FileText, current: route().current('admin.invoices.*') },
+                { name: 'Coupons & Promos', href: '/admin/coupons', icon: Ticket, current: route().current('admin.coupons.*') },
             ],
         },
         {
