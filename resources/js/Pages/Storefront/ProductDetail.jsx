@@ -88,6 +88,12 @@ export default function ProductDetail({
         if (isOutOfStock || isAddingToCart) return;
 
         setIsAddingToCart(true);
+
+        // Safety timeout so the button state is always released
+        const safetyTimer = setTimeout(() => {
+            setIsAddingToCart(false);
+        }, 3000);
+
         router.post(
             route('cart.items.store'),
             {
@@ -98,12 +104,18 @@ export default function ProductDetail({
             {
                 preserveScroll: true,
                 onSuccess: () => {
+                    clearTimeout(safetyTimer);
                     setIsAddingToCart(false);
                     setAddedNotice(true);
                     setTimeout(() => setAddedNotice(false), 3500);
                     window.dispatchEvent(new CustomEvent('open-cart'));
                 },
                 onError: () => {
+                    clearTimeout(safetyTimer);
+                    setIsAddingToCart(false);
+                },
+                onFinish: () => {
+                    clearTimeout(safetyTimer);
                     setIsAddingToCart(false);
                 },
             }
