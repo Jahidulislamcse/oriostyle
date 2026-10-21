@@ -30,7 +30,8 @@ import Badge from '@/Components/Common/Badge';
 import ThemeToggle from '@/Components/Common/ThemeToggle';
 
 export default function AdminLayout({ title = '', children }) {
-    const { auth, settings } = usePage().props;
+    const { url = '', props = {} } = usePage();
+    const { auth = {}, settings = {} } = props;
     const user = auth?.user;
     const { post } = useForm();
 
@@ -54,45 +55,70 @@ export default function AdminLayout({ title = '', children }) {
         post(route('logout'));
     };
 
+    // Robust, reactive URL matching for sidebar items across full page loads & Inertia client navigations
+    const currentPath = (url || (typeof window !== 'undefined' ? window.location.pathname : ''))
+        .split('?')[0]
+        .replace(/\/+$/, '') || '/';
+
+    const isItemActive = (href, matchPrefixes = []) => {
+        const targetPath = href.split('?')[0].replace(/\/+$/, '') || '/';
+
+        // Exact match required for Dashboard root so it doesn't collide with other /admin routes
+        if (targetPath === '/admin/dashboard') {
+            return currentPath === '/admin/dashboard';
+        }
+
+        // Sub-path match (e.g. /admin/products/create matches /admin/products)
+        if (currentPath === targetPath || currentPath.startsWith(targetPath + '/')) {
+            return true;
+        }
+
+        // Additional prefix aliases
+        return matchPrefixes.some((prefix) => {
+            const cleanPrefix = prefix.replace(/\/+$/, '');
+            return currentPath === cleanPrefix || currentPath.startsWith(cleanPrefix + '/');
+        });
+    };
+
     const navigation = [
         {
             group: 'Core Operations',
             items: [
-                { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, current: route().current('admin.dashboard') },
+                { name: 'Dashboard', href: '/admin/dashboard', icon: LayoutDashboard, current: isItemActive('/admin/dashboard') },
             ],
         },
         {
             group: 'Catalog & Taxonomy',
             items: [
-                { name: 'Categories Tree', href: '/admin/categories', icon: FolderTree, current: route().current('admin.categories.*') },
-                { name: 'Brands & Media', href: '/admin/brands', icon: Tag, current: route().current('admin.brands.*') },
-                { name: 'Products Catalog', href: '/admin/products', icon: Package, current: route().current('admin.products.*') },
-                { name: 'Banners & Sliders', href: '/admin/banners', icon: ImageIcon, current: route().current('admin.banners.*') },
-                { name: 'Bento Mosaic Grid', href: '/admin/homepage-bento', icon: LayoutGrid, current: route().current('admin.homepage-bento.*') },
-                { name: 'Variant Matrix', href: '/admin/variants', icon: Boxes, current: route().current('admin.variants.*') },
+                { name: 'Categories Tree', href: '/admin/categories', icon: FolderTree, current: isItemActive('/admin/categories') },
+                { name: 'Brands & Media', href: '/admin/brands', icon: Tag, current: isItemActive('/admin/brands') },
+                { name: 'Products Catalog', href: '/admin/products', icon: Package, current: isItemActive('/admin/products') },
+                { name: 'Banners & Sliders', href: '/admin/banners', icon: ImageIcon, current: isItemActive('/admin/banners') },
+                { name: 'Bento Mosaic Grid', href: '/admin/homepage-bento', icon: LayoutGrid, current: isItemActive('/admin/homepage-bento') },
+                { name: 'Variant Matrix', href: '/admin/variants', icon: Boxes, current: isItemActive('/admin/variants') },
             ],
         },
         {
             group: 'Procurement & Stock',
             items: [
-                { name: 'Suppliers Ledger', href: '/admin/suppliers', icon: Truck, current: route().current('admin.suppliers.*') },
-                { name: 'Stock-In PO', href: '/admin/purchase-orders', icon: Boxes, current: route().current('admin.purchase-orders.*') },
-                { name: 'Inventory Control', href: '/admin/inventory', icon: Package, current: route().current('admin.inventory.*') },
+                { name: 'Suppliers Ledger', href: '/admin/suppliers', icon: Truck, current: isItemActive('/admin/suppliers') },
+                { name: 'Stock-In PO', href: '/admin/purchase-orders', icon: Boxes, current: isItemActive('/admin/purchase-orders', ['/admin/purchases']) },
+                { name: 'Inventory Control', href: '/admin/inventory', icon: Package, current: isItemActive('/admin/inventory') },
             ],
         },
         {
             group: 'Orders & Fulfillment',
             items: [
-                { name: 'Orders Management', href: '/admin/orders', icon: ShoppingBag, current: route().current('admin.orders.*') },
-                { name: 'Invoices & Thermal', href: '/admin/invoices', icon: FileText, current: route().current('admin.invoices.*') },
-                { name: 'Coupons & Promos', href: '/admin/coupons', icon: Ticket, current: route().current('admin.coupons.*') },
+                { name: 'Orders Management', href: '/admin/orders', icon: ShoppingBag, current: isItemActive('/admin/orders') && !currentPath.includes('/invoice') },
+                { name: 'Invoices & Thermal', href: '/admin/invoices', icon: FileText, current: isItemActive('/admin/invoices') || currentPath.includes('/invoice') },
+                { name: 'Coupons & Promos', href: '/admin/coupons', icon: Ticket, current: isItemActive('/admin/coupons') },
             ],
         },
         {
             group: 'System & Intelligence',
             items: [
-                { name: 'Analytics & Profit BI', href: '/admin/analytics', icon: BarChart3, current: route().current('admin.analytics.*') },
-                { name: 'Dynamic Settings', href: '/admin/settings', icon: Settings, current: route().current('admin.settings.*') },
+                { name: 'Analytics & Profit BI', href: '/admin/analytics', icon: BarChart3, current: isItemActive('/admin/analytics') },
+                { name: 'Dynamic Settings', href: '/admin/settings', icon: Settings, current: isItemActive('/admin/settings') },
             ],
         },
     ];
@@ -175,11 +201,11 @@ export default function AdminLayout({ title = '', children }) {
                                             href={item.href}
                                             onClick={() => setMobileOpen(false)}
                                             title={sidebarCollapsed ? item.name : undefined}
-                                            className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 group ${
+                                            className={`relative flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 group ${
                                                 isActive
-                                                    ? 'bg-[#FDFBF5] text-[#926F18] border border-[#F5E7C2] dark:bg-[#142C49] dark:text-[#EBD495] dark:border-[#D4AF37]/50 shadow-2xs'
+                                                    ? 'bg-[#FBF5E6] text-[#755615] border border-[#EBD495] dark:bg-[#142C49] dark:text-[#EBD495] dark:border-[#D4AF37]/50 shadow-xs font-bold before:absolute before:left-1 before:top-2 before:bottom-2 before:w-1 before:bg-[#D4AF37] before:rounded-full'
                                                     : 'text-slate-600 dark:text-[#8EB0CF] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-[#142C49]/60 border border-transparent'
-                                            } ${sidebarCollapsed ? 'justify-center px-0' : ''}`}
+                                            } ${sidebarCollapsed ? 'justify-center px-0 before:hidden' : ''}`}
                                         >
                                             <Icon
                                                 className={`w-4.5 h-4.5 flex-shrink-0 transition-transform duration-150 group-hover:scale-110 ${

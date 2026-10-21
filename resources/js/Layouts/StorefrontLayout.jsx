@@ -16,7 +16,9 @@ function getValidImageUrl(c) {
 }
 
 export default function StorefrontLayout({ children, navCategories: directNavCategories, headerSolid = false }) {
-    const { settings = {}, auth = {}, navCategories: sharedNavCategories = [], cart = {} } = usePage().props;
+    const { url = '', props = {} } = usePage();
+    const { settings = {}, auth = {}, navCategories: sharedNavCategories = [], cart = {} } = props;
+    const currentPath = (url || '').split('?')[0].replace(/\/+$/, '') || '/';
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -192,18 +194,19 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     {/* Center Navigation Menu */}
                     <nav className="oubd-nav-wrap">
                         <ul className="oubd-nav-menu">
-                            <li>
+                            <li className={currentPath === '/' ? 'active' : ''}>
                                 <Link href="/">HOME</Link>
                             </li>
 
-                            <li>
+                            <li className={currentPath === '/shop' && !url.includes('category=') ? 'active' : ''}>
                                 <Link href="/shop">SHOP</Link>
                             </li>
 
                             {categories && categories.slice(0, 4).map((cat) => {
                                 const hasChildren = cat.children && cat.children.length > 0;
+                                const isCatActive = url.includes(`category=${cat.slug}`);
                                 return (
-                                    <li key={cat.id}>
+                                    <li key={cat.id} className={isCatActive ? 'active' : ''}>
                                         <Link href={`/shop?category=${cat.slug}`}>
                                             {cat.name}
                                             {hasChildren && <i className="ri-arrow-down-s-line" />}
@@ -225,7 +228,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                 );
                             })}
 
-                            <li>
+                            <li className={currentPath === '/shop' && !url.includes('category=') ? 'active' : ''}>
                                 <Link href="/shop">ALL PRODUCTS</Link>
                             </li>
                         </ul>

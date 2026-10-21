@@ -85,6 +85,7 @@ Route::prefix('admin')
     ->middleware(['auth', 'admin'])
     ->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/analytics', fn () => redirect()->route('admin.dashboard'))->name('analytics.index');
 
         // Phase 4: Category Hierarchy & Taxonomy
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
@@ -131,6 +132,7 @@ Route::prefix('admin')
         Route::patch('/products/toggle-featured', fn () => redirect()->route('admin.products.index'));
         Route::patch('/products/update-stock', fn () => redirect()->route('admin.products.index'));
         Route::match(['post', 'put'], '/products/update', fn () => redirect()->route('admin.products.index'));
+        Route::get('/variants', fn () => redirect()->route('admin.products.index'))->name('variants.index');
 
         // Phase 8: Supplier Directory & Payable Balance Ledger
         Route::get('/suppliers', [SupplierController::class, 'index'])->name('suppliers.index');
