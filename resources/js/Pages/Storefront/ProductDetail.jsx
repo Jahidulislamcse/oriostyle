@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import ProductCard from '@/Components/Storefront/ProductCard';
 import VariantSelector from '@/Components/Storefront/VariantSelector';
@@ -82,10 +82,32 @@ export default function ProductDetail({
         }
     };
 
+    const [isAddingToCart, setIsAddingToCart] = useState(false);
+
     const handleAddToCart = () => {
-        if (isOutOfStock) return;
-        setAddedNotice(true);
-        setTimeout(() => setAddedNotice(false), 3500);
+        if (isOutOfStock || isAddingToCart) return;
+
+        setIsAddingToCart(true);
+        router.post(
+            route('cart.items.store'),
+            {
+                product_id: product.id,
+                product_variant_id: selectedVariant ? selectedVariant.id : null,
+                quantity: quantity,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setIsAddingToCart(false);
+                    setAddedNotice(true);
+                    setTimeout(() => setAddedNotice(false), 3500);
+                    window.dispatchEvent(new CustomEvent('open-cart'));
+                },
+                onError: () => {
+                    setIsAddingToCart(false);
+                },
+            }
+        );
     };
 
     // Close zoom on Escape
@@ -310,14 +332,25 @@ export default function ProductDetail({
                                     <button
                                         type="button"
                                         onClick={handleAddToCart}
-                                        disabled={isOutOfStock}
+                                        disabled={isOutOfStock || isAddingToCart}
                                         className={`btn flex-grow-1 py-3 px-4 text-uppercase fw-bold font-size-13 tracking-wider d-flex align-items-center justify-content-center gap-2 shadow-sm ${
                                             isOutOfStock ? 'btn-secondary disabled' : 'btn-dark'
                                         }`}
                                         style={{ minWidth: '200px' }}
                                     >
-                                        <i className="ri-shopping-bag-3-line font-size-16" />
-                                        {isOutOfStock ? 'Sold Out' : 'Add to Bag'}
+                                        {isAddingToCart ? (
+                                            <>
+                                                <div className="spinner-border spinner-border-sm text-warning" role="status">
+                                                    <span className="visually-hidden">Loading...</span>
+                                                </div>
+                                                <span>Adding to Bag...</span>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <i className="ri-shopping-bag-3-line font-size-16" />
+                                                <span>{isOutOfStock ? 'Sold Out' : 'Add to Bag'}</span>
+                                            </>
+                                        )}
                                     </button>
                                 </div>
 

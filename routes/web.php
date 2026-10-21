@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\Storefront\CartController;
 use App\Http\Controllers\Storefront\HomeController;
 use App\Http\Controllers\Storefront\ProductDetailController;
 use App\Http\Controllers\Storefront\ShopController;
@@ -39,6 +40,13 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/shop', [ShopController::class, 'index'])->name('shop.index');
 Route::get('/products/{slug}', [ProductDetailController::class, 'show'])->name('products.show');
 Route::get('/api/search', [ShopController::class, 'search'])->name('shop.search');
+
+// Phase 14: Cart Engine & Mini-Cart Drawer
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
+Route::post('/cart/items', [CartController::class, 'store'])->name('cart.items.store');
+Route::patch('/cart/items/{cartItem}', [CartController::class, 'update'])->name('cart.items.update');
+Route::delete('/cart/items/{cartItem}', [CartController::class, 'destroy'])->name('cart.items.destroy');
+Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 
 /*
 |--------------------------------------------------------------------------

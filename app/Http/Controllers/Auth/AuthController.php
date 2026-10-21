@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
+use App\Services\Storefront\CartService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,10 +34,18 @@ class AuthController extends Controller
     {
         $request->authenticate();
 
+        $guestSessionId = $request->header('X-Cart-Session')
+            ?: ($request->cookie('cart_session') ?: $request->session()->getId());
+
         $request->session()->regenerate();
 
         /** @var User $user */
         $user = Auth::user();
+
+        // Merge any guest cart items into customer account cart
+        if ($guestSessionId && $user) {
+            app(CartService::class)->mergeGuestCartIntoUser($guestSessionId, $user);
+        }
 
         // Redirect admin/staff to admin dashboard, customers to intended or home
         if ($user->hasAdminAccess()) {
@@ -70,7 +79,14 @@ class AuthController extends Controller
 
         event(new Registered($user));
 
+        $guestSessionId = $request->header('X-Cart-Session')
+            ?: ($request->cookie('cart_session') ?: $request->session()->getId());
+
         Auth::login($user);
+
+        if ($guestSessionId) {
+            app(CartService::class)->mergeGuestCartIntoUser($guestSessionId, $user);
+        }
 
         return redirect(route('home'))->with('success', 'Welcome! Your account has been created successfully.');
     }

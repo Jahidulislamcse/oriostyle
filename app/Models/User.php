@@ -116,4 +116,12 @@ class User extends Authenticatable
     {
         return $this->hasMany(Order::class, 'user_id');
     }
+
+    /**
+     * Relationship: Active Customer Shopping Cart
+     */
+    public function cart(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Cart::class, 'user_id');
+    }
 }

@@ -57,6 +57,14 @@ class HandleInertiaRequests extends Middleware
                     'is_active' => (bool) ($request->user()->is_active ?? true),
                 ] : null,
             ],
+            'cart' => function () use ($request) {
+                /** @var \App\Services\Storefront\CartService $cartService */
+                $cartService = app(\App\Services\Storefront\CartService::class);
+                $sessionId = $request->header('X-Cart-Session')
+                    ?: ($request->cookie('cart_session') ?: $request->session()->getId());
+                $cart = $cartService->getOrCreateCart($request->user(), $sessionId);
+                return $cartService->formatCartPayload($cart);
+            },
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
