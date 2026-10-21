@@ -108,4 +108,12 @@ class User extends Authenticatable
     {
         return $query->whereIn('role', self::ADMIN_ROLES);
     }
+
+    /**
+     * Relationship: Customer Orders
+     */
+    public function orders(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Order::class, 'user_id');
+    }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\HomepageBentoController;
 use App\Http\Controllers\Admin\InventoryController;
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PurchaseOrderController;
 use App\Http\Controllers\Admin\SettingsController;
@@ -146,6 +147,14 @@ Route::prefix('admin')
         Route::post('/inventory/adjust', [InventoryController::class, 'adjust'])->name('inventory.adjust');
         Route::post('/inventory/damage', [InventoryController::class, 'logDamage'])->name('inventory.damage');
         Route::patch('/inventory/products/{product}/threshold', [InventoryController::class, 'updateThreshold'])->name('inventory.threshold');
+
+        // Phase 14: Orders & Fulfillment Management
+        Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('/orders/{order}', [OrderController::class, 'show'])->name('orders.show');
+        Route::patch('/orders/{order}/status', [OrderController::class, 'updateStatus'])->name('orders.status');
+        Route::patch('/orders/{order}/payment', [OrderController::class, 'updatePayment'])->name('orders.payment');
+        Route::get('/orders/{order}/invoice', [OrderController::class, 'invoice'])->name('orders.invoice');
+        Route::get('/invoices', fn () => redirect()->route('admin.orders.index'))->name('invoices.index');
 
         // Dynamic Banners & Sliders CMS
         Route::get('/banners', [BannerController::class, 'index'])->name('banners.index');

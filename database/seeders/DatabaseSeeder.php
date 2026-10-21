@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             PurchaseOrderSeeder::class,
             InventorySeeder::class,
             HomepageBentoSlotSeeder::class,
+            OrderSeeder::class,
         ]);
     }
 }

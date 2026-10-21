@@ -31,9 +31,9 @@ export default function Dashboard({ user, metrics }) {
     const metricCards = [
         {
             title: "Today's Gross Sales",
-            value: `${currency}28,200.00`,
-            growth: '+18.4% WoW',
-            subText: 'Immutable COGS tracked',
+            value: `${currency}${Number(metrics?.todayRevenue || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+            growth: 'Real-time sync',
+            subText: 'Paid & Delivered revenue',
             icon: TrendingUp,
             sparkData: [12, 16, 14, 22, 19, 28, 35, 42],
             sparkColor: '#D4AF37',
@@ -42,8 +42,8 @@ export default function Dashboard({ user, metrics }) {
         },
         {
             title: 'Pending Orders',
-            value: metrics?.pendingOrders || '18',
-            growth: '4 New Today',
+            value: metrics?.pendingOrders ?? 0,
+            growth: `${metrics?.totalOrders || 0} Total Orders`,
             subText: 'Awaiting dispatch confirmation',
             icon: ShoppingBag,
             sparkData: [5, 8, 12, 9, 14, 18, 15, 18],
@@ -76,6 +76,13 @@ export default function Dashboard({ user, metrics }) {
     ];
 
     const quickActions = [
+        {
+            name: 'Orders & Fulfillment',
+            desc: 'Review client purchases, manage parcel shipping, and print invoices',
+            href: '/admin/orders',
+            icon: ShoppingBag,
+            color: 'text-emerald-700 dark:text-emerald-300 bg-emerald-50/70 dark:bg-[#0E2038] border border-emerald-200 dark:border-emerald-800/50 hover:border-emerald-400',
+        },
         {
             name: 'Categories Hierarchy',
             desc: 'Configure parent-child taxonomies, subcategories and live slugs',

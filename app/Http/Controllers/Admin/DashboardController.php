@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -20,15 +21,30 @@ class DashboardController extends Controller
         $totalProductsCount = Product::count();
         $totalBrandsCount = Brand::count();
 
+        $totalOrdersCount = Order::count();
+        $pendingOrdersCount = Order::pending()->count();
+        $todayRevenue = (float) Order::whereDate('created_at', today())
+            ->where(function ($q) {
+                $q->where('payment_status', Order::PAYMENT_PAID)
+                  ->orWhere('order_status', Order::STATUS_DELIVERED);
+            })->sum('total_amount');
+
+        $recentOrders = Order::query()
+            ->withCount('items')
+            ->orderBy('id', 'desc')
+            ->take(5)
+            ->get();
+
         return Inertia::render('Admin/Dashboard', [
             'metrics' => [
-                'todayRevenue' => 0.00,
-                'totalOrders' => 0,
-                'pendingOrders' => 0,
+                'todayRevenue' => $todayRevenue,
+                'totalOrders' => $totalOrdersCount,
+                'pendingOrders' => $pendingOrdersCount,
                 'lowStockItems' => $lowStockCount,
                 'totalProducts' => $totalProductsCount,
                 'totalBrands' => $totalBrandsCount,
             ],
+            'recentOrders' => $recentOrders,
             'user' => $request->user()->only('id', 'name', 'email', 'role'),
         ]);
     }
