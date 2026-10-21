@@ -97,6 +97,26 @@ class Phase2AuthenticationTest extends TestCase
     }
 
     /**
+     * Test that admin login via Inertia returns Inertia location response for full window navigation.
+     */
+    public function test_admin_login_via_inertia_returns_inertia_location_response(): void
+    {
+        $admin = User::factory()->admin()->create([
+            'password' => bcrypt('password123'),
+        ]);
+
+        $response = $this->withHeaders(['X-Inertia' => 'true'])
+            ->post('/login', [
+                'email' => $admin->email,
+                'password' => 'password123',
+            ]);
+
+        $this->assertAuthenticatedAs($admin);
+        $response->assertStatus(409);
+        $response->assertHeader('X-Inertia-Location', route('admin.dashboard'));
+    }
+
+    /**
      * Test that super admin and admin can access admin dashboard.
      */
     public function test_super_admin_and_admin_roles_can_access_admin_dashboard(): void
