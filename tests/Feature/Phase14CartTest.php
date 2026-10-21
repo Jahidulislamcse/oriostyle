@@ -269,4 +269,21 @@ class Phase14CartTest extends TestCase
         $this->assertNotNull($userCart);
         $this->assertEquals(2, $userCart->items_count);
     }
+
+    public function test_adding_item_via_inertia_returns_redirect_and_not_plain_json(): void
+    {
+        $response = $this->from('/products/' . $this->product->slug)
+            ->withHeaders([
+                'X-Inertia' => 'true',
+                'X-Requested-With' => 'XMLHttpRequest',
+                'X-Cart-Session' => $this->sessionId,
+            ])
+            ->post(route('cart.items.store'), [
+                'product_id' => $this->product->id,
+                'quantity' => 1,
+            ]);
+
+        $response->assertRedirect('/products/' . $this->product->slug);
+        $response->assertSessionHas('success');
+    }
 }

@@ -68,7 +68,7 @@ class CartController extends Controller
 
         $payload = $this->cartService->formatCartPayload($cart->fresh());
 
-        if ($request->wantsJson() || $request->ajax()) {
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
             return response()->json([
                 'success' => true,
                 'message' => 'Item added to your shopping bag.',
@@ -106,7 +106,7 @@ class CartController extends Controller
 
         $payload = $this->cartService->formatCartPayload($cart->fresh());
 
-        if ($request->wantsJson() || $request->ajax()) {
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
             return response()->json([
                 'success' => true,
                 'message' => 'Shopping bag updated.',
@@ -135,7 +135,7 @@ class CartController extends Controller
 
         $payload = $this->cartService->formatCartPayload($cart->fresh());
 
-        if ($request->wantsJson() || $request->ajax()) {
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
             return response()->json([
                 'success' => true,
                 'message' => 'Item removed from shopping bag.',
@@ -160,7 +160,7 @@ class CartController extends Controller
 
         $payload = $this->cartService->formatCartPayload($cart->fresh());
 
-        if ($request->wantsJson() || $request->ajax()) {
+        if ($request->wantsJson() && !$request->header('X-Inertia')) {
             return response()->json([
                 'success' => true,
                 'message' => 'Shopping bag cleared.',
