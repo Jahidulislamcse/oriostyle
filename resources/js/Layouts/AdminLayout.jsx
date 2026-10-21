@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Head, Link, usePage, useForm } from '@inertiajs/react';
 import { 
     LayoutDashboard, 
@@ -35,9 +35,27 @@ export default function AdminLayout({ title = '', children }) {
     const user = auth?.user;
     const { post } = useForm();
 
-    const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+    const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+        if (typeof window !== 'undefined') {
+            return localStorage.getItem('admin_sidebar_collapsed') === 'true';
+        }
+        return false;
+    });
     const [mobileOpen, setMobileOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+
+    const sidebarNavRef = useRef(null);
+    const activeItemRef = useRef(null);
+
+    const toggleSidebar = () => {
+        setSidebarCollapsed((prev) => {
+            const next = !prev;
+            if (typeof window !== 'undefined') {
+                localStorage.setItem('admin_sidebar_collapsed', String(next));
+            }
+            return next;
+        });
+    };
 
     useEffect(() => {
         const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -55,10 +73,28 @@ export default function AdminLayout({ title = '', children }) {
         post(route('logout'));
     };
 
+    // Save sidebar scroll position continuously
+    const handleSidebarScroll = (e) => {
+        sessionStorage.setItem('admin_sidebar_scroll_top', String(e.currentTarget.scrollTop));
+    };
+
     // Robust, reactive URL matching for sidebar items across full page loads & Inertia client navigations
     const currentPath = (url || (typeof window !== 'undefined' ? window.location.pathname : ''))
         .split('?')[0]
         .replace(/\/+$/, '') || '/';
+
+    // Restore scroll position after navigation or scroll active item into view
+    useEffect(() => {
+        const navEl = sidebarNavRef.current;
+        if (!navEl) return;
+
+        const savedScroll = sessionStorage.getItem('admin_sidebar_scroll_top');
+        if (savedScroll !== null) {
+            navEl.scrollTop = parseInt(savedScroll, 10);
+        } else if (activeItemRef.current) {
+            activeItemRef.current.scrollIntoView({ block: 'nearest' });
+        }
+    }, [currentPath]);
 
     const isItemActive = (href, matchPrefixes = []) => {
         const targetPath = href.split('?')[0].replace(/\/+$/, '') || '/';
@@ -145,12 +181,12 @@ export default function AdminLayout({ title = '', children }) {
             {/* Sidebar (Desktop + Mobile Drawer) */}
             <aside
                 className={`fixed top-0 bottom-0 left-0 z-50 bg-white dark:bg-[#0E2038] border-r border-slate-200 dark:border-[#1C3E63]/70 flex flex-col transition-all duration-300 ease-in-out shadow-xs ${
-                    sidebarCollapsed ? 'w-20' : 'w-68 lg:w-72'
+                    sidebarCollapsed ? 'w-20' : 'w-72'
                 } ${mobileOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}
             >
                 {/* Brand Header */}
                 <div className="h-16 px-4.5 lg:px-5 border-b border-slate-200 dark:border-[#1C3E63]/70 flex items-center justify-between">
-                    <Link href="/admin/dashboard" className="flex items-center gap-3 overflow-hidden group">
+                    <Link href="/admin/dashboard" preserveScroll preserveState className="flex items-center gap-3 overflow-hidden group">
                         {siteLogo ? (
                             <div className="w-10 h-10 rounded-2xl bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#D4AF37]/40 p-1 flex-shrink-0 flex items-center justify-center shadow-xs group-hover:scale-105 transition overflow-hidden">
                                 <img src={siteLogo} alt={siteName} className="max-h-full max-w-full object-contain" />
@@ -182,7 +218,12 @@ export default function AdminLayout({ title = '', children }) {
                 </div>
 
                 {/* Navigation Links */}
-                <div className="flex-1 overflow-y-auto px-3.5 lg:px-4 pt-6 pb-6 space-y-6">
+                <div
+                    ref={sidebarNavRef}
+                    onScroll={handleSidebarScroll}
+                    data-scroll-region="true"
+                    className="flex-1 overflow-y-auto px-3.5 lg:px-4 pt-6 pb-6 space-y-6"
+                >
                     {navigation.map((group, groupIdx) => (
                         <div key={groupIdx} className={groupIdx === 0 ? 'mt-1' : ''}>
                             {!sidebarCollapsed && (
@@ -198,7 +239,10 @@ export default function AdminLayout({ title = '', children }) {
                                     return (
                                         <Link
                                             key={idx}
+                                            ref={isActive ? activeItemRef : null}
                                             href={item.href}
+                                            preserveScroll
+                                            preserveState
                                             onClick={() => setMobileOpen(false)}
                                             title={sidebarCollapsed ? item.name : undefined}
                                             className={`relative flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-150 group ${
@@ -239,7 +283,7 @@ export default function AdminLayout({ title = '', children }) {
                 {/* Desktop Collapse Toggle */}
                 <div className="hidden lg:flex p-3.5 border-t border-slate-200 dark:border-[#1C3E63]/70">
                     <button
-                        onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+                        onClick={toggleSidebar}
                         className="w-full flex items-center justify-center p-2.5 rounded-xl text-slate-500 hover:text-slate-800 dark:text-[#8EB0CF] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#142C49] transition cursor-pointer text-xs sm:text-sm font-semibold gap-2"
                     >
                         {sidebarCollapsed ? (
