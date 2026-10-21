@@ -35,6 +35,9 @@ if (typeof window !== 'undefined') {
             });
         } catch (e) {
             const fallbacks = {
+                'cart.index': '/cart',
+                'cart.items.store': '/cart/items',
+                'cart.clear': '/cart',
                 'login.store': '/login',
                 'login': '/login',
                 'register.store': '/register',

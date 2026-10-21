@@ -44,8 +44,9 @@ Route::get('/api/search', [ShopController::class, 'search'])->name('shop.search'
 // Phase 14: Cart Engine & Mini-Cart Drawer
 Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::post('/cart/items', [CartController::class, 'store'])->name('cart.items.store');
-Route::patch('/cart/items/{cartItem}', [CartController::class, 'update'])->name('cart.items.update');
-Route::delete('/cart/items/{cartItem}', [CartController::class, 'destroy'])->name('cart.items.destroy');
+Route::post('/cart/items/store', [CartController::class, 'store']);
+Route::patch('/cart/items/{cartItem}', [CartController::class, 'update'])->whereNumber('cartItem')->name('cart.items.update');
+Route::delete('/cart/items/{cartItem}', [CartController::class, 'destroy'])->whereNumber('cartItem')->name('cart.items.destroy');
 Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 
 /*
