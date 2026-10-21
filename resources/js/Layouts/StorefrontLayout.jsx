@@ -259,7 +259,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                         </li>
                                         {auth.user.role === 'admin' || auth.user.role === 'staff' ? (
                                             <li>
-                                                <Link href="/admin/dashboard" className="dropdown-item py-2">Admin Dashboard</Link>
+                                                <a href="/admin/dashboard" className="dropdown-item py-2">Admin Dashboard</a>
                                             </li>
                                         ) : null}
                                         <li>

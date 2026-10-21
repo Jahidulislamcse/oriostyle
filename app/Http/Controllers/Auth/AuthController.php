@@ -49,7 +49,7 @@ class AuthController extends Controller
 
         // Redirect admin/staff to admin dashboard, customers to intended or home
         if ($user->hasAdminAccess()) {
-            return redirect()->intended(route('admin.dashboard'));
+            return Inertia::location(route('admin.dashboard'));
         }
 
         return redirect()->intended(route('home'));
