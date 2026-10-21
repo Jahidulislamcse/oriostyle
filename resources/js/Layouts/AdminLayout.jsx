@@ -260,15 +260,16 @@ export default function AdminLayout({ title = '', children }) {
                         <ThemeToggle />
 
                         {/* Storefront Quick View Link */}
-                        <Link
+                        <a
                             href="/"
                             target="_blank"
+                            rel="noopener noreferrer"
                             className="inline-flex items-center gap-2 px-3 py-1.5 sm:py-2 rounded-xl bg-slate-100 hover:bg-[#FDFBF5] hover:text-[#926F18] hover:border-[#F5E7C2] dark:bg-[#142C49] dark:hover:bg-[#1C3E63] text-slate-700 dark:text-[#BACDE3] border border-slate-200 dark:border-[#1C3E63] text-xs sm:text-sm font-semibold transition shadow-2xs"
                         >
                             <Store className="w-4 h-4 text-[#D4AF37] dark:text-[#EBD495]" />
                             <span className="hidden sm:inline">Storefront</span>
                             <ExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-[#5E8CB6]" />
-                        </Link>
+                        </a>
 
                         {/* User Profile & Actions Dropdown */}
                         <div className="relative">

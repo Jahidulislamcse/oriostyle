@@ -53,7 +53,9 @@ class AuthController extends Controller
             return Inertia::location(route('admin.dashboard'));
         }
 
-        return redirect()->intended(route('home'));
+        $intendedUrl = redirect()->intended(route('home'))->getTargetUrl();
+
+        return Inertia::location($intendedUrl);
     }
 
     /**
@@ -67,7 +69,7 @@ class AuthController extends Controller
     /**
      * Handle an incoming registration request.
      */
-    public function register(RegisterRequest $request): RedirectResponse
+    public function register(RegisterRequest $request): SymfonyResponse
     {
         $user = User::create([
             'name' => $request->name,
@@ -89,19 +91,19 @@ class AuthController extends Controller
             app(CartService::class)->mergeGuestCartIntoUser($guestSessionId, $user);
         }
 
-        return redirect(route('home'))->with('success', 'Welcome! Your account has been created successfully.');
+        return Inertia::location(route('home'));
     }
 
     /**
      * Destroy an authenticated session.
      */
-    public function logout(Request $request): RedirectResponse
+    public function logout(Request $request): SymfonyResponse
     {
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/')->with('info', 'You have been logged out.');
+        return Inertia::location(route('home'));
     }
 }

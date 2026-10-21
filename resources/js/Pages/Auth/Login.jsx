@@ -42,7 +42,7 @@ export default function Login({ status }) {
             </div>
 
             <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-                <Link href="/" className="inline-flex items-center gap-2.5 mb-4 group">
+                <a href="/" className="inline-flex items-center gap-2.5 mb-4 group">
                     {siteLogo ? (
                         <div className="w-11 h-11 rounded-2xl bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#D4AF37]/40 p-1 flex items-center justify-center shadow-xs group-hover:scale-105 transition overflow-hidden">
                             <img src={siteLogo} alt={siteName} className="max-h-full max-w-full object-contain" />
@@ -53,7 +53,7 @@ export default function Login({ status }) {
                         </div>
                     )}
                     <span className="text-2xl font-extrabold tracking-tight text-[#0E2038] dark:text-white">{siteName}</span>
-                </Link>
+                </a>
                 <h2 className="text-xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">Sign in to your account</h2>
                 <p className="mt-2 text-sm text-slate-600 dark:text-[#8EB0CF]">
                     Or{' '}

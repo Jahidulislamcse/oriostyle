@@ -183,7 +183,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     {/* Left Brand Logo */}
                     <Link href="/" className="oubd-brand-logo">
                         {siteLogo ? (
-                            <img src={siteLogo} alt={siteName} />
+                            <img src={siteLogo} alt={siteName} style={{ maxHeight: '48px', width: 'auto', objectFit: 'contain' }} />
                         ) : (
                             <span className="brand-text">{siteName}</span>
                         )}
@@ -268,8 +268,8 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                     </>
                                 ) : (
                                     <>
-                                        <li><Link href="/login" className="dropdown-item py-2">Login</Link></li>
-                                        <li><Link href="/register" className="dropdown-item py-2">Register</Link></li>
+                                        <li><a href="/login" className="dropdown-item py-2">Login</a></li>
+                                        <li><a href="/register" className="dropdown-item py-2">Register</a></li>
                                     </>
                                 )}
                             </ul>
@@ -990,13 +990,13 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     <i className="ri-map-pin-line" />
                 </Link>
 
-                <Link
+                <a
                     href="/login"
                     className="oubd-bottom-nav-item"
                     title="Account"
                 >
                     <i className="ri-user-line" />
-                </Link>
+                </a>
             </div>
 
             {/* --- Floating Back to Top Button --- */}
