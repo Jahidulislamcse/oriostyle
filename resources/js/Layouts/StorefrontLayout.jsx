@@ -929,7 +929,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
 
                         <div className="d-flex flex-column gap-2">
                             <Link
-                                href="/shop"
+                                href="/checkout"
                                 className="btn btn-dark w-100 py-3 text-uppercase fw-bold font-size-13 tracking-wider d-flex align-items-center justify-content-center gap-2 shadow-xs"
                                 onClick={() => setIsCartOpen(false)}
                             >

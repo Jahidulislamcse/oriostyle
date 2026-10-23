@@ -40,6 +40,8 @@ if (typeof window !== 'undefined') {
                 'cart.clear': '/cart',
                 'cart.coupon.apply': '/cart/coupon',
                 'cart.coupon.remove': '/cart/coupon',
+                'checkout.index': '/checkout',
+                'checkout.store': '/checkout',
                 'admin.coupons.index': '/admin/coupons',
                 'login.store': '/login',
                 'login': '/login',

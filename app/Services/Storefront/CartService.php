@@ -7,10 +7,21 @@ use App\Models\CartItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class CartService
 {
+    /**
+     * Resolve the active cart instance for an incoming HTTP request.
+     */
+    public function getCartForRequest(Request $request): Cart
+    {
+        $sessionId = $request->header('X-Cart-Session')
+            ?: ($request->cookie('cart_session') ?: $request->session()->getId());
+
+        return $this->getOrCreateCart($request->user(), $sessionId);
+    }
     /**
      * Resolve or create the active cart instance for user or guest session.
      */

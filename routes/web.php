@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use App\Http\Controllers\Storefront\CartController;
+use App\Http\Controllers\Storefront\CheckoutController;
 use App\Http\Controllers\Storefront\HomeController;
 use App\Http\Controllers\Storefront\ProductDetailController;
 use App\Http\Controllers\Storefront\ShopController;
@@ -53,6 +54,11 @@ Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 // Phase 15: Discount Coupon Engine
 Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
 Route::delete('/cart/coupon', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
+
+// Phase 16: Single-Page Checkout & Payment Method Selector
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('throttle:10,1')->name('checkout.store');
+Route::get('/order-success/{orderNumber}', [CheckoutController::class, 'success'])->name('checkout.success');
 
 /*
 |--------------------------------------------------------------------------
