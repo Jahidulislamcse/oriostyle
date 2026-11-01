@@ -23,7 +23,9 @@ import {
     Shield,
     Image as ImageIcon,
     LayoutGrid,
-    Ticket
+    Ticket,
+    Bell,
+    AlertTriangle
 } from 'lucide-react';
 import ToastContainer from '@/Components/Common/ToastContainer';
 import Badge from '@/Components/Common/Badge';
@@ -31,7 +33,7 @@ import ThemeToggle from '@/Components/Common/ThemeToggle';
 
 export default function AdminLayout({ title = '', children }) {
     const { url = '', props = {} } = usePage();
-    const { auth = {}, settings = {} } = props;
+    const { auth = {}, settings = {}, adminNotifications = null } = props;
     const user = auth?.user;
     const { post } = useForm();
 
@@ -43,6 +45,7 @@ export default function AdminLayout({ title = '', children }) {
     });
     const [mobileOpen, setMobileOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
+    const [notificationsOpen, setNotificationsOpen] = useState(false);
 
     const sidebarNavRef = useRef(null);
     const activeItemRef = useRef(null);
@@ -139,13 +142,29 @@ export default function AdminLayout({ title = '', children }) {
             items: [
                 { name: 'Suppliers Ledger', href: '/admin/suppliers', icon: Truck, current: isItemActive('/admin/suppliers') },
                 { name: 'Stock-In PO', href: '/admin/purchase-orders', icon: Boxes, current: isItemActive('/admin/purchase-orders', ['/admin/purchases']) },
-                { name: 'Inventory Control', href: '/admin/inventory', icon: Package, current: isItemActive('/admin/inventory') },
+                { 
+                    name: 'Inventory Control', 
+                    href: '/admin/inventory', 
+                    icon: Package, 
+                    current: isItemActive('/admin/inventory'),
+                    badge: (adminNotifications?.low_stock_count || adminNotifications?.out_of_stock_count) 
+                        ? `${(adminNotifications.low_stock_count || 0) + (adminNotifications.out_of_stock_count || 0)} alert`
+                        : null
+                },
             ],
         },
         {
             group: 'Orders & Fulfillment',
             items: [
-                { name: 'Orders Management', href: '/admin/orders', icon: ShoppingBag, current: isItemActive('/admin/orders') && !currentPath.includes('/invoice') },
+                { 
+                    name: 'Orders Management', 
+                    href: '/admin/orders', 
+                    icon: ShoppingBag, 
+                    current: isItemActive('/admin/orders') && !currentPath.includes('/invoice'),
+                    badge: adminNotifications?.pending_orders_count 
+                        ? `${adminNotifications.pending_orders_count} new`
+                        : null
+                },
                 { name: 'Invoices & Thermal', href: '/admin/invoices', icon: FileText, current: isItemActive('/admin/invoices') || currentPath.includes('/invoice') },
                 { name: 'Coupons & Promos', href: '/admin/coupons', icon: Ticket, current: isItemActive('/admin/coupons') },
             ],
@@ -325,9 +344,168 @@ export default function AdminLayout({ title = '', children }) {
                         </div>
                     </div>
 
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2.5 sm:gap-3">
                         {/* Light / Dark Mode Toggle */}
                         <ThemeToggle />
+
+                        {/* Backoffice Notifications Center (Orders & Stock Alerts) */}
+                        <div className="relative">
+                            <button
+                                onClick={() => {
+                                    setNotificationsOpen(!notificationsOpen);
+                                    setUserMenuOpen(false);
+                                }}
+                                aria-label="Notifications"
+                                className="relative p-2 rounded-xl text-slate-500 dark:text-[#8EB0CF] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#142C49] border border-slate-200/80 dark:border-[#1C3E63] transition cursor-pointer"
+                            >
+                                <Bell className="w-4.5 h-4.5" />
+                                {adminNotifications && adminNotifications.total_unread > 0 && (
+                                    <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 px-1 items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white shadow-xs">
+                                        {adminNotifications.total_unread > 99 ? '99+' : adminNotifications.total_unread}
+                                    </span>
+                                )}
+                            </button>
+
+                            {/* Notifications Dropdown Panel */}
+                            {notificationsOpen && (
+                                <>
+                                    <div className="fixed inset-0 z-30" onClick={() => setNotificationsOpen(false)} />
+                                    <div className="absolute right-0 sm:-right-12 mt-2 w-80 sm:w-96 bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63] rounded-2xl shadow-2xl py-3 z-40 overflow-hidden animate-in fade-in zoom-in-95 duration-100">
+                                        {/* Dropdown Header */}
+                                        <div className="px-4 pb-2.5 border-b border-slate-100 dark:border-[#1C3E63]/70 flex items-center justify-between">
+                                            <div className="flex items-center gap-2">
+                                                <Bell className="w-4 h-4 text-[#D4AF37]" />
+                                                <h3 className="font-extrabold text-xs uppercase tracking-wider text-[#0E2038] dark:text-white">
+                                                    Activity & Alerts
+                                                </h3>
+                                            </div>
+                                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 dark:bg-[#071324] dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
+                                                {adminNotifications?.total_unread || 0} active
+                                            </span>
+                                        </div>
+
+                                        <div className="max-h-[380px] overflow-y-auto divide-y divide-slate-100 dark:divide-[#1C3E63]/50">
+                                            {/* Section: Incoming Orders */}
+                                            <div className="p-3">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] flex items-center gap-1.5">
+                                                        <ShoppingBag className="w-3.5 h-3.5 text-blue-500" />
+                                                        Incoming Orders ({adminNotifications?.pending_orders_count || 0})
+                                                    </span>
+                                                    <Link
+                                                        href="/admin/orders?status=pending"
+                                                        onClick={() => setNotificationsOpen(false)}
+                                                        className="text-[10px] font-bold text-[#D4AF37] hover:underline"
+                                                    >
+                                                        View all
+                                                    </Link>
+                                                </div>
+
+                                                {adminNotifications?.recent_orders && adminNotifications.recent_orders.length > 0 ? (
+                                                    <div className="space-y-1.5">
+                                                        {adminNotifications.recent_orders.map((order) => (
+                                                            <Link
+                                                                key={order.id}
+                                                                href={order.url}
+                                                                onClick={() => setNotificationsOpen(false)}
+                                                                className="block p-2 rounded-xl bg-slate-50 dark:bg-[#071324]/60 hover:bg-slate-100 dark:hover:bg-[#142C49] border border-slate-200/60 dark:border-[#1C3E63]/50 transition group"
+                                                            >
+                                                                <div className="flex items-center justify-between">
+                                                                    <span className="text-xs font-bold text-[#0E2038] dark:text-white font-mono group-hover:text-[#D4AF37]">
+                                                                        #{order.order_number}
+                                                                    </span>
+                                                                    <span className="text-[10px] text-slate-400">
+                                                                        {order.time_ago}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="flex items-center justify-between mt-1 text-[11px] text-slate-500 dark:text-slate-300">
+                                                                    <span className="truncate max-w-[170px]">{order.customer_name}</span>
+                                                                    <span className="font-bold text-emerald-500">
+                                                                        ৳{Number(order.total_amount).toLocaleString()}
+                                                                    </span>
+                                                                </div>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-xs text-slate-400 italic py-1 px-1">
+                                                        No pending orders requiring attention.
+                                                    </p>
+                                                )}
+                                            </div>
+
+                                            {/* Section: Stock Alerts */}
+                                            <div className="p-3">
+                                                <div className="flex items-center justify-between mb-2">
+                                                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] flex items-center gap-1.5">
+                                                        <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
+                                                        Low Stock & OOS Alerts ({(adminNotifications?.low_stock_count || 0) + (adminNotifications?.out_of_stock_count || 0)})
+                                                    </span>
+                                                    <Link
+                                                        href="/admin/inventory"
+                                                        onClick={() => setNotificationsOpen(false)}
+                                                        className="text-[10px] font-bold text-[#D4AF37] hover:underline"
+                                                    >
+                                                        Manage
+                                                    </Link>
+                                                </div>
+
+                                                {adminNotifications?.stock_alerts && adminNotifications.stock_alerts.length > 0 ? (
+                                                    <div className="space-y-1.5">
+                                                        {adminNotifications.stock_alerts.map((item) => (
+                                                            <Link
+                                                                key={item.id}
+                                                                href={item.url}
+                                                                onClick={() => setNotificationsOpen(false)}
+                                                                className="block p-2 rounded-xl bg-slate-50 dark:bg-[#071324]/60 hover:bg-slate-100 dark:hover:bg-[#142C49] border border-slate-200/60 dark:border-[#1C3E63]/50 transition group"
+                                                            >
+                                                                <div className="flex items-center justify-between">
+                                                                    <span className="text-xs font-semibold text-[#0E2038] dark:text-white truncate max-w-[200px] group-hover:text-[#D4AF37]">
+                                                                        {item.name}
+                                                                    </span>
+                                                                    <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${
+                                                                        item.is_out_of_stock
+                                                                            ? 'bg-rose-500/15 text-rose-500 border border-rose-500/30'
+                                                                            : 'bg-amber-500/15 text-amber-500 border border-amber-500/30'
+                                                                    }`}>
+                                                                        {item.is_out_of_stock ? 'OUT OF STOCK' : `${item.stock_quantity} left`}
+                                                                    </span>
+                                                                </div>
+                                                                <div className="text-[10px] text-slate-400 font-mono mt-0.5">
+                                                                    SKU: {item.sku || 'N/A'} (Threshold: {item.low_stock_threshold})
+                                                                </div>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                ) : (
+                                                    <p className="text-xs text-slate-400 italic py-1 px-1">
+                                                        All products have healthy stock levels.
+                                                    </p>
+                                                )}
+                                            </div>
+                                        </div>
+
+                                        {/* Dropdown Footer */}
+                                        <div className="pt-2 px-3 border-t border-slate-100 dark:border-[#1C3E63]/70 flex items-center justify-between text-xs">
+                                            <Link
+                                                href="/admin/orders"
+                                                onClick={() => setNotificationsOpen(false)}
+                                                className="text-slate-500 dark:text-[#8EB0CF] hover:text-[#0E2038] dark:hover:text-white font-medium"
+                                            >
+                                                All Orders
+                                            </Link>
+                                            <Link
+                                                href="/admin/inventory"
+                                                onClick={() => setNotificationsOpen(false)}
+                                                className="text-slate-500 dark:text-[#8EB0CF] hover:text-[#0E2038] dark:hover:text-white font-medium"
+                                            >
+                                                Inventory Control
+                                            </Link>
+                                        </div>
+                                    </div>
+                                </>
+                            )}
+                        </div>
 
                         {/* Storefront Quick View Link */}
                         <a

@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Services\Admin\AdminNotificationService;
 use App\Services\Catalog\CategoryService;
 use App\Services\Settings\SettingService;
 use Illuminate\Http\Request;
@@ -77,6 +78,13 @@ class HandleInertiaRequests extends Middleware
                 'warning' => fn () => $request->session()->get('warning'),
                 'info' => fn () => $request->session()->get('info'),
             ],
+            'adminNotifications' => function () use ($request) {
+                $user = $request->user();
+                if (!$user || !in_array($user->role, ['super_admin', 'admin', 'manager', 'inventory_staff'], true)) {
+                    return null;
+                }
+                return app(AdminNotificationService::class)->getHeaderAlerts();
+            },
         ];
     }
 }
