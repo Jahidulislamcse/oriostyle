@@ -52,45 +52,112 @@ export default function AdminLayout({ title = '', children }) {
     const [incomingToast, setIncomingToast] = useState(null);
     const lastPendingCountRef = useRef(initialAlerts?.pending_orders_count ?? null);
     const toastTimerRef = useRef(null);
+    const audioContextRef = useRef(null);
+    const audioElementRef = useRef(null);
 
-    // Audio chime helper using Web Audio API (Zero external file dependency, reliable, crisp chime)
+    // Audio chime player with dual failover: HTML5 Audio + Web Audio API synthesizer
     const playNotificationSound = () => {
+        let played = false;
+
+        // Strategy 1: HTML5 Audio element with local WAV file
+        try {
+            if (!audioElementRef.current) {
+                audioElementRef.current = new Audio('/sounds/notification.wav');
+            }
+            audioElementRef.current.currentTime = 0;
+            const playPromise = audioElementRef.current.play();
+            if (playPromise !== undefined) {
+                playPromise
+                    .then(() => {
+                        played = true;
+                    })
+                    .catch(() => {
+                        // If autoplay blocked, fall back to Web Audio API
+                    });
+            }
+        } catch {
+            // Ignore
+        }
+
+        // Strategy 2: Web Audio API Oscillator synthesizer (Dual tone chime)
         try {
             const AudioCtx = window.AudioContext || window.webkitAudioContext;
             if (!AudioCtx) return;
-            const ctx = new AudioCtx();
+
+            if (!audioContextRef.current) {
+                audioContextRef.current = new AudioCtx();
+            }
+            const ctx = audioContextRef.current;
+            if (ctx.state === 'suspended') {
+                ctx.resume();
+            }
+
             const now = ctx.currentTime;
 
-            // Tone 1: Gentle primary chime
+            // Tone 1: 880Hz (A5)
             const osc1 = ctx.createOscillator();
             const gain1 = ctx.createGain();
             osc1.type = 'sine';
-            osc1.frequency.setValueAtTime(587.33, now); // D5
-            osc1.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
-            gain1.gain.setValueAtTime(0.25, now);
+            osc1.frequency.setValueAtTime(880, now);
+            gain1.gain.setValueAtTime(0.35, now);
             gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
             osc1.connect(gain1);
             gain1.connect(ctx.destination);
             osc1.start(now);
             osc1.stop(now + 0.35);
 
-            // Tone 2: Harmonious celebratory overtone
+            // Tone 2: 1318.5Hz (E6)
             const osc2 = ctx.createOscillator();
             const gain2 = ctx.createGain();
-            osc2.type = 'triangle';
-            osc2.frequency.setValueAtTime(880, now + 0.12); // A5
-            osc2.frequency.exponentialRampToValueAtTime(1174.66, now + 0.28); // D6
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(1318.5, now + 0.15);
             gain2.gain.setValueAtTime(0.0, now);
-            gain2.gain.setValueAtTime(0.2, now + 0.12);
-            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+            gain2.gain.setValueAtTime(0.35, now + 0.15);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
             osc2.connect(gain2);
             gain2.connect(ctx.destination);
-            osc2.start(now + 0.12);
-            osc2.stop(now + 0.55);
+            osc2.start(now + 0.15);
+            osc2.stop(now + 0.65);
         } catch {
-            // Ignore browsers requiring prior user interaction
+            // Browser autoplay restrictions
         }
     };
+
+    // Unlock browser audio context on first user interaction anywhere on admin panel
+    useEffect(() => {
+        const unlockAudio = () => {
+            try {
+                if (audioContextRef.current && audioContextRef.current.state === 'suspended') {
+                    audioContextRef.current.resume();
+                } else if (!audioContextRef.current) {
+                    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+                    if (AudioCtx) {
+                        audioContextRef.current = new AudioCtx();
+                    }
+                }
+
+                if (!audioElementRef.current) {
+                    audioElementRef.current = new Audio('/sounds/notification.wav');
+                    audioElementRef.current.load();
+                }
+            } catch {
+                // Ignore
+            }
+            window.removeEventListener('click', unlockAudio);
+            window.removeEventListener('keydown', unlockAudio);
+            window.removeEventListener('touchstart', unlockAudio);
+        };
+
+        window.addEventListener('click', unlockAudio, { once: true });
+        window.addEventListener('keydown', unlockAudio, { once: true });
+        window.addEventListener('touchstart', unlockAudio, { once: true });
+
+        return () => {
+            window.removeEventListener('click', unlockAudio);
+            window.removeEventListener('keydown', unlockAudio);
+            window.removeEventListener('touchstart', unlockAudio);
+        };
+    }, []);
 
     // Lightweight Background Polling (Interval: 15s, paused when tab is in background)
     useEffect(() => {
@@ -536,9 +603,21 @@ export default function AdminLayout({ title = '', children }) {
                                                     Activity & Alerts
                                                 </h3>
                                             </div>
-                                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 dark:bg-[#071324] dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
-                                                {liveAlerts?.total_unread || 0} active
-                                            </span>
+                                            <div className="flex items-center gap-2">
+                                                <button
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        playNotificationSound();
+                                                    }}
+                                                    title="Test Notification Sound"
+                                                    className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-[#D4AF37]/15 text-[#926F18] dark:text-[#EBD495] border border-[#D4AF37]/30 hover:bg-[#D4AF37]/30 transition"
+                                                >
+                                                    🔊 Test Sound
+                                                </button>
+                                                <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 dark:bg-[#071324] dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
+                                                    {liveAlerts?.total_unread || 0} active
+                                                </span>
+                                            </div>
                                         </div>
 
                                         <div className="max-h-[380px] overflow-y-auto divide-y divide-slate-100 dark:divide-[#1C3E63]/50">
