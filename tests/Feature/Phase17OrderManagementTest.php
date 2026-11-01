@@ -331,6 +331,157 @@ class Phase17OrderManagementTest extends TestCase
         );
     }
 
+    public function test_cancelling_order_automatically_restocks_inventory_and_logs_movement(): void
+    {
+        // Setup product with variant and initial stock
+        $this->product->update(['stock_quantity' => 18]);
+        $variant = \App\Models\ProductVariant::create([
+            'product_id' => $this->product->id,
+            'sku' => 'THB-ROY-L-NVY',
+            'size' => 'L',
+            'color' => 'Navy',
+            'price_adjustment' => 0.00,
+            'stock_quantity' => 8,
+            'is_active' => true,
+        ]);
+
+        $order = Order::create([
+            'order_number' => 'ORD-20261021-CANCEL1',
+            'customer_name' => 'Cancel Test Client',
+            'customer_phone' => '01799887766',
+            'shipping_address' => 'Mirpur 10, Dhaka',
+            'city' => 'Dhaka',
+            'payment_method' => Order::METHOD_COD,
+            'payment_status' => Order::PAYMENT_UNPAID,
+            'order_status' => Order::STATUS_CONFIRMED,
+            'subtotal' => 7000.00,
+            'shipping_charge' => 70.00,
+            'total_amount' => 7070.00,
+        ]);
+
+        OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $this->product->id,
+            'product_variant_id' => $variant->id,
+            'product_name' => $this->product->name,
+            'product_sku' => $variant->sku,
+            'unit_price' => 3500.00,
+            'quantity' => 2,
+            'line_total' => 7000.00,
+        ]);
+
+        $response = $this->actingAs($this->adminUser)
+            ->patch(route('admin.orders.status', $order->id), [
+                'order_status' => Order::STATUS_CANCELLED,
+                'admin_notes' => 'Customer requested cancellation before dispatch.',
+            ]);
+
+        $response->assertRedirect();
+        $order->refresh();
+        $this->assertEquals(Order::STATUS_CANCELLED, $order->order_status);
+        $this->assertNotNull($order->cancelled_at);
+
+        // Stock restored from 8 to 10
+        $this->assertEquals(10, $variant->fresh()->stock_quantity);
+        $this->assertEquals(10, $this->product->fresh()->stock_quantity);
+
+        // Inventory movement logged
+        $this->assertDatabaseHas('inventory_movements', [
+            'product_id' => $this->product->id,
+            'product_variant_id' => $variant->id,
+            'type' => \App\Models\InventoryMovement::TYPE_RETURN_IN,
+            'quantity' => 2,
+            'reference_type' => 'order',
+            'reference_id' => $order->id,
+        ]);
+
+        // Status history audit record exists
+        $this->assertDatabaseHas('order_status_histories', [
+            'order_id' => $order->id,
+            'from_status' => Order::STATUS_CONFIRMED,
+            'to_status' => Order::STATUS_CANCELLED,
+            'action' => 'order_cancelled',
+        ]);
+    }
+
+    public function test_invalid_order_status_transition_is_rejected(): void
+    {
+        $order = Order::create([
+            'order_number' => 'ORD-20261021-INV-TRANS',
+            'customer_name' => 'Invalid Transition Client',
+            'customer_phone' => '01711002299',
+            'shipping_address' => 'Gulshan 1, Dhaka',
+            'city' => 'Dhaka',
+            'payment_method' => Order::METHOD_COD,
+            'payment_status' => Order::PAYMENT_UNPAID,
+            'order_status' => Order::STATUS_CANCELLED,
+            'subtotal' => 3500.00,
+            'total_amount' => 3570.00,
+        ]);
+
+        // Trying to transition from cancelled to delivered should fail validation
+        $response = $this->actingAs($this->adminUser)
+            ->patch(route('admin.orders.status', $order->id), [
+                'order_status' => Order::STATUS_DELIVERED,
+            ]);
+
+        $response->assertSessionHasErrors(['order_status']);
+        $this->assertEquals(Order::STATUS_CANCELLED, $order->fresh()->order_status);
+    }
+
+    public function test_order_status_and_payment_histories_are_tracked_and_displayed(): void
+    {
+        $order = Order::create([
+            'order_number' => 'ORD-20261021-AUDIT1',
+            'customer_name' => 'Audit Test Client',
+            'customer_phone' => '01811223344',
+            'shipping_address' => 'Uttara, Dhaka',
+            'city' => 'Dhaka',
+            'payment_method' => Order::METHOD_COD,
+            'payment_status' => Order::PAYMENT_UNPAID,
+            'order_status' => Order::STATUS_PENDING,
+            'subtotal' => 3500.00,
+            'total_amount' => 3570.00,
+        ]);
+
+        // 1. Transition pending -> confirmed
+        $this->actingAs($this->adminUser)
+            ->patch(route('admin.orders.status', $order->id), [
+                'order_status' => Order::STATUS_CONFIRMED,
+                'admin_notes' => 'Address confirmed via call.',
+            ]);
+
+        // 2. Change payment unpaid -> paid
+        $this->actingAs($this->adminUser)
+            ->patch(route('admin.orders.payment', $order->id), [
+                'payment_status' => Order::PAYMENT_PAID,
+                'admin_notes' => 'Advanced payment received.',
+            ]);
+
+        $this->assertDatabaseHas('order_status_histories', [
+            'order_id' => $order->id,
+            'action' => 'status_change',
+            'from_status' => Order::STATUS_PENDING,
+            'to_status' => Order::STATUS_CONFIRMED,
+        ]);
+
+        $this->assertDatabaseHas('order_status_histories', [
+            'order_id' => $order->id,
+            'action' => 'payment_change',
+            'from_status' => Order::PAYMENT_UNPAID,
+            'to_status' => Order::PAYMENT_PAID,
+        ]);
+
+        $response = $this->actingAs($this->adminUser)
+            ->get(route('admin.orders.show', $order->id));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) => $page
+            ->component('Admin/Orders/Show')
+            ->has('order.status_histories', 2)
+        );
+    }
+
     public function test_non_admin_cannot_access_orders_management(): void
     {
         $guestRes = $this->get(route('admin.orders.index'));

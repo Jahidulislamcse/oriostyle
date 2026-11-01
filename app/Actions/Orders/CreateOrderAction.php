@@ -8,6 +8,7 @@ use App\Models\Coupon;
 use App\Models\InventoryMovement;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\OrderStatusHistory;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use App\Models\User;
@@ -189,7 +190,22 @@ class CreateOrderAction
                 $appliedCoupon->increment('times_used');
             }
 
-            // 11. Empty cart line items and reset coupon
+            // 11. Record initial Order Placed history
+            OrderStatusHistory::create([
+                'order_id' => $order->id,
+                'user_id' => $user?->id,
+                'from_status' => null,
+                'to_status' => Order::STATUS_PENDING,
+                'action' => 'order_placed',
+                'comment' => "Order placed via {$order->payment_method} checkout.",
+                'metadata' => [
+                    'payment_method' => $order->payment_method,
+                    'total_amount' => $order->total_amount,
+                    'customer_ip' => request()->ip(),
+                ],
+            ]);
+
+            // 12. Empty cart line items and reset coupon
             $cart->items()->delete();
             $cart->coupon_code = null;
             $cart->save();

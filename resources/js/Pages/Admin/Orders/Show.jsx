@@ -22,7 +22,8 @@ import {
     User,
     ShieldAlert,
     ExternalLink,
-    AlertCircle
+    AlertCircle,
+    History
 } from 'lucide-react';
 
 export default function OrderShow({
@@ -340,6 +341,65 @@ export default function OrderShow({
                                     {order.admin_notes || 'No internal remarks logged.'}
                                 </p>
                             </div>
+                        </div>
+
+                        {/* Order Lifecycle Audit Trail & Timeline */}
+                        <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-5 shadow-xs">
+                            <h3 className="font-bold text-sm text-[#0E2038] dark:text-white uppercase tracking-wider mb-4 flex items-center gap-2">
+                                <History className="w-4 h-4 text-[#D4AF37]" />
+                                Lifecycle Audit Trail ({order.status_histories ? order.status_histories.length : 0})
+                            </h3>
+
+                            {order.status_histories && order.status_histories.length > 0 ? (
+                                <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-slate-200 dark:before:bg-[#1C3E63]">
+                                    {order.status_histories.map((entry) => (
+                                        <div key={entry.id} className="relative group">
+                                            <span className="absolute -left-6 top-1 w-4 h-4 rounded-full bg-white dark:bg-[#0E2038] border-2 border-[#D4AF37] flex items-center justify-center">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-[#D4AF37]"></span>
+                                            </span>
+                                            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-slate-100 dark:bg-[#071324] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#1C3E63]">
+                                                        {entry.action.replace('_', ' ')}
+                                                    </span>
+                                                    <span className="text-xs font-semibold text-slate-700 dark:text-slate-200">
+                                                        {entry.from_status ? (
+                                                            <span>
+                                                                <span className="capitalize">{entry.from_status}</span> &rarr;{' '}
+                                                                <span className="font-bold capitalize text-[#926F18] dark:text-[#EBD495]">
+                                                                    {entry.to_status}
+                                                                </span>
+                                                            </span>
+                                                        ) : (
+                                                            <span className="font-bold capitalize text-emerald-500">{entry.to_status}</span>
+                                                        )}
+                                                    </span>
+                                                </div>
+                                                <span className="text-[11px] text-slate-400 font-mono">
+                                                    {formatDateTime(entry.created_at)}
+                                                </span>
+                                            </div>
+
+                                            {entry.comment && (
+                                                <p className="mt-1.5 text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-[#071324]/50 p-2.5 rounded-xl border border-slate-100 dark:border-[#1C3E63]/40">
+                                                    {entry.comment}
+                                                </p>
+                                            )}
+
+                                            <div className="mt-1 flex items-center gap-2 text-[11px] text-slate-400">
+                                                <span>Logged by: {entry.user ? entry.user.name : (entry.metadata?.updated_by || 'System')}</span>
+                                                {entry.user?.role && (
+                                                    <span className="px-1.5 py-0.2 rounded text-[10px] bg-slate-200 dark:bg-[#1C3E63] text-slate-600 dark:text-slate-300 uppercase font-mono">
+                                                        {entry.user.role}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-xs text-slate-400 italic">No historical transitions recorded yet.</p>
+                            )}
                         </div>
                     </div>
 

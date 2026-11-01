@@ -71,7 +71,8 @@ class OrderController extends Controller
         $this->orderService->updateOrderStatus(
             $order,
             $validated['order_status'],
-            $validated['admin_notes'] ?? null
+            $validated['admin_notes'] ?? null,
+            $request->user()
         );
 
         return back()->with('success', "Order {$order->order_number} status updated to " . ucfirst($validated['order_status']) . '.');
@@ -90,7 +91,8 @@ class OrderController extends Controller
         $this->orderService->updatePaymentStatus(
             $order,
             $validated['payment_status'],
-            $validated['admin_notes'] ?? null
+            $validated['admin_notes'] ?? null,
+            $request->user()
         );
 
         return back()->with('success', "Order {$order->order_number} payment status updated to " . ucfirst($validated['payment_status']) . '.');

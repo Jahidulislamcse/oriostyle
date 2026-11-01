@@ -103,6 +103,14 @@ class Order extends Model
     }
 
     /**
+     * Relationship: Order Status and Fulfillment Histories
+     */
+    public function statusHistories(): HasMany
+    {
+        return $this->hasMany(OrderStatusHistory::class, 'order_id')->latest();
+    }
+
+    /**
      * Relationship: Registered Customer Account (if authenticated)
      */
     public function user(): BelongsTo
