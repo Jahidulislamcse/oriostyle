@@ -21,6 +21,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\Storefront\CartController;
 use App\Http\Controllers\Storefront\CheckoutController;
 use App\Http\Controllers\Storefront\HomeController;
+use App\Http\Controllers\Storefront\OrderTrackingController;
 use App\Http\Controllers\Storefront\ProductDetailController;
 use App\Http\Controllers\Storefront\ShopController;
 use App\Http\Controllers\StorageFileController;
@@ -60,6 +61,11 @@ Route::delete('/cart/coupon', [CartController::class, 'removeCoupon'])->name('ca
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class, 'store'])->middleware('throttle:10,1')->name('checkout.store');
 Route::get('/order-success/{orderNumber}', [CheckoutController::class, 'success'])->name('checkout.success');
+
+// Customer Order Tracing & Status Tracking
+Route::get('/track-order', [OrderTrackingController::class, 'index'])->name('orders.track');
+Route::post('/track-order', [OrderTrackingController::class, 'track'])->name('orders.track.post');
+Route::get('/orders/{orderNumber}/track', [OrderTrackingController::class, 'show'])->name('orders.track.show');
 
 /*
 |--------------------------------------------------------------------------

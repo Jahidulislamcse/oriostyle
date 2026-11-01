@@ -173,6 +173,13 @@ export default function OrderSuccess({
                         {/* Action Buttons */}
                         <div className="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 pt-3 border-top">
                             <Link
+                                href={`/track-order?order_number=${order.order_number}&phone=${encodeURIComponent(order.customer_phone || '')}`}
+                                className="btn btn-warning px-4 py-2.5 rounded-3 font-size-13 fw-bold text-dark text-uppercase tracking-wider w-100 w-sm-auto shadow-xs"
+                            >
+                                <i className="ri-map-pin-2-line me-1" /> Track Order Status
+                            </Link>
+
+                            <Link
                                 href="/shop"
                                 className="btn btn-dark px-4 py-2.5 rounded-3 font-size-13 fw-bold text-uppercase tracking-wider w-100 w-sm-auto shadow-xs"
                             >

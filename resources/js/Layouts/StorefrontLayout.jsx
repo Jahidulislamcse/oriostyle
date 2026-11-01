@@ -231,6 +231,10 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             <li className={currentPath === '/shop' && !url.includes('category=') ? 'active' : ''}>
                                 <Link href="/shop">ALL PRODUCTS</Link>
                             </li>
+
+                            <li className={currentPath === '/track-order' ? 'active' : ''}>
+                                <Link href="/track-order">TRACK ORDER</Link>
+                            </li>
                         </ul>
                     </nav>
 
@@ -266,6 +270,11 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                             </li>
                                         ) : null}
                                         <li>
+                                            <Link href="/track-order" className="dropdown-item py-2 d-flex align-items-center gap-2">
+                                                <i className="ri-map-pin-2-line text-warning" /> Track Orders
+                                            </Link>
+                                        </li>
+                                        <li>
                                             <Link href="/logout" method="post" as="button" className="dropdown-item py-2 text-danger">Logout</Link>
                                         </li>
                                     </>
@@ -273,6 +282,12 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                     <>
                                         <li><a href="/login" className="dropdown-item py-2">Login</a></li>
                                         <li><a href="/register" className="dropdown-item py-2">Register</a></li>
+                                        <li><hr className="dropdown-divider my-1" /></li>
+                                        <li>
+                                            <Link href="/track-order" className="dropdown-item py-2 d-flex align-items-center gap-2">
+                                                <i className="ri-map-pin-2-line text-warning" /> Track Order
+                                            </Link>
+                                        </li>
                                     </>
                                 )}
                             </ul>
@@ -399,6 +414,11 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                         <li className="mt-3 pt-3 border-top">
                             <Link href="/shop" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
                                 ALL PRODUCTS
+                            </Link>
+                        </li>
+                        <li className="mb-2">
+                            <Link href="/track-order" className="d-block py-2 fw-bold text-dark text-decoration-none d-flex align-items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
+                                <i className="ri-map-pin-2-line text-warning" /> TRACK ORDER
                             </Link>
                         </li>
                     </ul>
@@ -589,6 +609,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             </div>
                             <div className={`d-md-block ${mobileFooterOpen.quickLinks ? 'd-block' : 'd-none'}`}>
                                 <ul className="list-unstyled font-size-13">
+                                    <li className="mb-2"><Link href="/track-order" className="text-muted text-decoration-none">Track Your Order</Link></li>
                                     <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Store Locator</Link></li>
                                     <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">About ORIO STYLE</Link></li>
                                     <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Blogs & Editorial</Link></li>
@@ -986,11 +1007,11 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                 </button>
 
                 <Link
-                    href="/"
-                    className="oubd-bottom-nav-item"
-                    title="Store Locator"
+                    href="/track-order"
+                    className={`oubd-bottom-nav-item ${currentPath === '/track-order' ? 'active' : ''}`}
+                    title="Track Order"
                 >
-                    <i className="ri-map-pin-line" />
+                    <i className="ri-map-pin-2-line" />
                 </Link>
 
                 <a
