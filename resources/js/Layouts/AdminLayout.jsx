@@ -33,7 +33,7 @@ import ThemeToggle from '@/Components/Common/ThemeToggle';
 
 export default function AdminLayout({ title = '', children }) {
     const { url = '', props = {} } = usePage();
-    const { auth = {}, settings = {}, adminNotifications = null } = props;
+    const { auth = {}, settings = {}, adminNotifications: initialAlerts = null } = props;
     const user = auth?.user;
     const { post } = useForm();
 
@@ -46,6 +46,124 @@ export default function AdminLayout({ title = '', children }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
+
+    // Live notifications state & real-time popup toast
+    const [liveAlerts, setLiveAlerts] = useState(initialAlerts);
+    const [incomingToast, setIncomingToast] = useState(null);
+    const lastPendingCountRef = useRef(initialAlerts?.pending_orders_count ?? null);
+    const toastTimerRef = useRef(null);
+
+    // Audio chime helper using Web Audio API (Zero external file dependency, reliable, crisp chime)
+    const playNotificationSound = () => {
+        try {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (!AudioCtx) return;
+            const ctx = new AudioCtx();
+            const now = ctx.currentTime;
+
+            // Tone 1: Gentle primary chime
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(587.33, now); // D5
+            osc1.frequency.exponentialRampToValueAtTime(880, now + 0.12); // A5
+            gain1.gain.setValueAtTime(0.25, now);
+            gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 0.35);
+
+            // Tone 2: Harmonious celebratory overtone
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'triangle';
+            osc2.frequency.setValueAtTime(880, now + 0.12); // A5
+            osc2.frequency.exponentialRampToValueAtTime(1174.66, now + 0.28); // D6
+            gain2.gain.setValueAtTime(0.0, now);
+            gain2.gain.setValueAtTime(0.2, now + 0.12);
+            gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.55);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now + 0.12);
+            osc2.stop(now + 0.55);
+        } catch {
+            // Ignore browsers requiring prior user interaction
+        }
+    };
+
+    // Lightweight Background Polling (Interval: 15s, paused when tab is in background)
+    useEffect(() => {
+        if (!user || !['super_admin', 'admin', 'manager', 'inventory_staff'].includes(user.role)) {
+            return;
+        }
+
+        let isMounted = true;
+
+        const checkAlerts = async () => {
+            // If tab is inactive or hidden, skip to save CPU/battery
+            if (document.hidden) return;
+
+            try {
+                const res = await fetch('/admin/notifications/poll', {
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                });
+
+                if (!res.ok) return;
+                const data = await res.json();
+                if (!isMounted) return;
+
+                setLiveAlerts(data);
+
+                // Detect new incoming order(s)
+                if (lastPendingCountRef.current !== null && data.pending_orders_count > lastPendingCountRef.current) {
+                    playNotificationSound();
+
+                    const latestOrder = data.recent_orders?.[0];
+                    if (latestOrder) {
+                        setIncomingToast({
+                            type: 'order',
+                            title: 'New Order Received!',
+                            message: `Order #${latestOrder.order_number} by ${latestOrder.customer_name}`,
+                            amount: latestOrder.total_amount,
+                            url: latestOrder.url,
+                        });
+
+                        if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+                        toastTimerRef.current = setTimeout(() => {
+                            setIncomingToast(null);
+                        }, 7000);
+                    }
+                }
+
+                lastPendingCountRef.current = data.pending_orders_count;
+            } catch {
+                // Silently swallow transient network failure
+            }
+        };
+
+        // Poll every 15 seconds
+        const pollInterval = setInterval(checkAlerts, 15000);
+
+        return () => {
+            isMounted = false;
+            clearInterval(pollInterval);
+            if (toastTimerRef.current) clearTimeout(toastTimerRef.current);
+        };
+    }, [user?.role]);
+
+    // Keep state synced if parent props change via full page inertia visit
+    useEffect(() => {
+        if (initialAlerts) {
+            setLiveAlerts(initialAlerts);
+            if (lastPendingCountRef.current === null) {
+                lastPendingCountRef.current = initialAlerts.pending_orders_count;
+            }
+        }
+    }, [initialAlerts]);
 
     const sidebarNavRef = useRef(null);
     const activeItemRef = useRef(null);
@@ -147,8 +265,8 @@ export default function AdminLayout({ title = '', children }) {
                     href: '/admin/inventory', 
                     icon: Package, 
                     current: isItemActive('/admin/inventory'),
-                    badge: (adminNotifications?.low_stock_count || adminNotifications?.out_of_stock_count) 
-                        ? `${(adminNotifications.low_stock_count || 0) + (adminNotifications.out_of_stock_count || 0)} alert`
+                    badge: (liveAlerts?.low_stock_count || liveAlerts?.out_of_stock_count) 
+                        ? `${(liveAlerts.low_stock_count || 0) + (liveAlerts.out_of_stock_count || 0)} alert`
                         : null
                 },
             ],
@@ -161,8 +279,8 @@ export default function AdminLayout({ title = '', children }) {
                     href: '/admin/orders', 
                     icon: ShoppingBag, 
                     current: isItemActive('/admin/orders') && !currentPath.includes('/invoice'),
-                    badge: adminNotifications?.pending_orders_count 
-                        ? `${adminNotifications.pending_orders_count} new`
+                    badge: liveAlerts?.pending_orders_count 
+                        ? `${liveAlerts.pending_orders_count} new`
                         : null
                 },
                 { name: 'Invoices & Thermal', href: '/admin/invoices', icon: FileText, current: isItemActive('/admin/invoices') || currentPath.includes('/invoice') },
@@ -359,12 +477,51 @@ export default function AdminLayout({ title = '', children }) {
                                 className="relative p-2 rounded-xl text-slate-500 dark:text-[#8EB0CF] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-100 dark:hover:bg-[#142C49] border border-slate-200/80 dark:border-[#1C3E63] transition cursor-pointer"
                             >
                                 <Bell className="w-4.5 h-4.5" />
-                                {adminNotifications && adminNotifications.total_unread > 0 && (
-                                    <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 px-1 items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white shadow-xs">
-                                        {adminNotifications.total_unread > 99 ? '99+' : adminNotifications.total_unread}
+                                {liveAlerts && liveAlerts.total_unread > 0 && (
+                                    <span className="absolute -top-1 -right-1 flex h-4.5 min-w-4.5 px-1 items-center justify-center rounded-full bg-rose-500 text-[10px] font-black text-white shadow-xs animate-pulse">
+                                        {liveAlerts.total_unread > 99 ? '99+' : liveAlerts.total_unread}
                                     </span>
                                 )}
                             </button>
+
+                            {/* Floating Toast Popup under Notification Icon upon new order arrival */}
+                            {incomingToast && (
+                                <div className="absolute right-0 top-12 w-80 p-3.5 rounded-2xl bg-[#0E2038] text-white border-2 border-[#D4AF37] shadow-2xl z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                                    <div className="flex items-start justify-between gap-2">
+                                        <div className="flex items-center gap-2">
+                                            <span className="w-8 h-8 rounded-xl bg-[#D4AF37]/20 border border-[#D4AF37]/40 flex items-center justify-center text-[#EBD495]">
+                                                <ShoppingBag className="w-4 h-4" />
+                                            </span>
+                                            <div>
+                                                <h4 className="text-xs font-black uppercase tracking-wider text-[#EBD495]">
+                                                    {incomingToast.title}
+                                                </h4>
+                                                <p className="text-xs text-slate-200 font-medium line-clamp-1">
+                                                    {incomingToast.message}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <button
+                                            onClick={() => setIncomingToast(null)}
+                                            className="text-slate-400 hover:text-white p-1 rounded-lg"
+                                        >
+                                            <X className="w-3.5 h-3.5" />
+                                        </button>
+                                    </div>
+                                    <div className="mt-2.5 pt-2 border-t border-[#1C3E63] flex items-center justify-between">
+                                        <span className="text-xs font-bold text-emerald-400">
+                                            ৳{Number(incomingToast.amount).toLocaleString()}
+                                        </span>
+                                        <Link
+                                            href={incomingToast.url}
+                                            onClick={() => setIncomingToast(null)}
+                                            className="px-2.5 py-1 rounded-lg bg-[#D4AF37] text-[#071324] font-bold text-[11px] uppercase tracking-wider hover:bg-[#EBD495] transition"
+                                        >
+                                            View Order
+                                        </Link>
+                                    </div>
+                                </div>
+                            )}
 
                             {/* Notifications Dropdown Panel */}
                             {notificationsOpen && (
@@ -380,7 +537,7 @@ export default function AdminLayout({ title = '', children }) {
                                                 </h3>
                                             </div>
                                             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 dark:bg-[#071324] dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
-                                                {adminNotifications?.total_unread || 0} active
+                                                {liveAlerts?.total_unread || 0} active
                                             </span>
                                         </div>
 
@@ -390,7 +547,7 @@ export default function AdminLayout({ title = '', children }) {
                                                 <div className="flex items-center justify-between mb-2">
                                                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] flex items-center gap-1.5">
                                                         <ShoppingBag className="w-3.5 h-3.5 text-blue-500" />
-                                                        Incoming Orders ({adminNotifications?.pending_orders_count || 0})
+                                                        Incoming Orders ({liveAlerts?.pending_orders_count || 0})
                                                     </span>
                                                     <Link
                                                         href="/admin/orders?status=pending"
@@ -401,9 +558,9 @@ export default function AdminLayout({ title = '', children }) {
                                                     </Link>
                                                 </div>
 
-                                                {adminNotifications?.recent_orders && adminNotifications.recent_orders.length > 0 ? (
+                                                {liveAlerts?.recent_orders && liveAlerts.recent_orders.length > 0 ? (
                                                     <div className="space-y-1.5">
-                                                        {adminNotifications.recent_orders.map((order) => (
+                                                        {liveAlerts.recent_orders.map((order) => (
                                                             <Link
                                                                 key={order.id}
                                                                 href={order.url}
@@ -439,7 +596,7 @@ export default function AdminLayout({ title = '', children }) {
                                                 <div className="flex items-center justify-between mb-2">
                                                     <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-400 dark:text-[#5E8CB6] flex items-center gap-1.5">
                                                         <AlertTriangle className="w-3.5 h-3.5 text-amber-500" />
-                                                        Low Stock & OOS Alerts ({(adminNotifications?.low_stock_count || 0) + (adminNotifications?.out_of_stock_count || 0)})
+                                                        Low Stock & OOS Alerts ({(liveAlerts?.low_stock_count || 0) + (liveAlerts?.out_of_stock_count || 0)})
                                                     </span>
                                                     <Link
                                                         href="/admin/inventory"
@@ -450,9 +607,9 @@ export default function AdminLayout({ title = '', children }) {
                                                     </Link>
                                                 </div>
 
-                                                {adminNotifications?.stock_alerts && adminNotifications.stock_alerts.length > 0 ? (
+                                                {liveAlerts?.stock_alerts && liveAlerts.stock_alerts.length > 0 ? (
                                                     <div className="space-y-1.5">
-                                                        {adminNotifications.stock_alerts.map((item) => (
+                                                        {liveAlerts.stock_alerts.map((item) => (
                                                             <Link
                                                                 key={item.id}
                                                                 href={item.url}
