@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Head, useForm, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Button from '@/Components/Common/Button';
@@ -60,6 +60,21 @@ export default function BrandIndex({ brands = { data: [] }, stats = {}, filters 
             { preserveState: true, replace: true }
         );
     };
+
+    // Live Debounced Search (300ms)
+    const isFirstRender = useRef(true);
+    useEffect(() => {
+        if (isFirstRender.current) {
+            isFirstRender.current = false;
+            return;
+        }
+
+        const timer = setTimeout(() => {
+            applyFilters(searchQuery, statusFilter);
+        }, 300);
+
+        return () => clearTimeout(timer);
+    }, [searchQuery]);
 
     const handleSearchSubmit = (e) => {
         e.preventDefault();

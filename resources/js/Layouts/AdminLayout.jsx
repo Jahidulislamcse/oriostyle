@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Head, Link, usePage, useForm } from '@inertiajs/react';
+import { Head, Link, usePage, useForm, router } from '@inertiajs/react';
 import { 
     LayoutDashboard, 
     FolderTree, 
@@ -231,6 +231,45 @@ export default function AdminLayout({ title = '', children }) {
             }
         }
     }, [initialAlerts]);
+
+    // Global Header Search
+    const [globalSearch, setGlobalSearch] = useState('');
+    const globalSearchInputRef = useRef(null);
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                globalSearchInputRef.current?.focus();
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    const handleGlobalSearchSubmit = (e) => {
+        e?.preventDefault();
+        const query = globalSearch.trim();
+        if (!query) return;
+
+        if (url.startsWith('/admin/orders')) {
+            router.get(route('admin.orders.index'), { search: query }, { preserveState: true, replace: true });
+        } else if (url.startsWith('/admin/inventory')) {
+            router.get('/admin/inventory', { search: query }, { preserveState: true, replace: true });
+        } else if (url.startsWith('/admin/brands')) {
+            router.get(route('admin.brands.index'), { search: query }, { preserveState: true, replace: true });
+        } else if (url.startsWith('/admin/suppliers')) {
+            router.get(route('admin.suppliers.index'), { search: query }, { preserveState: true, replace: true });
+        } else if (url.startsWith('/admin/purchase-orders')) {
+            router.get(route('admin.purchase-orders.index'), { search: query }, { preserveState: true, replace: true });
+        } else if (url.startsWith('/admin/coupons')) {
+            router.get(route('admin.coupons.index'), { search: query }, { preserveState: true, replace: true });
+        } else if (url.startsWith('/admin/banners')) {
+            router.get(route('admin.banners.index'), { search: query }, { preserveState: true, replace: true });
+        } else {
+            router.get(route('admin.products.index'), { search: query });
+        }
+    };
 
     const sidebarNavRef = useRef(null);
     const activeItemRef = useRef(null);
@@ -519,14 +558,26 @@ export default function AdminLayout({ title = '', children }) {
                             <Menu className="w-5 h-5" />
                         </button>
 
-                        <div className="hidden sm:flex items-center gap-2.5 text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] bg-slate-100/80 dark:bg-[#142C49]/70 border border-slate-200 dark:border-[#1C3E63] px-3.5 py-2 rounded-xl w-72 lg:w-80 focus-within:ring-2 focus-within:ring-[#D4AF37]/30 focus-within:border-[#D4AF37] transition">
+                        <form onSubmit={handleGlobalSearchSubmit} className="hidden sm:flex items-center gap-2.5 text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] bg-slate-100/80 dark:bg-[#142C49]/70 border border-slate-200 dark:border-[#1C3E63] px-3.5 py-2 rounded-xl w-72 lg:w-80 focus-within:ring-2 focus-within:ring-[#D4AF37]/30 focus-within:border-[#D4AF37] transition">
                             <Search className="w-4 h-4 text-slate-400 dark:text-[#5E8CB6] shrink-0" />
                             <input
+                                ref={globalSearchInputRef}
                                 type="text"
+                                value={globalSearch}
+                                onChange={(e) => setGlobalSearch(e.target.value)}
                                 placeholder="Search catalog, orders... (Ctrl+K)"
                                 className="bg-transparent text-xs sm:text-sm text-[#0E2038] dark:text-white placeholder-slate-400 dark:placeholder-[#8EB0CF]/60 focus:outline-none w-full font-medium"
                             />
-                        </div>
+                            {globalSearch && (
+                                <button
+                                    type="button"
+                                    onClick={() => setGlobalSearch('')}
+                                    className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 cursor-pointer"
+                                >
+                                    <X className="w-3.5 h-3.5" />
+                                </button>
+                            )}
+                        </form>
                     </div>
 
                     <div className="flex items-center gap-2.5 sm:gap-3">
