@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORIO E-Commerce — Master Architecture & Blueprint</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+        code, pre, .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%);
+        }
+        .gold-border {
+            border-color: rgba(212, 175, 55, 0.25);
+        }
+        .navy-card {
+            background: #0E2038;
+            border: 1px solid rgba(28, 62, 99, 0.7);
+        }
+        .navy-dark {
+            background: #071324;
+        }
+    </style>
+</head>
+<body class="bg-[#071324] text-slate-200 antialiased selection:bg-[#D4AF37] selection:text-[#071324]">
+
+    <!-- Top Glow Header -->
+    <header class="border-b border-[#1C3E63]/70 bg-[#0E2038]/80 backdrop-blur sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-[#D4AF37]/20">
+                    O
+                </div>
+                <div>
+                    <h1 class="text-lg font-black tracking-wider text-white uppercase flex items-center gap-2">
+                        ORIO E-Commerce
+                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#EBD495] border border-[#D4AF37]/40 font-mono">
+                            v2.0 Architecture
+                        </span>
+                    </h1>
+                    <p class="text-xs text-slate-400">Master Architecture, Non-Negotiables & 20-Phase Roadmap</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="text-right hidden sm:block">
+                    <div class="text-xs text-slate-400">Implementation Progress</div>
+                    <div class="text-sm font-bold text-[#EBD495] font-mono">85% Complete (17/20 Phases)</div>
+                </div>
+                <div class="w-24 bg-[#1C3E63] rounded-full h-2.5 overflow-hidden border border-[#1C3E63]">
+                    <div class="gold-gradient h-2.5 rounded-full" style="width: 85%"></div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-6 py-10 space-y-12">
+
+        <!-- Hero Stats Row -->
+        <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="navy-card rounded-2xl p-6 relative overflow-hidden">
+                <div class="text-xs font-bold uppercase tracking-wider text-[#D4AF37]">Lead Architect</div>
+                <div class="text-xl font-bold text-white mt-1">Jahidul Islam</div>
+                <div class="text-xs text-slate-400 font-mono mt-1">jahidcse181@gmail.com</div>
+                <div class="absolute -right-2 -bottom-2 opacity-5 text-white">
+                    <i data-lucide="shield" class="w-28 h-28"></i>
+                </div>
+            </div>
+
+            <div class="navy-card rounded-2xl p-6 relative overflow-hidden">
+                <div class="text-xs font-bold uppercase tracking-wider text-emerald-400">Automated Tests</div>
+                <div class="text-2xl font-black text-white mt-1 flex items-baseline gap-2">
+                    173 / 173 <span class="text-xs font-medium text-emerald-400">100% Green</span>
+                </div>
+                <div class="text-xs text-slate-400 font-mono mt-1">1,021 assertions passed</div>
+            </div>
+
+            <div class="navy-card rounded-2xl p-6 relative overflow-hidden">
+                <div class="text-xs font-bold uppercase tracking-wider text-sky-400">Tech Stack</div>
+                <div class="text-base font-bold text-white mt-1">Laravel 12 + React 18</div>
+                <div class="text-xs text-slate-400 font-mono mt-1">Inertia.js v2 SPA + Tailwind 3.4</div>
+            </div>
+
+            <div class="navy-card rounded-2xl p-6 relative overflow-hidden">
+                <div class="text-xs font-bold uppercase tracking-wider text-purple-400">Next Sprint Phase</div>
+                <div class="text-base font-bold text-white mt-1">Phase 18: Invoicing</div>
+                <div class="text-xs text-slate-400 font-mono mt-1">A4 Tax PDF & 80mm POS Thermal</div>
+            </div>
+        </section>
+
+        <!-- 6 Non-Negotiables Grid -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-black text-white uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="scale" class="w-5 h-5 text-[#D4AF37]"></i>
+                        The 6 Non-Negotiable Architectural Rules
+                    </h2>
+                    <p class="text-xs text-slate-400">Strict tenets enforced on every code modification across all conversations</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Rule 1 -->
+                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center font-bold font-mono text-sm">01</span>
+                        <h3 class="font-bold text-white text-sm">Anti-N+1 Query Policy</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Strict lazy loading forbidden via <code class="text-rose-300">Model::preventLazyLoading()</code>. Every relationship retrieval must explicitly use <code class="text-[#EBD495]">with(['relation'])</code>.
+                    </p>
+                </div>
+
+                <!-- Rule 2 -->
+                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold font-mono text-sm">02</span>
+                        <h3 class="font-bold text-white text-sm">Action / Service Layer (No Fat Controllers)</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Controllers only validate inputs, call actions, and return responses. Domain mutations live exclusively in <code class="text-blue-300">app/Actions/</code> and <code class="text-blue-300">app/Services/</code>.
+                    </p>
+                </div>
+
+                <!-- Rule 3 -->
+                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center font-bold font-mono text-sm">03</span>
+                        <h3 class="font-bold text-white text-sm">Atomic DB Transactions</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Operations touching multiple tables (Stock-in, Checkout, Cancellations) are wrapped in <code class="text-amber-300">DB::transaction(fn(), 5)</code> with dead-lock retry protection.
+                    </p>
+                </div>
+
+                <!-- Rule 4 -->
+                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold font-mono text-sm">04</span>
+                        <h3 class="font-bold text-white text-sm">Real COGS Profit Tracking</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Order items snapshot immutable purchase unit cost price at purchase time, guaranteeing real mathematical Gross Profit calculation: <span class="text-emerald-300 font-mono text-[11px] block mt-1">(Subtotal - Discount) - Σ(Cost × Qty)</span>
+                    </p>
+                </div>
+
+                <!-- Rule 5 -->
+                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-[#D4AF37]/10 text-[#EBD495] border border-[#D4AF37]/30 flex items-center justify-center font-bold font-mono text-sm">05</span>
+                        <h3 class="font-bold text-white text-sm">Zero Hardcoding (100% Dynamic)</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        No hardcoded logos, phone numbers, emails, currency symbols, or sliders. Every asset is managed through Admin Settings CMS, cached in Redis, and shared globally.
+                    </p>
+                </div>
+
+                <!-- Rule 6 -->
+                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
+                    <div class="flex items-center gap-3 mb-3">
+                        <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center font-bold font-mono text-sm">06</span>
+                        <h3 class="font-bold text-white text-sm">Standardized Directory Layout</h3>
+                    </div>
+                    <p class="text-xs text-slate-300 leading-relaxed">
+                        Strict separation into <code class="text-indigo-300">Actions/</code>, <code class="text-indigo-300">Services/</code>, <code class="text-indigo-300">Models/</code>, and React atomic components under <code class="text-indigo-300">resources/js/Pages/</code> and <code class="text-indigo-300">Layouts/</code>.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 20-Phase Roadmap Table -->
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h2 class="text-xl font-black text-white uppercase tracking-wider flex items-center gap-2">
+                        <i data-lucide="map" class="w-5 h-5 text-[#D4AF37]"></i>
+                        The 20-Phase Lifecycle Execution Directory
+                    </h2>
+                    <p class="text-xs text-slate-400">Current implementation status across all 4 production sprints</p>
+                </div>
+            </div>
+
+            <div class="navy-card rounded-2xl overflow-hidden border border-[#1C3E63]/70">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs">
+                        <thead>
+                            <tr class="bg-[#071324] border-b border-[#1C3E63] text-slate-400 font-bold uppercase tracking-wider">
+                                <th class="py-3 px-4 w-16">Phase</th>
+                                <th class="py-3 px-4">Title & Scope Overview</th>
+                                <th class="py-3 px-4 w-28">Sprint</th>
+                                <th class="py-3 px-4 w-32">Status</th>
+                                <th class="py-3 px-4 w-24 text-right">Tests</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-[#1C3E63]/40">
+                            <!-- Sprint 1 -->
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P01</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Project Setup & Anti-N+1 Rules</span> — Laravel 12, Inertia React, Tailwind 3.4, Strict Lazy Loading Prevention</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P02</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Role-Based Access Control (RBAC)</span> — Multi-role enum, EnsureAdminAccess middleware, authentication flows</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P03</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Admin Dashboard Shell & UI Kit</span> — Collapsible sidebar, mobile drawer, DataTable, Modal, Button component system</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P04</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Category Taxonomy & Tree</span> — Self-referencing recursive parent-child categories with slug auto-generation</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P05</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Brand Catalog & WebP Media Hub</span> — MediaUploadService, automated WebP compression, dimension validation</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+
+                            <!-- Sprint 2 -->
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P06</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Core Simple Products Catalog</span> — Base pricing, cost price, stock alerts, rich specifications</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P07</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Product Attribute Matrix & Variants</span> — Cartesian permutation generator (Color × Size), dynamic SKU generation</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P08</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Supplier Directory & Accounts Payable</span> — Supplier profiles, transaction history, running ledger balance</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P09</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Stock-In Purchase Orders</span> — ReceivePurchaseOrderAction, atomic inventory hydration, weighted average COGS recalculation</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P10</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Inventory Control & Damage Logs</span> — InventoryMovement audit trail, cycle count adjustments, damage write-offs</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+
+                            <!-- Sprint 3 -->
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P11</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Storefront Layout & Bento Homepage</span> — Dynamic hero banner carousel, featured deals, announcement tickers</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P12</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Catalog Discovery & Multi-Facet Filters</span> — Category hierarchy, price range sliders, debounced live search dropdown</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P13</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Product Detail & Dynamic Variant Selector</span> — Live price and stock updates on swatch selection, zoom gallery modal</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P14</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Cart Engine & Slide-out Mini-Cart</span> — CartService, guest cookie/session persistence, auto user cart merge on login</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P15</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Discount Coupon Engine & Promo Rules</span> — CouponValidationService, minimum spend checks, expiry validation, per-user limits</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+
+                            <!-- Sprint 4 -->
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P16</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Single-Page Checkout & Payment Selector</span> — Inside/outside Dhaka delivery logic, free shipping threshold, COD / bKash / Nagad options</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition">
+                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P17</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Order State Machine & Auto-Restock</span> — UpdateOrderStatusAction, audit trail timeline (order_status_histories), auto restock on cancellation</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
+                            </tr>
+                            <tr class="bg-[#D4AF37]/5 hover:bg-[#D4AF37]/10 transition border-l-2 border-l-[#D4AF37]">
+                                <td class="py-3 px-4 font-mono font-bold text-[#D4AF37]">P18</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Dual Invoicing Engine</span> — High-fidelity A4 Tax Invoice PDF download + 80mm POS Thermal Receipt print layout</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#D4AF37]/20 text-[#EBD495] border border-[#D4AF37]/40">⏳ Next Up</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-slate-400">—</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition opacity-70">
+                                <td class="py-3 px-4 font-mono font-bold text-slate-400">P19</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Customer Account Portal & Order Tracker</span> — Customer dashboard, visual order tracking progress bar, saved delivery addresses</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20">📅 Queued</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-slate-400">—</td>
+                            </tr>
+                            <tr class="hover:bg-[#071324]/40 transition opacity-70">
+                                <td class="py-3 px-4 font-mono font-bold text-slate-400">P20</td>
+                                <td class="py-3 px-4"><span class="font-bold text-white">Settings CMS, BI Analytics & Production QA</span> — Full dynamic site CMS, gross profit BI analytics, audit log observer, realistic demo seeders</td>
+                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
+                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20">📅 Queued</span></td>
+                                <td class="py-3 px-4 text-right font-mono text-slate-400">—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="pt-6 border-t border-[#1C3E63]/70 text-center text-xs text-slate-500">
+            <p>ORIO E-Commerce Blueprint Specification &bull; Author & Lead Architect: Jahidul Islam (<a href="mailto:jahidcse181@gmail.com" class="text-[#D4AF37] hover:underline">jahidcse181@gmail.com</a>)</p>
+            <p class="mt-1">Generated dynamically from <code class="text-slate-400">PROJECT_MASTER_BLUEPRINT.md</code></p>
+        </footer>
+
+    </main>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
