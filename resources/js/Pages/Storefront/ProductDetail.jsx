@@ -34,7 +34,13 @@ export default function ProductDetail({
 
     const [activeImageIndex, setActiveImageIndex] = useState(0);
     const [isZoomOpen, setIsZoomOpen] = useState(false);
-    const [zoomScale, setZoomScale] = useState(1.5);
+    const [lightboxScale, setLightboxScale] = useState(1);
+    const [panOffset, setPanOffset] = useState({ x: 0, y: 0 });
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
+    const [touchStart, setTouchStart] = useState(null);
+    const [isHoverZooming, setIsHoverZooming] = useState(false);
+    const [hoverPosition, setHoverPosition] = useState({ x: 50, y: 50 });
 
     // Variant selection state
     const variants = product.variants || [];
@@ -122,14 +128,156 @@ export default function ProductDetail({
         );
     };
 
-    // Close zoom on Escape
+    // Showcase Desktop Hover Loupe Handlers
+    const handleShowcaseMouseMove = (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        setHoverPosition({
+            x: Math.min(100, Math.max(0, x)),
+            y: Math.min(100, Math.max(0, y)),
+        });
+    };
+
+    const handleShowcaseMouseEnter = () => {
+        if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(hover: hover)').matches) {
+            setIsHoverZooming(true);
+        }
+    };
+
+    const handleShowcaseMouseLeave = () => {
+        setIsHoverZooming(false);
+    };
+
+    // Lightbox Gallery Navigation & Zoom Controls
+    const handlePrevImage = () => {
+        setActiveImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
+        setLightboxScale(1);
+        setPanOffset({ x: 0, y: 0 });
+    };
+
+    const handleNextImage = () => {
+        setActiveImageIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
+        setLightboxScale(1);
+        setPanOffset({ x: 0, y: 0 });
+    };
+
+    const handleZoomIn = () => {
+        setLightboxScale((prev) => Math.min(prev + 0.5, 3.5));
+    };
+
+    const handleZoomOut = () => {
+        setLightboxScale((prev) => {
+            const next = Math.max(prev - 0.5, 1);
+            if (next === 1) setPanOffset({ x: 0, y: 0 });
+            return next;
+        });
+    };
+
+    const handleResetZoom = () => {
+        setLightboxScale(1);
+        setPanOffset({ x: 0, y: 0 });
+    };
+
+    const handleToggleZoomAtPoint = () => {
+        if (isDragging) return;
+        if (lightboxScale === 1) {
+            setLightboxScale(2.2);
+        } else {
+            setLightboxScale(1);
+            setPanOffset({ x: 0, y: 0 });
+        }
+    };
+
+    const handleLightboxMouseDown = (e) => {
+        if (lightboxScale <= 1) return;
+        e.preventDefault();
+        setIsDragging(true);
+        setDragStart({ x: e.clientX - panOffset.x, y: e.clientY - panOffset.y });
+    };
+
+    const handleLightboxMouseMove = (e) => {
+        if (!isDragging || lightboxScale <= 1) return;
+        setPanOffset({
+            x: e.clientX - dragStart.x,
+            y: e.clientY - dragStart.y,
+        });
+    };
+
+    const handleLightboxMouseUp = () => {
+        setIsDragging(false);
+    };
+
+    const handleLightboxTouchStart = (e) => {
+        if (e.touches.length === 1) {
+            const touch = e.touches[0];
+            setTouchStart({ x: touch.clientX, y: touch.clientY });
+            if (lightboxScale > 1) {
+                setIsDragging(true);
+                setDragStart({ x: touch.clientX - panOffset.x, y: touch.clientY - panOffset.y });
+            }
+        }
+    };
+
+    const handleLightboxTouchMove = (e) => {
+        if (e.touches.length === 1) {
+            const touch = e.touches[0];
+            if (lightboxScale > 1 && isDragging) {
+                setPanOffset({
+                    x: touch.clientX - dragStart.x,
+                    y: touch.clientY - dragStart.y,
+                });
+            }
+        }
+    };
+
+    const handleLightboxTouchEnd = (e) => {
+        if (lightboxScale <= 1 && touchStart) {
+            const touch = e.changedTouches[0];
+            const diffX = touch.clientX - touchStart.x;
+            const diffY = touch.clientY - touchStart.y;
+            if (Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY)) {
+                if (diffX > 0) {
+                    handlePrevImage();
+                } else {
+                    handleNextImage();
+                }
+            }
+        }
+        setIsDragging(false);
+    };
+
+    // Keyboard navigation & scroll locking for Lightbox Modal
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (e.key === 'Escape') setIsZoomOpen(false);
+            if (!isZoomOpen) return;
+            if (e.key === 'Escape') {
+                setIsZoomOpen(false);
+            } else if (e.key === 'ArrowLeft') {
+                handlePrevImage();
+            } else if (e.key === 'ArrowRight') {
+                handleNextImage();
+            } else if (e.key === '+' || e.key === '=') {
+                handleZoomIn();
+            } else if (e.key === '-') {
+                handleZoomOut();
+            } else if (e.key === '0') {
+                handleResetZoom();
+            }
         };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, []);
+
+        if (isZoomOpen) {
+            document.body.style.overflow = 'hidden';
+            window.addEventListener('keydown', handleKeyDown);
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        return () => {
+            document.body.style.overflow = '';
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [isZoomOpen, activeImageIndex, lightboxScale]);
 
     const activeImageSrc = allImages[activeImageIndex] || allImages[0];
 
@@ -195,10 +343,20 @@ export default function ProductDetail({
                                     </div>
                                 )}
 
-                                {/* Main Active Showcase Preview (Proportional, Zero Dead Space) */}
-                                <div className="oubd-product-showcase-wrap flex-grow-1 border shadow-xs">
+                                {/* Main Active Showcase Preview (Desktop Hover Loupe + Click to Lightbox) */}
+                                <div
+                                    className={`oubd-product-showcase-wrap flex-grow-1 border shadow-xs ${isHoverZooming ? 'is-zooming' : ''}`}
+                                    onMouseMove={handleShowcaseMouseMove}
+                                    onMouseEnter={handleShowcaseMouseEnter}
+                                    onMouseLeave={handleShowcaseMouseLeave}
+                                    onClick={() => {
+                                        setIsZoomOpen(true);
+                                        setLightboxScale(1);
+                                        setPanOffset({ x: 0, y: 0 });
+                                    }}
+                                >
                                     {/* Badges Overlay */}
-                                    <div className="position-absolute top-0 start-0 m-2 m-md-3 d-flex flex-column gap-1" style={{ zIndex: 10 }}>
+                                    <div className="position-absolute top-0 start-0 m-2 m-md-3 d-flex flex-column gap-1 pointer-events-none" style={{ zIndex: 10 }}>
                                         {hasDiscount && discountPercent && (
                                             <span className="badge bg-danger font-size-11 font-size-md-12 px-2 py-1 text-uppercase fw-bold shadow-xs">
                                                 -{discountPercent}% OFF
@@ -214,24 +372,40 @@ export default function ProductDetail({
                                     {/* Zoom Hint Icon */}
                                     <button
                                         type="button"
-                                        onClick={() => setIsZoomOpen(true)}
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setIsZoomOpen(true);
+                                            setLightboxScale(1);
+                                            setPanOffset({ x: 0, y: 0 });
+                                        }}
                                         className="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2 m-md-3 shadow-sm d-flex align-items-center justify-content-center"
-                                        title="Click to Zoom"
+                                        title="Click to expand"
                                         style={{ width: '36px', height: '36px', zIndex: 10 }}
                                     >
                                         <i className="ri-zoom-in-line font-size-16" />
                                     </button>
 
-                                    {/* Image with Click to Zoom */}
-                                    <div
-                                        className="w-100 h-100 cursor-pointer"
-                                        onClick={() => setIsZoomOpen(true)}
-                                    >
+                                    {/* Image with Interactive Desktop Hover Loupe Zoom */}
+                                    <div className="w-100 h-100 overflow-hidden position-relative">
                                         <img
                                             src={activeImageSrc}
                                             alt={product.name}
-                                            className="w-100 h-100 transition-all"
+                                            className="w-100 h-100"
+                                            style={{
+                                                objectFit: 'cover',
+                                                objectPosition: 'top center',
+                                                transformOrigin: `${hoverPosition.x}% ${hoverPosition.y}%`,
+                                                transform: isHoverZooming ? 'scale(2.2)' : 'scale(1)',
+                                                transition: isHoverZooming ? 'transform 0.08s ease-out' : 'transform 0.25s ease-out',
+                                                pointerEvents: 'none',
+                                            }}
                                         />
+                                    </div>
+
+                                    {/* Desktop Hover Hint Pill */}
+                                    <div className="oubd-zoom-prompt d-none d-md-flex align-items-center gap-1.5 position-absolute bottom-0 start-50 translate-middle-x mb-3 px-3 py-1 rounded-pill bg-dark bg-opacity-75 text-white font-size-11 fw-semibold backdrop-blur-xs shadow-sm">
+                                        <i className="ri-zoom-in-line text-warning font-size-13" />
+                                        <span>Hover to zoom • Click to expand</span>
                                     </div>
                                 </div>
                             </div>
@@ -436,7 +610,7 @@ export default function ProductDetail({
                             </h2>
                         </div>
 
-                        <div className="oubd-product-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
+                        <div className="oubd-shop-product-grid">
                             {relatedProducts.map((relProduct) => (
                                 <ProductCard
                                     key={relProduct.id}
@@ -452,63 +626,151 @@ export default function ProductDetail({
 
             {/* --- Full-Screen Interactive Lightbox Gallery Modal --- */}
             {isZoomOpen && (
-                <div
-                    className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-95 d-flex align-items-center justify-content-center p-3"
-                    style={{ zIndex: 2000 }}
-                    onClick={() => setIsZoomOpen(false)}
-                >
-                    {/* Controls Toolbar */}
-                    <div className="position-absolute top-0 end-0 m-4 d-flex align-items-center gap-2" style={{ zIndex: 2010 }} onClick={(e) => e.stopPropagation()}>
-                        <button
-                            type="button"
-                            onClick={() => setZoomScale(prev => Math.min(prev + 0.3, 3))}
-                            className="btn btn-outline-light btn-sm rounded-circle p-2"
-                            title="Zoom In"
-                            style={{ width: '40px', height: '40px' }}
-                        >
-                            <i className="ri-zoom-in-line font-size-16" />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setZoomScale(prev => Math.max(prev - 0.3, 1))}
-                            className="btn btn-outline-light btn-sm rounded-circle p-2"
-                            title="Zoom Out"
-                            style={{ width: '40px', height: '40px' }}
-                        >
-                            <i className="ri-zoom-out-line font-size-16" />
-                        </button>
-                        <button
-                            type="button"
-                            onClick={() => setIsZoomOpen(false)}
-                            className="btn btn-light btn-sm rounded-circle p-2 ms-2"
-                            title="Close (Esc)"
-                            style={{ width: '40px', height: '40px' }}
-                        >
-                            <i className="ri-close-line font-size-18 text-dark" />
-                        </button>
+                <div className="oubd-lightbox-modal">
+                    {/* Top Header Bar */}
+                    <div className="oubd-lightbox-header">
+                        <div className="d-flex align-items-center gap-3">
+                            <span className="badge bg-white bg-opacity-15 text-white font-size-12 px-3 py-1.5 rounded-pill font-mono">
+                                {activeImageIndex + 1} / {allImages.length}
+                            </span>
+                            <span className="text-white-50 font-size-13 d-none d-sm-inline text-truncate" style={{ maxWidth: '320px' }}>
+                                {product.name}
+                            </span>
+                        </div>
+
+                        {/* Zoom Actions & Close */}
+                        <div className="d-flex align-items-center gap-2">
+                            <button
+                                type="button"
+                                onClick={handleZoomOut}
+                                disabled={lightboxScale <= 1}
+                                className="btn btn-outline-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center"
+                                style={{ width: '38px', height: '38px', opacity: lightboxScale <= 1 ? 0.35 : 1 }}
+                                title="Zoom Out (-)"
+                            >
+                                <i className="ri-zoom-out-line font-size-16" />
+                            </button>
+
+                            <span className="text-white font-mono font-size-12 px-1 text-center" style={{ minWidth: '42px' }}>
+                                {Math.round(lightboxScale * 100)}%
+                            </span>
+
+                            <button
+                                type="button"
+                                onClick={handleZoomIn}
+                                disabled={lightboxScale >= 3.5}
+                                className="btn btn-outline-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center"
+                                style={{ width: '38px', height: '38px', opacity: lightboxScale >= 3.5 ? 0.35 : 1 }}
+                                title="Zoom In (+)"
+                            >
+                                <i className="ri-zoom-in-line font-size-16" />
+                            </button>
+
+                            {lightboxScale > 1 && (
+                                <button
+                                    type="button"
+                                    onClick={handleResetZoom}
+                                    className="btn btn-warning btn-sm rounded-pill font-size-11 fw-bold px-2.5 py-1 text-dark ms-1 d-none d-sm-inline-block"
+                                    title="Reset Zoom (0)"
+                                >
+                                    Reset
+                                </button>
+                            )}
+
+                            <button
+                                type="button"
+                                onClick={() => setIsZoomOpen(false)}
+                                className="btn btn-light btn-sm rounded-circle p-0 d-flex align-items-center justify-content-center ms-2"
+                                title="Close (Esc)"
+                                style={{ width: '38px', height: '38px' }}
+                            >
+                                <i className="ri-close-line font-size-20 text-dark" />
+                            </button>
+                        </div>
                     </div>
 
-                    {/* High-Res Image Container */}
+                    {/* Main Zoom Stage with Pan & Swipe */}
                     <div
-                        className="overflow-auto text-center"
-                        style={{ maxWidth: '90vw', maxHeight: '90vh' }}
-                        onClick={(e) => e.stopPropagation()}
+                        className="oubd-lightbox-main"
+                        onMouseDown={handleLightboxMouseDown}
+                        onMouseMove={handleLightboxMouseMove}
+                        onMouseUp={handleLightboxMouseUp}
+                        onMouseLeave={handleLightboxMouseUp}
+                        onTouchStart={handleLightboxTouchStart}
+                        onTouchMove={handleLightboxTouchMove}
+                        onTouchEnd={handleLightboxTouchEnd}
+                        onClick={handleToggleZoomAtPoint}
+                        style={{
+                            cursor: lightboxScale > 1 ? (isDragging ? 'grabbing' : 'grab') : 'zoom-in',
+                        }}
                     >
-                        <img
-                            src={activeImageSrc}
-                            alt={product.name}
-                            className="transition-all rounded shadow-lg"
+                        {/* Left Navigation Arrow */}
+                        {allImages.length > 1 && (
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handlePrevImage();
+                                }}
+                                className="oubd-lightbox-nav-btn prev"
+                                aria-label="Previous Image"
+                            >
+                                <i className="ri-arrow-left-s-line font-size-24" />
+                            </button>
+                        )}
+
+                        {/* Active Showcase Image */}
+                        <div
+                            className="oubd-lightbox-img-wrapper"
                             style={{
-                                transform: `scale(${zoomScale})`,
-                                transformOrigin: 'center center',
-                                maxWidth: '85vw',
-                                maxHeight: '85vh',
-                                objectFit: 'contain',
-                                cursor: zoomScale > 1 ? 'grab' : 'zoom-in',
+                                transform: `scale(${lightboxScale}) translate(${panOffset.x / lightboxScale}px, ${panOffset.y / lightboxScale}px)`,
+                                transition: isDragging ? 'none' : 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
                             }}
-                            onClick={() => setZoomScale(prev => prev > 1 ? 1 : 1.8)}
-                        />
+                        >
+                            <img
+                                src={activeImageSrc}
+                                alt={product.name}
+                                className="oubd-lightbox-img"
+                                draggable={false}
+                            />
+                        </div>
+
+                        {/* Right Navigation Arrow */}
+                        {allImages.length > 1 && (
+                            <button
+                                type="button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleNextImage();
+                                }}
+                                className="oubd-lightbox-nav-btn next"
+                                aria-label="Next Image"
+                            >
+                                <i className="ri-arrow-right-s-line font-size-24" />
+                            </button>
+                        )}
                     </div>
+
+                    {/* Bottom Gallery Thumbnail Strip */}
+                    {allImages.length > 1 && (
+                        <div className="oubd-lightbox-thumbs" onClick={(e) => e.stopPropagation()}>
+                            {allImages.map((imgSrc, idx) => (
+                                <button
+                                    key={idx}
+                                    type="button"
+                                    onClick={() => {
+                                        setActiveImageIndex(idx);
+                                        setLightboxScale(1);
+                                        setPanOffset({ x: 0, y: 0 });
+                                    }}
+                                    className={`oubd-lightbox-thumb-btn ${activeImageIndex === idx ? 'active' : ''}`}
+                                    title={`View photo ${idx + 1}`}
+                                >
+                                    <img src={imgSrc} alt="" />
+                                </button>
+                            ))}
+                        </div>
+                    )}
                 </div>
             )}
 
