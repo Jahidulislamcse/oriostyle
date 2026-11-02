@@ -185,9 +185,9 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     {/* Left Brand Logo */}
                     <Link href="/" className="oubd-brand-logo">
                         {siteLogo ? (
-                            <img src={siteLogo} alt={siteName} style={{ maxHeight: '62px', width: 'auto', objectFit: 'contain' }} />
+                            <img src={siteLogo} alt={siteName} style={{ maxHeight: '48px', width: 'auto', objectFit: 'contain' }} />
                         ) : (
-                            <span className="brand-text" style={{ fontSize: '34px' }}>{siteName}</span>
+                            <span className="brand-text">{siteName}</span>
                         )}
                     </Link>
 
@@ -199,10 +199,10 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             </li>
 
                             <li className={currentPath === '/shop' && !url.includes('category=') ? 'active' : ''}>
-                                <Link href="/shop">ALL COLLECTIONS</Link>
+                                <Link href="/shop">SHOP</Link>
                             </li>
 
-                            {categories && categories.slice(0, 5).map((cat) => {
+                            {categories && categories.slice(0, 4).map((cat) => {
                                 const hasChildren = cat.children && cat.children.length > 0;
                                 const isCatActive = url.includes(`category=${cat.slug}`);
                                 return (
@@ -227,6 +227,10 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                     </li>
                                 );
                             })}
+
+                            <li className={currentPath === '/shop' && !url.includes('category=') ? 'active' : ''}>
+                                <Link href="/shop">ALL PRODUCTS</Link>
+                            </li>
 
                             <li className={currentPath === '/track-order' ? 'active' : ''}>
                                 <Link href="/track-order">TRACK ORDER</Link>
@@ -315,9 +319,9 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
 
                 <Link href="/" className="oubd-brand-logo mx-auto">
                     {siteLogo ? (
-                        <img src={siteLogo} alt={siteName} style={{ maxHeight: '42px', width: 'auto', objectFit: 'contain' }} />
+                        <img src={siteLogo} alt={siteName} style={{ maxHeight: '30px' }} />
                     ) : (
-                        <span className="brand-text" style={{ fontSize: '26px' }}>{siteName}</span>
+                        <span className="brand-text" style={{ fontSize: '20px' }}>{siteName}</span>
                     )}
                 </Link>
 
@@ -378,7 +382,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                         </li>
                         <li className="mb-2">
                             <Link href="/shop" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
-                                ALL COLLECTIONS
+                                SHOP
                             </Link>
                         </li>
                         {categories && categories.map((cat) => (
@@ -407,7 +411,12 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                 )}
                             </li>
                         ))}
-                        <li className="mt-2 pt-2 border-top">
+                        <li className="mt-3 pt-3 border-top">
+                            <Link href="/shop" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
+                                ALL PRODUCTS
+                            </Link>
+                        </li>
+                        <li className="mb-2">
                             <Link href="/track-order" className="d-block py-2 fw-bold text-dark text-decoration-none d-flex align-items-center gap-2" onClick={() => setIsMobileMenuOpen(false)}>
                                 <i className="ri-map-pin-2-line text-warning" /> TRACK ORDER
                             </Link>
