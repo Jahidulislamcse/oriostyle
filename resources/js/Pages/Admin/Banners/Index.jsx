@@ -37,8 +37,8 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
     const [deletingBanner, setDeletingBanner] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
 
-    // Form setup
-    const { data, setData, post, processing, errors, reset, clearErrors } = useForm({
+    // Create Form
+    const createForm = useForm({
         title: '',
         subtitle: '',
         badge_text: '',
@@ -48,7 +48,19 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
         display_order: 0,
         is_active: true,
         image: null,
-        image_path: '',
+    });
+
+    // Edit Form
+    const editForm = useForm({
+        title: '',
+        subtitle: '',
+        badge_text: '',
+        button_text: '',
+        link_url: '',
+        type: 'hero',
+        display_order: 0,
+        is_active: true,
+        image: null,
         remove_image: false,
     });
 
@@ -90,40 +102,38 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
         applyFilters(typeFilter, searchQuery, val);
     };
 
-    const handleImageChange = (e) => {
+    const handleCreateImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setData('image', file);
+            createForm.setData('image', file);
+            setImagePreview(URL.createObjectURL(file));
+        }
+    };
+
+    const handleEditImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            editForm.setData((prev) => ({
+                ...prev,
+                image: file,
+                remove_image: false,
+            }));
             setImagePreview(URL.createObjectURL(file));
         }
     };
 
     const openCreateModal = () => {
-        reset();
-        clearErrors();
+        createForm.reset();
+        createForm.clearErrors();
         setImagePreview(null);
-        setData({
-            title: '',
-            subtitle: '',
-            badge_text: '',
-            button_text: '',
-            link_url: '',
-            type: 'hero',
-            display_order: 0,
-            is_active: true,
-            image: null,
-            image_path: '',
-            remove_image: false,
-        });
         setIsCreateModalOpen(true);
     };
 
     const openEditModal = (banner) => {
-        reset();
-        clearErrors();
+        editForm.clearErrors();
         setEditingBanner(banner);
         setImagePreview(banner.image_url || null);
-        setData({
+        editForm.setData({
             title: banner.title || '',
             subtitle: banner.subtitle || '',
             badge_text: banner.badge_text || '',
@@ -133,7 +143,6 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
             display_order: banner.display_order ?? 0,
             is_active: Boolean(banner.is_active),
             image: null,
-            image_path: banner.image_path || '',
             remove_image: false,
         });
         setIsEditModalOpen(true);
@@ -141,11 +150,12 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
 
     const handleCreateSubmit = (e) => {
         e.preventDefault();
-        post(route('admin.banners.store'), {
+        createForm.post(route('admin.banners.store'), {
             forceFormData: true,
+            preserveScroll: true,
             onSuccess: () => {
                 setIsCreateModalOpen(false);
-                reset();
+                createForm.reset();
                 setImagePreview(null);
             },
         });
@@ -155,17 +165,26 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
         e.preventDefault();
         if (!editingBanner) return;
 
-        // Use Inertia post with method spoofing _method: 'PUT' for file uploads
-        router.post(route('admin.banners.update', editingBanner.id), {
+        const payload = {
             _method: 'PUT',
-            ...data,
-        }, {
+            ...editForm.data,
+        };
+
+        if (!(editForm.data.image instanceof File)) {
+            delete payload.image;
+        }
+
+        router.post(route('admin.banners.update', editingBanner.id), payload, {
             forceFormData: true,
+            preserveScroll: true,
             onSuccess: () => {
                 setIsEditModalOpen(false);
                 setEditingBanner(null);
-                reset();
+                editForm.reset();
                 setImagePreview(null);
+            },
+            onError: (errs) => {
+                editForm.setError(errs);
             },
         });
     };
@@ -179,6 +198,7 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
     const handleDelete = () => {
         if (!deletingBanner) return;
         router.delete(route('admin.banners.destroy', deletingBanner.id), {
+            preserveScroll: true,
             onSuccess: () => setDeletingBanner(null),
         });
     };
@@ -506,6 +526,7 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
 
             {/* Create Banner Modal */}
             <Modal
+                isOpen={isCreateModalOpen}
                 show={isCreateModalOpen}
                 onClose={() => setIsCreateModalOpen(false)}
                 title="Create New Banner"
@@ -515,9 +536,9 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormSelect
                             label="Banner Placement / Type"
-                            value={data.type}
-                            onChange={(e) => setData('type', e.target.value)}
-                            error={errors.type}
+                            value={createForm.data.type}
+                            onChange={(e) => createForm.setData('type', e.target.value)}
+                            error={createForm.errors.type}
                             options={[
                                 { value: 'hero', label: 'Hero Slider Banner (Top Carousel)' },
                                 { value: 'split', label: 'Split Promotional Banner (2-Column Grid)' },
@@ -529,9 +550,9 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                         <FormInput
                             label="Display Order"
                             type="number"
-                            value={data.display_order}
-                            onChange={(e) => setData('display_order', parseInt(e.target.value) || 0)}
-                            error={errors.display_order}
+                            value={createForm.data.display_order}
+                            onChange={(e) => createForm.setData('display_order', parseInt(e.target.value) || 0)}
+                            error={createForm.errors.display_order}
                             placeholder="0 (Lower shows first)"
                         />
                     </div>
@@ -539,43 +560,43 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormInput
                             label="Banner Title"
-                            value={data.title}
-                            onChange={(e) => setData('title', e.target.value)}
-                            error={errors.title}
+                            value={createForm.data.title}
+                            onChange={(e) => createForm.setData('title', e.target.value)}
+                            error={createForm.errors.title}
                             placeholder="e.g., Glorious 10 Years"
                         />
 
                         <FormInput
                             label="Badge Text (Optional)"
-                            value={data.badge_text}
-                            onChange={(e) => setData('badge_text', e.target.value)}
-                            error={errors.badge_text}
+                            value={createForm.data.badge_text}
+                            onChange={(e) => createForm.setData('badge_text', e.target.value)}
+                            error={createForm.errors.badge_text}
                             placeholder="e.g., NEW ARRIVAL / SPECIAL DROP"
                         />
                     </div>
 
                     <FormInput
                         label="Subtitle / Description"
-                        value={data.subtitle}
-                        onChange={(e) => setData('subtitle', e.target.value)}
-                        error={errors.subtitle}
+                        value={createForm.data.subtitle}
+                        onChange={(e) => createForm.setData('subtitle', e.target.value)}
+                        error={createForm.errors.subtitle}
                         placeholder="e.g., Purpose & Style with Premium Quality"
                     />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormInput
                             label="Button Text"
-                            value={data.button_text}
-                            onChange={(e) => setData('button_text', e.target.value)}
-                            error={errors.button_text}
+                            value={createForm.data.button_text}
+                            onChange={(e) => createForm.setData('button_text', e.target.value)}
+                            error={createForm.errors.button_text}
                             placeholder="e.g., EXPLORE NOW / SHOP COLLECTION"
                         />
 
                         <FormInput
                             label="Link URL"
-                            value={data.link_url}
-                            onChange={(e) => setData('link_url', e.target.value)}
-                            error={errors.link_url}
+                            value={createForm.data.link_url}
+                            onChange={(e) => createForm.setData('link_url', e.target.value)}
+                            error={createForm.errors.link_url}
                             placeholder="e.g., /#featured-products or /?category=thobe"
                         />
                     </div>
@@ -599,11 +620,11 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    onChange={handleImageChange}
+                                    onChange={handleCreateImageChange}
                                     className="text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#D4AF37] file:text-[#071324] hover:file:bg-[#c49f2e] cursor-pointer"
                                 />
                                 <p className="text-[11px] text-slate-400 mt-1">Supports JPG, PNG, WEBP up to 5MB.</p>
-                                {errors.image && <p className="text-xs text-rose-500 mt-1">{errors.image}</p>}
+                                {createForm.errors.image && <p className="text-xs text-rose-500 mt-1">{createForm.errors.image}</p>}
                             </div>
                         </div>
                     </div>
@@ -613,8 +634,8 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                         <input
                             type="checkbox"
                             id="create_is_active"
-                            checked={data.is_active}
-                            onChange={(e) => setData('is_active', e.target.checked)}
+                            checked={createForm.data.is_active}
+                            onChange={(e) => createForm.setData('is_active', e.target.checked)}
                             className="w-4 h-4 rounded text-[#D4AF37] focus:ring-[#D4AF37] border-slate-300"
                         />
                         <label htmlFor="create_is_active" className="text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
@@ -635,10 +656,10 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                         <Button
                             type="submit"
                             variant="primary"
-                            disabled={processing}
+                            disabled={createForm.processing}
                             className="bg-[#D4AF37] hover:bg-[#c49f2e] text-[#071324] font-bold text-xs uppercase px-5 py-2.5 rounded-xl"
                         >
-                            {processing ? 'Creating...' : 'Save Banner'}
+                            {createForm.processing ? 'Creating...' : 'Save Banner'}
                         </Button>
                     </div>
                 </form>
@@ -646,6 +667,7 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
 
             {/* Edit Banner Modal */}
             <Modal
+                isOpen={isEditModalOpen}
                 show={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 title={`Edit Banner #${editingBanner?.id || ''}`}
@@ -655,9 +677,9 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormSelect
                             label="Banner Placement / Type"
-                            value={data.type}
-                            onChange={(e) => setData('type', e.target.value)}
-                            error={errors.type}
+                            value={editForm.data.type}
+                            onChange={(e) => editForm.setData('type', e.target.value)}
+                            error={editForm.errors.type}
                             options={[
                                 { value: 'hero', label: 'Hero Slider Banner (Top Carousel)' },
                                 { value: 'split', label: 'Split Promotional Banner (2-Column Grid)' },
@@ -669,48 +691,48 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                         <FormInput
                             label="Display Order"
                             type="number"
-                            value={data.display_order}
-                            onChange={(e) => setData('display_order', parseInt(e.target.value) || 0)}
-                            error={errors.display_order}
+                            value={editForm.data.display_order}
+                            onChange={(e) => editForm.setData('display_order', parseInt(e.target.value) || 0)}
+                            error={editForm.errors.display_order}
                         />
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormInput
                             label="Banner Title"
-                            value={data.title}
-                            onChange={(e) => setData('title', e.target.value)}
-                            error={errors.title}
+                            value={editForm.data.title}
+                            onChange={(e) => editForm.setData('title', e.target.value)}
+                            error={editForm.errors.title}
                         />
 
                         <FormInput
                             label="Badge Text"
-                            value={data.badge_text}
-                            onChange={(e) => setData('badge_text', e.target.value)}
-                            error={errors.badge_text}
+                            value={editForm.data.badge_text}
+                            onChange={(e) => editForm.setData('badge_text', e.target.value)}
+                            error={editForm.errors.badge_text}
                         />
                     </div>
 
                     <FormInput
                         label="Subtitle / Description"
-                        value={data.subtitle}
-                        onChange={(e) => setData('subtitle', e.target.value)}
-                        error={errors.subtitle}
+                        value={editForm.data.subtitle}
+                        onChange={(e) => editForm.setData('subtitle', e.target.value)}
+                        error={editForm.errors.subtitle}
                     />
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <FormInput
                             label="Button Text"
-                            value={data.button_text}
-                            onChange={(e) => setData('button_text', e.target.value)}
-                            error={errors.button_text}
+                            value={editForm.data.button_text}
+                            onChange={(e) => editForm.setData('button_text', e.target.value)}
+                            error={editForm.errors.button_text}
                         />
 
                         <FormInput
                             label="Link URL"
-                            value={data.link_url}
-                            onChange={(e) => setData('link_url', e.target.value)}
-                            error={errors.link_url}
+                            value={editForm.data.link_url}
+                            onChange={(e) => editForm.setData('link_url', e.target.value)}
+                            error={editForm.errors.link_url}
                         />
                     </div>
 
@@ -733,11 +755,29 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                                 <input
                                     type="file"
                                     accept="image/*"
-                                    onChange={handleImageChange}
+                                    onChange={handleEditImageChange}
                                     className="text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#D4AF37] file:text-[#071324] hover:file:bg-[#c49f2e] cursor-pointer"
                                 />
                                 <p className="text-[11px] text-slate-400 mt-1">Upload a new image to replace the current one.</p>
-                                {errors.image && <p className="text-xs text-rose-500 mt-1">{errors.image}</p>}
+                                
+                                {editingBanner?.image_url && !editForm.data.remove_image && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            editForm.setData('remove_image', true);
+                                            setImagePreview(null);
+                                        }}
+                                        className="mt-2 text-[11px] font-bold text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer block"
+                                    >
+                                        Remove current image
+                                    </button>
+                                )}
+
+                                {editForm.data.remove_image && (
+                                    <p className="mt-1 text-[11px] text-amber-500 font-bold">Image will be removed upon saving.</p>
+                                )}
+
+                                {editForm.errors.image && <p className="text-xs text-rose-500 mt-1">{editForm.errors.image}</p>}
                             </div>
                         </div>
                     </div>
@@ -747,8 +787,8 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                         <input
                             type="checkbox"
                             id="edit_is_active"
-                            checked={data.is_active}
-                            onChange={(e) => setData('is_active', e.target.checked)}
+                            checked={editForm.data.is_active}
+                            onChange={(e) => editForm.setData('is_active', e.target.checked)}
                             className="w-4 h-4 rounded text-[#D4AF37] focus:ring-[#D4AF37] border-slate-300"
                         />
                         <label htmlFor="edit_is_active" className="text-xs font-bold text-slate-700 dark:text-slate-300 cursor-pointer">
@@ -769,10 +809,10 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                         <Button
                             type="submit"
                             variant="primary"
-                            disabled={processing}
+                            disabled={editForm.processing}
                             className="bg-[#D4AF37] hover:bg-[#c49f2e] text-[#071324] font-bold text-xs uppercase px-5 py-2.5 rounded-xl"
                         >
-                            {processing ? 'Saving...' : 'Update Banner'}
+                            {editForm.processing ? 'Saving...' : 'Update Banner'}
                         </Button>
                     </div>
                 </form>
@@ -780,11 +820,13 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
 
             {/* Confirm Delete Dialog */}
             <ConfirmDialog
+                isOpen={Boolean(deletingBanner)}
                 show={Boolean(deletingBanner)}
                 title="Delete Banner"
                 message={`Are you sure you want to delete banner "${deletingBanner?.title || `#${deletingBanner?.id}`}"? This action cannot be undone.`}
                 confirmText="Delete Banner"
                 onConfirm={handleDelete}
+                onClose={() => setDeletingBanner(null)}
                 onCancel={() => setDeletingBanner(null)}
             />
         </AdminLayout>

@@ -5,7 +5,9 @@ import { AlertTriangle } from 'lucide-react';
 
 export default function ConfirmDialog({
     isOpen = false,
+    show = false,
     onClose,
+    onCancel,
     onConfirm,
     title = 'Confirm Action',
     message = 'Are you sure you want to proceed? This action cannot be undone.',
@@ -14,15 +16,18 @@ export default function ConfirmDialog({
     processing = false,
     variant = 'danger',
 }) {
+    const isVisible = Boolean(isOpen || show);
+    const handleClose = onClose || onCancel;
+
     return (
         <Modal
-            isOpen={isOpen}
-            onClose={onClose}
+            isOpen={isVisible}
+            onClose={handleClose}
             title={title}
             maxWidth="md"
             footer={
                 <>
-                    <Button variant="secondary" size="md" onClick={onClose} disabled={processing}>
+                    <Button variant="secondary" size="md" onClick={handleClose} disabled={processing}>
                         {cancelText}
                     </Button>
                     <Button

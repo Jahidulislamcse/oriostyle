@@ -51,6 +51,10 @@ class BannerController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if ($request->has('image') && !$request->hasFile('image')) {
+            $request->request->remove('image');
+        }
+
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:500',
@@ -78,6 +82,10 @@ class BannerController extends Controller
      */
     public function update(Request $request, Banner $banner): RedirectResponse
     {
+        if ($request->has('image') && !$request->hasFile('image')) {
+            $request->request->remove('image');
+        }
+
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:500',

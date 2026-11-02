@@ -3,6 +3,7 @@ import { X } from 'lucide-react';
 
 export default function Modal({
     isOpen = false,
+    show = false,
     onClose,
     title = '',
     description = '',
@@ -10,14 +11,16 @@ export default function Modal({
     children,
     footer = null,
 }) {
+    const isVisible = Boolean(isOpen || show);
+
     useEffect(() => {
         const handleKeyDown = (e) => {
-            if (e.key === 'Escape' && isOpen) {
+            if (e.key === 'Escape' && isVisible && onClose) {
                 onClose();
             }
         };
 
-        if (isOpen) {
+        if (isVisible) {
             document.body.style.overflow = 'hidden';
             window.addEventListener('keydown', handleKeyDown);
         } else {
@@ -28,9 +31,9 @@ export default function Modal({
             document.body.style.overflow = 'unset';
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [isOpen, onClose]);
+    }, [isVisible, onClose]);
 
-    if (!isOpen) return null;
+    if (!isVisible) return null;
 
     const maxWidths = {
         sm: 'max-w-sm',

@@ -199,7 +199,7 @@ Route::prefix('admin')
         Route::post('/banners', [BannerController::class, 'store'])->name('banners.store');
         Route::post('/banners/store', [BannerController::class, 'store']);
         Route::delete('/banners/destroy', [BannerController::class, 'destroy']);
-        Route::put('/banners/{banner}', [BannerController::class, 'update'])->name('banners.update');
+        Route::match(['put', 'post'], '/banners/{banner}', [BannerController::class, 'update'])->name('banners.update');
         Route::delete('/banners/{banner}', [BannerController::class, 'destroy'])->name('banners.destroy');
         Route::patch('/banners/{banner}/toggle-active', [BannerController::class, 'toggleActive'])->name('banners.toggle-active');
 
