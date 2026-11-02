@@ -93,7 +93,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
     };
 
     const handleClearCart = () => {
-        if (confirm('Are you sure you want to clear your shopping bag?')) {
+        if (confirm('Are you sure you want to clear your shopping cart?')) {
             router.delete(
                 route('cart.clear'),
                 { preserveScroll: true, preserveState: true }
@@ -697,7 +697,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     <div className="d-flex align-items-center gap-2">
                         <i className="ri-shopping-bag-3-line font-size-18 text-warning" />
                         <span className="fw-bold fs-6 text-uppercase text-dark tracking-wider">
-                            Shopping Bag
+                            Shopping Cart
                         </span>
                         <span className="badge bg-dark rounded-pill font-size-11 px-2 py-1">
                             {cart?.count || 0}
@@ -841,7 +841,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             <div className="w-16 h-16 rounded-circle bg-light d-flex align-items-center justify-content-center mb-3 text-muted">
                                 <i className="ri-shopping-bag-3-line display-5 opacity-50" />
                             </div>
-                            <h5 className="fw-bold text-dark font-size-16 mb-1">Your Shopping Bag is Empty</h5>
+                            <h5 className="fw-bold text-dark font-size-16 mb-1">Your Shopping Cart is Empty</h5>
                             <p className="font-size-13 text-muted mb-4" style={{ maxWidth: '240px' }}>
                                 Looks like you haven't added anything to your cart yet.
                             </p>
@@ -963,7 +963,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                     onClick={handleClearCart}
                                     className="btn btn-sm btn-link text-muted font-size-12 text-decoration-none p-0 hover-text-danger"
                                 >
-                                    Clear Bag
+                                    Clear Cart
                                 </button>
                                 <button
                                     type="button"

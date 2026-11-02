@@ -71,14 +71,14 @@ class CartController extends Controller
         if ($request->wantsJson() && !$request->header('X-Inertia')) {
             return response()->json([
                 'success' => true,
-                'message' => 'Item added to your shopping bag.',
+                'message' => 'Item added to your cart.',
                 'item' => $cartItem,
                 'cart' => $payload,
             ]);
         }
 
         return back()->with([
-            'success' => 'Item added to your shopping bag.',
+            'success' => 'Item added to your cart.',
             'cart' => $payload,
         ]);
     }
@@ -109,13 +109,13 @@ class CartController extends Controller
         if ($request->wantsJson() && !$request->header('X-Inertia')) {
             return response()->json([
                 'success' => true,
-                'message' => 'Shopping bag updated.',
+                'message' => 'Cart updated.',
                 'cart' => $payload,
             ]);
         }
 
         return back()->with([
-            'success' => 'Shopping bag updated.',
+            'success' => 'Cart updated.',
             'cart' => $payload,
         ]);
     }
@@ -138,19 +138,19 @@ class CartController extends Controller
         if ($request->wantsJson() && !$request->header('X-Inertia')) {
             return response()->json([
                 'success' => true,
-                'message' => 'Item removed from shopping bag.',
+                'message' => 'Item removed from cart.',
                 'cart' => $payload,
             ]);
         }
 
         return back()->with([
-            'success' => 'Item removed from shopping bag.',
+            'success' => 'Item removed from cart.',
             'cart' => $payload,
         ]);
     }
 
     /**
-     * Clear all items in the shopping bag.
+     * Clear all items in the shopping cart.
      */
     public function clear(Request $request): JsonResponse|RedirectResponse
     {
@@ -163,13 +163,13 @@ class CartController extends Controller
         if ($request->wantsJson() && !$request->header('X-Inertia')) {
             return response()->json([
                 'success' => true,
-                'message' => 'Shopping bag cleared.',
+                'message' => 'Cart cleared.',
                 'cart' => $payload,
             ]);
         }
 
         return back()->with([
-            'success' => 'Shopping bag cleared.',
+            'success' => 'Cart cleared.',
             'cart' => $payload,
         ]);
     }

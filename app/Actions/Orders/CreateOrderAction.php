@@ -45,7 +45,7 @@ class CreateOrderAction
 
         if ($cart->items->isEmpty()) {
             throw ValidationException::withMessages([
-                'cart' => ['Your shopping bag is empty. Please add items before placing an order.'],
+                'cart' => ['Your shopping cart is empty. Please add items before placing an order.'],
             ]);
         }
 

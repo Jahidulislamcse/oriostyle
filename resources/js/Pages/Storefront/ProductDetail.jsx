@@ -354,12 +354,12 @@ export default function ProductDetail({
                                                 <div className="spinner-border spinner-border-sm text-warning" role="status">
                                                     <span className="visually-hidden">Loading...</span>
                                                 </div>
-                                                <span>Adding to Bag...</span>
+                                                <span>Adding to Cart...</span>
                                             </>
                                         ) : (
                                             <>
                                                 <i className="ri-shopping-bag-3-line font-size-16" />
-                                                <span>{isOutOfStock ? 'Sold Out' : 'Add to Bag'}</span>
+                                                <span>{isOutOfStock ? 'Sold Out' : 'Add to Cart'}</span>
                                             </>
                                         )}
                                     </button>
@@ -370,7 +370,7 @@ export default function ProductDetail({
                                     <div className="alert alert-success d-flex align-items-center gap-2 py-2 font-size-13 mb-4 shadow-xs" role="alert">
                                         <i className="ri-checkbox-circle-fill font-size-16" />
                                         <span>
-                                            Added <strong>{quantity}x {product.name}</strong> to bag successfully!
+                                            Added <strong>{quantity}x {product.name}</strong> to cart successfully!
                                         </span>
                                     </div>
                                 )}
@@ -545,7 +545,7 @@ export default function ProductDetail({
                         ) : (
                             <>
                                 <i className="ri-shopping-bag-3-line font-size-14" />
-                                <span>{isOutOfStock ? 'Sold Out' : 'Add to Bag'}</span>
+                                <span>{isOutOfStock ? 'Sold Out' : 'Add to Cart'}</span>
                             </>
                         )}
                     </button>

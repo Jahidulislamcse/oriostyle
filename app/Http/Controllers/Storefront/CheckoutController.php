@@ -31,7 +31,7 @@ class CheckoutController extends Controller
         if ($cart->items->isEmpty()) {
             return redirect()->route('shop.index')->with(
                 'info',
-                'Your shopping bag is empty. Please add items before proceeding to checkout.'
+                'Your shopping cart is empty. Please add items before proceeding to checkout.'
             );
         }
 
