@@ -46,7 +46,7 @@ header.oubd-header.scrolled,
 }
 
 .oubd-brand-logo img {
-    max-height: 44px !important;
+    max-height: 58px !important;
     width: auto !important;
     object-fit: contain !important;
     display: block !important;
@@ -54,7 +54,7 @@ header.oubd-header.scrolled,
 
 .oubd-brand-logo .brand-text {
     font-family: var(--font-serif, 'Playfair Display', Georgia, serif) !important;
-    font-size: 26px !important;
+    font-size: 34px !important;
     font-weight: 700 !important;
     letter-spacing: 0.5px !important;
     color: #111111 !important;
@@ -259,14 +259,17 @@ header.oubd-header.scrolled,
 .oubd-mobile-header .brand-text {
     color: #111111 !important;
     font-family: var(--font-serif, 'Playfair Display', Georgia, serif) !important;
-    font-size: 22px;
-    font-weight: 700;
+    font-size: 28px !important;
+    font-weight: 700 !important;
     letter-spacing: 1px;
     text-shadow: none !important;
 }
 
 .oubd-mobile-header .oubd-brand-logo img {
-    max-height: 32px;
+    max-height: 42px !important;
+    width: auto !important;
+    object-fit: contain !important;
+    display: block !important;
 }
 
 .oubd-mobile-header .oubd-action-btn {
@@ -329,6 +332,23 @@ header.oubd-header.scrolled,
     height: auto;
     display: block;
     object-fit: contain;
+}
+
+@media (max-width: 767px) {
+    .oubd-hero-container,
+    .oubd-hero-slider-wrap,
+    .oubd-hero-slide-item {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    .oubd-hero-img {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
+        display: block !important;
+        object-fit: contain !important;
+    }
 }
 
 /* Backward compatibility */
