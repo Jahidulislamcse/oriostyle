@@ -2,12 +2,12 @@
    Modern Customer-Side Storefront Custom Styles (Lookbook & Clean Fashion E-Commerce)
    ========================================================================== */
 
-/* --- Modern Header & Navigation (Transparent Overlay matching Reference) --- */
+/* --- Modern Header & Navigation (Clean Luxury White matching Reference) --- */
 header.oubd-header,
 .oubd-header {
-    background-color: transparent !important;
-    border-bottom: none !important;
-    position: absolute !important;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #eeeeee !important;
+    position: sticky !important;
     top: 0 !important;
     left: 0 !important;
     right: 0 !important;
@@ -15,24 +15,23 @@ header.oubd-header,
     padding: 0 !important;
     margin: 0 !important;
     z-index: 1000 !important;
-    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+    transition: all 0.3s ease;
 }
 
 header.oubd-header.scrolled,
 .oubd-header.scrolled {
-    position: fixed !important;
-    background-color: rgba(17, 17, 17, 0.95) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
-    border-bottom: none !important;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3) !important;
+    position: sticky !important;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #e5e5e5 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06) !important;
 }
 
 .oubd-header-inner {
     display: flex !important;
     align-items: center !important;
     justify-content: space-between !important;
-    padding: 6px 45px !important;
+    padding: 10px 45px !important;
     max-width: 100% !important;
     margin: 0 !important;
     width: 100% !important;
@@ -47,19 +46,19 @@ header.oubd-header.scrolled,
 }
 
 .oubd-brand-logo img {
-    max-height: 52px !important;
+    max-height: 44px !important;
     width: auto !important;
     object-fit: contain !important;
     display: block !important;
 }
 
 .oubd-brand-logo .brand-text {
-    font-size: 32px !important;
-    font-weight: 900 !important;
-    letter-spacing: 2px !important;
-    color: #ffffff !important;
-    text-transform: uppercase !important;
-    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+    font-family: var(--font-serif, 'Playfair Display', Georgia, serif) !important;
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+    color: #111111 !important;
+    text-shadow: none !important;
     line-height: 1 !important;
 }
 
@@ -76,7 +75,7 @@ header.oubd-header.scrolled,
 .oubd-nav-menu {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 20px;
     list-style: none;
     margin: 0;
     padding: 0;
@@ -90,35 +89,46 @@ header.oubd-header.scrolled,
     font-size: 11px;
     font-weight: 500;
     letter-spacing: 0.6px;
-    color: #ffffff;
+    color: #222222 !important;
     text-transform: uppercase;
     text-decoration: none;
-    padding: 6px 0;
+    padding: 8px 0;
     display: flex;
     align-items: center;
     gap: 3px;
     transition: color 0.2s ease, opacity 0.2s ease;
     opacity: 0.9;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+    text-shadow: none !important;
     white-space: nowrap;
+    position: relative;
 }
 
 .oubd-nav-menu > li > a:hover,
 .oubd-nav-menu > li.active > a {
-    color: #d4af37;
+    color: #a81c1c !important;
     opacity: 1;
     font-weight: 600;
 }
 
+.oubd-nav-menu > li.active > a::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    height: 1.5px;
+    background-color: #a81c1c;
+}
+
 .oubd-nav-menu > li > a i {
     font-size: 13px;
-    color: #ffffff;
+    color: #555555 !important;
     transition: transform 0.2s ease, color 0.2s ease;
 }
 
 .oubd-nav-menu > li:hover > a i {
     transform: rotate(180deg);
-    color: #d4af37;
+    color: #a81c1c !important;
 }
 
 /* Dropdown Menu */
@@ -128,7 +138,7 @@ header.oubd-header.scrolled,
     left: 0;
     min-width: 200px;
     background: #ffffff;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
     border-radius: 4px;
     padding: 8px 0;
     list-style: none;
@@ -161,7 +171,7 @@ header.oubd-header.scrolled,
 
 .oubd-dropdown li a:hover {
     background-color: #f8f9fa;
-    color: #0b8253;
+    color: #a81c1c;
     padding-left: 22px;
 }
 
@@ -177,8 +187,8 @@ header.oubd-header.scrolled,
     position: relative;
     background: none;
     border: none;
-    color: #ffffff;
-    font-size: 20px;
+    color: #222222 !important;
+    font-size: 19px;
     cursor: pointer;
     padding: 3px;
     display: inline-flex;
@@ -186,11 +196,11 @@ header.oubd-header.scrolled,
     justify-content: center;
     text-decoration: none;
     transition: color 0.2s ease;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    text-shadow: none !important;
 }
 
 .oubd-action-btn:hover {
-    color: #d4af37;
+    color: #a81c1c !important;
 }
 
 .oubd-cart-badge {
@@ -215,44 +225,44 @@ header.oubd-header.scrolled,
     display: none;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 14px;
-    background-color: transparent;
-    border-bottom: none;
-    position: absolute;
+    padding: 10px 16px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eeeeee;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
+    width: 100%;
     z-index: 1000;
-    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, backdrop-filter 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
 }
 
 .oubd-mobile-header.scrolled {
-    position: fixed;
-    background-color: rgba(17, 17, 17, 0.95);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border-bottom: none;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    position: sticky;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .oubd-mobile-toggle {
     background: none;
     border: none;
     font-size: 24px;
-    color: #ffffff;
+    color: #222222 !important;
     cursor: pointer;
     padding: 2px;
     display: flex;
     align-items: center;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    text-shadow: none !important;
 }
 
 .oubd-mobile-header .brand-text {
-    color: #ffffff;
-    font-size: 20px;
-    font-weight: 900;
-    letter-spacing: 2px;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+    color: #111111 !important;
+    font-family: var(--font-serif, 'Playfair Display', Georgia, serif) !important;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: none !important;
 }
 
 .oubd-mobile-header .oubd-brand-logo img {
@@ -260,21 +270,22 @@ header.oubd-header.scrolled,
 }
 
 .oubd-mobile-header .oubd-action-btn {
-    color: #ffffff;
+    color: #222222 !important;
     font-size: 20px;
     padding: 2px;
+    text-shadow: none !important;
 }
 
 @media (max-width: 991px) {
     .oubd-header {
-        display: none;
+        display: none !important;
     }
     .oubd-mobile-header {
-        display: flex;
+        display: flex !important;
     }
 }
 
-/* --- Hero Banner & Accent Line --- */
+/* --- Hero Banner & Accent Line (Fit Image Naturally) --- */
 .oubd-hero-container {
     width: 100%;
     position: relative;
@@ -282,88 +293,49 @@ header.oubd-header.scrolled,
     background-color: #071324;
 }
 
-.oubd-hero-slide {
+.oubd-hero-slider-wrap {
+    display: grid;
+    grid-template-areas: "hero-slide";
+    width: 100%;
     position: relative;
-    width: 100%;
-    height: 75vh;
-    min-height: 520px;
-    background-color: #071324;
     overflow: hidden;
-    display: flex;
-    align-items: center;
 }
 
-@media (min-width: 576px) {
-    .oubd-hero-slide {
-        height: 78vh;
-        min-height: 580px;
-    }
-}
-
-@media (min-width: 768px) {
-    .oubd-hero-slide {
-        height: 82vh;
-        min-height: 640px;
-    }
-}
-
-@media (min-width: 992px) {
-    .oubd-hero-slide {
-        height: 88vh;
-        min-height: 700px;
-    }
-}
-
-@media (min-width: 1200px) {
-    .oubd-hero-slide {
-        height: 100vh;
-        min-height: 750px;
-        max-height: 1080px;
-    }
-}
-
-@media (min-width: 1600px) {
-    .oubd-hero-slide {
-        height: 100vh;
-        min-height: 850px;
-        max-height: 1200px;
-    }
-}
-
-.oubd-hero-slide-layer {
-    position: absolute;
-    inset: 0;
+.oubd-hero-slide-item {
+    grid-area: hero-slide;
     width: 100%;
-    height: 100%;
-    background-size: cover;
-    background-position: center center;
-    background-repeat: no-repeat;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.8s ease-in-out, transform 1.2s ease-out;
-    transform: scale(1.02);
+    transition: opacity 0.6s ease-in-out;
+    pointer-events: none;
+    z-index: 1;
 }
 
-.oubd-hero-slide-layer.active {
+.oubd-hero-slide-item.active {
     opacity: 1;
     visibility: visible;
-    transform: scale(1);
+    pointer-events: auto;
     z-index: 2;
 }
 
-@media (max-width: 767px) {
-    .oubd-hero-slide-layer {
-        background-position: center top;
-    }
+.oubd-hero-slide-link {
+    display: block;
+    width: 100%;
+    text-decoration: none;
 }
 
-.oubd-hero-link-overlay {
-    position: absolute;
-    inset: 0;
+.oubd-hero-img {
     width: 100%;
-    height: 100%;
-    z-index: 3;
+    height: auto;
     display: block;
+    object-fit: contain;
+}
+
+/* Backward compatibility */
+.oubd-hero-slide {
+    position: relative;
+    width: 100%;
+    height: auto;
 }
 
 .oubd-hero-accent-bar {
@@ -387,24 +359,24 @@ header.oubd-header.scrolled,
 /* Slider Dots */
 .oubd-slider-dots {
     position: absolute;
-    bottom: 20px;
+    bottom: 12px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 8px;
+    gap: 6px;
     z-index: 10;
 }
 
 @media (min-width: 768px) {
     .oubd-slider-dots {
-        bottom: 26px;
-        gap: 10px;
+        bottom: 16px;
+        gap: 8px;
     }
 }
 
 .oubd-slider-dot {
-    width: 20px;
-    height: 4px;
+    width: 18px;
+    height: 3.5px;
     background-color: rgba(255, 255, 255, 0.45);
     border: none;
     border-radius: 2px;
@@ -415,20 +387,20 @@ header.oubd-header.scrolled,
 
 @media (min-width: 768px) {
     .oubd-slider-dot {
-        width: 30px;
-        height: 4.5px;
+        width: 24px;
+        height: 4px;
     }
 }
 
 .oubd-slider-dot.active {
-    width: 32px;
+    width: 28px;
     background-color: #ffffff;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.6);
 }
 
 @media (min-width: 768px) {
     .oubd-slider-dot.active {
-        width: 48px;
+        width: 36px;
     }
 }
 

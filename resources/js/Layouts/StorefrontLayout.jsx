@@ -552,7 +552,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
             )}
 
             {/* --- Main Body Content --- */}
-            <main className="flex-grow-1" style={{ width: '100%', paddingTop: headerSolid ? '75px' : '0' }}>
+            <main className="flex-grow-1" style={{ width: '100%', paddingTop: '0' }}>
                 {children}
             </main>
 

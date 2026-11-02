@@ -46,27 +46,36 @@ export default function HeroSlider({ banners = [] }) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div className="oubd-hero-slide">
-                {/* Render each slide as a layered background for smooth transitions and full-size display */}
+            <div className="oubd-hero-slider-wrap">
+                {/* Render each slide with responsive img that fits its natural aspect ratio */}
                 {slides.map((s, index) => {
                     const sUrl = s.image_url || s.image_path || s.bg || DEFAULT_SLIDES[0].image_url;
                     const isActive = index === activeIndex;
 
+                    const imageContent = (
+                        <img
+                            src={sUrl}
+                            alt={s.title || `Hero Banner ${index + 1}`}
+                            className="oubd-hero-img"
+                            loading={index === 0 ? 'eager' : 'lazy'}
+                        />
+                    );
+
                     return (
                         <div
                             key={s.id || index}
-                            className={`oubd-hero-slide-layer ${isActive ? 'active' : ''}`}
-                            style={{ backgroundImage: `url(${sUrl})` }}
-                            role="img"
-                            aria-label={s.title || `Hero Slide ${index + 1}`}
+                            className={`oubd-hero-slide-item ${isActive ? 'active' : ''}`}
                         >
-                            {/* Clickable Banner Navigation Link */}
-                            {s.link_url && (
+                            {s.link_url ? (
                                 <Link
                                     href={s.link_url}
-                                    className="oubd-hero-link-overlay"
+                                    className="oubd-hero-slide-link"
                                     aria-label={s.title || `Shop Banner ${index + 1}`}
-                                />
+                                >
+                                    {imageContent}
+                                </Link>
+                            ) : (
+                                imageContent
                             )}
                         </div>
                     );
@@ -86,12 +95,6 @@ export default function HeroSlider({ banners = [] }) {
                         ))}
                     </div>
                 )}
-            </div>
-
-            {/* Bottom Gold/Green Accent Bar */}
-            <div className="oubd-hero-accent-bar">
-                <div className="bar-left" />
-                <div className="bar-right" />
             </div>
         </div>
     );
