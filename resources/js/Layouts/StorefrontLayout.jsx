@@ -19,6 +19,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
     const { url = '', props = {} } = usePage();
     const { settings = {}, auth = {}, navCategories: sharedNavCategories = [], cart = {} } = props;
     const currentPath = (url || '').split('?')[0].replace(/\/+$/, '') || '/';
+    const isHome = currentPath === '/';
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -307,7 +308,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
             </header>
 
             {/* --- Mobile Header (Matching Mobile Reference Screenshot) --- */}
-            <div className={`oubd-mobile-header ${isScrolled ? 'scrolled' : ''}`}>
+            <div className={`oubd-mobile-header ${isHome ? 'is-home' : ''} ${isScrolled ? 'scrolled' : ''}`}>
                 <button
                     type="button"
                     className="oubd-mobile-toggle p-0"

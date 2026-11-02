@@ -283,6 +283,25 @@ header.oubd-header.scrolled,
     .oubd-mobile-header {
         display: flex !important;
     }
+    .oubd-mobile-header.is-home:not(.scrolled) {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        background-color: transparent !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+        z-index: 1000;
+    }
+    .oubd-mobile-header.is-home:not(.scrolled) .oubd-mobile-toggle,
+    .oubd-mobile-header.is-home:not(.scrolled) .oubd-action-btn,
+    .oubd-mobile-header.is-home:not(.scrolled) .brand-text {
+        color: #ffffff !important;
+        text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6) !important;
+    }
+    .oubd-mobile-header.is-home:not(.scrolled) .oubd-brand-logo img {
+        filter: brightness(0) invert(1) drop-shadow(0 1px 3px rgba(0, 0, 0, 0.5));
+    }
 }
 
 /* --- Hero Banner & Accent Line (Fit Image Naturally) --- */

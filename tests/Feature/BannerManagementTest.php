@@ -225,6 +225,117 @@ class BannerManagementTest extends TestCase
         Storage::disk('public')->assertMissing($path);
     }
 
+    public function test_admin_can_create_banner_with_mobile_image(): void
+    {
+        Storage::fake('public');
+
+        $desktopFile = UploadedFile::fake()->image('desktop_banner.jpg', 1920, 800);
+        $mobileFile = UploadedFile::fake()->image('mobile_banner.jpg', 800, 1000);
+
+        $response = $this->actingAs($this->admin)->post(route('admin.banners.store'), [
+            'title' => 'Mobile Responsive Hero',
+            'type' => 'hero',
+            'display_order' => 1,
+            'is_active' => true,
+            'image' => $desktopFile,
+            'mobile_image' => $mobileFile,
+        ]);
+
+        $response->assertRedirect();
+        $this->assertDatabaseHas('banners', [
+            'title' => 'Mobile Responsive Hero',
+        ]);
+
+        $banner = Banner::where('title', 'Mobile Responsive Hero')->first();
+        $this->assertNotNull($banner->image_path);
+        $this->assertNotNull($banner->mobile_image_path);
+        Storage::disk('public')->assertExists($banner->image_path);
+        Storage::disk('public')->assertExists($banner->mobile_image_path);
+    }
+
+    public function test_admin_can_update_banner_with_mobile_image(): void
+    {
+        Storage::fake('public');
+
+        $banner = Banner::create([
+            'title' => 'Initial Banner',
+            'type' => 'hero',
+            'display_order' => 1,
+            'is_active' => true,
+        ]);
+
+        $mobileFile = UploadedFile::fake()->image('mobile_banner.jpg', 800, 1000);
+
+        $response = $this->actingAs($this->admin)->post(route('admin.banners.update', $banner), [
+            '_method' => 'PUT',
+            'title' => 'Initial Banner Updated',
+            'type' => 'hero',
+            'display_order' => 1,
+            'is_active' => 1,
+            'mobile_image' => $mobileFile,
+        ]);
+
+        $response->assertRedirect();
+        $banner->refresh();
+        $this->assertNotNull($banner->mobile_image_path);
+        Storage::disk('public')->assertExists($banner->mobile_image_path);
+    }
+
+    public function test_admin_can_remove_mobile_image(): void
+    {
+        Storage::fake('public');
+
+        $mobileFile = UploadedFile::fake()->image('mobile_banner.jpg', 800, 1000);
+        $mobilePath = $mobileFile->store('banners/mobile', 'public');
+
+        $banner = Banner::create([
+            'title' => 'Banner With Mobile',
+            'type' => 'hero',
+            'mobile_image_path' => $mobilePath,
+            'display_order' => 1,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->admin)->post(route('admin.banners.update', $banner), [
+            '_method' => 'PUT',
+            'title' => 'Banner With Mobile Removed',
+            'type' => 'hero',
+            'display_order' => 1,
+            'is_active' => 1,
+            'remove_mobile_image' => 1,
+        ]);
+
+        $response->assertRedirect();
+        $banner->refresh();
+        $this->assertNull($banner->mobile_image_path);
+        Storage::disk('public')->assertMissing($mobilePath);
+    }
+
+    public function test_admin_deleting_banner_removes_both_images(): void
+    {
+        Storage::fake('public');
+
+        $file1 = UploadedFile::fake()->image('desktop.jpg', 1920, 800);
+        $path1 = $file1->store('banners', 'public');
+
+        $file2 = UploadedFile::fake()->image('mobile.jpg', 800, 1000);
+        $path2 = $file2->store('banners/mobile', 'public');
+
+        $banner = Banner::create([
+            'title' => 'Full Banner',
+            'type' => 'hero',
+            'image_path' => $path1,
+            'mobile_image_path' => $path2,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->admin)->delete(route('admin.banners.destroy', $banner));
+
+        $response->assertRedirect();
+        Storage::disk('public')->assertMissing($path1);
+        Storage::disk('public')->assertMissing($path2);
+    }
+
     public function test_admin_can_toggle_banner_active_status(): void
     {
         $banner = Banner::create([

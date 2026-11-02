@@ -19,6 +19,7 @@ class Banner extends Model
         'button_text',
         'link_url',
         'image_path',
+        'mobile_image_path',
         'type',
         'display_order',
         'is_active',
@@ -26,6 +27,7 @@ class Banner extends Model
 
     protected $appends = [
         'image_url',
+        'mobile_image_url',
     ];
 
     protected function casts(): array
@@ -50,6 +52,22 @@ class Banner extends Model
         }
 
         return asset('storage/' . ltrim($this->image_path, '/'));
+    }
+
+    /**
+     * Accessor: Get dedicated mobile banner image URL safely.
+     */
+    public function getMobileImageUrlAttribute(): ?string
+    {
+        if (empty($this->mobile_image_path)) {
+            return null;
+        }
+
+        if (str_starts_with($this->mobile_image_path, 'http://') || str_starts_with($this->mobile_image_path, 'https://') || str_starts_with($this->mobile_image_path, '/')) {
+            return $this->mobile_image_path;
+        }
+
+        return asset('storage/' . ltrim($this->mobile_image_path, '/'));
     }
 
     /**

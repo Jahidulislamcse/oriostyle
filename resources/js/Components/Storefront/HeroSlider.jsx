@@ -47,18 +47,24 @@ export default function HeroSlider({ banners = [] }) {
             onMouseLeave={() => setIsHovered(false)}
         >
             <div className="oubd-hero-slider-wrap">
-                {/* Render each slide with responsive img that fits its natural aspect ratio */}
+                {/* Render each slide with responsive art-directed picture tag */}
                 {slides.map((s, index) => {
-                    const sUrl = s.image_url || s.image_path || s.bg || DEFAULT_SLIDES[0].image_url;
+                    const desktopUrl = s.image_url || s.image_path || s.bg || DEFAULT_SLIDES[0].image_url;
+                    const mobileUrl = s.mobile_image_url || s.mobile_image_path || null;
                     const isActive = index === activeIndex;
 
                     const imageContent = (
-                        <img
-                            src={sUrl}
-                            alt={s.title || `Hero Banner ${index + 1}`}
-                            className="oubd-hero-img"
-                            loading={index === 0 ? 'eager' : 'lazy'}
-                        />
+                        <picture className="w-100 d-block">
+                            {mobileUrl && (
+                                <source media="(max-width: 767px)" srcSet={mobileUrl} />
+                            )}
+                            <img
+                                src={desktopUrl}
+                                alt={s.title || `Hero Banner ${index + 1}`}
+                                className="oubd-hero-img"
+                                loading={index === 0 ? 'eager' : 'lazy'}
+                            />
+                        </picture>
                     );
 
                     return (
@@ -95,6 +101,12 @@ export default function HeroSlider({ banners = [] }) {
                         ))}
                     </div>
                 )}
+            </div>
+
+            {/* Dual-tone Accent Bar matching reference design (Gold Left, Green Right) */}
+            <div className="oubd-hero-accent-bar">
+                <div className="bar-left" />
+                <div className="bar-right" />
             </div>
         </div>
     );

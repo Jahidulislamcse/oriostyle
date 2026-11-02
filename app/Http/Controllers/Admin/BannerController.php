@@ -55,6 +55,10 @@ class BannerController extends Controller
             $request->request->remove('image');
         }
 
+        if ($request->has('mobile_image') && !$request->hasFile('mobile_image')) {
+            $request->request->remove('mobile_image');
+        }
+
         $validated = $request->validate([
             'title' => 'nullable|string|max:255',
             'subtitle' => 'nullable|string|max:500',
@@ -66,13 +70,16 @@ class BannerController extends Controller
             'is_active' => 'nullable|boolean',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg,gif|max:5120',
             'image_path' => 'nullable|string|max:255',
+            'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg,gif|max:5120',
+            'mobile_image_path' => 'nullable|string|max:255',
         ]);
 
         $imageFile = $request->file('image');
+        $mobileImageFile = $request->file('mobile_image');
         $validated['is_active'] = $request->boolean('is_active', true);
         $validated['display_order'] = $validated['display_order'] ?? 0;
 
-        $this->bannerService->createBanner($validated, $imageFile);
+        $this->bannerService->createBanner($validated, $imageFile, $mobileImageFile);
 
         return redirect()->back()->with('success', 'Banner created successfully.');
     }
@@ -84,6 +91,10 @@ class BannerController extends Controller
     {
         if ($request->has('image') && !$request->hasFile('image')) {
             $request->request->remove('image');
+        }
+
+        if ($request->has('mobile_image') && !$request->hasFile('mobile_image')) {
+            $request->request->remove('mobile_image');
         }
 
         $validated = $request->validate([
@@ -98,14 +109,19 @@ class BannerController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg,gif|max:5120',
             'image_path' => 'nullable|string|max:255',
             'remove_image' => 'nullable|boolean',
+            'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp,svg,gif|max:5120',
+            'mobile_image_path' => 'nullable|string|max:255',
+            'remove_mobile_image' => 'nullable|boolean',
         ]);
 
         $imageFile = $request->file('image');
+        $mobileImageFile = $request->file('mobile_image');
         $removeImage = $request->boolean('remove_image');
+        $removeMobileImage = $request->boolean('remove_mobile_image');
         $validated['is_active'] = $request->boolean('is_active');
         $validated['display_order'] = $validated['display_order'] ?? 0;
 
-        $this->bannerService->updateBanner($banner, $validated, $imageFile, $removeImage);
+        $this->bannerService->updateBanner($banner, $validated, $imageFile, $removeImage, $mobileImageFile, $removeMobileImage);
 
         return redirect()->back()->with('success', 'Banner updated successfully.');
     }

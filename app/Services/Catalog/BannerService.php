@@ -61,16 +61,21 @@ class BannerService
     }
 
     /**
-     * Create a new banner with optional image upload.
+     * Create a new banner with optional desktop and mobile image uploads.
      */
-    public function createBanner(array $data, ?UploadedFile $imageFile = null): Banner
+    public function createBanner(array $data, ?UploadedFile $imageFile = null, ?UploadedFile $mobileImageFile = null): Banner
     {
         if ($imageFile && $imageFile->isValid()) {
             $path = $imageFile->store('banners', 'public');
             $data['image_path'] = $path;
         }
 
-        unset($data['image'], $data['remove_image']);
+        if ($mobileImageFile && $mobileImageFile->isValid()) {
+            $mobilePath = $mobileImageFile->store('banners/mobile', 'public');
+            $data['mobile_image_path'] = $mobilePath;
+        }
+
+        unset($data['image'], $data['remove_image'], $data['mobile_image'], $data['remove_mobile_image']);
 
         $banner = Banner::create($data);
         $this->flushCache();
@@ -79,9 +84,9 @@ class BannerService
     }
 
     /**
-     * Update an existing banner with optional image replacement.
+     * Update an existing banner with optional desktop and mobile image replacement.
      */
-    public function updateBanner(Banner $banner, array $data, ?UploadedFile $imageFile = null, bool $removeImage = false): Banner
+    public function updateBanner(Banner $banner, array $data, ?UploadedFile $imageFile = null, bool $removeImage = false, ?UploadedFile $mobileImageFile = null, bool $removeMobileImage = false): Banner
     {
         if ($removeImage) {
             $this->deleteStoredImage($banner->image_path);
@@ -94,7 +99,18 @@ class BannerService
             $data['image_path'] = $path;
         }
 
-        unset($data['image'], $data['remove_image']);
+        if ($removeMobileImage) {
+            $this->deleteStoredImage($banner->mobile_image_path);
+            $data['mobile_image_path'] = null;
+        }
+
+        if ($mobileImageFile && $mobileImageFile->isValid()) {
+            $this->deleteStoredImage($banner->mobile_image_path);
+            $mobilePath = $mobileImageFile->store('banners/mobile', 'public');
+            $data['mobile_image_path'] = $mobilePath;
+        }
+
+        unset($data['image'], $data['remove_image'], $data['mobile_image'], $data['remove_mobile_image']);
 
         $banner->update($data);
         $this->flushCache();
@@ -103,11 +119,12 @@ class BannerService
     }
 
     /**
-     * Delete banner and its associated uploaded file.
+     * Delete banner and its associated uploaded files.
      */
     public function deleteBanner(Banner $banner): bool
     {
         $this->deleteStoredImage($banner->image_path);
+        $this->deleteStoredImage($banner->mobile_image_path);
         $deleted = $banner->delete();
         $this->flushCache();
 

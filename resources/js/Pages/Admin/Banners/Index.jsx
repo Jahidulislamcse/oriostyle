@@ -21,7 +21,8 @@ import {
     Sliders,
     Layers,
     Sparkles,
-    Move
+    Move,
+    Smartphone
 } from 'lucide-react';
 
 export default function BannerIndex({ banners = { data: [] }, stats = {}, filters = {} }) {
@@ -36,6 +37,7 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
     const [editingBanner, setEditingBanner] = useState(null);
     const [deletingBanner, setDeletingBanner] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
+    const [mobileImagePreview, setMobileImagePreview] = useState(null);
 
     // Create Form
     const createForm = useForm({
@@ -48,6 +50,7 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
         display_order: 0,
         is_active: true,
         image: null,
+        mobile_image: null,
     });
 
     // Edit Form
@@ -61,7 +64,9 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
         display_order: 0,
         is_active: true,
         image: null,
+        mobile_image: null,
         remove_image: false,
+        remove_mobile_image: false,
     });
 
     const applyFilters = (newType = typeFilter, newSearch = searchQuery, newStatus = statusFilter) => {
@@ -110,6 +115,14 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
         }
     };
 
+    const handleCreateMobileImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            createForm.setData('mobile_image', file);
+            setMobileImagePreview(URL.createObjectURL(file));
+        }
+    };
+
     const handleEditImageChange = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -122,10 +135,23 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
         }
     };
 
+    const handleEditMobileImageChange = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            editForm.setData((prev) => ({
+                ...prev,
+                mobile_image: file,
+                remove_mobile_image: false,
+            }));
+            setMobileImagePreview(URL.createObjectURL(file));
+        }
+    };
+
     const openCreateModal = () => {
         createForm.reset();
         createForm.clearErrors();
         setImagePreview(null);
+        setMobileImagePreview(null);
         setIsCreateModalOpen(true);
     };
 
@@ -133,6 +159,7 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
         editForm.clearErrors();
         setEditingBanner(banner);
         setImagePreview(banner.image_url || null);
+        setMobileImagePreview(banner.mobile_image_url || null);
         editForm.setData({
             title: banner.title || '',
             subtitle: banner.subtitle || '',
@@ -143,7 +170,9 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
             display_order: banner.display_order ?? 0,
             is_active: Boolean(banner.is_active),
             image: null,
+            mobile_image: null,
             remove_image: false,
+            remove_mobile_image: false,
         });
         setIsEditModalOpen(true);
     };
@@ -157,6 +186,7 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                 setIsCreateModalOpen(false);
                 createForm.reset();
                 setImagePreview(null);
+                setMobileImagePreview(null);
             },
         });
     };
@@ -173,6 +203,9 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
         if (!(editForm.data.image instanceof File)) {
             delete payload.image;
         }
+        if (!(editForm.data.mobile_image instanceof File)) {
+            delete payload.mobile_image;
+        }
 
         router.post(route('admin.banners.update', editingBanner.id), payload, {
             forceFormData: true,
@@ -182,6 +215,7 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                 setEditingBanner(null);
                 editForm.reset();
                 setImagePreview(null);
+                setMobileImagePreview(null);
             },
             onError: (errs) => {
                 editForm.setError(errs);
@@ -388,6 +422,13 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                                             {banner.badge_text}
                                         </div>
                                     )}
+
+                                    {/* Dedicated Mobile Banner Indicator */}
+                                    {banner.mobile_image_url && (
+                                        <div className="absolute bottom-3 right-3 bg-emerald-600/90 text-white text-[9px] font-black uppercase px-2 py-0.5 rounded flex items-center gap-1 shadow-xs border border-emerald-400/30 backdrop-blur-xs">
+                                            <Smartphone className="w-3 h-3" /> Mobile
+                                        </div>
+                                    )}
                                 </div>
 
                                 {/* Banner Body */}
@@ -462,11 +503,18 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                                     {bannerList.map((banner) => (
                                         <tr key={banner.id} className="hover:bg-slate-50/50 dark:hover:bg-[#1C3E63]/20 transition">
                                             <td className="p-4">
-                                                <div className="w-20 h-12 bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center">
-                                                    {banner.image_url ? (
-                                                        <img src={banner.image_url} alt="" className="w-full h-full object-cover" />
-                                                    ) : (
-                                                        <ImageIcon className="w-4 h-4 text-slate-500" />
+                                                <div className="flex items-center gap-2">
+                                                    <div className="w-16 h-10 bg-slate-900 rounded-lg overflow-hidden flex items-center justify-center shrink-0 border border-slate-300 dark:border-slate-700">
+                                                        {banner.image_url ? (
+                                                            <img src={banner.image_url} alt="" className="w-full h-full object-cover" />
+                                                        ) : (
+                                                            <ImageIcon className="w-4 h-4 text-slate-500" />
+                                                        )}
+                                                    </div>
+                                                    {banner.mobile_image_url && (
+                                                        <div className="w-7 h-10 bg-slate-900 rounded-md overflow-hidden flex items-center justify-center shrink-0 border-2 border-emerald-500/70" title="Dedicated Mobile Banner (4:5)">
+                                                            <img src={banner.mobile_image_url} alt="Mobile" className="w-full h-full object-cover" />
+                                                        </div>
                                                     )}
                                                 </div>
                                             </td>
@@ -601,10 +649,10 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                         />
                     </div>
 
-                    {/* Image Upload & Preview */}
+                    {/* Desktop Image Upload & Preview */}
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
-                            Banner Image (High Resolution Recommended: 1920x800 for Hero, 800x1000 for Split)
+                            Desktop Banner Image (1920x800 for Hero, 800x1000 for Split)
                         </label>
                         <div className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-dashed border-slate-300 dark:border-[#1C3E63] rounded-xl bg-slate-50 dark:bg-[#071324]/50">
                             {imagePreview ? (
@@ -625,6 +673,41 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                                 />
                                 <p className="text-[11px] text-slate-400 mt-1">Supports JPG, PNG, WEBP up to 5MB.</p>
                                 {createForm.errors.image && <p className="text-xs text-rose-500 mt-1">{createForm.errors.image}</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Dedicated Mobile Banner Image Upload & Preview */}
+                    <div className="p-4 rounded-xl border border-dashed border-emerald-500/40 bg-emerald-50/30 dark:bg-emerald-950/20">
+                        <div className="flex items-center gap-2 mb-1.5">
+                            <Smartphone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                            <label className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                                Dedicated Mobile Banner (Recommended: ~800x1000 / 4:5 Portrait)
+                            </label>
+                        </div>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+                            Shown exclusively on mobile devices (<span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">&lt; 768px</span>). If omitted, the desktop image is used as fallback.
+                        </p>
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                            {mobileImagePreview ? (
+                                <div className="w-20 h-24 bg-slate-900 rounded-lg overflow-hidden shrink-0 border border-emerald-500/50 shadow-xs">
+                                    <img src={mobileImagePreview} alt="Mobile Preview" className="w-full h-full object-cover" />
+                                </div>
+                            ) : (
+                                <div className="w-20 h-24 bg-slate-200 dark:bg-slate-800/80 rounded-lg flex flex-col items-center justify-center shrink-0 text-slate-400 border border-slate-300 dark:border-slate-700">
+                                    <Smartphone className="w-6 h-6 mb-1 text-slate-400" />
+                                    <span className="text-[9px] uppercase font-bold">Mobile</span>
+                                </div>
+                            )}
+                            <div className="flex-1 w-full">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleCreateMobileImageChange}
+                                    className="text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer"
+                                />
+                                <p className="text-[11px] text-slate-400 mt-1">Supports JPG, PNG, WEBP up to 5MB.</p>
+                                {createForm.errors.mobile_image && <p className="text-xs text-rose-500 mt-1">{createForm.errors.mobile_image}</p>}
                             </div>
                         </div>
                     </div>
@@ -736,10 +819,10 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                         />
                     </div>
 
-                    {/* Image Upload & Preview */}
+                    {/* Desktop Image Upload & Preview */}
                     <div>
                         <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-2">
-                            Banner Image
+                            Desktop Banner Image
                         </label>
                         <div className="flex flex-col sm:flex-row items-center gap-4 p-4 border border-dashed border-slate-300 dark:border-[#1C3E63] rounded-xl bg-slate-50 dark:bg-[#071324]/50">
                             {imagePreview ? (
@@ -758,7 +841,7 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                                     onChange={handleEditImageChange}
                                     className="text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-[#D4AF37] file:text-[#071324] hover:file:bg-[#c49f2e] cursor-pointer"
                                 />
-                                <p className="text-[11px] text-slate-400 mt-1">Upload a new image to replace the current one.</p>
+                                <p className="text-[11px] text-slate-400 mt-1">Upload a new image to replace the current desktop banner.</p>
                                 
                                 {editingBanner?.image_url && !editForm.data.remove_image && (
                                     <button
@@ -769,15 +852,68 @@ export default function BannerIndex({ banners = { data: [] }, stats = {}, filter
                                         }}
                                         className="mt-2 text-[11px] font-bold text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer block"
                                     >
-                                        Remove current image
+                                        Remove current desktop image
                                     </button>
                                 )}
 
                                 {editForm.data.remove_image && (
-                                    <p className="mt-1 text-[11px] text-amber-500 font-bold">Image will be removed upon saving.</p>
+                                    <p className="mt-1 text-[11px] text-amber-500 font-bold">Desktop image will be removed upon saving.</p>
                                 )}
 
                                 {editForm.errors.image && <p className="text-xs text-rose-500 mt-1">{editForm.errors.image}</p>}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Dedicated Mobile Banner Image Upload & Preview */}
+                    <div className="p-4 rounded-xl border border-dashed border-emerald-500/40 bg-emerald-50/30 dark:bg-emerald-950/20">
+                        <div className="flex items-center gap-2 mb-1.5">
+                            <Smartphone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                            <label className="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">
+                                Dedicated Mobile Banner (Recommended: ~800x1000 / 4:5 Portrait)
+                            </label>
+                        </div>
+                        <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
+                            Shown exclusively on mobile devices (<span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">&lt; 768px</span>). If omitted, the desktop image is used as fallback.
+                        </p>
+                        <div className="flex flex-col sm:flex-row items-center gap-4">
+                            {mobileImagePreview ? (
+                                <div className="w-20 h-24 bg-slate-900 rounded-lg overflow-hidden shrink-0 border border-emerald-500/50 shadow-xs">
+                                    <img src={mobileImagePreview} alt="Mobile Preview" className="w-full h-full object-cover" />
+                                </div>
+                            ) : (
+                                <div className="w-20 h-24 bg-slate-200 dark:bg-slate-800/80 rounded-lg flex flex-col items-center justify-center shrink-0 text-slate-400 border border-slate-300 dark:border-slate-700">
+                                    <Smartphone className="w-6 h-6 mb-1 text-slate-400" />
+                                    <span className="text-[9px] uppercase font-bold">Mobile</span>
+                                </div>
+                            )}
+                            <div className="flex-1 w-full">
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleEditMobileImageChange}
+                                    className="text-xs text-slate-500 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-bold file:bg-emerald-600 file:text-white hover:file:bg-emerald-700 cursor-pointer"
+                                />
+                                <p className="text-[11px] text-slate-400 mt-1">Upload a new mobile image or replace existing.</p>
+
+                                {editingBanner?.mobile_image_url && !editForm.data.remove_mobile_image && (
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            editForm.setData('remove_mobile_image', true);
+                                            setMobileImagePreview(null);
+                                        }}
+                                        className="mt-2 text-[11px] font-bold text-rose-500 hover:text-rose-600 dark:hover:text-rose-400 cursor-pointer block"
+                                    >
+                                        Remove mobile image (fallback to desktop)
+                                    </button>
+                                )}
+
+                                {editForm.data.remove_mobile_image && (
+                                    <p className="mt-1 text-[11px] text-amber-500 font-bold">Mobile image will be removed upon saving.</p>
+                                )}
+
+                                {editForm.errors.mobile_image && <p className="text-xs text-rose-500 mt-1">{editForm.errors.mobile_image}</p>}
                             </div>
                         </div>
                     </div>
