@@ -138,10 +138,10 @@ export default function ProductDetail({
             <Head title={`${product.name} | ORIO STYLE`} />
 
             {/* --- Breadcrumb Bar --- */}
-            <div className="oubd-breadcrumb-strip py-3 border-bottom" style={{ backgroundColor: '#fcfcfc' }}>
-                <div className="container-fluid" style={{ maxWidth: '1600px', padding: '0 40px' }}>
+            <div className="oubd-breadcrumb-strip py-2 py-md-3 border-bottom" style={{ backgroundColor: '#fcfcfc' }}>
+                <div className="container-fluid px-3 px-md-4" style={{ maxWidth: '1600px' }}>
                     <nav aria-label="breadcrumb">
-                        <ol className="breadcrumb mb-0 font-size-12 text-uppercase tracking-wider">
+                        <ol className="breadcrumb mb-0 font-size-11 font-size-md-12 text-uppercase tracking-wider flex-nowrap overflow-auto text-nowrap pb-1">
                             <li className="breadcrumb-item">
                                 <Link href="/" className="text-muted text-decoration-none hover-text-dark">Home</Link>
                             </li>
@@ -155,7 +155,7 @@ export default function ProductDetail({
                                     </Link>
                                 </li>
                             )}
-                            <li className="breadcrumb-item active text-dark fw-bold text-truncate" style={{ maxWidth: '300px' }} aria-current="page">
+                            <li className="breadcrumb-item active text-dark fw-bold text-truncate" style={{ maxWidth: '280px' }} aria-current="page">
                                 {product.name}
                             </li>
                         </ol>
@@ -164,16 +164,16 @@ export default function ProductDetail({
             </div>
 
             {/* --- Main Product Section --- */}
-            <section className="py-5">
-                <div className="container-fluid" style={{ maxWidth: '1600px', padding: '0 40px' }}>
-                    <div className="row g-5">
+            <section className="py-3 py-md-5">
+                <div className="container-fluid px-3 px-md-4" style={{ maxWidth: '1600px' }}>
+                    <div className="row g-4 g-lg-5">
                         
                         {/* --- Left Column: Interactive High-Res Gallery --- */}
                         <div className="col-lg-6 col-12">
                             <div className="d-flex flex-column-reverse flex-md-row gap-3">
                                 {/* Thumbnails Column */}
                                 {allImages.length > 1 && (
-                                    <div className="d-flex flex-row flex-md-column gap-2 overflow-auto" style={{ maxWidth: '100%', maxHeight: '550px' }}>
+                                    <div className="d-flex flex-row flex-md-column gap-2 overflow-auto pb-1" style={{ maxWidth: '100%', maxHeight: '550px' }}>
                                         {allImages.map((imgSrc, idx) => (
                                             <button
                                                 key={idx}
@@ -182,30 +182,30 @@ export default function ProductDetail({
                                                 className={`btn p-0 border rounded overflow-hidden transition-all flex-shrink-0 ${
                                                     activeImageIndex === idx ? 'border-dark shadow-sm ring-2' : 'border-light opacity-75 hover-opacity-100'
                                                 }`}
-                                                style={{ width: '75px', height: '90px' }}
+                                                style={{ width: '60px', height: '75px' }}
                                             >
                                                 <img
                                                     src={imgSrc}
                                                     alt={`Thumbnail ${idx + 1}`}
                                                     className="w-100 h-100"
-                                                    style={{ objectFit: 'cover' }}
+                                                    style={{ objectFit: 'cover', objectPosition: 'top center' }}
                                                 />
                                             </button>
                                         ))}
                                     </div>
                                 )}
 
-                                {/* Main Active Showcase Preview */}
-                                <div className="position-relative flex-grow-1 border rounded overflow-hidden bg-light" style={{ minHeight: '480px', maxHeight: '640px' }}>
+                                {/* Main Active Showcase Preview (Proportional, Zero Dead Space) */}
+                                <div className="oubd-product-showcase-wrap flex-grow-1 border shadow-xs">
                                     {/* Badges Overlay */}
-                                    <div className="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1" style={{ zIndex: 10 }}>
+                                    <div className="position-absolute top-0 start-0 m-2 m-md-3 d-flex flex-column gap-1" style={{ zIndex: 10 }}>
                                         {hasDiscount && discountPercent && (
-                                            <span className="badge bg-danger font-size-12 px-2 py-1 text-uppercase fw-bold shadow-xs">
+                                            <span className="badge bg-danger font-size-11 font-size-md-12 px-2 py-1 text-uppercase fw-bold shadow-xs">
                                                 -{discountPercent}% OFF
                                             </span>
                                         )}
                                         {product.is_new_arrival && (
-                                            <span className="badge bg-dark font-size-11 px-2 py-1 text-uppercase fw-semibold shadow-xs">
+                                            <span className="badge bg-dark font-size-10 font-size-md-11 px-2 py-1 text-uppercase fw-semibold shadow-xs">
                                                 New Edition
                                             </span>
                                         )}
@@ -215,23 +215,22 @@ export default function ProductDetail({
                                     <button
                                         type="button"
                                         onClick={() => setIsZoomOpen(true)}
-                                        className="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-3 shadow-sm d-flex align-items-center justify-content-center"
+                                        className="btn btn-light btn-sm rounded-circle position-absolute top-0 end-0 m-2 m-md-3 shadow-sm d-flex align-items-center justify-content-center"
                                         title="Click to Zoom"
-                                        style={{ width: '38px', height: '38px', zIndex: 10 }}
+                                        style={{ width: '36px', height: '36px', zIndex: 10 }}
                                     >
                                         <i className="ri-zoom-in-line font-size-16" />
                                     </button>
 
                                     {/* Image with Click to Zoom */}
                                     <div
-                                        className="w-100 h-100 d-flex align-items-center justify-content-center cursor-pointer"
+                                        className="w-100 h-100 cursor-pointer"
                                         onClick={() => setIsZoomOpen(true)}
                                     >
                                         <img
                                             src={activeImageSrc}
                                             alt={product.name}
                                             className="w-100 h-100 transition-all"
-                                            style={{ objectFit: 'cover', maxHeight: '640px' }}
                                         />
                                     </div>
                                 </div>
@@ -512,6 +511,46 @@ export default function ProductDetail({
                     </div>
                 </div>
             )}
+
+            {/* --- Mobile Sticky Quick Buy Bar --- */}
+            <div className="oubd-mobile-sticky-buy d-lg-none">
+                <div className="d-flex align-items-center justify-content-between gap-3">
+                    <div className="min-width-0">
+                        <div className="fw-bold text-dark font-size-15 font-mono text-truncate">
+                            {currencySymbol}{Number(currentPrice).toLocaleString()}
+                            {originalPrice && (
+                                <span className="text-muted text-decoration-line-through font-size-11 ms-1.5 font-normal">
+                                    {currencySymbol}{Number(originalPrice).toLocaleString()}
+                                </span>
+                            )}
+                        </div>
+                        <div className="font-size-10 text-muted text-truncate">
+                            {selectedVariant ? selectedVariant.name : (variants.length > 0 ? 'Select Size / Variant' : 'In Stock')}
+                        </div>
+                    </div>
+                    <button
+                        type="button"
+                        onClick={handleAddToCart}
+                        disabled={isOutOfStock || isAddingToCart}
+                        className={`btn py-2 px-3 text-uppercase fw-bold font-size-12 tracking-wider d-flex align-items-center justify-content-center gap-1.5 rounded-pill shadow-sm flex-shrink-0 ${
+                            isOutOfStock ? 'btn-secondary disabled' : 'btn-dark'
+                        }`}
+                        style={{ minWidth: '135px' }}
+                    >
+                        {isAddingToCart ? (
+                            <>
+                                <span className="spinner-border spinner-border-sm text-warning" role="status" aria-hidden="true" />
+                                <span>Adding...</span>
+                            </>
+                        ) : (
+                            <>
+                                <i className="ri-shopping-bag-3-line font-size-14" />
+                                <span>{isOutOfStock ? 'Sold Out' : 'Add to Bag'}</span>
+                            </>
+                        )}
+                    </button>
+                </div>
+            </div>
         </StorefrontLayout>
     );
 }

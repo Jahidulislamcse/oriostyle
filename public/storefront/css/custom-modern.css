@@ -1434,3 +1434,107 @@ header.oubd-header.scrolled,
     box-shadow: 0 0 0 0.2rem rgba(14, 28, 42, 0.15) !important;
 }
 
+/* ==========================================================================
+   Mobile Optimization: Cart Drawer, Shop Discovery & Product Details
+   ========================================================================== */
+
+/* Cart Drawer: 100% width on phone, no awkward clipping or left margin */
+.oubd-cart-drawer {
+    width: 440px;
+    max-width: 100vw;
+}
+
+@media (max-width: 767px) {
+    .oubd-cart-drawer {
+        width: 100% !important;
+        max-width: 100vw !important;
+    }
+}
+
+/* Shop Grid: Strict 2-Column Grid on Mobile devices */
+.oubd-shop-product-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+}
+
+@media (min-width: 1400px) {
+    .oubd-shop-product-grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+
+@media (max-width: 991px) {
+    .oubd-shop-product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+    }
+}
+
+@media (max-width: 767px) {
+    .oubd-shop-product-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+    }
+}
+
+/* Product Showcase Image: Proportional portrait fit with zero dead space */
+.oubd-product-showcase-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    max-height: 600px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.oubd-product-showcase-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+}
+
+@media (max-width: 767px) {
+    .oubd-product-showcase-wrap {
+        aspect-ratio: 4 / 5 !important;
+        max-height: 450px !important;
+        border-radius: 6px;
+    }
+}
+
+/* Sticky Mobile Quick Buy Bar on Product Page */
+.oubd-mobile-sticky-buy {
+    position: fixed;
+    bottom: 58px;
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border-top: 1px solid #e9ecef;
+    padding: 10px 16px;
+    z-index: 1015;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Bottom Nav Labels matching mobile screenshots */
+.oubd-bottom-nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    margin-top: 2px;
+    color: #444444;
+    line-height: 1;
+}
+
+.oubd-bottom-nav-item.active .oubd-bottom-nav-label,
+.oubd-bottom-nav-item:hover .oubd-bottom-nav-label {
+    color: #000000;
+    font-weight: 700;
+}
+
+

@@ -685,13 +685,11 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                 />
             )}
             <div
-                className="position-fixed top-0 end-0 h-100 bg-white shadow-lg d-flex flex-column"
+                className="oubd-cart-drawer position-fixed top-0 end-0 h-100 bg-white shadow-lg d-flex flex-column"
                 style={{
-                    width: '420px',
-                    maxWidth: '92vw',
                     zIndex: 1160,
                     transform: isCartOpen ? 'translateX(0)' : 'translateX(100%)',
-                    transition: 'transform 0.3s ease-in-out',
+                    transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
                 }}
             >
                 {/* Drawer Header */}
@@ -757,7 +755,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                     <Link
                                         href={`/products/${item.product_slug}`}
                                         className="flex-shrink-0 border rounded overflow-hidden bg-light"
-                                        style={{ width: '70px', height: '85px' }}
+                                        style={{ width: '64px', height: '80px' }}
                                         onClick={() => setIsCartOpen(false)}
                                     >
                                         {item.image_url ? (
@@ -790,7 +788,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                             </span>
                                         )}
 
-                                        <div className="d-flex align-items-center justify-content-between mt-2">
+                                        <div className="d-flex align-items-center justify-content-between mt-2 flex-wrap gap-2">
                                             {/* Quantity Switcher */}
                                             <div className="d-flex align-items-center border rounded bg-white">
                                                 <button
@@ -819,7 +817,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
 
                                             {/* Line Total */}
                                             <div className="text-end">
-                                                <span className="fw-bold font-size-13 text-dark font-mono">
+                                                <span className="fw-bold font-size-14 text-dark font-mono text-nowrap">
                                                     {currencySymbol}{Number(item.line_total).toLocaleString()}
                                                 </span>
                                             </div>
@@ -829,11 +827,11 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                     {/* Remove Button */}
                                     <button
                                         type="button"
-                                        className="btn btn-sm text-muted p-1 hover-text-danger border-0"
+                                        className="btn btn-sm text-muted p-1 hover-text-danger border-0 flex-shrink-0"
                                         onClick={() => handleRemoveItem(item.id)}
                                         title="Remove item"
                                     >
-                                        <i className="ri-delete-bin-line font-size-15" />
+                                        <i className="ri-delete-bin-line font-size-16" />
                                     </button>
                                 </div>
                             ))}
@@ -995,6 +993,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     title="WhatsApp"
                 >
                     <i className="ri-whatsapp-line" style={{ color: '#25D366' }} />
+                    <span className="oubd-bottom-nav-label">WhatsApp</span>
                 </a>
 
                 <button
@@ -1003,8 +1002,11 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     onClick={() => setIsCartOpen(true)}
                     title="Cart"
                 >
-                    <i className="ri-shopping-bag-line" />
-                    <span className="oubd-cart-badge">{cart?.count || 0}</span>
+                    <div className="position-relative">
+                        <i className="ri-shopping-bag-line" />
+                        <span className="oubd-cart-badge">{cart?.count || 0}</span>
+                    </div>
+                    <span className="oubd-bottom-nav-label">Cart</span>
                 </button>
 
                 <Link
@@ -1013,6 +1015,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     title="Track Order"
                 >
                     <i className="ri-map-pin-2-line" />
+                    <span className="oubd-bottom-nav-label">Track Order</span>
                 </Link>
 
                 <a
@@ -1021,6 +1024,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     title="Account"
                 >
                     <i className="ri-user-line" />
+                    <span className="oubd-bottom-nav-label">Account</span>
                 </a>
             </div>
 

@@ -103,15 +103,15 @@ export default function Shop({
             <Head title={pageTitle} />
 
             {/* --- Hero Banner / Breadcrumb Header --- */}
-            <section className="oubd-shop-banner py-5" style={{ backgroundColor: '#0e1c2a', color: '#ffffff', borderBottom: '1px solid #1a2c3f' }}>
-                <div className="container-fluid" style={{ maxWidth: '1600px', padding: '0 40px' }}>
+            <section className="oubd-shop-banner py-3 py-md-4" style={{ backgroundColor: '#0e1c2a', color: '#ffffff', borderBottom: '1px solid #1a2c3f' }}>
+                <div className="container-fluid px-3 px-md-4" style={{ maxWidth: '1600px' }}>
                     <nav aria-label="breadcrumb" className="mb-2">
-                        <ol className="breadcrumb mb-0 font-size-12 text-uppercase tracking-wider">
+                        <ol className="breadcrumb mb-0 font-size-11 font-size-md-12 text-uppercase tracking-wider flex-nowrap overflow-auto text-nowrap pb-1">
                             <li className="breadcrumb-item">
-                                <Link href="/" className="text-muted text-decoration-none hover-text-white">Home</Link>
+                                <Link href="/" className="text-white-50 text-decoration-none hover-text-white">Home</Link>
                             </li>
                             <li className="breadcrumb-item">
-                                <Link href="/shop" className="text-muted text-decoration-none hover-text-white">Shop</Link>
+                                <Link href="/shop" className="text-white-50 text-decoration-none hover-text-white">Shop</Link>
                             </li>
                             {activeCategory && (
                                 <li className="breadcrumb-item active text-warning" aria-current="page">
@@ -128,10 +128,10 @@ export default function Shop({
 
                     <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
                         <div>
-                            <h1 className="fw-bold text-uppercase mb-1" style={{ fontSize: '28px', letterSpacing: '1px' }}>
+                            <h1 className="fw-bold text-uppercase mb-1" style={{ fontSize: 'clamp(20px, 4vw, 28px)', letterSpacing: '0.8px' }}>
                                 {activeCategory?.name || (filters.search ? `Results for "${filters.search}"` : 'All Collections')}
                             </h1>
-                            <p className="font-size-13 text-muted mb-0">
+                            <p className="font-size-12 font-size-md-13 mb-0" style={{ color: 'rgba(255, 255, 255, 0.85)' }}>
                                 {activeCategory?.description || 'Explore our complete catalog of signature designs, refined casuals, and luxury essentials.'}
                             </p>
                         </div>
@@ -140,25 +140,52 @@ export default function Shop({
             </section>
 
             {/* --- Main Shop Discovery Section --- */}
-            <div className="container-fluid py-4" style={{ maxWidth: '1600px', padding: '0 40px' }}>
-                {/* Control Toolbar */}
-                <div className="d-flex flex-wrap align-items-center justify-content-between gap-3 pb-3 mb-3 border-bottom">
-                    {/* Left: Item count & Mobile filter toggle */}
-                    <div className="d-flex align-items-center gap-3">
-                        <button
-                            type="button"
-                            className="btn btn-outline-dark d-lg-none d-flex align-items-center gap-2 font-size-13 fw-semibold py-2 px-3"
-                            onClick={() => setIsMobileDrawerOpen(true)}
-                        >
-                            <i className="ri-filter-3-line" />
-                            Filters
-                            {activeChips.length > 0 && (
-                                <span className="badge bg-warning text-dark rounded-pill ms-1 font-size-11">
-                                    {activeChips.length}
-                                </span>
-                            )}
-                        </button>
+            <div className="container-fluid px-3 px-md-4 py-3 py-md-4" style={{ maxWidth: '1600px' }}>
+                {/* Mobile Filter & Sort Bar (Clean 2-Column Equal Row) */}
+                <div className="d-lg-none mb-3">
+                    <div className="row g-2 align-items-center mb-2">
+                        <div className="col-6">
+                            <button
+                                type="button"
+                                className="btn btn-outline-dark w-100 d-flex align-items-center justify-content-center gap-1.5 font-size-12 fw-bold py-2 shadow-xs"
+                                onClick={() => setIsMobileDrawerOpen(true)}
+                            >
+                                <i className="ri-filter-3-line" />
+                                <span>Filters</span>
+                                {activeChips.length > 0 && (
+                                    <span className="badge bg-warning text-dark rounded-pill font-size-10 px-1.5 py-0.5">
+                                        {activeChips.length}
+                                    </span>
+                                )}
+                            </button>
+                        </div>
+                        <div className="col-6">
+                            <select
+                                id="shopSortSelectMobile"
+                                className="form-select form-select-sm font-size-12 py-2 cursor-pointer shadow-xs fw-semibold"
+                                value={filters.sort || 'newest'}
+                                onChange={(e) => updateFilters('sort', e.target.value)}
+                            >
+                                <option value="newest">Newest Arrivals</option>
+                                <option value="price_asc">Price: Low to High</option>
+                                <option value="price_desc">Price: High to Low</option>
+                                <option value="popular">Popular Drops</option>
+                                <option value="name_asc">Alphabetical: A–Z</option>
+                                <option value="name_desc">Alphabetical: Z–A</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className="d-flex align-items-center justify-content-between font-size-11 text-muted px-1">
+                        <span>
+                            Showing <strong className="text-dark">{products.total > 0 ? `${products.from || 1}–${products.to || products.total}` : 0}</strong> of <strong className="text-dark">{products.total}</strong> products
+                        </span>
+                    </div>
+                </div>
 
+                {/* Desktop Control Toolbar */}
+                <div className="d-none d-lg-flex flex-wrap align-items-center justify-content-between gap-3 pb-3 mb-3 border-bottom">
+                    {/* Left: Item count */}
+                    <div className="d-flex align-items-center gap-3">
                         <span className="text-muted font-size-13">
                             {products.total > 0 ? (
                                 <>
@@ -170,10 +197,10 @@ export default function Shop({
                         </span>
                     </div>
 
-                    {/* Right: Sorting & Per-Page Controls */}
+                    {/* Right: Sorting Controls */}
                     <div className="d-flex align-items-center gap-3">
                         <div className="d-flex align-items-center gap-2">
-                            <label htmlFor="shopSortSelect" className="font-size-13 text-muted text-nowrap mb-0 d-none d-sm-inline">
+                            <label htmlFor="shopSortSelect" className="font-size-13 text-muted text-nowrap mb-0">
                                 Sort By:
                             </label>
                             <select
@@ -248,7 +275,7 @@ export default function Shop({
                     <div className="col-lg-9 col-12">
                         {products.data && products.data.length > 0 ? (
                             <>
-                                <div className="oubd-product-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))' }}>
+                                <div className="oubd-shop-product-grid">
                                     {products.data.map((product) => (
                                         <ProductCard
                                             key={product.id}
