@@ -199,10 +199,6 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                 <Link href="/">HOME</Link>
                             </li>
 
-                            <li className={currentPath === '/shop' && !url.includes('category=') ? 'active' : ''}>
-                                <Link href="/shop">SHOP</Link>
-                            </li>
-
                             {categories && categories.slice(0, 4).map((cat) => {
                                 const hasChildren = cat.children && cat.children.length > 0;
                                 const isCatActive = url.includes(`category=${cat.slug}`);
@@ -230,7 +226,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             })}
 
                             <li className={currentPath === '/shop' && !url.includes('category=') ? 'active' : ''}>
-                                <Link href="/shop">ALL PRODUCTS</Link>
+                                <Link href="/shop">ALL COLLECTIONS</Link>
                             </li>
 
                             <li className={currentPath === '/track-order' ? 'active' : ''}>
@@ -381,11 +377,6 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                 HOME
                             </Link>
                         </li>
-                        <li className="mb-2">
-                            <Link href="/shop" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
-                                SHOP
-                            </Link>
-                        </li>
                         {categories && categories.map((cat) => (
                             <li key={cat.id} className="mb-2">
                                 <Link
@@ -414,7 +405,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                         ))}
                         <li className="mt-3 pt-3 border-top">
                             <Link href="/shop" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
-                                ALL PRODUCTS
+                                ALL COLLECTIONS
                             </Link>
                         </li>
                         <li className="mb-2">
