@@ -39,8 +39,6 @@ export default function HeroSlider({ banners = [] }) {
     }, [isHovered, slides.length]);
 
     const activeIndex = currentSlide < slides.length ? currentSlide : 0;
-    const slide = slides[activeIndex] || DEFAULT_SLIDES[0];
-    const bgUrl = slide.image_url || slide.image_path || slide.bg || DEFAULT_SLIDES[0].image_url;
 
     return (
         <div
@@ -48,13 +46,32 @@ export default function HeroSlider({ banners = [] }) {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div
-                className="oubd-hero-slide"
-                style={{
-                    backgroundImage: `url(${bgUrl})`,
-                    transition: 'background-image 0.6s ease-in-out',
-                }}
-            >
+            <div className="oubd-hero-slide">
+                {/* Render each slide as a layered background for smooth transitions and full-size display */}
+                {slides.map((s, index) => {
+                    const sUrl = s.image_url || s.image_path || s.bg || DEFAULT_SLIDES[0].image_url;
+                    const isActive = index === activeIndex;
+
+                    return (
+                        <div
+                            key={s.id || index}
+                            className={`oubd-hero-slide-layer ${isActive ? 'active' : ''}`}
+                            style={{ backgroundImage: `url(${sUrl})` }}
+                            role="img"
+                            aria-label={s.title || `Hero Slide ${index + 1}`}
+                        >
+                            {/* Clickable Banner Navigation Link */}
+                            {s.link_url && (
+                                <Link
+                                    href={s.link_url}
+                                    className="oubd-hero-link-overlay"
+                                    aria-label={s.title || `Shop Banner ${index + 1}`}
+                                />
+                            )}
+                        </div>
+                    );
+                })}
+
                 {/* Dots indicator */}
                 {slides.length > 1 && (
                     <div className="oubd-slider-dots">
