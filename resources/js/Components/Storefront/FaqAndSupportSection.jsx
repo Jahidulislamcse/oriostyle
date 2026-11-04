@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 
 const FAQS = [
     {
@@ -29,7 +29,16 @@ const FAQS = [
 ];
 
 export default function FaqAndSupportSection() {
+    const { settings = {} } = usePage().props;
     const [openIndex, setOpenIndex] = useState(null);
+
+    const rawNumber = settings.whatsapp_number || settings.support_phone || '+880 1700-000000';
+    const cleanNumber = String(rawNumber).replace(/[^0-9]/g, '');
+    const formattedNumber = (cleanNumber.length === 11 && cleanNumber.startsWith('01')) ? `88${cleanNumber}` : cleanNumber;
+    const siteName = settings.site_name || 'ORIO STYLE';
+    const waUrl = formattedNumber
+        ? `https://wa.me/${formattedNumber}?text=${encodeURIComponent(`Hello ${siteName}, I need help with an order/inquiry.`)}`
+        : 'https://wa.me/8801700000000';
 
     const toggleFaq = (index) => {
         setOpenIndex(openIndex === index ? null : index);
@@ -78,10 +87,10 @@ export default function FaqAndSupportSection() {
                     </p>
 
                     <div className="oubd-support-actions">
-                        <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" className="oubd-btn-contact">
+                        <a href={waUrl} target="_blank" rel="noopener noreferrer" className="oubd-btn-contact">
                             Contact Us
                         </a>
-                        <a href="https://wa.me/8801700000000" target="_blank" rel="noopener noreferrer" className="oubd-link-chat">
+                        <a href={waUrl} target="_blank" rel="noopener noreferrer" className="oubd-link-chat">
                             Live chat ↗
                         </a>
                     </div>
