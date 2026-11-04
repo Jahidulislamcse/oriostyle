@@ -1091,17 +1091,6 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
 
             {/* --- Mobile Fixed Bottom Navigation Bar --- */}
             <div className="oubd-bottom-nav">
-                <a
-                    href={whatsappUrl || 'https://wa.me/8801700000000'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="oubd-bottom-nav-item"
-                    title="WhatsApp"
-                >
-                    <i className="ri-whatsapp-line" style={{ color: '#25D366' }} />
-                    <span className="oubd-bottom-nav-label">WhatsApp</span>
-                </a>
-
                 <button
                     type="button"
                     className="oubd-bottom-nav-item bg-transparent border-0"
