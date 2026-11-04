@@ -15,6 +15,42 @@ function getValidImageUrl(c) {
     return null;
 }
 
+function formatSocialUrl(platform, url) {
+    if (!url) return '';
+    const trimmed = String(url).trim();
+    if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+        return trimmed;
+    }
+    const clean = trimmed.replace(/^@/, '');
+    switch (platform) {
+        case 'facebook':
+            return `https://facebook.com/${clean}`;
+        case 'instagram':
+            return `https://instagram.com/${clean}`;
+        case 'youtube':
+            return `https://youtube.com/${clean.startsWith('@') ? clean : '@' + clean}`;
+        case 'tiktok':
+            return `https://tiktok.com/@${clean}`;
+        case 'twitter':
+            return `https://x.com/${clean}`;
+        case 'linkedin':
+            return `https://linkedin.com/company/${clean}`;
+        default:
+            return `https://${clean}`;
+    }
+}
+
+function formatWhatsAppUrl(phone, siteName = 'ORIO STYLE') {
+    if (!phone) return null;
+    const cleanNumber = String(phone).replace(/[^0-9]/g, '');
+    if (!cleanNumber) return null;
+    const formattedNumber = (cleanNumber.length === 11 && cleanNumber.startsWith('01'))
+        ? `88${cleanNumber}`
+        : cleanNumber;
+    const text = encodeURIComponent(`Hello ${siteName}, I would like to inquire about your products.`);
+    return `https://wa.me/${formattedNumber}?text=${text}`;
+}
+
 export default function StorefrontLayout({ children, navCategories: directNavCategories, headerSolid = false }) {
     const { url = '', props = {} } = usePage();
     const { settings = {}, auth = {}, navCategories: sharedNavCategories = [], cart = {} } = props;
@@ -42,6 +78,60 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
     const siteName = settings.site_name || 'ORIO STYLE';
     const siteLogo = settings.site_logo || null;
     const currencySymbol = settings.currency_symbol || '৳';
+
+    // Dynamic WhatsApp Configuration from Database
+    const isWhatsAppChatEnabled = settings.whatsapp_chat_enabled !== false &&
+        settings.whatsapp_chat_enabled !== '0' &&
+        settings.whatsapp_chat_enabled !== 0;
+    const rawWhatsAppNumber = settings.whatsapp_number || settings.support_phone || '+880 1700-000000';
+    const whatsappUrl = formatWhatsAppUrl(rawWhatsAppNumber, siteName);
+
+    // Dynamic Social Links from Database
+    const socialChannels = [
+        {
+            key: 'facebook',
+            name: 'Facebook',
+            rawUrl: settings.facebook_url,
+            icon: 'ri-facebook-fill',
+        },
+        {
+            key: 'instagram',
+            name: 'Instagram',
+            rawUrl: settings.instagram_url,
+            icon: 'ri-instagram-line',
+        },
+        {
+            key: 'youtube',
+            name: 'YouTube',
+            rawUrl: settings.youtube_url,
+            icon: 'ri-youtube-fill',
+        },
+        {
+            key: 'tiktok',
+            name: 'TikTok',
+            rawUrl: settings.tiktok_url,
+            icon: 'ri-tiktok-fill',
+        },
+        {
+            key: 'twitter',
+            name: 'Twitter / X',
+            rawUrl: settings.twitter_url,
+            icon: 'ri-twitter-x-fill',
+        },
+        {
+            key: 'linkedin',
+            name: 'LinkedIn',
+            rawUrl: settings.linkedin_url,
+            icon: 'ri-linkedin-fill',
+        },
+    ];
+
+    const activeSocialLinks = socialChannels
+        .filter((item) => item.rawUrl && String(item.rawUrl).trim() !== '' && String(item.rawUrl).trim() !== '#')
+        .map((item) => ({
+            ...item,
+            href: formatSocialUrl(item.key, item.rawUrl),
+        }));
 
     const [isScrolled, setIsScrolled] = useState(false);
     const [couponInput, setCouponInput] = useState('');
@@ -413,6 +503,28 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                 <i className="ri-map-pin-2-line text-warning" /> TRACK ORDER
                             </Link>
                         </li>
+                        {activeSocialLinks.length > 0 && (
+                            <li className="mt-4 pt-3 border-top">
+                                <div className="font-size-11 fw-bold text-uppercase text-muted tracking-wider mb-2">
+                                    Connect With Us
+                                </div>
+                                <div className="d-flex align-items-center gap-2 flex-wrap">
+                                    {activeSocialLinks.map((item) => (
+                                        <a
+                                            key={item.key}
+                                            href={item.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="oubd-social-icon"
+                                            title={item.name}
+                                            aria-label={item.name}
+                                        >
+                                            <i className={item.icon} />
+                                        </a>
+                                    ))}
+                                </div>
+                            </li>
+                        )}
                     </ul>
                 </div>
             </div>
@@ -570,21 +682,24 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                 </a>
                             </div>
 
-                            {/* Circular Social Icons */}
-                            <div className="oubd-social-links">
-                                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" className="oubd-social-icon text-dark" style={{ borderColor: '#222' }}>
-                                    <i className="ri-facebook-fill" />
-                                </a>
-                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="oubd-social-icon text-dark" style={{ borderColor: '#222' }}>
-                                    <i className="ri-instagram-line" />
-                                </a>
-                                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="oubd-social-icon text-dark" style={{ borderColor: '#222' }}>
-                                    <i className="ri-youtube-fill" />
-                                </a>
-                                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="oubd-social-icon text-dark" style={{ borderColor: '#222' }}>
-                                    <i className="ri-linkedin-fill" />
-                                </a>
-                            </div>
+                            {/* Circular Social Icons from Database */}
+                            {activeSocialLinks.length > 0 && (
+                                <div className="oubd-social-links">
+                                    {activeSocialLinks.map((item) => (
+                                        <a
+                                            key={item.key}
+                                            href={item.href}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="oubd-social-icon"
+                                            title={`Follow us on ${item.name}`}
+                                            aria-label={item.name}
+                                        >
+                                            <i className={item.icon} />
+                                        </a>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Column 2: Quick Links */}
@@ -977,7 +1092,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
             {/* --- Mobile Fixed Bottom Navigation Bar --- */}
             <div className="oubd-bottom-nav">
                 <a
-                    href="https://wa.me/8801700000000"
+                    href={whatsappUrl || 'https://wa.me/8801700000000'}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="oubd-bottom-nav-item"
@@ -1018,6 +1133,29 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     <span className="oubd-bottom-nav-label">Account</span>
                 </a>
             </div>
+
+            {/* --- Floating WhatsApp Chat Widget --- */}
+            {isWhatsAppChatEnabled && whatsappUrl && (
+                <aside aria-label="WhatsApp Support">
+                    <a
+                        href={whatsappUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="oubd-floating-whatsapp"
+                        title="Chat with us on WhatsApp"
+                        aria-label="Chat with us on WhatsApp"
+                    >
+                        <div className="oubd-whatsapp-pulse" aria-hidden="true" />
+                        <div className="oubd-whatsapp-icon-wrap">
+                            <i className="ri-whatsapp-fill" />
+                        </div>
+                        <div className="oubd-whatsapp-pill">
+                            <span className="oubd-whatsapp-status-dot" />
+                            <span className="oubd-whatsapp-pill-text">Chat with us</span>
+                        </div>
+                    </a>
+                </aside>
+            )}
 
             {/* --- Floating Back to Top Button --- */}
             {showBackToTop && (

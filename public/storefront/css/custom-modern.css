@@ -1311,26 +1311,30 @@ header.oubd-header.scrolled,
     align-items: center;
     gap: 10px;
     margin-top: 16px;
+    flex-wrap: wrap;
 }
 
 .oubd-social-icon {
-    width: 34px;
-    height: 34px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
-    border: 1px solid #333333;
+    border: 1px solid #e2e8f0;
+    background-color: #f8fafc;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
-    font-size: 15px;
-    text-decoration: none;
-    transition: all 0.25s ease;
+    color: #1e293b;
+    font-size: 16px;
+    text-decoration: none !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .oubd-social-icon:hover {
-    background-color: #ffffff;
-    color: #111111;
-    border-color: #ffffff;
+    background-color: #0f172a;
+    color: #ffffff !important;
+    border-color: #0f172a;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.18);
 }
 
 /* --- Mobile Bottom Fixed Navigation Bar --- */
@@ -1703,6 +1707,146 @@ header.oubd-header.scrolled,
     object-fit: cover;
     object-position: top center;
     display: block;
+}
+
+/* ==========================================================================
+   Floating WhatsApp Chat Widget & Support Launcher
+   ========================================================================== */
+.oubd-floating-whatsapp {
+    position: fixed;
+    bottom: 28px;
+    right: 28px;
+    z-index: 1040;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none !important;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.oubd-floating-whatsapp:hover {
+    transform: translateY(-3px) scale(1.02);
+}
+
+.oubd-whatsapp-icon-wrap {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45);
+    z-index: 2;
+    transition: box-shadow 0.3s ease;
+}
+
+.oubd-floating-whatsapp:hover .oubd-whatsapp-icon-wrap {
+    box-shadow: 0 12px 30px rgba(37, 211, 102, 0.65);
+}
+
+.oubd-whatsapp-pulse {
+    position: absolute;
+    width: 52px;
+    height: 52px;
+    right: 0;
+    border-radius: 50%;
+    background-color: rgba(37, 211, 102, 0.6);
+    z-index: 1;
+    animation: oubd-whatsapp-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+    pointer-events: none;
+}
+
+@keyframes oubd-whatsapp-ping {
+    0% {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+    70%, 100% {
+        transform: scale(1.65);
+        opacity: 0;
+    }
+}
+
+.oubd-whatsapp-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background-color: #ffffff;
+    color: #111111;
+    border-radius: 9999px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+    white-space: nowrap;
+    transition: all 0.25s ease;
+}
+
+.oubd-floating-whatsapp:hover .oubd-whatsapp-pill {
+    background-color: #0d1726;
+    color: #ffffff;
+    box-shadow: 0 8px 24px rgba(13, 23, 38, 0.25);
+}
+
+.oubd-whatsapp-status-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #25D366;
+    box-shadow: 0 0 6px rgba(37, 211, 102, 0.8);
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+/* Ensure Back to Top button stacks cleanly above Floating WhatsApp */
+.oubd-back-to-top {
+    bottom: 92px !important;
+    right: 33px !important;
+}
+
+@media (max-width: 767px) {
+    .oubd-floating-whatsapp {
+        bottom: 74px;
+        right: 14px;
+        gap: 6px;
+    }
+
+    .oubd-whatsapp-icon-wrap {
+        width: 44px;
+        height: 44px;
+        font-size: 24px;
+        box-shadow: 0 6px 18px rgba(37, 211, 102, 0.4);
+    }
+
+    .oubd-whatsapp-pulse {
+        width: 44px;
+        height: 44px;
+    }
+
+    .oubd-whatsapp-pill {
+        padding: 5px 12px;
+        font-size: 11px;
+    }
+
+    .oubd-back-to-top {
+        bottom: 130px !important;
+        right: 18px !important;
+    }
+
+    /* Product Detail page with mobile sticky buy bar */
+    body:has(.oubd-mobile-sticky-buy) .oubd-floating-whatsapp {
+        bottom: 130px;
+    }
+
+    body:has(.oubd-mobile-sticky-buy) .oubd-back-to-top {
+        bottom: 188px !important;
+    }
 }
 
 
