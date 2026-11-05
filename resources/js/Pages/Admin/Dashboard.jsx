@@ -37,6 +37,7 @@ export default function Dashboard({ user, metrics }) {
             icon: TrendingUp,
             sparkData: [12, 16, 14, 22, 19, 28, 35, 42],
             sparkColor: '#D4AF37',
+            badgeStyle: 'text-[#926F18] dark:text-[#EBD495]',
             color: 'text-[#926F18] dark:text-[#EBD495]',
             iconBg: 'bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/40',
         },
@@ -47,7 +48,8 @@ export default function Dashboard({ user, metrics }) {
             subText: 'Awaiting dispatch confirmation',
             icon: ShoppingBag,
             sparkData: [5, 8, 12, 9, 14, 18, 15, 18],
-            sparkColor: '#4F46E5',
+            sparkColor: '#6366F1',
+            badgeStyle: 'text-indigo-600 dark:text-indigo-400',
             color: 'text-indigo-600 dark:text-indigo-400',
             iconBg: 'bg-indigo-50 text-indigo-600 dark:bg-[#071324] dark:text-indigo-300 border border-indigo-200 dark:border-indigo-800/40',
         },
@@ -59,6 +61,7 @@ export default function Dashboard({ user, metrics }) {
             icon: AlertTriangle,
             sparkData: [8, 6, 7, 5, 4, 6, 4, 3],
             sparkColor: '#F59E0B',
+            badgeStyle: 'text-amber-600 dark:text-amber-400',
             color: 'text-amber-600 dark:text-amber-400',
             iconBg: 'bg-amber-50 text-amber-600 dark:bg-[#071324] dark:text-amber-300 border border-amber-200 dark:border-amber-800/40',
         },
@@ -68,8 +71,9 @@ export default function Dashboard({ user, metrics }) {
             growth: 'RBAC Active',
             subText: 'Super Admin & Store Admin',
             icon: Users,
-            sparkData: [2, 2, 2, 2, 2, 2, 2, 2],
-            sparkColor: '#9333EA',
+            sparkData: [1, 2, 1, 2, 2, 3, 2, 2],
+            sparkColor: '#A855F7',
+            badgeStyle: 'text-purple-600 dark:text-purple-400',
             color: 'text-purple-600 dark:text-purple-400',
             iconBg: 'bg-purple-50 text-purple-600 dark:bg-[#071324] dark:text-purple-300 border border-purple-200 dark:border-purple-800/40',
         },
@@ -154,36 +158,36 @@ export default function Dashboard({ user, metrics }) {
                             className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-5 shadow-xs hover:border-slate-300 dark:hover:border-[#3B6D9B] transition duration-150 flex flex-col justify-between"
                         >
                             <div>
-                                <div className="flex items-center justify-between mb-2.5">
-                                    <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[#8EB0CF]">
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[#8EB0CF]">
                                         {card.title}
                                     </span>
-                                    <div className={`w-9 h-9 lg:w-10 lg:h-10 rounded-xl flex items-center justify-center ${card.iconBg} shadow-2xs`}>
-                                        <Icon className="w-4.5 h-4.5 lg:w-5 lg:h-5" />
+                                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center ${card.iconBg} shadow-2xs`}>
+                                        <Icon className="w-4.5 h-4.5" />
                                     </div>
                                 </div>
-                                <div className="flex items-baseline justify-between gap-2 mb-2">
+                                <div className="flex items-baseline justify-between gap-2 mb-1">
                                     <div className="text-2xl sm:text-3xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">
                                         {card.value}
                                     </div>
-                                    <span className="text-[#926F18] dark:text-[#EBD495] font-bold text-xs">
+                                    <span className={`text-xs font-bold ${card.badgeStyle || 'text-[#926F18] dark:text-[#EBD495]'}`}>
                                         {card.growth}
                                     </span>
                                 </div>
 
-                                {/* Mini Animated Sparkline Wave */}
-                                <div className="h-8 my-1.5 opacity-90">
+                                {/* Flow Chart Sparkline (Cleanly Contained) */}
+                                <div className="w-full h-11 my-2 relative overflow-hidden">
                                     <Sparkline
                                         data={card.sparkData}
                                         color={card.sparkColor}
-                                        height={32}
-                                        strokeWidth={2}
+                                        height={44}
+                                        strokeWidth={2.2}
                                     />
                                 </div>
                             </div>
 
-                            <div className="flex items-center justify-between text-xs font-medium pt-2 border-t border-slate-100 dark:border-[#1C3E63]/60 text-slate-400 dark:text-[#5E8CB6]">
-                                <span>{card.subText}</span>
+                            <div className="flex items-center justify-between text-xs font-medium pt-2.5 border-t border-slate-100 dark:border-[#1C3E63]/60 text-slate-400 dark:text-[#5E8CB6]">
+                                <span className="truncate">{card.subText}</span>
                             </div>
                         </div>
                     );

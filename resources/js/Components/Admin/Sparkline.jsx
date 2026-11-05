@@ -1,23 +1,26 @@
-import React from 'react';
+import React, { useId } from 'react';
 
 export default function Sparkline({
     data = [12, 18, 15, 25, 22, 35, 30, 45],
     color = '#D4AF37',
-    height = 36,
-    strokeWidth = 2,
-    fillOpacity = 0.15,
+    height = 44,
+    strokeWidth = 2.2,
+    fillOpacity = 0.16,
     className = '',
 }) {
     if (!data || data.length === 0) return null;
+
+    const reactId = useId();
+    const gradientId = `spark-grad-${reactId.replace(/[:]/g, '')}`;
 
     const min = Math.min(...data);
     const max = Math.max(...data);
     const range = max - min === 0 ? 1 : max - min;
     const isFlat = max === min;
-    const width = 120;
-    const paddingX = 4;
-    const paddingTop = 6;
-    const paddingBottom = 6;
+    const width = 280;
+    const paddingX = 8;
+    const paddingTop = 7;
+    const paddingBottom = 9;
 
     const points = data.map((val, idx) => {
         const x = paddingX + (idx / (data.length - 1)) * (width - paddingX * 2);
@@ -51,18 +54,18 @@ export default function Sparkline({
     const linePath = getSvgPath();
     const areaPath = `${linePath} L ${points[points.length - 1][0]},${height} L ${points[0][0]},${height} Z`;
     const lastPoint = points[points.length - 1];
-    const gradientId = `sparkline-grad-${color.replace('#', '')}-${Math.random().toString(36).substr(2, 5)}`;
 
     return (
-        <div className={`relative overflow-hidden ${className}`}>
+        <div className={`w-full h-full relative overflow-hidden ${className}`}>
             <svg
                 viewBox={`0 0 ${width} ${height}`}
-                className="w-full h-full overflow-visible"
+                className="w-full h-full block overflow-visible"
                 preserveAspectRatio="none"
             >
                 <defs>
                     <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
                         <stop offset="0%" stopColor={color} stopOpacity={fillOpacity} />
+                        <stop offset="85%" stopColor={color} stopOpacity={fillOpacity * 0.2} />
                         <stop offset="100%" stopColor={color} stopOpacity="0" />
                     </linearGradient>
                 </defs>
@@ -78,6 +81,7 @@ export default function Sparkline({
                     strokeWidth={strokeWidth}
                     strokeLinecap="round"
                     strokeLinejoin="round"
+                    vectorEffect="non-scaling-stroke"
                     className="transition-all duration-700 ease-out"
                 />
 
@@ -87,17 +91,17 @@ export default function Sparkline({
                         <circle
                             cx={lastPoint[0]}
                             cy={lastPoint[1]}
-                            r="4"
+                            r="4.5"
                             fill={color}
                             className="animate-ping opacity-60 origin-center"
                         />
                         <circle
                             cx={lastPoint[0]}
                             cy={lastPoint[1]}
-                            r="2.5"
+                            r="3"
                             fill={color}
                             className="stroke-white dark:stroke-[#0E2038]"
-                            strokeWidth="1"
+                            strokeWidth="1.5"
                         />
                     </g>
                 )}
