@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 const DEFAULT_SLOTS = {
     top_left_tall: {
@@ -118,7 +119,8 @@ export default function CategoryLookbookSection({ bentoSlots = {}, categories = 
         if (slot) {
             const slug = slot.category_slug || slot.category?.slug || defaultDef.slug || '';
             const title = slot.display_title || slot.title || slot.category?.name || defaultDef.title;
-            const image = slot.image_url || slot.image_path || defaultDef.fallbackImg;
+            const rawImage = slot.image_url || slot.image_path || defaultDef.fallbackImg;
+            const image = sanitizeImageUrl(rawImage, defaultDef.fallbackImg);
             const hasArrow = slot.has_arrow !== undefined ? Boolean(slot.has_arrow) : defaultDef.hasArrow;
             const darkBadge = slot.dark_badge !== undefined ? Boolean(slot.dark_badge) : defaultDef.darkBadge;
 
@@ -146,9 +148,7 @@ export default function CategoryLookbookSection({ bentoSlots = {}, categories = 
                 catImg = cat.image_url || cat.image;
             }
 
-            if (catImg && typeof catImg === 'string' && !catImg.startsWith('http://') && !catImg.startsWith('https://') && !catImg.startsWith('/')) {
-                catImg = `/storage/${catImg}`;
-            }
+            const image = sanitizeImageUrl(catImg, defaultDef.fallbackImg);
 
             const slug = cat.slug || defaultDef.slug || '';
             return {

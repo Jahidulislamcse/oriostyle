@@ -4,6 +4,7 @@ import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import ProductCard from '@/Components/Storefront/ProductCard';
 import VariantSelector from '@/Components/Storefront/VariantSelector';
 import FrequentlyBoughtTogether from '@/Components/Storefront/FrequentlyBoughtTogether';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 export default function ProductDetail({
     product,
@@ -15,19 +16,18 @@ export default function ProductDetail({
 
     const currencySymbol = settings.currency_symbol || '৳';
 
-    // Gallery images preparation
+    // Gallery images preparation safely sanitized against loopbacks
     const allImages = [];
     if (product.images && product.images.length > 0) {
         product.images.forEach(img => {
             const url = img.image_url || img.image_path;
             if (url) {
-                allImages.push(url.startsWith('http') || url.startsWith('/') ? url : `/storage/${url}`);
+                allImages.push(sanitizeImageUrl(url));
             }
         });
     }
     if (allImages.length === 0 && product.image) {
-        const u = product.image;
-        allImages.push(u.startsWith('http') || u.startsWith('/') ? u : `/storage/${u}`);
+        allImages.push(sanitizeImageUrl(product.image));
     }
     if (allImages.length === 0) {
         allImages.push('/storefront/img/product/1.jpg');

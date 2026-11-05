@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\UrlSanitizer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -39,35 +40,35 @@ class Banner extends Model
     }
 
     /**
-     * Accessor: Get full public image URL safely.
+     * Clean raw stored image path.
      */
-    public function getImageUrlAttribute(): ?string
+    public function getImagePathAttribute(?string $value): ?string
     {
-        if (empty($this->image_path)) {
-            return null;
-        }
-
-        if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://') || str_starts_with($this->image_path, '/')) {
-            return $this->image_path;
-        }
-
-        return asset('storage/' . ltrim($this->image_path, '/'));
+        return UrlSanitizer::cleanRawPath($value);
     }
 
     /**
-     * Accessor: Get dedicated mobile banner image URL safely.
+     * Clean raw stored mobile image path.
+     */
+    public function getMobileImagePathAttribute(?string $value): ?string
+    {
+        return UrlSanitizer::cleanRawPath($value);
+    }
+
+    /**
+     * Accessor: Get full public image URL safely sanitized against localhost loopbacks.
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        return UrlSanitizer::sanitize($this->image_path);
+    }
+
+    /**
+     * Accessor: Get dedicated mobile banner image URL safely sanitized against localhost loopbacks.
      */
     public function getMobileImageUrlAttribute(): ?string
     {
-        if (empty($this->mobile_image_path)) {
-            return null;
-        }
-
-        if (str_starts_with($this->mobile_image_path, 'http://') || str_starts_with($this->mobile_image_path, 'https://') || str_starts_with($this->mobile_image_path, '/')) {
-            return $this->mobile_image_path;
-        }
-
-        return asset('storage/' . ltrim($this->mobile_image_path, '/'));
+        return UrlSanitizer::sanitize($this->mobile_image_path);
     }
 
     /**

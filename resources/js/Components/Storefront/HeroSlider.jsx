@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 const DEFAULT_SLIDES = [
     {
@@ -49,8 +50,10 @@ export default function HeroSlider({ banners = [] }) {
             <div className="oubd-hero-slider-wrap">
                 {/* Render each slide with responsive art-directed picture tag */}
                 {slides.map((s, index) => {
-                    const desktopUrl = s.image_url || s.image_path || s.bg || DEFAULT_SLIDES[0].image_url;
-                    const mobileUrl = s.mobile_image_url || s.mobile_image_path || null;
+                    const rawDesktop = s.image_url || s.image_path || s.bg || DEFAULT_SLIDES[0].image_url;
+                    const desktopUrl = sanitizeImageUrl(rawDesktop, DEFAULT_SLIDES[0].image_url);
+                    const rawMobile = s.mobile_image_url || s.mobile_image_path || null;
+                    const mobileUrl = rawMobile ? sanitizeImageUrl(rawMobile) : null;
                     const isActive = index === activeIndex;
 
                     const imageContent = (

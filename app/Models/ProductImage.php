@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\UrlSanitizer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -32,19 +33,19 @@ class ProductImage extends Model
     }
 
     /**
-     * Accessor for full public image URL.
+     * Clean raw stored image path so legacy localhost prefixes never leak.
+     */
+    public function getImagePathAttribute(?string $value): ?string
+    {
+        return UrlSanitizer::cleanRawPath($value);
+    }
+
+    /**
+     * Accessor for full public image URL safely sanitized against localhost loopbacks.
      */
     public function getImageUrlAttribute(): string
     {
-        if (empty($this->image_path)) {
-            return '';
-        }
-
-        if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://')) {
-            return $this->image_path;
-        }
-
-        return asset('storage/' . ltrim($this->image_path, '/'));
+        return UrlSanitizer::sanitize($this->image_path) ?? '';
     }
 
     public function product(): BelongsTo

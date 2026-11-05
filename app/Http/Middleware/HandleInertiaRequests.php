@@ -82,7 +82,7 @@ class HandleInertiaRequests extends Middleware
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
                 'url' => $request->getSchemeAndHttpHost(),
-                'port' => ($request->getPort() !== 80 && $request->getPort() !== 443) ? $request->getPort() : null,
+                'port' => ($request->getPort() !== 80 && $request->getPort() !== 443 && !app()->environment('production')) ? $request->getPort() : null,
             ],
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

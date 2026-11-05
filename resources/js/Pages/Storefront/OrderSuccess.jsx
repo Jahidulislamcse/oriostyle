@@ -1,6 +1,7 @@
 import React from 'react';
 import { Head, Link, usePage } from '@inertiajs/react';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 export default function OrderSuccess({
     order = {},
@@ -110,7 +111,7 @@ export default function OrderSuccess({
                                                         style={{ width: '48px', height: '54px' }}
                                                     >
                                                         {item.image_url ? (
-                                                            <img src={item.image_url} alt={item.product_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                            <img src={sanitizeImageUrl(item.image_url)} alt={item.product_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                         ) : (
                                                             <i className="ri-image-line text-muted font-size-16" />
                                                         )}

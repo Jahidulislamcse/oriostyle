@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 const DEFAULT_SPLIT_BANNERS = [
     {
@@ -29,7 +30,9 @@ export default function SplitPromoBanners({ banners = [] }) {
         <section className="oubd-split-banners-section">
             <div className="oubd-split-grid">
                 {items.map((b, index) => {
-                    const bg = b.image_url || b.image_path || (index === 0 ? '/storefront/img/banner/5.jpg' : '/storefront/img/banner/6.jpg');
+                    const fallback = index === 0 ? '/storefront/img/banner/5.jpg' : '/storefront/img/banner/6.jpg';
+                    const rawBg = b.image_url || b.image_path || fallback;
+                    const bg = sanitizeImageUrl(rawBg, fallback);
                     const badge = b.badge_text || b.subtitle || (index === 0 ? 'EVERYDAY CARRY ESSENTIAL' : 'PREMIUM COMFORT');
                     const title = b.title || (index === 0 ? 'Smart, Durable, Daily Use.' : 'Soft feel. Perfect fit.');
                     const btnText = b.button_text || 'SHOP NOW';

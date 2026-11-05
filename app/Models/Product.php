@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\UrlSanitizer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -141,12 +142,12 @@ class Product extends Model
     public function getPrimaryImageUrlAttribute(): ?string
     {
         if ($this->relationLoaded('primaryImage') && $this->primaryImage) {
-            return $this->primaryImage->image_url ?? $this->primaryImage->image_path;
+            return UrlSanitizer::sanitize($this->primaryImage->image_url ?? $this->primaryImage->image_path);
         }
 
         if ($this->relationLoaded('images') && $this->images->isNotEmpty()) {
             $img = $this->images->firstWhere('is_primary', true) ?? $this->images->first();
-            return $img->image_url ?? $img->image_path;
+            return UrlSanitizer::sanitize($img->image_url ?? $img->image_path);
         }
 
         return null;

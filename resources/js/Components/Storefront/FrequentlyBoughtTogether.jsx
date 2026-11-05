@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { router } from '@inertiajs/react';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 export default function FrequentlyBoughtTogether({
     mainProduct,
@@ -129,11 +130,12 @@ export default function FrequentlyBoughtTogether({
     };
 
     const getImage = (prod) => {
-        return prod?.primary_image_url
+        const raw = prod?.primary_image_url
             || prod?.primary_image?.image_url
             || prod?.primary_image?.image_path
             || prod?.image
             || '/storefront/img/product/1.jpg';
+        return sanitizeImageUrl(raw, '/storefront/img/product/1.jpg');
     };
 
     return (

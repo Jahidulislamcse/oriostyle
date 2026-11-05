@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 export default function Checkout({
     cart = { items: [] },
@@ -451,7 +452,7 @@ export default function Checkout({
                                                 style={{ width: '56px', height: '64px' }}
                                             >
                                                 {item.image_url ? (
-                                                    <img src={item.image_url} alt={item.product_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                                    <img src={sanitizeImageUrl(item.image_url)} alt={item.product_name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                 ) : (
                                                     <i className="ri-image-line text-muted font-size-18" />
                                                 )}

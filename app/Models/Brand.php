@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\UrlSanitizer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,19 +42,19 @@ class Brand extends Model
     }
 
     /**
-     * Accessor: Get full public logo URL safely.
+     * Clean raw stored logo path.
+     */
+    public function getLogoAttribute(?string $value): ?string
+    {
+        return UrlSanitizer::cleanRawPath($value);
+    }
+
+    /**
+     * Accessor: Get full public logo URL safely sanitized against localhost loopbacks.
      */
     public function getLogoUrlAttribute(): ?string
     {
-        if (empty($this->logo)) {
-            return null;
-        }
-
-        if (str_starts_with($this->logo, 'http://') || str_starts_with($this->logo, 'https://')) {
-            return $this->logo;
-        }
-
-        return asset('storage/' . ltrim($this->logo, '/'));
+        return UrlSanitizer::sanitize($this->logo);
     }
 
     /**

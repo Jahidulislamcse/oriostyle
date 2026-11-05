@@ -8,6 +8,7 @@ import SplitPromoBanners from '@/Components/Storefront/SplitPromoBanners';
 import TrustFeaturesSection from '@/Components/Storefront/TrustFeaturesSection';
 import FaqAndSupportSection from '@/Components/Storefront/FaqAndSupportSection';
 import BrandStorySection from '@/Components/Storefront/BrandStorySection';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 const DEFAULT_LOOKBOOK_CATEGORIES = [
     { id: 1, title: 'THOBE', slug: 'thobe', images: ['/storefront/img/category/1.jpg'] },
@@ -39,20 +40,16 @@ export default function Index({
     const lookbookCategories = featuredCategories && featuredCategories.length > 0
         ? featuredCategories.map((cat, index) => {
             const fallback = DEFAULT_LOOKBOOK_CATEGORIES[index % DEFAULT_LOOKBOOK_CATEGORIES.length];
-            let dynamicImg = null;
+            let rawImg = null;
             if (cat.images && cat.images.length > 0) {
-                dynamicImg = cat.images[0].image_url || cat.images[0].image_path;
+                rawImg = cat.images[0].image_url || cat.images[0].image_path;
             } else if (cat.image_url) {
-                dynamicImg = cat.image_url;
+                rawImg = cat.image_url;
             } else {
-                dynamicImg = `/storefront/img/category/${(index % 18) + 1}.jpg`;
+                rawImg = `/storefront/img/category/${(index % 18) + 1}.jpg`;
             }
 
-            if (dynamicImg && typeof dynamicImg === 'string') {
-                if (!dynamicImg.startsWith('http://') && !dynamicImg.startsWith('https://') && !dynamicImg.startsWith('/')) {
-                    dynamicImg = `/storage/${dynamicImg}`;
-                }
-            }
+            const dynamicImg = sanitizeImageUrl(rawImg, `/storefront/img/category/${(index % 18) + 1}.jpg`);
 
             return {
                 id: cat.id,

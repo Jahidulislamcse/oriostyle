@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 export default function Wishlist({
     wishlistItems = [],
@@ -137,7 +138,7 @@ export default function Wishlist({
 
                                                 <Link href={item.slug ? `/products/${item.slug}` : '/shop'}>
                                                     <img
-                                                        src={item.primary_image_url || '/storefront/img/product/1.jpg'}
+                                                        src={sanitizeImageUrl(item.primary_image_url, '/storefront/img/product/1.jpg')}
                                                         alt={item.name}
                                                         loading="lazy"
                                                     />

@@ -1,16 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import axios from 'axios';
+import { sanitizeImageUrl } from '../Utils/image';
 
 function getValidImageUrl(c) {
     const raw = c?.image_url || (c?.images && c?.images[0]?.image_url) || c?.image || (c?.images && c?.images[0]?.image_path) || null;
     if (raw && typeof raw === 'string') {
-        if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('/')) {
-            return raw;
-        }
-        if (/\.(png|jpe?g|webp|svg|gif|avif)$/i.test(raw)) {
-            return `/storage/${raw}`;
-        }
+        return sanitizeImageUrl(raw);
     }
     return null;
 }
@@ -76,7 +72,8 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
         : (sharedNavCategories || []);
 
     const siteName = settings.site_name || 'ORIO STYLE';
-    const siteLogo = settings.site_logo || null;
+    const siteLogo = sanitizeImageUrl(settings.site_logo) || null;
+    const siteLogoWhite = sanitizeImageUrl(settings.site_logo_white) || siteLogo;
     const currencySymbol = settings.currency_symbol || '৳';
 
     // Dynamic WhatsApp Configuration from Database
@@ -631,7 +628,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                                     onClick={() => setIsSearchOpen(false)}
                                                 >
                                                     <img
-                                                        src={sp.image_url}
+                                                        src={sanitizeImageUrl(sp.image_url)}
                                                         alt={sp.name}
                                                         className="rounded"
                                                         style={{ width: '45px', height: '45px', objectFit: 'cover' }}
@@ -885,7 +882,7 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                                     >
                                         {item.image_url ? (
                                             <img
-                                                src={item.image_url}
+                                                src={sanitizeImageUrl(item.image_url)}
                                                 alt={item.product_name}
                                                 className="w-100 h-100"
                                                 style={{ objectFit: 'cover' }}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Head, Link, router, usePage } from '@inertiajs/react';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 export default function TrackOrder({
     trackedOrder = null,
@@ -495,7 +496,7 @@ export default function TrackOrder({
                                                         <div className="d-flex align-items-center gap-3">
                                                             {item.image_url ? (
                                                                 <img
-                                                                    src={item.image_url}
+                                                                    src={sanitizeImageUrl(item.image_url)}
                                                                     alt={item.product_name}
                                                                     className="rounded-3 border object-fit-cover"
                                                                     style={{ width: '48px', height: '48px' }}

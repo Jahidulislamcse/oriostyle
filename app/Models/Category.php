@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\UrlSanitizer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -67,21 +68,27 @@ class Category extends Model
     ];
 
     /**
+     * Clean raw stored category image path.
+     */
+    public function getImageAttribute(?string $value): ?string
+    {
+        return UrlSanitizer::cleanRawPath($value);
+    }
+
+    /**
+     * Clean raw stored category banner path.
+     */
+    public function getBannerAttribute(?string $value): ?string
+    {
+        return UrlSanitizer::cleanRawPath($value);
+    }
+
+    /**
      * Accessor for full public category banner image URL.
      */
     public function getBannerUrlAttribute(): ?string
     {
-        if (!empty($this->banner)) {
-            if (str_starts_with($this->banner, 'http://') || str_starts_with($this->banner, 'https://')) {
-                return $this->banner;
-            }
-            if (str_starts_with($this->banner, '/')) {
-                return $this->banner;
-            }
-            return asset('storage/' . ltrim($this->banner, '/'));
-        }
-
-        return null;
+        return UrlSanitizer::sanitize($this->banner);
     }
 
     /**
@@ -98,18 +105,15 @@ class Category extends Model
         }
 
         if (!empty($this->image)) {
-            if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
-                return $this->image;
-            }
-            return asset('storage/' . ltrim($this->image, '/'));
+            return UrlSanitizer::sanitize($this->image);
         }
 
         if (!empty($this->icon)) {
-            if (str_starts_with($this->icon, 'http://') || str_starts_with($this->icon, 'https://') || str_starts_with($this->icon, '/')) {
-                return $this->icon;
-            }
             if (preg_match('/\.(png|jpe?g|webp|svg|gif|avif)$/i', $this->icon)) {
-                return asset('storage/' . ltrim($this->icon, '/'));
+                return UrlSanitizer::sanitize($this->icon);
+            }
+            if (str_starts_with($this->icon, '/')) {
+                return $this->icon;
             }
         }
 

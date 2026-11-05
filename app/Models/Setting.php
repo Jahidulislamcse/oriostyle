@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\UrlSanitizer;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,6 +37,10 @@ class Setting extends Model
     {
         if (is_null($this->value) || $this->value === '') {
             return null;
+        }
+
+        if (in_array($this->key, ['site_logo', 'site_logo_white', 'site_favicon'], true)) {
+            return UrlSanitizer::sanitize($this->value);
         }
 
         return match ($this->type) {

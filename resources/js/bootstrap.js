@@ -11,12 +11,13 @@ if (typeof window !== 'undefined') {
 
     if (Ziggy) {
         Ziggy.url = currentOrigin;
-        Ziggy.port = window.location.port ? parseInt(window.location.port, 10) : null;
+        Ziggy.port = null;
     }
 
     window.Ziggy = window.Ziggy || Ziggy;
     if (window.Ziggy) {
         window.Ziggy.url = currentOrigin;
+        window.Ziggy.port = null;
     }
 
     window.route = (name, params, absolute = false, config = window.Ziggy || Ziggy) => {

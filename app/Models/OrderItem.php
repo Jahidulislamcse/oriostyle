@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\UrlSanitizer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -63,16 +64,12 @@ class OrderItem extends Model
     }
 
     /**
-     * Accessor: Clean Image URL for thumbnail display
+     * Accessor: Clean Image URL for thumbnail display safely sanitized against loopbacks
      */
     public function getImageUrlAttribute(): ?string
     {
         if (!empty($this->image_path)) {
-            if (str_starts_with($this->image_path, 'http://') || str_starts_with($this->image_path, 'https://') || str_starts_with($this->image_path, '/')) {
-                return $this->image_path;
-            }
-
-            return '/storage/' . ltrim($this->image_path, '/');
+            return UrlSanitizer::sanitize($this->image_path);
         }
 
         if ($this->relationLoaded('product') && $this->product) {

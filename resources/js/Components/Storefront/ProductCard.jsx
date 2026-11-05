@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, router, usePage } from '@inertiajs/react';
+import { sanitizeImageUrl } from '@/Utils/image';
 
 export default function ProductCard({
     product,
@@ -34,7 +35,7 @@ export default function ProductCard({
         });
     };
 
-    let primaryImg = product.primary_image_url
+    let rawImg = product.primary_image_url
         || product.primary_image?.image_url
         || product.images?.[0]?.image_url
         || product.primary_image?.image_path
@@ -42,13 +43,7 @@ export default function ProductCard({
         || product.image
         || '/storefront/img/product/1.jpg';
 
-    if (primaryImg && typeof primaryImg === 'string') {
-        if (!primaryImg.startsWith('http://') && !primaryImg.startsWith('https://') && !primaryImg.startsWith('/')) {
-            primaryImg = `/storage/${primaryImg}`;
-        }
-    } else {
-        primaryImg = '/storefront/img/product/1.jpg';
-    }
+    const primaryImg = sanitizeImageUrl(rawImg, '/storefront/img/product/1.jpg');
     const priceNum = parseFloat(product.base_price || 0);
     const salePriceNum = product.sale_price ? parseFloat(product.sale_price) : null;
     
