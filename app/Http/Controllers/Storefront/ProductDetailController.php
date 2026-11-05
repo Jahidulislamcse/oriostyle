@@ -30,8 +30,36 @@ class ProductDetailController extends Controller
                 'brand:id,name,slug,logo',
                 'images' => fn($q) => $q->orderBy('display_order'),
                 'variants' => fn($q) => $q->where('is_active', true),
+                'bundles' => fn($q) => $q->active()->with([
+                    'pairedProduct.primaryImage',
+                    'pairedProduct.brand',
+                    'pairedProduct.variants' => fn($vq) => $vq->where('is_active', true),
+                ]),
             ])
             ->firstOrFail();
+
+        // If no explicit bundles exist, generate smart companion pairing
+        $curatedBundles = $product->bundles;
+        if ($curatedBundles->isEmpty()) {
+            $companions = Product::query()
+                ->active()
+                ->where('id', '!=', $product->id)
+                ->with(['primaryImage', 'brand', 'variants' => fn($vq) => $vq->where('is_active', true)])
+                ->take(2)
+                ->get();
+
+            $curatedBundles = $companions->map(function ($comp, $idx) use ($product) {
+                return (object) [
+                    'id' => 'smart_' . $comp->id,
+                    'main_product_id' => $product->id,
+                    'paired_product_id' => $comp->id,
+                    'discount_percentage' => 5.00,
+                    'badge_label' => $idx === 0 ? 'Frequently Bought Together' : 'Complete The Look',
+                    'paired_product' => $comp,
+                ];
+            });
+        }
+        $product->setRelation('bundles', $curatedBundles);
 
         // Related products in the same category or brand
         $relatedProducts = Product::query()

@@ -7,6 +7,7 @@ use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\RegisterRequest;
 use App\Models\User;
 use App\Services\Storefront\CartService;
+use App\Services\Storefront\WishlistService;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -43,9 +44,10 @@ class AuthController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        // Merge any guest cart items into customer account cart
+        // Merge any guest cart & wishlist items into customer account
         if ($guestSessionId && $user) {
             app(CartService::class)->mergeGuestCartIntoUser($guestSessionId, $user);
+            app(WishlistService::class)->mergeGuestWishlistIntoUser($guestSessionId, $user);
         }
 
         // Redirect admin/staff to admin dashboard, customers to intended or home
@@ -89,6 +91,7 @@ class AuthController extends Controller
 
         if ($guestSessionId) {
             app(CartService::class)->mergeGuestCartIntoUser($guestSessionId, $user);
+            app(WishlistService::class)->mergeGuestWishlistIntoUser($guestSessionId, $user);
         }
 
         return Inertia::location(route('home'));

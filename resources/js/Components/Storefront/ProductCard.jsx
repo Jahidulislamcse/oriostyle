@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link } from '@inertiajs/react';
+import React, { useState, useEffect } from 'react';
+import { Link, router, usePage } from '@inertiajs/react';
 
 export default function ProductCard({
     product,
@@ -7,6 +7,32 @@ export default function ProductCard({
     isNew = true,
 }) {
     if (!product) return null;
+
+    const { wishlistProductIds = [] } = usePage().props;
+    const isInitiallyWishlisted = Array.isArray(wishlistProductIds) && wishlistProductIds.includes(product.id);
+    const [isWishlisted, setIsWishlisted] = useState(isInitiallyWishlisted);
+    const [isAnimateHeart, setIsAnimateHeart] = useState(false);
+
+    useEffect(() => {
+        setIsWishlisted(Array.isArray(wishlistProductIds) && wishlistProductIds.includes(product.id));
+    }, [wishlistProductIds, product.id]);
+
+    const handleToggleWishlist = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const nextState = !isWishlisted;
+        setIsWishlisted(nextState);
+        setIsAnimateHeart(true);
+        setTimeout(() => setIsAnimateHeart(false), 500);
+
+        router.post('/wishlist/toggle', {
+            product_id: product.id,
+        }, {
+            preserveScroll: true,
+            preserveState: true,
+        });
+    };
 
     let primaryImg = product.primary_image_url
         || product.primary_image?.image_url
@@ -45,6 +71,17 @@ export default function ProductCard({
                 <span className="oubd-product-brand-tag">
                     {product.brand?.name || 'ORIO STYLE'}
                 </span>
+
+                {/* 1-Click Wishlist Heart Button */}
+                <button
+                    type="button"
+                    onClick={handleToggleWishlist}
+                    className={`oubd-card-wishlist-btn ${isWishlisted ? 'active' : ''} ${isAnimateHeart ? 'heart-bump' : ''}`}
+                    title={isWishlisted ? "Remove from Wishlist" : "Save to Wishlist"}
+                    aria-label="Wishlist"
+                >
+                    <i className={isWishlisted ? "ri-heart-fill text-danger" : "ri-heart-line text-dark"} />
+                </button>
 
                 {/* Badges */}
                 {hasDiscount && discountPercent ? (

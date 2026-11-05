@@ -197,4 +197,28 @@ class Product extends Model
 
         return $salePrice !== null && (float) $salePrice > 0 && (float) $salePrice < $basePrice;
     }
+
+    /**
+     * Relationship: Active bundles where this product is the main item.
+     */
+    public function bundles(): HasMany
+    {
+        return $this->hasMany(ProductBundle::class, 'main_product_id')->where('is_active', true)->orderBy('display_order');
+    }
+
+    /**
+     * Relationship: Wishlist entries for this product.
+     */
+    public function wishlists(): HasMany
+    {
+        return $this->hasMany(Wishlist::class, 'product_id');
+    }
+
+    /**
+     * Relationship: Back in stock notifications.
+     */
+    public function stockNotifications(): HasMany
+    {
+        return $this->hasMany(StockNotification::class, 'product_id');
+    }
 }

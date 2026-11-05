@@ -24,6 +24,7 @@ use App\Http\Controllers\Storefront\HomeController;
 use App\Http\Controllers\Storefront\OrderTrackingController;
 use App\Http\Controllers\Storefront\ProductDetailController;
 use App\Http\Controllers\Storefront\ShopController;
+use App\Http\Controllers\Storefront\WishlistController;
 use App\Http\Controllers\StorageFileController;
 
 /*
@@ -56,6 +57,13 @@ Route::delete('/cart', [CartController::class, 'clear'])->name('cart.clear');
 // Phase 15: Discount Coupon Engine
 Route::post('/cart/coupon', [CartController::class, 'applyCoupon'])->name('cart.coupon.apply');
 Route::delete('/cart/coupon', [CartController::class, 'removeCoupon'])->name('cart.coupon.remove');
+
+// Phase 21: Customer Wishlist, Smart Bundles & AI Style
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
+Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+Route::delete('/wishlist/{productId}', [WishlistController::class, 'destroy'])->whereNumber('productId')->name('wishlist.destroy');
+Route::post('/bundles/add-to-cart', [WishlistController::class, 'addBundleToCart'])->name('bundles.add-to-cart');
+Route::post('/stock-notifications', [WishlistController::class, 'notifyStock'])->name('stock-notifications.store');
 
 // Phase 16: Single-Page Checkout & Payment Method Selector
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

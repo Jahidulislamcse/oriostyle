@@ -66,6 +66,18 @@ class HandleInertiaRequests extends Middleware
                 $cart = $cartService->getOrCreateCart($request->user(), $sessionId);
                 return $cartService->formatCartPayload($cart);
             },
+            'wishlistCount' => function () use ($request) {
+                /** @var \App\Services\Storefront\WishlistService $wishlistService */
+                $wishlistService = app(\App\Services\Storefront\WishlistService::class);
+                $sessionId = $wishlistService->resolveSessionId($request);
+                return $wishlistService->getWishlistCount($request->user(), $sessionId);
+            },
+            'wishlistProductIds' => function () use ($request) {
+                /** @var \App\Services\Storefront\WishlistService $wishlistService */
+                $wishlistService = app(\App\Services\Storefront\WishlistService::class);
+                $sessionId = $wishlistService->resolveSessionId($request);
+                return $wishlistService->getWishlistProductIds($request->user(), $sessionId);
+            },
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),

@@ -1963,5 +1963,122 @@ header.oubd-header.scrolled,
     }
 }
 
+/* ==========================================================================
+   PHASE 21: CUSTOMER WISHLIST & SMART BUNDLE STYLING
+   ========================================================================== */
+
+/* 1-Click Wishlist Heart Button on Product Card */
+.oubd-card-wishlist-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 5;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.92);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    color: #111111;
+    padding: 0;
+}
+
+.oubd-card-wishlist-btn:hover {
+    background-color: #ffffff;
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+.oubd-card-wishlist-btn i {
+    font-size: 16px;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.oubd-card-wishlist-btn.active {
+    background-color: #ffffff;
+}
+
+.oubd-card-wishlist-btn.active i {
+    color: #e53e3e !important;
+}
+
+.oubd-card-wishlist-btn.heart-bump i {
+    animation: oubdHeartBump 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes oubdHeartBump {
+    0% { transform: scale(1); }
+    35% { transform: scale(1.45); }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); }
+}
+
+/* Frequently Bought Together Bundle Card Flow */
+.oubd-bundle-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: all 0.25s ease;
+}
+
+.oubd-bundle-img-wrap {
+    width: 90px;
+    height: 110px;
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #f7f8f9;
+    border: 1px solid #e2e8f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.oubd-bundle-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+@media (min-width: 768px) {
+    .oubd-bundle-img-wrap {
+        width: 110px;
+        height: 135px;
+    }
+}
+
+.oubd-bundle-plus {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+
+/* Luxury Wishlist Page Specifics */
+.oubd-wishlist-page {
+    background-color: #ffffff;
+    min-height: 60vh;
+}
+
+.oubd-wishlist-page .oubd-product-card {
+    border: 1px solid #edf2f7;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.oubd-wishlist-page .oubd-product-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    transform: translateY(-2px);
+}
+
+
 
 

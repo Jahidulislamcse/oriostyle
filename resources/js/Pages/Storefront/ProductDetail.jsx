@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import StorefrontLayout from '@/Layouts/StorefrontLayout';
 import ProductCard from '@/Components/Storefront/ProductCard';
 import VariantSelector from '@/Components/Storefront/VariantSelector';
+import FrequentlyBoughtTogether from '@/Components/Storefront/FrequentlyBoughtTogether';
 
 export default function ProductDetail({
     product,
@@ -51,6 +52,44 @@ export default function ProductDetail({
     // Quantity state
     const [quantity, setQuantity] = useState(1);
     const [addedNotice, setAddedNotice] = useState(false);
+
+    // Wishlist & Stock Alert state
+    const { wishlistProductIds = [], auth = {} } = usePage().props;
+    const isInitiallyWishlisted = Array.isArray(wishlistProductIds) && wishlistProductIds.includes(product.id);
+    const [isWishlisted, setIsWishlisted] = useState(isInitiallyWishlisted);
+    const [notifyEmail, setNotifyEmail] = useState(auth?.user?.email || '');
+    const [stockNotified, setStockNotified] = useState(false);
+    const [isSubmittingStockNotify, setIsSubmittingStockNotify] = useState(false);
+
+    useEffect(() => {
+        setIsWishlisted(Array.isArray(wishlistProductIds) && wishlistProductIds.includes(product.id));
+    }, [wishlistProductIds, product.id]);
+
+    const handleToggleWishlist = () => {
+        const next = !isWishlisted;
+        setIsWishlisted(next);
+        router.post('/wishlist/toggle', {
+            product_id: product.id,
+        }, {
+            preserveScroll: true,
+            preserveState: true,
+        });
+    };
+
+    const handleStockNotificationSubmit = (e) => {
+        e.preventDefault();
+        if (!notifyEmail) return;
+        setIsSubmittingStockNotify(true);
+        router.post('/stock-notifications', {
+            product_id: product.id,
+            product_variant_id: selectedVariant?.id || null,
+            email: notifyEmail,
+        }, {
+            preserveScroll: true,
+            onSuccess: () => setStockNotified(true),
+            onFinish: () => setIsSubmittingStockNotify(false),
+        });
+    };
 
     // Price calculation
     const baseEffective = parseFloat(product.effective_price || product.base_price || 0);
@@ -521,7 +560,7 @@ export default function ProductDetail({
                                         className={`btn flex-grow-1 py-3 px-4 text-uppercase fw-bold font-size-13 tracking-wider d-flex align-items-center justify-content-center gap-2 shadow-sm ${
                                             isOutOfStock ? 'btn-secondary disabled' : 'btn-dark'
                                         }`}
-                                        style={{ minWidth: '200px' }}
+                                        style={{ minWidth: '180px' }}
                                     >
                                         {isAddingToCart ? (
                                             <>
@@ -537,7 +576,60 @@ export default function ProductDetail({
                                             </>
                                         )}
                                     </button>
+
+                                    {/* Add to Wishlist Button */}
+                                    <button
+                                        type="button"
+                                        onClick={handleToggleWishlist}
+                                        className={`btn py-3 px-3.5 d-flex align-items-center justify-content-center shadow-sm transition ${
+                                            isWishlisted
+                                                ? 'btn-danger text-white border-danger'
+                                                : 'btn-outline-dark'
+                                        }`}
+                                        title={isWishlisted ? "Remove from Wishlist" : "Save to Wishlist"}
+                                        aria-label="Wishlist"
+                                        style={{ width: '48px', height: '48px' }}
+                                    >
+                                        <i className={isWishlisted ? "ri-heart-fill font-size-18" : "ri-heart-line font-size-18"} />
+                                    </button>
                                 </div>
+
+                                {/* Out of Stock Back-In-Stock Alert Form */}
+                                {isOutOfStock && (
+                                    <div className="mb-4 p-3 bg-light rounded-2 border shadow-xs">
+                                        <div className="d-flex align-items-center justify-content-between mb-2">
+                                            <span className="font-size-12 fw-bold text-dark text-uppercase tracking-wider d-flex align-items-center gap-1.5">
+                                                <i className="ri-notification-3-line text-warning font-size-15" />
+                                                Notify Me When Back in Stock
+                                            </span>
+                                            <span className="badge bg-danger-subtle text-danger font-size-10 px-2 py-0.5">Sold Out</span>
+                                        </div>
+                                        {stockNotified ? (
+                                            <div className="alert alert-success py-2 px-3 font-size-12 mb-0 d-flex align-items-center gap-2">
+                                                <i className="ri-checkbox-circle-fill text-success font-size-15" />
+                                                <span>You're on the priority notification list! We'll alert you the moment this item is restocked.</span>
+                                            </div>
+                                        ) : (
+                                            <form onSubmit={handleStockNotificationSubmit} className="d-flex gap-2">
+                                                <input
+                                                    type="email"
+                                                    required
+                                                    value={notifyEmail}
+                                                    onChange={(e) => setNotifyEmail(e.target.value)}
+                                                    placeholder="Enter your email address"
+                                                    className="form-control form-control-sm font-size-12 bg-white"
+                                                />
+                                                <button
+                                                    type="submit"
+                                                    disabled={isSubmittingStockNotify}
+                                                    className="btn btn-sm btn-dark text-uppercase font-size-11 fw-bold px-3 text-nowrap"
+                                                >
+                                                    {isSubmittingStockNotify ? 'Saving...' : 'Alert Me'}
+                                                </button>
+                                            </form>
+                                        )}
+                                    </div>
+                                )}
 
                                 {/* Confirmation Toast Feedback */}
                                 {addedNotice && (
@@ -595,6 +687,17 @@ export default function ProductDetail({
                             </div>
                         </div>
 
+                    </div>
+                </div>
+
+                {/* Frequently Bought Together & Styled Outfit Bundles */}
+                <div className="row mt-4">
+                    <div className="col-12">
+                        <FrequentlyBoughtTogether
+                            mainProduct={product}
+                            bundles={product.bundles || []}
+                            currencySymbol={currencySymbol}
+                        />
                     </div>
                 </div>
             </section>

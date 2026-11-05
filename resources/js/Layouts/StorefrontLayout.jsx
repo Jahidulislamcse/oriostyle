@@ -53,7 +53,7 @@ function formatWhatsAppUrl(phone, siteName = 'ORIO STYLE') {
 
 export default function StorefrontLayout({ children, navCategories: directNavCategories, headerSolid = false }) {
     const { url = '', props = {} } = usePage();
-    const { settings = {}, auth = {}, navCategories: sharedNavCategories = [], cart = {} } = props;
+    const { settings = {}, auth = {}, navCategories: sharedNavCategories = [], cart = {}, wishlistCount = 0 } = props;
     const currentPath = (url || '').split('?')[0].replace(/\/+$/, '') || '/';
     const isHome = currentPath === '/';
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -380,6 +380,16 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             </ul>
                         </div>
 
+                        <Link
+                            href="/wishlist"
+                            className="oubd-action-btn position-relative"
+                            title="Wishlist"
+                            aria-label="Wishlist"
+                        >
+                            <i className={wishlistCount > 0 ? "ri-heart-fill text-danger" : "ri-heart-line"} />
+                            {wishlistCount > 0 && <span className="oubd-cart-badge">{wishlistCount}</span>}
+                        </Link>
+
                         <button
                             type="button"
                             className="oubd-action-btn"
@@ -421,6 +431,15 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     >
                         <i className="ri-search-line" />
                     </button>
+                    <Link
+                        href="/wishlist"
+                        className="oubd-action-btn position-relative"
+                        aria-label="Wishlist"
+                        title="Wishlist"
+                    >
+                        <i className={wishlistCount > 0 ? "ri-heart-fill text-danger" : "ri-heart-line"} />
+                        {wishlistCount > 0 && <span className="oubd-cart-badge">{wishlistCount}</span>}
+                    </Link>
                     <button
                         type="button"
                         className="oubd-action-btn position-relative"
@@ -1103,6 +1122,18 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     </div>
                     <span className="oubd-bottom-nav-label">Cart</span>
                 </button>
+
+                <Link
+                    href="/wishlist"
+                    className={`oubd-bottom-nav-item ${currentPath === '/wishlist' ? 'active' : ''}`}
+                    title="Wishlist"
+                >
+                    <div className="position-relative">
+                        <i className={wishlistCount > 0 ? "ri-heart-fill text-danger" : "ri-heart-line"} />
+                        {wishlistCount > 0 && <span className="oubd-cart-badge">{wishlistCount}</span>}
+                    </div>
+                    <span className="oubd-bottom-nav-label">Wishlist</span>
+                </Link>
 
                 <Link
                     href="/track-order"

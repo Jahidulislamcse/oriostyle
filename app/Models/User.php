@@ -124,4 +124,12 @@ class User extends Authenticatable
     {
         return $this->hasOne(Cart::class, 'user_id');
     }
+
+    /**
+     * Relationship: Customer Wishlist Items
+     */
+    public function wishlists(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Wishlist::class, 'user_id');
+    }
 }
