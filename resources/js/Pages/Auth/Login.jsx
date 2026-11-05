@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { Lock, Mail, Sparkles, ArrowRight, UserCheck } from 'lucide-react';
+import { Lock, Mail, Sparkles, ArrowRight } from 'lucide-react';
 import ThemeToggle from '@/Components/Common/ThemeToggle';
 
 export default function Login({ status }) {
@@ -19,14 +19,6 @@ export default function Login({ status }) {
         e.preventDefault();
         post('/login', {
             onFinish: () => reset('password'),
-        });
-    };
-
-    const fillDemoCredentials = (email, password) => {
-        setData({
-            ...data,
-            email,
-            password,
         });
     };
 
@@ -146,38 +138,6 @@ export default function Login({ status }) {
                             </button>
                         </div>
                     </form>
-
-                    {/* Quick Demo Credentials Panel */}
-                    <div className="mt-8 pt-6 border-t border-slate-100 dark:border-[#1C3E63]/70">
-                        <div className="flex items-center justify-between mb-3">
-                            <span className="text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-[#BACDE3] flex items-center gap-1.5">
-                                <UserCheck className="w-3.5 h-3.5 text-[#D4AF37] dark:text-[#EBD495]" />
-                                1-Click Demo Login
-                            </span>
-                            <span className="text-[10px] font-semibold text-slate-400 dark:text-[#8EB0CF] bg-slate-100 dark:bg-[#071324] px-2 py-0.5 rounded-md border border-transparent dark:border-[#1C3E63]">
-                                Dev Helpers
-                            </span>
-                        </div>
-                        <div className="grid grid-cols-2 gap-2.5">
-                            <button
-                                type="button"
-                                onClick={() => fillDemoCredentials('superadmin@orio.com', 'password123')}
-                                className="px-3 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 dark:bg-[#071324] dark:hover:bg-[#142C49] border border-purple-200 dark:border-purple-800 text-purple-800 dark:text-purple-300 text-xs font-semibold transition cursor-pointer flex flex-col items-center"
-                            >
-                                <span>Super Admin</span>
-                                <span className="text-[9px] opacity-75">All Access</span>
-                            </button>
-
-                            <button
-                                type="button"
-                                onClick={() => fillDemoCredentials('admin@orio.com', 'password123')}
-                                className="px-3 py-2 rounded-xl bg-[#FDFBF5] hover:bg-[#FBF5E6] dark:bg-[#071324] dark:hover:bg-[#142C49] border border-[#F5E7C2] dark:border-[#D4AF37]/50 text-[#926F18] dark:text-[#EBD495] text-xs font-semibold transition cursor-pointer flex flex-col items-center"
-                            >
-                                <span>Store Admin</span>
-                                <span className="text-[9px] opacity-75">Staff Access</span>
-                            </button>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
