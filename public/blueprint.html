@@ -1,371 +1,1597 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORIO E-Commerce — Master Architecture & Blueprint</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>ORIO E-COMMERCE | Master Architecture & 25-Phase Roadmap</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.5.0/fonts/remixicon.css" rel="stylesheet">
     <style>
+        :root {
+            --bg-page: #060E1A;
+            --bg-surface: #0C1A2E;
+            --bg-card: #12253E;
+            --bg-card-hover: #183152;
+            --gold: #D4AF37;
+            --gold-glow: rgba(212, 175, 55, 0.25);
+            --gold-light: #F6E29F;
+            --text-heading: #FFFFFF;
+            --text-body: #CBD5E1;
+            --text-muted: #82A2C2;
+            --border: #1B3554;
+            --border-highlight: #2A4C73;
+            --emerald: #10B981;
+            --emerald-glow: rgba(16, 185, 129, 0.2);
+            --amber: #F59E0B;
+            --purple: #A855F7;
+            --blue: #38BDF8;
+            --radius-lg: 18px;
+            --radius-md: 12px;
+            --radius-sm: 8px;
+            --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        [data-theme="light"] {
+            --bg-page: #F8FAFC;
+            --bg-surface: #FFFFFF;
+            --bg-card: #F1F5F9;
+            --bg-card-hover: #E2E8F0;
+            --gold: #B8860B;
+            --gold-glow: rgba(184, 134, 11, 0.15);
+            --gold-light: #8B6508;
+            --text-heading: #0F172A;
+            --text-body: #334155;
+            --text-muted: #64748B;
+            --border: #E2E8F0;
+            --border-highlight: #CBD5E1;
+            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-body);
+            line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+            -webkit-font-smoothing: antialiased;
         }
-        code, pre, .font-mono {
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 28px;
+        }
+
+        /* Top Sticky Bar */
+        .topbar {
+            background-color: rgba(12, 26, 46, 0.95);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 14px 0;
+        }
+
+        [data-theme="light"] .topbar {
+            background-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .topbar-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .brand-cluster {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-symbol {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #D4AF37, #996515);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #060E1A;
+            font-size: 20px;
+            font-weight: 900;
+            box-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        .brand-meta h1 {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .brand-meta p {
+            font-size: 11px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 700;
+        }
+
+        .topbar-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link-btn {
+            background: var(--bg-card);
+            color: var(--text-body);
+            border: 1px solid var(--border);
+            padding: 7px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-link-btn:hover {
+            background: var(--gold);
+            color: #060E1A;
+            border-color: var(--gold);
+        }
+
+        .nav-link-btn.highlight {
+            background: rgba(212, 175, 55, 0.18);
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            border: 1px solid transparent;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-gold {
+            background: var(--gold);
+            color: #060E1A;
+            box-shadow: 0 4px 14px var(--gold-glow);
+        }
+
+        .btn-gold:hover {
+            background: var(--gold-light);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-body);
+            border-color: var(--border);
+        }
+
+        .btn-outline:hover {
+            background: var(--bg-card);
+            color: var(--text-heading);
+        }
+
+        /* Hero Banner */
+        .hero-banner {
+            padding: 48px 0 32px 0;
+            background: radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.08) 0%, transparent 65%);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(212, 175, 55, 0.12);
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 16px;
+        }
+
+        .hero-headline {
+            font-size: 36px;
+            font-weight: 900;
+            line-height: 1.2;
+            color: var(--text-heading);
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
+        }
+
+        .hero-headline span {
+            background: linear-gradient(135deg, var(--gold) 0%, #FFF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtext {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.7;
+            margin-bottom: 22px;
+        }
+
+        .vitals-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .vitals-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+        }
+
+        .vital-item {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 14px 18px;
+        }
+
+        .vital-num {
             font-family: 'JetBrains Mono', monospace;
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin-bottom: 2px;
         }
-        .gold-gradient {
-            background: linear-gradient(135deg, #D4AF37 0%, #AA7C11 100%);
+
+        .vital-desc {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .gold-border {
-            border-color: rgba(212, 175, 55, 0.25);
+
+        /* Badges */
+        .status-badge {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            padding: 4px 10px;
+            border-radius: 9999px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
         }
-        .navy-card {
-            background: #0E2038;
-            border: 1px solid rgba(28, 62, 99, 0.7);
+
+        .status-badge.completed {
+            background: var(--emerald-glow);
+            color: var(--emerald);
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
-        .navy-dark {
-            background: #071324;
+
+        .status-badge.progress {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--amber);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+
+        .status-badge.planned {
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .tag-category {
+            background: var(--bg-card);
+            color: var(--text-muted);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        /* Section Headlines */
+        .section-headline {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            margin: 48px 0 24px 0;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .section-headline h2 {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-heading);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-headline h2 i {
+            color: var(--gold);
+        }
+
+        /* Table Styling */
+        .table-wrap {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            overflow-x: auto;
+            box-shadow: var(--shadow);
+            margin-bottom: 40px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 13.5px;
+        }
+
+        th {
+            background: var(--bg-card);
+            padding: 16px 20px;
+            color: var(--text-muted);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 700;
+            border-bottom: 1px solid var(--border);
+        }
+
+        td {
+            padding: 16px 20px;
+            border-bottom: 1px solid rgba(27, 53, 84, 0.6);
+            vertical-align: middle;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: rgba(20, 44, 73, 0.5);
+        }
+
+        tr.highlight-advanced td {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        tr.highlight-advanced:hover td {
+            background: rgba(212, 175, 55, 0.12);
+        }
+
+        /* Showcase Cards Grid for Phases 21-25 */
+        .advanced-showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .showcase-card {
+            background: var(--bg-surface);
+            border: 2px solid var(--border-highlight);
+            border-radius: var(--radius-lg);
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .showcase-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+        }
+
+        .showcase-card.admin-phase {
+            border-top: 5px solid var(--gold);
+        }
+
+        .showcase-card.customer-phase {
+            border-top: 5px solid var(--purple);
+        }
+
+        .showcase-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .showcase-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 800;
+            padding: 4px 12px;
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--gold);
+            border: 1px solid var(--border);
+        }
+
+        .showcase-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin-bottom: 10px;
+            line-height: 1.35;
+        }
+
+        .showcase-desc {
+            font-size: 14px;
+            color: var(--text-body);
+            line-height: 1.6;
+            margin-bottom: 18px;
+            flex-grow: 1;
+        }
+
+        .showcase-bullets {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+            border-top: 1px solid var(--border);
+            padding-top: 16px;
+        }
+
+        .showcase-bullets li {
+            font-size: 13px;
+            color: #E2E8F0;
+            padding: 5px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .showcase-bullets li i {
+            color: var(--gold);
+            font-size: 15px;
+            margin-top: 2px;
+        }
+
+        .showcase-target {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 10px 14px;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow-x: auto;
+        }
+
+        /* Filter Controls */
+        .controls-panel {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 20px 24px;
+            margin: 36px 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            box-shadow: var(--shadow);
+        }
+
+        .filter-buttons {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            background: var(--bg-card);
+            color: var(--text-body);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .filter-btn:hover {
+            background: var(--bg-card-hover);
+            color: var(--text-heading);
+        }
+
+        .filter-btn.active {
+            background: var(--gold);
+            color: #060E1A;
+            border-color: var(--gold);
+            font-weight: 700;
+        }
+
+        .search-box {
+            position: relative;
+            min-width: 280px;
+        }
+
+        .search-box i {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            font-size: 16px;
+        }
+
+        .search-input {
+            width: 100%;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 9999px;
+            padding: 9px 16px 9px 40px;
+            color: var(--text-heading);
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: var(--gold);
+        }
+
+        /* 25 Phase Cards Grid */
+        .phases-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        @media (max-width: 600px) {
+            .phases-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .phase-card {
+            background: var(--bg-surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg);
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s, border-color 0.2s;
+        }
+
+        .phase-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--gold);
+        }
+
+        .phase-card.card-advanced {
+            border: 2px solid var(--gold);
+            background: linear-gradient(180deg, var(--bg-surface) 0%, rgba(212, 175, 55, 0.04) 100%);
+        }
+
+        .phase-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .phase-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 12px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: var(--bg-card);
+            color: var(--gold);
+            border: 1px solid var(--border);
+        }
+
+        .phase-title {
+            font-size: 16px;
+            font-weight: 800;
+            color: var(--text-heading);
+            margin-bottom: 8px;
+            line-height: 1.35;
+        }
+
+        .phase-category {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .phase-desc {
+            font-size: 13.5px;
+            color: var(--text-body);
+            line-height: 1.6;
+            margin-bottom: 14px;
+            flex-grow: 1;
+        }
+
+        .phase-files {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 8px 12px;
+            color: var(--text-muted);
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+
+        /* Modal Dialog */
+        .prompt-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .prompt-modal.open {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-surface);
+            border: 1px solid var(--gold);
+            border-radius: var(--radius-lg);
+            max-width: 680px;
+            width: 100%;
+            padding: 32px;
+            position: relative;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 36px 0;
+            margin-top: 60px;
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        footer strong {
+            color: var(--text-heading);
         }
     </style>
 </head>
-<body class="bg-[#071324] text-slate-200 antialiased selection:bg-[#D4AF37] selection:text-[#071324]">
+<body>
 
-    <!-- Top Glow Header -->
-    <header class="border-b border-[#1C3E63]/70 bg-[#0E2038]/80 backdrop-blur sticky top-0 z-50">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl gold-gradient flex items-center justify-center font-black text-slate-950 text-xl shadow-lg shadow-[#D4AF37]/20">
-                    O
+    <!-- Sticky Navigation Topbar -->
+    <header class="topbar">
+        <div class="container topbar-inner">
+            <div class="brand-cluster">
+                <div class="brand-symbol">
+                    <i class="ri-vip-diamond-fill"></i>
                 </div>
-                <div>
-                    <h1 class="text-lg font-black tracking-wider text-white uppercase flex items-center gap-2">
-                        ORIO E-Commerce
-                        <span class="text-[10px] px-2 py-0.5 rounded-full bg-[#D4AF37]/20 text-[#EBD495] border border-[#D4AF37]/40 font-mono">
-                            v2.0 Architecture
-                        </span>
-                    </h1>
-                    <p class="text-xs text-slate-400">Master Architecture, Non-Negotiables & 20-Phase Roadmap</p>
+                <div class="brand-meta">
+                    <h1>ORIO STYLE <span>• MASTER BLUEPRINT</span></h1>
+                    <p>Single-Vendor Monolith Architecture & 25-Phase Roadmap</p>
                 </div>
             </div>
 
-            <div class="flex items-center gap-4">
-                <div class="text-right hidden sm:block">
-                    <div class="text-xs text-slate-400">Implementation Progress</div>
-                    <div class="text-sm font-bold text-[#EBD495] font-mono">85% Complete (17/20 Phases)</div>
-                </div>
-                <div class="w-24 bg-[#1C3E63] rounded-full h-2.5 overflow-hidden border border-[#1C3E63]">
-                    <div class="gold-gradient h-2.5 rounded-full" style="width: 85%"></div>
-                </div>
+            <!-- Quick Jump Anchor Links -->
+            <nav class="topbar-nav">
+                <a href="#master-table" class="nav-link-btn">
+                    <i class="ri-table-line"></i> Master Table (1-25)
+                </a>
+                <a href="#advanced-section" class="nav-link-btn highlight">
+                    <i class="ri-sparkling-fill"></i> New Phases 21-25
+                </a>
+                <a href="#all-cards" class="nav-link-btn">
+                    <i class="ri-grid-fill"></i> Detail Cards
+                </a>
+            </nav>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-outline" onclick="toggleTheme()" id="themeBtn">
+                    <i class="ri-moon-line"></i> <span>Dark</span>
+                </button>
+                <button class="btn btn-outline" onclick="openPromptModal()">
+                    <i class="ri-terminal-box-line"></i> <span>Prompt</span>
+                </button>
+                <button class="btn btn-gold" onclick="window.print()">
+                    <i class="ri-printer-line"></i> <span>Print</span>
+                </button>
             </div>
         </div>
     </header>
 
-    <main class="max-w-7xl mx-auto px-6 py-10 space-y-12">
+    <main class="container">
 
-        <!-- Hero Stats Row -->
-        <section class="grid grid-cols-1 md:grid-cols-4 gap-6">
-            <div class="navy-card rounded-2xl p-6 relative overflow-hidden">
-                <div class="text-xs font-bold uppercase tracking-wider text-[#D4AF37]">Lead Architect</div>
-                <div class="text-xl font-bold text-white mt-1">Jahidul Islam</div>
-                <div class="text-xs text-slate-400 font-mono mt-1">jahidcse181@gmail.com</div>
-                <div class="absolute -right-2 -bottom-2 opacity-5 text-white">
-                    <i data-lucide="shield" class="w-28 h-28"></i>
-                </div>
-            </div>
-
-            <div class="navy-card rounded-2xl p-6 relative overflow-hidden">
-                <div class="text-xs font-bold uppercase tracking-wider text-emerald-400">Automated Tests</div>
-                <div class="text-2xl font-black text-white mt-1 flex items-baseline gap-2">
-                    173 / 173 <span class="text-xs font-medium text-emerald-400">100% Green</span>
-                </div>
-                <div class="text-xs text-slate-400 font-mono mt-1">1,021 assertions passed</div>
-            </div>
-
-            <div class="navy-card rounded-2xl p-6 relative overflow-hidden">
-                <div class="text-xs font-bold uppercase tracking-wider text-sky-400">Tech Stack</div>
-                <div class="text-base font-bold text-white mt-1">Laravel 12 + React 18</div>
-                <div class="text-xs text-slate-400 font-mono mt-1">Inertia.js v2 SPA + Tailwind 3.4</div>
-            </div>
-
-            <div class="navy-card rounded-2xl p-6 relative overflow-hidden">
-                <div class="text-xs font-bold uppercase tracking-wider text-purple-400">Next Sprint Phase</div>
-                <div class="text-base font-bold text-white mt-1">Phase 18: Invoicing</div>
-                <div class="text-xs text-slate-400 font-mono mt-1">A4 Tax PDF & 80mm POS Thermal</div>
-            </div>
-        </section>
-
-        <!-- 6 Non-Negotiables Grid -->
-        <section class="space-y-4">
-            <div class="flex items-center justify-between">
+        <!-- Hero Header -->
+        <section class="hero-banner">
+            <div class="hero-grid">
                 <div>
-                    <h2 class="text-xl font-black text-white uppercase tracking-wider flex items-center gap-2">
-                        <i data-lucide="scale" class="w-5 h-5 text-[#D4AF37]"></i>
-                        The 6 Non-Negotiable Architectural Rules
+                    <div class="hero-tag">
+                        <i class="ri-shield-check-fill"></i> SPRINT CERTIFIED • PRODUCTION ARCHITECTURE
+                    </div>
+                    <h2 class="hero-headline">
+                        Complete Architecture & <span>25 Engineering Phases</span>
                     </h2>
-                    <p class="text-xs text-slate-400">Strict tenets enforced on every code modification across all conversations</p>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Rule 1 -->
-                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="w-8 h-8 rounded-lg bg-rose-500/10 text-rose-400 border border-rose-500/20 flex items-center justify-center font-bold font-mono text-sm">01</span>
-                        <h3 class="font-bold text-white text-sm">Anti-N+1 Query Policy</h3>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        Strict lazy loading forbidden via <code class="text-rose-300">Model::preventLazyLoading()</code>. Every relationship retrieval must explicitly use <code class="text-[#EBD495]">with(['relation'])</code>.
+                    <p class="hero-subtext">
+                        A rigorous Laravel 12 + React 18 / Inertia.js monolithic platform engineered for enterprise speed, anti-N+1 query guards, real-time COGS profit tracking, and zero hardcoded content.
                     </p>
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <span class="status-badge completed"><i class="ri-checkbox-circle-fill"></i> 19 Phases 100% Live</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Dual Invoicing Live</span>
+                        <a href="#advanced-section" class="status-badge planned" style="text-decoration: none;">
+                            <i class="ri-sparkling-fill"></i> Phases 21 - 25 Expanded
+                        </a>
+                    </div>
                 </div>
 
-                <!-- Rule 2 -->
-                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="w-8 h-8 rounded-lg bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center font-bold font-mono text-sm">02</span>
-                        <h3 class="font-bold text-white text-sm">Action / Service Layer (No Fat Controllers)</h3>
+                <!-- Live Vitals -->
+                <div class="vitals-card">
+                    <div class="vitals-title">
+                        <i class="ri-pulse-line" style="color: var(--gold);"></i> System Vitals Ledger
                     </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        Controllers only validate inputs, call actions, and return responses. Domain mutations live exclusively in <code class="text-blue-300">app/Actions/</code> and <code class="text-blue-300">app/Services/</code>.
-                    </p>
-                </div>
-
-                <!-- Rule 3 -->
-                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="w-8 h-8 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center font-bold font-mono text-sm">03</span>
-                        <h3 class="font-bold text-white text-sm">Atomic DB Transactions</h3>
+                    <div class="vitals-grid">
+                        <div class="vital-item">
+                            <div class="vital-num" style="color: var(--emerald);">185 / 185</div>
+                            <div class="vital-desc">Tests Passing (100%)</div>
+                        </div>
+                        <div class="vital-item">
+                            <div class="vital-num">1,132</div>
+                            <div class="vital-desc">Assertions Verified</div>
+                        </div>
+                        <div class="vital-item">
+                            <div class="vital-num" style="color: var(--gold);">25</div>
+                            <div class="vital-desc">Total Roadmap Phases</div>
+                        </div>
+                        <div class="vital-item">
+                            <div class="vital-num">0 ms</div>
+                            <div class="vital-desc">N+1 Lazy Violations</div>
+                        </div>
                     </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        Operations touching multiple tables (Stock-in, Checkout, Cancellations) are wrapped in <code class="text-amber-300">DB::transaction(fn(), 5)</code> with dead-lock retry protection.
-                    </p>
-                </div>
-
-                <!-- Rule 4 -->
-                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 flex items-center justify-center font-bold font-mono text-sm">04</span>
-                        <h3 class="font-bold text-white text-sm">Real COGS Profit Tracking</h3>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        Order items snapshot immutable purchase unit cost price at purchase time, guaranteeing real mathematical Gross Profit calculation: <span class="text-emerald-300 font-mono text-[11px] block mt-1">(Subtotal - Discount) - Σ(Cost × Qty)</span>
-                    </p>
-                </div>
-
-                <!-- Rule 5 -->
-                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="w-8 h-8 rounded-lg bg-[#D4AF37]/10 text-[#EBD495] border border-[#D4AF37]/30 flex items-center justify-center font-bold font-mono text-sm">05</span>
-                        <h3 class="font-bold text-white text-sm">Zero Hardcoding (100% Dynamic)</h3>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        No hardcoded logos, phone numbers, emails, currency symbols, or sliders. Every asset is managed through Admin Settings CMS, cached in Redis, and shared globally.
-                    </p>
-                </div>
-
-                <!-- Rule 6 -->
-                <div class="navy-card rounded-2xl p-5 hover:border-[#D4AF37]/50 transition">
-                    <div class="flex items-center gap-3 mb-3">
-                        <span class="w-8 h-8 rounded-lg bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 flex items-center justify-center font-bold font-mono text-sm">06</span>
-                        <h3 class="font-bold text-white text-sm">Standardized Directory Layout</h3>
-                    </div>
-                    <p class="text-xs text-slate-300 leading-relaxed">
-                        Strict separation into <code class="text-indigo-300">Actions/</code>, <code class="text-indigo-300">Services/</code>, <code class="text-indigo-300">Models/</code>, and React atomic components under <code class="text-indigo-300">resources/js/Pages/</code> and <code class="text-indigo-300">Layouts/</code>.
-                    </p>
                 </div>
             </div>
         </section>
 
-        <!-- 20-Phase Roadmap Table -->
-        <section class="space-y-4">
-            <div class="flex items-center justify-between">
-                <div>
-                    <h2 class="text-xl font-black text-white uppercase tracking-wider flex items-center gap-2">
-                        <i data-lucide="map" class="w-5 h-5 text-[#D4AF37]"></i>
-                        The 20-Phase Lifecycle Execution Directory
-                    </h2>
-                    <p class="text-xs text-slate-400">Current implementation status across all 4 production sprints</p>
-                </div>
+        <!-- ========================================== -->
+        <!-- 🌟 DEDICATED SHOWCASE: PHASES 21 - 25 -->
+        <!-- ========================================== -->
+        <section id="advanced-section" style="padding-top: 20px;">
+            <div class="section-headline">
+                <h2>
+                    <i class="ri-sparkling-2-fill"></i>
+                    Spotlight: Advanced Enterprise Expansion (Phases 21 - 25)
+                </h2>
+                <span class="status-badge planned">Newly Formulated Specs</span>
             </div>
 
-            <div class="navy-card rounded-2xl overflow-hidden border border-[#1C3E63]/70">
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs">
-                        <thead>
-                            <tr class="bg-[#071324] border-b border-[#1C3E63] text-slate-400 font-bold uppercase tracking-wider">
-                                <th class="py-3 px-4 w-16">Phase</th>
-                                <th class="py-3 px-4">Title & Scope Overview</th>
-                                <th class="py-3 px-4 w-28">Sprint</th>
-                                <th class="py-3 px-4 w-32">Status</th>
-                                <th class="py-3 px-4 w-24 text-right">Tests</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-[#1C3E63]/40">
-                            <!-- Sprint 1 -->
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P01</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Project Setup & Anti-N+1 Rules</span> — Laravel 12, Inertia React, Tailwind 3.4, Strict Lazy Loading Prevention</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P02</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Role-Based Access Control (RBAC)</span> — Multi-role enum, EnsureAdminAccess middleware, authentication flows</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P03</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Admin Dashboard Shell & UI Kit</span> — Collapsible sidebar, mobile drawer, DataTable, Modal, Button component system</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P04</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Category Taxonomy & Tree</span> — Self-referencing recursive parent-child categories with slug auto-generation</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P05</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Brand Catalog & WebP Media Hub</span> — MediaUploadService, automated WebP compression, dimension validation</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 1</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
+            <p style="font-size: 14.5px; color: var(--text-muted); margin-bottom: 24px;">
+                Engineered specifically to ease administrative operations, prevent cash-on-delivery losses, automate courier logistics, and enrich the customer shopping experience to drive conversions.
+            </p>
 
-                            <!-- Sprint 2 -->
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P06</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Core Simple Products Catalog</span> — Base pricing, cost price, stock alerts, rich specifications</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P07</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Product Attribute Matrix & Variants</span> — Cartesian permutation generator (Color × Size), dynamic SKU generation</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P08</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Supplier Directory & Accounts Payable</span> — Supplier profiles, transaction history, running ledger balance</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P09</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Stock-In Purchase Orders</span> — ReceivePurchaseOrderAction, atomic inventory hydration, weighted average COGS recalculation</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P10</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Inventory Control & Damage Logs</span> — InventoryMovement audit trail, cycle count adjustments, damage write-offs</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 2</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
+            <div class="advanced-showcase-grid">
+                <!-- Phase 21 -->
+                <div class="showcase-card customer-phase">
+                    <div class="showcase-top">
+                        <span class="showcase-badge">PHASE 21</span>
+                        <span class="status-badge planned" style="color: var(--purple); border-color: rgba(168, 85, 247, 0.4); background: rgba(168, 85, 247, 0.1);">
+                            <i class="ri-heart-3-line"></i> Customer Experience
+                        </span>
+                    </div>
+                    <h3 class="showcase-title">Customer Wishlist, Smart Bundles & AI Style</h3>
+                    <p class="showcase-desc">
+                        Boosts customer retention and Average Order Value (AOV) by providing curated outfit lookbooks, 1-click bundle checkouts, and back-in-stock alerts.
+                    </p>
+                    <ul class="showcase-bullets">
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Persistent Wishlist:</strong> 1-click heart icon; saved in LocalStorage for guests, auto-synced to DB on login.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Frequently Bought Together:</strong> Head-to-toe luxury lookbooks (e.g., Panjabi + Pajama + Shawl) with 5% discount.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Back-in-Stock Alerts:</strong> "Notify Me When Available" button on sold-out sizes triggers auto SMS/email.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Shareable Wishlist URL:</strong> Enables shoppers to share their wishlist with friends and family.</li>
+                    </ul>
+                    <div class="showcase-target">app/Http/Controllers/Storefront/WishlistController.php</div>
+                </div>
 
-                            <!-- Sprint 3 -->
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P11</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Storefront Layout & Bento Homepage</span> — Dynamic hero banner carousel, featured deals, announcement tickers</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P12</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Catalog Discovery & Multi-Facet Filters</span> — Category hierarchy, price range sliders, debounced live search dropdown</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P13</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Product Detail & Dynamic Variant Selector</span> — Live price and stock updates on swatch selection, zoom gallery modal</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P14</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Cart Engine & Slide-out Mini-Cart</span> — CartService, guest cookie/session persistence, auto user cart merge on login</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P15</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Discount Coupon Engine & Promo Rules</span> — CouponValidationService, minimum spend checks, expiry validation, per-user limits</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 3</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
+                <!-- Phase 22 -->
+                <div class="showcase-card customer-phase">
+                    <div class="showcase-top">
+                        <span class="showcase-badge">PHASE 22</span>
+                        <span class="status-badge planned" style="color: var(--purple); border-color: rgba(168, 85, 247, 0.4); background: rgba(168, 85, 247, 0.1);">
+                            <i class="ri-star-smile-line"></i> Conversion Driver
+                        </span>
+                    </div>
+                    <h3 class="showcase-title">Verified Reviews, Photo Feedback & WhatsApp Bridge</h3>
+                    <p class="showcase-desc">
+                        Authentic customer photos and verified buyer feedback provide the highest-converting social proof in lifestyle fashion, paired with an instant WhatsApp customer bridge.
+                    </p>
+                    <ul class="showcase-bullets">
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Verified Buyer Badge:</strong> Reviews restricted strictly to customers who completed verified orders.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Granular Fit & Fabric Ratings:</strong> Clear indicators for *True to Size*, *Fabric Quality*, and *Value*.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Customer Outfit Photo Gallery:</strong> Real shopper styling photos auto-converted to WebP thumbnails.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Floating WhatsApp Concierge:</strong> 1-click WhatsApp chat pre-filled with product title, size, and direct URL.</li>
+                    </ul>
+                    <div class="showcase-target">app/Http/Controllers/Storefront/ReviewController.php</div>
+                </div>
 
-                            <!-- Sprint 4 -->
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P16</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Single-Page Checkout & Payment Selector</span> — Inside/outside Dhaka delivery logic, free shipping threshold, COD / bKash / Nagad options</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition">
-                                <td class="py-3 px-4 font-mono font-bold text-[#EBD495]">P17</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Order State Machine & Auto-Restock</span> — UpdateOrderStatusAction, audit trail timeline (order_status_histories), auto restock on cancellation</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">✅ Completed</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-emerald-400">Pass</td>
-                            </tr>
-                            <tr class="bg-[#D4AF37]/5 hover:bg-[#D4AF37]/10 transition border-l-2 border-l-[#D4AF37]">
-                                <td class="py-3 px-4 font-mono font-bold text-[#D4AF37]">P18</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Dual Invoicing Engine</span> — High-fidelity A4 Tax Invoice PDF download + 80mm POS Thermal Receipt print layout</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-[#D4AF37]/20 text-[#EBD495] border border-[#D4AF37]/40">⏳ Next Up</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-slate-400">—</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition opacity-70">
-                                <td class="py-3 px-4 font-mono font-bold text-slate-400">P19</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Customer Account Portal & Order Tracker</span> — Customer dashboard, visual order tracking progress bar, saved delivery addresses</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20">📅 Queued</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-slate-400">—</td>
-                            </tr>
-                            <tr class="hover:bg-[#071324]/40 transition opacity-70">
-                                <td class="py-3 px-4 font-mono font-bold text-slate-400">P20</td>
-                                <td class="py-3 px-4"><span class="font-bold text-white">Settings CMS, BI Analytics & Production QA</span> — Full dynamic site CMS, gross profit BI analytics, audit log observer, realistic demo seeders</td>
-                                <td class="py-3 px-4 text-slate-400">Sprint 4</td>
-                                <td class="py-3 px-4"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-500/10 text-slate-400 border border-slate-500/20">📅 Queued</span></td>
-                                <td class="py-3 px-4 text-right font-mono text-slate-400">—</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <!-- Phase 23 -->
+                <div class="showcase-card admin-phase">
+                    <div class="showcase-top">
+                        <span class="showcase-badge">PHASE 23</span>
+                        <span class="status-badge planned"><i class="ri-truck-line"></i> Admin Logistics</span>
+                    </div>
+                    <h3 class="showcase-title">Automated Courier Logistics Bridge & Bulk Dispatch</h3>
+                    <p class="showcase-desc">
+                        Connects directly with Steadfast, Pathao, and RedX APIs. Replaces hours of manual order copying with 1-click bulk booking and automated webhook reconciliation.
+                    </p>
+                    <ul class="showcase-bullets">
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>1-Click Bulk Booking:</strong> Select 50 orders on the Orders table and dispatch simultaneously.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Automated AWB Generation:</strong> Instant courier consignment IDs without external portal visits.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Bulk Thermal Sticker Labels:</strong> Generates 4-per-page or thermal barcode shipping slips.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Inbound Webhook Sync:</strong> Real-time delivery webhook auto-marks orders as Delivered and clears COD cash.</li>
+                    </ul>
+                    <div class="showcase-target">app/Services/Logistics/CourierManager.php</div>
+                </div>
+
+                <!-- Phase 24 -->
+                <div class="showcase-card admin-phase">
+                    <div class="showcase-top">
+                        <span class="showcase-badge">PHASE 24</span>
+                        <span class="status-badge planned"><i class="ri-barcode-box-line"></i> Warehouse & POS</span>
+                    </div>
+                    <h3 class="showcase-title">Warehouse Barcode Scanner & Quick POS Counter Mode</h3>
+                    <p class="showcase-desc">
+                        Eliminates packing mistakes (wrong size/color sent) and provides a fast physical retail counter checkout linked to the same real-time inventory ledger.
+                    </p>
+                    <ul class="showcase-bullets">
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Scan-to-Pack Verification:</strong> Staff scans invoice barcode, then beeps each garment. Turns green only when 100% verified.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Fast POS Touch Register:</strong> Instant barcode gun beep checkout with split-tender payment (Cash + Card + bKash).</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Silent 80mm Thermal Print:</strong> Direct receipt output without print dialog interruptions.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Code-128 Barcode Sticker Generator:</strong> Generates printable adhesive sticker sheets for apparel tags.</li>
+                    </ul>
+                    <div class="showcase-target">app/Http/Controllers/Admin/PosController.php</div>
+                </div>
+
+                <!-- Phase 25 -->
+                <div class="showcase-card admin-phase">
+                    <div class="showcase-top">
+                        <span class="showcase-badge">PHASE 25</span>
+                        <span class="status-badge planned"><i class="ri-shield-keyhole-line"></i> Loss Prevention</span>
+                    </div>
+                    <h3 class="showcase-title">COD Fraud Detection & Smart Risk Scoring Guard</h3>
+                    <p class="showcase-desc">
+                        Protects the business against prank orders, competitor sabotage, and habitual returners causing expensive courier return fees. Evaluates risk in real time upon checkout.
+                    </p>
+                    <ul class="showcase-bullets">
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Customer Delivery Trust Score:</strong> Computes historical success rate across past orders.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Advance Delivery Charge Gate:</strong> Low-trust customers prompted to pay shipping fee (৳70/৳130) before confirmation.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>Automated Bot & Duplicate Detector:</strong> Flags repeat orders placed within 15 mins or throwaway emails.</li>
+                        <li><i class="ri-checkbox-circle-fill"></i> <strong>1-Click Blacklist Directory:</strong> Ban fraudulent phone numbers or IP addresses directly from Orders view.</li>
+                    </ul>
+                    <div class="showcase-target">app/Services/Fraud/OrderRiskEvaluationService.php</div>
                 </div>
             </div>
         </section>
 
-        <!-- Footer -->
-        <footer class="pt-6 border-t border-[#1C3E63]/70 text-center text-xs text-slate-500">
-            <p>ORIO E-Commerce Blueprint Specification &bull; Author & Lead Architect: Jahidul Islam (<a href="mailto:jahidcse181@gmail.com" class="text-[#D4AF37] hover:underline">jahidcse181@gmail.com</a>)</p>
-            <p class="mt-1">Generated dynamically from <code class="text-slate-400">PROJECT_MASTER_BLUEPRINT.md</code></p>
-        </footer>
+        <!-- ========================================== -->
+        <!-- 📋 MASTER 25-PHASE COMPLETE TABLE -->
+        <!-- ========================================== -->
+        <section id="master-table">
+            <div class="section-headline">
+                <h2>
+                    <i class="ri-table-line"></i>
+                    Complete 25-Phase Architecture Master Table
+                </h2>
+                <span class="status-badge completed">100% Comprehensive</span>
+            </div>
+
+            <div class="table-wrap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 75px;">Phase</th>
+                            <th>Feature Scope & Domain Logic</th>
+                            <th>Track / Domain</th>
+                            <th>Status</th>
+                            <th>Quality Assurance</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>01</strong></td>
+                            <td>Project Architecture, Inertia Monolith Bridge & Strict Anti-N+1 Rules</td>
+                            <td><span class="tag-category">Core</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Anti-N+1 active)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>02</strong></td>
+                            <td>Role-Based Access Control (RBAC) & Secure Session Authentication</td>
+                            <td><span class="tag-category">Auth</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Guards Verified)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>03</strong></td>
+                            <td>Admin Dashboard Shell, Sidebar Persistence & UI Component Kit</td>
+                            <td><span class="tag-category">Admin UI</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Responsive)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>04</strong></td>
+                            <td>Self-Referencing Category Tree Taxonomy & Slug Engine</td>
+                            <td><span class="tag-category">Catalog</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Recursive Tree)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>05</strong></td>
+                            <td>Brand Directory & Automated WebP Media Transformation Hub</td>
+                            <td><span class="tag-category">Media</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (WebP &lt;150KB)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>06</strong></td>
+                            <td>Core Product Catalog, Single Products & Real Cost-Price Engine</td>
+                            <td><span class="tag-category">Catalog</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (COGS Snapshotted)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>07</strong></td>
+                            <td>Product Attribute Matrix Builder (Cartesian SKU Permutations)</td>
+                            <td><span class="tag-category">Catalog</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Variants Synced)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>08</strong></td>
+                            <td>Supplier Directory & Accounts Payable Running Ledger</td>
+                            <td><span class="tag-category">Supply Chain</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Ledger Verified)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>09</strong></td>
+                            <td>Stock-In Purchase Orders & Weighted Average COGS Hydration</td>
+                            <td><span class="tag-category">Supply Chain</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Stock Hydrated)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>10</strong></td>
+                            <td>Inventory Movement Audit Trail, Damage Write-Offs & Chime Alerts</td>
+                            <td><span class="tag-category">Inventory</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Immutable Logs)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>11</strong></td>
+                            <td>Storefront Master Layout, Dynamic Sliders & Bento Mosaic Homepage</td>
+                            <td><span class="tag-category">Storefront</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (100% Dynamic CMS)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>12</strong></td>
+                            <td>Catalog Discovery, Debounced Live Search & Multi-Facet Filters</td>
+                            <td><span class="tag-category">Storefront</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (300ms Debounce)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>13</strong></td>
+                            <td>Product Detail Experience with Dynamic Swatches & Zoom Gallery</td>
+                            <td><span class="tag-category">Storefront</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Instant Switch)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>14</strong></td>
+                            <td>High-Performance Cart Engine & Slide-Over Mini-Cart Drawer</td>
+                            <td><span class="tag-category">Commerce</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Session & DB)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>15</strong></td>
+                            <td>Discount Coupon Engine with Threshold Limits & Max Caps</td>
+                            <td><span class="tag-category">Marketing</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Math Validated)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>16</strong></td>
+                            <td>Single-Page Frictionless Checkout with Payment Selector</td>
+                            <td><span class="tag-category">Checkout</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Rate Limited)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>17</strong></td>
+                            <td>Order Lifecycle State Machine, Restock Action & Audit Timeline</td>
+                            <td><span class="tag-category">Fulfillment</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Atomic Tx)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>18</strong></td>
+                            <td>Dual Invoicing Engine (A4 Tax PDF & 80mm POS Thermal Receipt)</td>
+                            <td><span class="tag-category">Operations</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (Dual Format Verified)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>19</strong></td>
+                            <td>Customer Real-Time Order Tracing & 5-Stage Stepper Tracker</td>
+                            <td><span class="tag-category">Customer</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Completed</span></td>
+                            <td>Pass (8 Feature Tests)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>20</strong></td>
+                            <td>Settings CMS, Real-Time Audio Chime & BI Profit Analytics</td>
+                            <td><span class="tag-category">BI & CMS</span></td>
+                            <td><span class="status-badge completed"><i class="ri-check-line"></i> Active Sync</span></td>
+                            <td>Pass (Zero Hardcode)</td>
+                        </tr>
+
+                        <!-- NEW ADVANCED PHASES 21 - 25 -->
+                        <tr class="highlight-advanced">
+                            <td><strong style="color: var(--purple);">21</strong></td>
+                            <td><strong>Customer Wishlist, Smart Lookbook Bundles & AI Suggestions</strong></td>
+                            <td><span class="tag-category" style="color: var(--purple); border: 1px solid var(--purple);">Customer AOV</span></td>
+                            <td><span class="status-badge planned" style="color: var(--purple); border-color: rgba(168, 85, 247, 0.4);"><i class="ri-sparkling-fill"></i> Planned</span></td>
+                            <td>Spec Ready (Bundles/Alerts)</td>
+                        </tr>
+                        <tr class="highlight-advanced">
+                            <td><strong style="color: var(--purple);">22</strong></td>
+                            <td><strong>Verified Reviews, Photo Feedback & Floating WhatsApp Bridge</strong></td>
+                            <td><span class="tag-category" style="color: var(--purple); border: 1px solid var(--purple);">Social Proof</span></td>
+                            <td><span class="status-badge planned" style="color: var(--purple); border-color: rgba(168, 85, 247, 0.4);"><i class="ri-sparkling-fill"></i> Planned</span></td>
+                            <td>Spec Ready (Verified Reviews)</td>
+                        </tr>
+                        <tr class="highlight-advanced">
+                            <td><strong style="color: var(--gold);">23</strong></td>
+                            <td><strong>Automated Courier Logistics Bridge & Bulk Dispatch</strong> (Steadfast, Pathao, RedX)</td>
+                            <td><span class="tag-category" style="color: var(--gold); border: 1px solid var(--gold);">Admin Ops</span></td>
+                            <td><span class="status-badge planned"><i class="ri-sparkling-fill"></i> Planned</span></td>
+                            <td>Spec Ready (API Drivers)</td>
+                        </tr>
+                        <tr class="highlight-advanced">
+                            <td><strong style="color: var(--gold);">24</strong></td>
+                            <td><strong>Warehouse Barcode Scanner & Quick POS Counter Register</strong></td>
+                            <td><span class="tag-category" style="color: var(--gold); border: 1px solid var(--gold);">Warehouse/POS</span></td>
+                            <td><span class="status-badge planned"><i class="ri-sparkling-fill"></i> Planned</span></td>
+                            <td>Spec Ready (Code-128/POS)</td>
+                        </tr>
+                        <tr class="highlight-advanced">
+                            <td><strong style="color: var(--gold);">25</strong></td>
+                            <td><strong>COD Fraud Detection & Smart Risk Scoring Guard</strong></td>
+                            <td><span class="tag-category" style="color: var(--gold); border: 1px solid var(--gold);">Loss Prevention</span></td>
+                            <td><span class="status-badge planned"><i class="ri-sparkling-fill"></i> Planned</span></td>
+                            <td>Spec Ready (Risk Matrix)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- ========================================== -->
+        <!-- 🗂️ ALL 25 DETAIL CARDS WITH FILTER & SEARCH -->
+        <!-- ========================================== -->
+        <section id="all-cards">
+            <!-- Filter Controls -->
+            <div class="controls-panel">
+                <div class="filter-buttons">
+                    <button class="filter-btn active" onclick="filterPhases('all', this)">All Phases (25)</button>
+                    <button class="filter-btn" onclick="filterPhases('completed', this)">Completed (18)</button>
+                    <button class="filter-btn" onclick="filterPhases('progress', this)">In Progress (2)</button>
+                    <button class="filter-btn" onclick="filterPhases('advanced', this)">🌟 New Expansion (5)</button>
+                </div>
+                <div class="search-box">
+                    <i class="ri-search-line"></i>
+                    <input type="text" class="search-input" id="phaseSearch" placeholder="Search phase, feature, or file..." oninput="searchPhases(this.value)">
+                </div>
+            </div>
+
+            <div class="section-headline">
+                <h2>
+                    <i class="ri-grid-fill"></i>
+                    Complete Phase Detail Cards
+                </h2>
+                <span style="font-size: 13px; color: var(--text-muted); font-weight: 700;" id="phaseCounter">
+                    Showing 25 of 25 Phases
+                </span>
+            </div>
+
+            <div class="phases-grid" id="phasesGrid">
+                <!-- Phases 1 through 20 (Standard Cards) -->
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 01</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Core Architecture</div>
+                    <h3 class="phase-title">Project Setup, Inertia Bridge & Anti-N+1 Rules</h3>
+                    <p class="phase-desc">Laravel 11/12 setup, Inertia React, Tailwind CSS, Redis connection, and strict Eloquent anti-N+1 query guards.</p>
+                    <div class="phase-files">app/Providers/AppServiceProvider.php</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 02</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Security & Access</div>
+                    <h3 class="phase-title">Role-Based Access Control (RBAC) & Secure Auth</h3>
+                    <p class="phase-desc">User roles (super_admin, admin, staff, customer) with EnsureAdminAccess middleware and session authentication.</p>
+                    <div class="phase-files">app/Http/Middleware/EnsureAdminAccess.php</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 03</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Admin Experience</div>
+                    <h3 class="phase-title">Admin Dashboard Shell & UI Component Kit</h3>
+                    <p class="phase-desc">Collapsible desktop sidebar with persistent state in LocalStorage, mobile drawer, and reusable UI components.</p>
+                    <div class="phase-files">resources/js/Layouts/AdminLayout.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 04</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Product Taxonomy</div>
+                    <h3 class="phase-title">Category Taxonomy & Self-Referencing Tree</h3>
+                    <p class="phase-desc">Parent-child self-referencing hierarchy with recursive tree visualizer and instant slug generator.</p>
+                    <div class="phase-files">resources/js/Pages/Admin/Categories/Index.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 05</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Media Hub</div>
+                    <h3 class="phase-title">Brand Catalog & Automated WebP Media Hub</h3>
+                    <p class="phase-desc">Brand directory with automated dimension checking, EXIF removal, and automated high-compression WebP conversion.</p>
+                    <div class="phase-files">app/Services/Media/MediaUploadService.php</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 06</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Catalog Engine</div>
+                    <h3 class="phase-title">Core Product Catalog (Single Products)</h3>
+                    <p class="phase-desc">Base product schema, SKU generation, pricing, unit cost price tracking, and low-stock threshold configuration.</p>
+                    <div class="phase-files">resources/js/Pages/Admin/Products/Index.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 07</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Catalog Engine</div>
+                    <h3 class="phase-title">Product Attribute Matrix & Variant SKU Builder</h3>
+                    <p class="phase-desc">Cartesian product permutation matrix (Color x Size = N SKUs) with editable cost price, selling price, and stock.</p>
+                    <div class="phase-files">app/Actions/Products/StoreProductAction.php</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 08</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Supply Chain</div>
+                    <h3 class="phase-title">Supplier Directory & Accounts Payable Ledger</h3>
+                    <p class="phase-desc">Supplier profiles with running due balance ledger and payment disbursement audit records.</p>
+                    <div class="phase-files">resources/js/Pages/Admin/Suppliers/Index.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 09</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Supply Chain</div>
+                    <h3 class="phase-title">Stock-In Purchase Orders (Inventory Hydration)</h3>
+                    <p class="phase-desc">Purchase order lifecycle (Draft -> Ordered -> Received) with atomic stock increment and weighted average COGS update.</p>
+                    <div class="phase-files">app/Services/Procurement/PurchaseOrderService.php</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 10</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Inventory Control</div>
+                    <h3 class="phase-title">Inventory Control, Damage Logs & Chime Alerts</h3>
+                    <p class="phase-desc">Immutable movement ledger, manual adjustments, damage write-offs, and 15-second background audio chime notification center.</p>
+                    <div class="phase-files">resources/js/Pages/Admin/Inventory/Index.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 11</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Storefront</div>
+                    <h3 class="phase-title">Storefront Layout & Bento Mosaic Homepage</h3>
+                    <p class="phase-desc">Luxury storefront layout with header mega-menu, mobile thumb navigation, dynamic hero sliders, and Bento grid mosaic.</p>
+                    <div class="phase-files">resources/js/Layouts/StorefrontLayout.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 12</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Storefront</div>
+                    <h3 class="phase-title">Catalog Discovery & Multi-Facet Filters</h3>
+                    <p class="phase-desc">Shop catalog with URL-synced multi-facet sidebar filters (category, brand, price slider, stock) and live search overlay.</p>
+                    <div class="phase-files">resources/js/Pages/Storefront/Shop.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 13</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Storefront</div>
+                    <h3 class="phase-title">Product Detail Page & Dynamic Swatches</h3>
+                    <p class="phase-desc">High-res zoom gallery modal, reactive variant swatches (color/size dynamically update price, stock, and SKU), urgency stock tags.</p>
+                    <div class="phase-files">resources/js/Pages/Storefront/ProductDetail.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 14</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Commerce</div>
+                    <h3 class="phase-title">Cart Engine & Slide-Out Mini-Cart Drawer</h3>
+                    <p class="phase-desc">Dual guest session / user database cart management with slide-out drawer, live subtotal updates, and quantity controls.</p>
+                    <div class="phase-files">app/Services/Storefront/CartService.php</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 15</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Marketing</div>
+                    <h3 class="phase-title">Discount Coupon Engine & Promotional Rules</h3>
+                    <p class="phase-desc">Percentage and fixed discount coupons with minimum spend thresholds, maximum discount caps, and customer usage limits.</p>
+                    <div class="phase-files">app/Services/Storefront/CouponValidationService.php</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 16</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Conversion</div>
+                    <h3 class="phase-title">Single-Page Checkout & Payment Selector</h3>
+                    <p class="phase-desc">Frictionless single-page checkout (COD, bKash, Nagad, Bank), free shipping threshold logic (waived >= ৳2000), and rate limiting.</p>
+                    <div class="phase-files">resources/js/Pages/Storefront/Checkout.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 17</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Fulfillment</div>
+                    <h3 class="phase-title">Order State Machine & Restock Action</h3>
+                    <p class="phase-desc">Strict state machine validation, immutable audit timeline, automatic COD payment mark on delivery, and auto-restock on cancellation.</p>
+                    <div class="phase-files">app/Actions/Orders/UpdateOrderStatusAction.php</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 18</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Fulfillment</div>
+                    <h3 class="phase-title">Dual Invoicing (A4 Tax PDF & 80mm POS Thermal)</h3>
+                    <p class="phase-desc">A4 Commercial Tax Invoice plus 80mm POS Thermal Receipt packing list with Code-39 barcode and zero hardcoded content.</p>
+                    <div class="phase-files">resources/js/Pages/Admin/Orders/Invoice.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 19</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Completed</span>
+                    </div>
+                    <div class="phase-category">Customer Experience</div>
+                    <h3 class="phase-title">Real-Time Order Tracing & 5-Stage Stepper</h3>
+                    <p class="phase-desc">Dedicated order tracking portal with 5-stage progress timeline, phone/email privacy verification, and 1-click tracking for members.</p>
+                    <div class="phase-files">resources/js/Pages/Storefront/TrackOrder.jsx</div>
+                </div>
+
+                <div class="phase-card" data-status="completed">
+                    <div class="phase-header">
+                        <span class="phase-num">PHASE 20</span>
+                        <span class="status-badge completed"><i class="ri-check-line"></i> Active Sync</span>
+                    </div>
+                    <div class="phase-category">BI & CMS</div>
+                    <h3 class="phase-title">Dynamic Settings CMS & BI Profit Analytics</h3>
+                    <p class="phase-desc">100% dynamic CMS identity (zero hardcoding), Redis cache synchronization, real profit calculation (Sales - COGS), and audio alerts.</p>
+                    <div class="phase-files">app/Services/Settings/SettingService.php</div>
+                </div>
+
+                <!-- ========================================== -->
+                <!-- 🌟 PHASES 21 - 25 HIGHLIGHTED CARDS -->
+                <!-- ========================================== -->
+                <div class="phase-card card-advanced" data-status="advanced">
+                    <div class="phase-header">
+                        <span class="phase-num" style="background: var(--purple); color: #fff;">PHASE 21</span>
+                        <span class="status-badge planned" style="color: var(--purple); border-color: var(--purple);"><i class="ri-sparkling-fill"></i> New Phase</span>
+                    </div>
+                    <div class="phase-category" style="color: var(--purple);">Customer AOV Booster</div>
+                    <h3 class="phase-title">Customer Wishlist, Smart Bundles & AI Style</h3>
+                    <p class="phase-desc">Persistent wishlist across devices, "Frequently Bought Together" styled outfit bundles with 5% discount, and in-stock alerts.</p>
+                    <div class="phase-files">app/Http/Controllers/Storefront/WishlistController.php</div>
+                </div>
+
+                <div class="phase-card card-advanced" data-status="advanced">
+                    <div class="phase-header">
+                        <span class="phase-num" style="background: var(--purple); color: #fff;">PHASE 22</span>
+                        <span class="status-badge planned" style="color: var(--purple); border-color: var(--purple);"><i class="ri-sparkling-fill"></i> New Phase</span>
+                    </div>
+                    <div class="phase-category" style="color: var(--purple);">Social Proof & Care</div>
+                    <h3 class="phase-title">Verified Reviews, Photo Feedback & WhatsApp Bridge</h3>
+                    <p class="phase-desc">Verified buyer reviews with Fit & Fabric ratings, customer outfit photo gallery, and floating WhatsApp customer care bridge.</p>
+                    <div class="phase-files">app/Http/Controllers/Storefront/ReviewController.php</div>
+                </div>
+
+                <div class="phase-card card-advanced" data-status="advanced">
+                    <div class="phase-header">
+                        <span class="phase-num" style="background: var(--gold); color: #000;">PHASE 23</span>
+                        <span class="status-badge planned"><i class="ri-sparkling-fill"></i> New Phase</span>
+                    </div>
+                    <div class="phase-category" style="color: var(--gold);">Admin Logistics</div>
+                    <h3 class="phase-title">Automated Courier Logistics Bridge & Bulk Dispatch</h3>
+                    <p class="phase-desc">Direct API integration with Steadfast, Pathao, and RedX for 1-click bulk booking, thermal AWB generation, and webhook delivery sync.</p>
+                    <div class="phase-files">app/Services/Logistics/CourierManager.php</div>
+                </div>
+
+                <div class="phase-card card-advanced" data-status="advanced">
+                    <div class="phase-header">
+                        <span class="phase-num" style="background: var(--gold); color: #000;">PHASE 24</span>
+                        <span class="status-badge planned"><i class="ri-sparkling-fill"></i> New Phase</span>
+                    </div>
+                    <div class="phase-category" style="color: var(--gold);">Warehouse & POS</div>
+                    <h3 class="phase-title">Warehouse Barcode Scanner & Quick POS Register</h3>
+                    <p class="phase-desc">Warehouse Scan-to-Pack validation preventing item errors, plus fast retail counter checkout with instant thermal receipt printing.</p>
+                    <div class="phase-files">app/Http/Controllers/Admin/PosController.php</div>
+                </div>
+
+                <div class="phase-card card-advanced" data-status="advanced">
+                    <div class="phase-header">
+                        <span class="phase-num" style="background: var(--gold); color: #000;">PHASE 25</span>
+                        <span class="status-badge planned"><i class="ri-sparkling-fill"></i> New Phase</span>
+                    </div>
+                    <div class="phase-category" style="color: var(--gold);">Loss Prevention</div>
+                    <h3 class="phase-title">COD Fraud Detection & Smart Risk Scoring Guard</h3>
+                    <p class="phase-desc">AI/Rule risk scoring based on customer historical delivery success rate, rush order flags, and 1-click phone/IP blacklist directory.</p>
+                    <div class="phase-files">app/Services/Fraud/OrderRiskEvaluationService.php</div>
+                </div>
+            </div>
+        </section>
 
     </main>
 
+    <!-- Prompt Template Modal -->
+    <div class="prompt-modal" id="promptModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closePromptModal()">&times;</button>
+            <h3 style="font-size: 18px; font-weight: 800; color: #fff; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">
+                <i class="ri-terminal-box-line" style="color: var(--gold);"></i> AI Agent Continuation Prompt
+            </h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 16px;">
+                Copy and paste this standard prompt into any new chat turn to resume development instantly without re-explaining the architecture:
+            </p>
+            <div style="background: #040912; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; font-family: 'JetBrains Mono', monospace; font-size: 12px; color: #94A3B8; margin-bottom: 20px;">
+                <pre style="margin: 0; white-space: pre-wrap;"><code id="promptText">I am continuing development on ORIO ECOMMERCE. Please read PROJECT_MASTER_BLUEPRINT.md and BLUEPRINT.html in the workspace root. We are working on Phase [Phase Number]: [Phase Title]. Please implement the exact domain actions, services, controllers, Inertia views, and automated tests adhering to the strict anti-N+1 rules.</code></pre>
+            </div>
+            <button class="btn btn-gold w-100" style="width: 100%; justify-content: center;" onclick="copyPrompt()">
+                <i class="ri-file-copy-line"></i> <span id="copyBtnText">Copy Prompt to Clipboard</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <p><strong>ORIO E-COMMERCE PLATFORM</strong> • Engineered by Jahidul Islam • Lead Architect</p>
+            <p style="margin-top: 6px; font-size: 11px; color: var(--gold);">
+                Laravel 12 / React 18 / Inertia.js Monolith • 185 Passing Feature Tests (1,132 Assertions)
+            </p>
+        </div>
+    </footer>
+
     <script>
-        lucide.createIcons();
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            
+            const btn = document.getElementById('themeBtn');
+            if (newTheme === 'light') {
+                btn.innerHTML = '<i class="ri-sun-line"></i> <span>Light</span>';
+            } else {
+                btn.innerHTML = '<i class="ri-moon-line"></i> <span>Dark</span>';
+            }
+        }
+
+        // Filter Phases
+        function filterPhases(status, btn) {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            const cards = document.querySelectorAll('.phase-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const cardStatus = card.getAttribute('data-status');
+                if (status === 'all' || cardStatus === status) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('phaseCounter').textContent = `Showing ${visibleCount} of 25 Phases`;
+        }
+
+        // Live Search Phases
+        function searchPhases(query) {
+            const q = query.toLowerCase().trim();
+            const cards = document.querySelectorAll('.phase-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (text.includes(q)) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            document.getElementById('phaseCounter').textContent = `Showing ${visibleCount} of 25 Phases`;
+        }
+
+        // Modal Controls
+        function openPromptModal() {
+            document.getElementById('promptModal').classList.add('open');
+        }
+
+        function closePromptModal() {
+            document.getElementById('promptModal').classList.remove('open');
+        }
+
+        function copyPrompt() {
+            const text = document.getElementById('promptText').innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.getElementById('copyBtnText');
+                btn.textContent = 'Copied to Clipboard!';
+                setTimeout(() => btn.textContent = 'Copy Prompt to Clipboard', 2000);
+            });
+        }
+
+        // Close modal on click outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('promptModal');
+            if (event.target === modal) {
+                closePromptModal();
+            }
+        };
     </script>
 </body>
 </html>
