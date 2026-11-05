@@ -702,7 +702,42 @@ header.oubd-header.scrolled,
     transform: scale(1.04);
 }
 
-/* Product Badges */
+/* Product Badges & Top-Right Action Cluster */
+.oubd-card-top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 6;
+    pointer-events: auto;
+}
+
+.oubd-card-top-right .oubd-badge {
+    position: static;
+    top: auto;
+    right: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    padding: 0 8px;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 12px;
+    line-height: 1;
+    white-space: nowrap;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+}
+
+.oubd-card-top-right .oubd-card-wishlist-btn {
+    position: static;
+    top: auto;
+    right: auto;
+    flex-shrink: 0;
+}
+
 .oubd-badge {
     position: absolute;
     top: 10px;
@@ -735,6 +770,10 @@ header.oubd-header.scrolled,
     color: #666666;
     letter-spacing: 1px;
     z-index: 2;
+    max-width: calc(100% - 95px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* Product Content */
@@ -793,6 +832,29 @@ header.oubd-header.scrolled,
     }
     .oubd-product-price {
         font-size: 13px;
+    }
+    .oubd-card-top-right {
+        top: 6px;
+        right: 6px;
+        gap: 4px;
+    }
+    .oubd-card-top-right .oubd-badge {
+        height: 22px;
+        padding: 0 6px;
+        font-size: 10px;
+    }
+    .oubd-card-wishlist-btn {
+        width: 28px;
+        height: 28px;
+    }
+    .oubd-card-wishlist-btn i {
+        font-size: 14px;
+    }
+    .oubd-product-brand-tag {
+        top: 8px;
+        left: 8px;
+        font-size: 10px;
+        max-width: calc(100% - 85px);
     }
     .oubd-badge {
         top: 6px;

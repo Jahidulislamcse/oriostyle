@@ -113,28 +113,29 @@ export default function Wishlist({
                                 return (
                                     <div key={item.id} className="col-6 col-md-4 col-lg-3">
                                         <div className={`oubd-product-card h-100 position-relative ${isRemoving ? 'opacity-50' : ''}`}>
-                                            {/* Top corner remove button */}
-                                            <button
-                                                type="button"
-                                                onClick={() => handleRemove(item.product_id)}
-                                                disabled={isRemoving}
-                                                className="btn btn-sm btn-light rounded-circle shadow-xs position-absolute top-2 end-2 z-2 d-flex align-items-center justify-content-center"
-                                                style={{ width: '30px', height: '30px', padding: 0 }}
-                                                title="Remove from wishlist"
-                                                aria-label="Remove"
-                                            >
-                                                <i className="ri-close-line font-size-16 text-muted" />
-                                            </button>
-
                                             {/* Image Wrap */}
                                             <div className="oubd-product-img-wrap">
                                                 <span className="oubd-product-brand-tag">{item.brand_name}</span>
 
-                                                {item.is_on_sale && item.base_price > item.effective_price && (
-                                                    <span className="oubd-badge oubd-badge-discount">
-                                                        -{Math.round(((item.base_price - item.effective_price) / item.base_price) * 100)}%
-                                                    </span>
-                                                )}
+                                                {/* Top-Right Badges & Remove Action (Side-by-Side, Zero Overlap) */}
+                                                <div className="oubd-card-top-right">
+                                                    {item.is_on_sale && item.base_price > item.effective_price && (
+                                                        <span className="oubd-badge oubd-badge-discount">
+                                                            -{Math.round(((item.base_price - item.effective_price) / item.base_price) * 100)}%
+                                                        </span>
+                                                    )}
+
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => handleRemove(item.product_id)}
+                                                        disabled={isRemoving}
+                                                        className="oubd-card-wishlist-btn"
+                                                        title="Remove from wishlist"
+                                                        aria-label="Remove"
+                                                    >
+                                                        <i className="ri-close-line font-size-16 text-muted" />
+                                                    </button>
+                                                </div>
 
                                                 <Link href={item.slug ? `/products/${item.slug}` : '/shop'}>
                                                     <img

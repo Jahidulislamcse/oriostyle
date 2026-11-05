@@ -67,23 +67,25 @@ export default function ProductCard({
                     {product.brand?.name || 'ORIO STYLE'}
                 </span>
 
-                {/* 1-Click Wishlist Heart Button */}
-                <button
-                    type="button"
-                    onClick={handleToggleWishlist}
-                    className={`oubd-card-wishlist-btn ${isWishlisted ? 'active' : ''} ${isAnimateHeart ? 'heart-bump' : ''}`}
-                    title={isWishlisted ? "Remove from Wishlist" : "Save to Wishlist"}
-                    aria-label="Wishlist"
-                >
-                    <i className={isWishlisted ? "ri-heart-fill text-danger" : "ri-heart-line text-dark"} />
-                </button>
+                {/* Top-Right Badges & Wishlist Action (Side-by-Side, Zero Overlap) */}
+                <div className="oubd-card-top-right">
+                    {hasDiscount && discountPercent ? (
+                        <span className="oubd-badge oubd-badge-discount">-{discountPercent}%</span>
+                    ) : isNew ? (
+                        <span className="oubd-badge oubd-badge-new">New</span>
+                    ) : null}
 
-                {/* Badges */}
-                {hasDiscount && discountPercent ? (
-                    <span className="oubd-badge oubd-badge-discount">-{discountPercent}%</span>
-                ) : isNew ? (
-                    <span className="oubd-badge oubd-badge-new">New</span>
-                ) : null}
+                    {/* 1-Click Wishlist Heart Button */}
+                    <button
+                        type="button"
+                        onClick={handleToggleWishlist}
+                        className={`oubd-card-wishlist-btn ${isWishlisted ? 'active' : ''} ${isAnimateHeart ? 'heart-bump' : ''}`}
+                        title={isWishlisted ? "Remove from Wishlist" : "Save to Wishlist"}
+                        aria-label="Wishlist"
+                    >
+                        <i className={isWishlisted ? "ri-heart-fill text-danger" : "ri-heart-line text-dark"} />
+                    </button>
+                </div>
 
                 <Link href={product.slug ? `/products/${product.slug}` : '/shop'}>
                     <img
