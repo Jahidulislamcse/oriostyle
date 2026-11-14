@@ -37,9 +37,9 @@ class HomeController extends Controller
         $featuredCategories = Category::query()
             ->active()
             ->featured()
-            ->subcategory()
             ->with(['parent:id,name,slug', 'images', 'featuredImage'])
             ->withCount(['products' => fn($q) => $q->where('is_active', true)])
+            ->orderByRaw('CASE WHEN parent_id IS NOT NULL THEN 0 ELSE 1 END')
             ->orderBy('display_order')
             ->take(16)
             ->get();
@@ -47,19 +47,9 @@ class HomeController extends Controller
         if ($featuredCategories->isEmpty()) {
             $featuredCategories = Category::query()
                 ->active()
-                ->subcategory()
                 ->with(['parent:id,name,slug', 'images', 'featuredImage'])
                 ->withCount(['products' => fn($q) => $q->where('is_active', true)])
-                ->orderBy('display_order')
-                ->take(16)
-                ->get();
-        }
-
-        if ($featuredCategories->isEmpty()) {
-            $featuredCategories = Category::query()
-                ->active()
-                ->with(['parent:id,name,slug', 'images', 'featuredImage'])
-                ->withCount(['products' => fn($q) => $q->where('is_active', true)])
+                ->orderByRaw('CASE WHEN parent_id IS NOT NULL THEN 0 ELSE 1 END')
                 ->orderBy('display_order')
                 ->take(16)
                 ->get();
@@ -123,34 +113,63 @@ class HomeController extends Controller
         $promoBanners = $bannersGrouped->get('promo', collect())->values();
         $bentoSlots = $this->bentoService->getActiveSlotsForStorefront();
 
-        // 2. Fetch categories with banners for promotional showcase collections.
-        // Strictly dynamic: Categories with an uploaded wide showcase banner and active products.
-        $categoryShowcases = Category::query()
+        // 2. Fetch featured categories for promotional collection showcases.
+        // Dynamic & strictly controlled by the admin: Categories marked as is_featured = true.
+        // Each category showcase pulls products from the category itself AND all its descendant subcategories.
+        $featuredShowcaseCategories = Category::query()
             ->active()
-            ->whereNotNull('banner')
-            ->where('banner', '!=', '')
-            ->whereHas('products', fn($q) => $q->active())
-            ->with(['products' => function ($q) {
-                $q->active()->with(['category:id,name,slug', 'brand:id,name,slug', 'primaryImage', 'images'])->take(6);
-            }])
+            ->featured()
+            ->with('allChildren')
             ->orderBy('display_order')
             ->take(6)
             ->get();
 
-        // If no category has a showcase banner uploaded yet, fallback to featured categories with products
-        // so the homepage can showcase real catalog collections until the admin uploads dedicated banners.
-        if ($categoryShowcases->isEmpty()) {
-            $categoryShowcases = Category::query()
+        // If admin hasn't marked any category as featured yet, fallback to active categories with banner or products
+        // so the homepage isn't completely empty before admin setup.
+        if ($featuredShowcaseCategories->isEmpty()) {
+            $featuredShowcaseCategories = Category::query()
                 ->active()
-                ->featured()
-                ->whereHas('products', fn($q) => $q->active())
-                ->with(['products' => function ($q) {
-                    $q->active()->with(['category:id,name,slug', 'brand:id,name,slug', 'primaryImage', 'images'])->take(6);
-                }])
+                ->where(function ($q) {
+                    $q->whereNotNull('banner')->where('banner', '!=', '')
+                      ->orWhereHas('products', fn($pq) => $pq->active());
+                })
+                ->with('allChildren')
                 ->orderBy('display_order')
-                ->take(2)
+                ->take(4)
                 ->get();
         }
+
+        $fallbackBanners = [
+            '/storefront/img/banner/1.jpg',
+            '/storefront/img/banner/2.jpg',
+            '/storefront/img/banner/5.jpg',
+            '/storefront/img/banner/6.jpg',
+        ];
+
+        $categoryShowcases = $featuredShowcaseCategories->map(function (Category $category, int $index) use ($fallbackBanners) {
+            $categoryIds = array_merge([$category->id], $category->getAllDescendantIds());
+
+            $products = Product::query()
+                ->active()
+                ->whereIn('category_id', $categoryIds)
+                ->with(['category:id,name,slug', 'brand:id,name,slug', 'primaryImage', 'images'])
+                ->orderBy('id', 'desc')
+                ->take(6)
+                ->get();
+
+            // Set the products relation on this category
+            $category->setRelation('products', $products);
+
+            // Assign fallback banner if no panoramic banner was uploaded
+            if (empty($category->banner)) {
+                $category->banner = $fallbackBanners[$index % count($fallbackBanners)];
+            }
+
+            return $category;
+        })->filter(function (Category $category) {
+            // Only include showcases that actually have products to display
+            return $category->products && $category->products->isNotEmpty();
+        })->values();
 
         return Inertia::render('Storefront/Index', [
             'navCategories' => $navCategories,

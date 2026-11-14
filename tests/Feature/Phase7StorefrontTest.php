@@ -235,4 +235,66 @@ class Phase7StorefrontTest extends TestCase
             ->has('products.data', 0)
         );
     }
+
+    public function test_featured_category_showcase_includes_descendant_products_and_respects_featured_toggle(): void
+    {
+        // 1. Featured parent category with no direct products, but product in subcategory
+        $parentCat = Category::create([
+            'name' => "Men's Fashion",
+            'slug' => 'mens-fashion',
+            'is_active' => true,
+            'is_featured' => true,
+            'display_order' => 1,
+        ]);
+
+        $subCat = Category::create([
+            'name' => 'Formal Shirts',
+            'slug' => 'formal-shirts',
+            'parent_id' => $parentCat->id,
+            'is_active' => true,
+            'is_featured' => false,
+            'display_order' => 1,
+        ]);
+
+        $productInSub = Product::create([
+            'name' => 'Oxford Formal Shirt',
+            'slug' => 'oxford-formal-shirt',
+            'sku' => 'SHIRT-OX-1',
+            'category_id' => $subCat->id,
+            'base_price' => 2500.00,
+            'stock_quantity' => 15,
+            'is_active' => true,
+        ]);
+
+        // 2. Unfeatured category with banner and product (should NOT be showcased because is_featured = false and another category is featured)
+        $unfeaturedCat = Category::create([
+            'name' => 'Accessories',
+            'slug' => 'accessories',
+            'banner' => 'categories/banners/acc.jpg',
+            'is_active' => true,
+            'is_featured' => false,
+            'display_order' => 2,
+        ]);
+
+        Product::create([
+            'name' => 'Leather Belt',
+            'slug' => 'leather-belt',
+            'sku' => 'BELT-01',
+            'category_id' => $unfeaturedCat->id,
+            'base_price' => 800.00,
+            'stock_quantity' => 20,
+            'is_active' => true,
+        ]);
+
+        $response = $this->get('/');
+        $response->assertStatus(200);
+        $response->assertInertia(fn (Assert $page) => $page
+            ->component('Storefront/Index')
+            ->has('categoryShowcases', 1)
+            ->where('categoryShowcases.0.id', $parentCat->id)
+            ->where('categoryShowcases.0.name', "Men's Fashion")
+            ->has('categoryShowcases.0.products', 1)
+            ->where('categoryShowcases.0.products.0.name', 'Oxford Formal Shirt')
+        );
+    }
 }
