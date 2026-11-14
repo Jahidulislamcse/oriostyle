@@ -147,7 +147,7 @@ export default function ProductForm({ product = null, categories = [], brands = 
 
     const categoryOptions = [
         { label: '-- Select Category --', value: '' },
-        ...categories.map((c) => ({ label: c.name, value: String(c.id) })),
+        ...categories.map((c) => ({ label: c.label || c.name, value: String(c.id) })),
     ];
 
     const brandOptions = [

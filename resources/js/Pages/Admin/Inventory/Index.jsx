@@ -836,7 +836,7 @@ export default function InventoryIndex({
                                     className="w-48 text-sm"
                                     options={[
                                         { label: 'All Categories', value: 'all' },
-                                        ...categories.map((c) => ({ label: c.name, value: String(c.id) })),
+                                        ...categories.map((c) => ({ label: c.label || c.name, value: String(c.id) })),
                                     ]}
                                 />
                             </div>

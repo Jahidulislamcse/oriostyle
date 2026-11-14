@@ -2,6 +2,7 @@
 
 namespace App\Services\Catalog;
 
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductImage;
 use App\Models\ProductVariant;
@@ -46,7 +47,15 @@ class ProductService
         }
 
         if (is_numeric($category)) {
-            $query->where('category_id', (int) $category);
+            $catId = (int) $category;
+            $selectedCategory = Category::find($catId);
+            if ($selectedCategory) {
+                // Hierarchical inclusion: include parent category and all its descendant subcategories
+                $categoryIds = array_merge([$selectedCategory->id], $selectedCategory->getAllDescendantIds());
+                $query->whereIn('category_id', $categoryIds);
+            } else {
+                $query->where('category_id', $catId);
+            }
         }
 
         if (is_numeric($brand)) {

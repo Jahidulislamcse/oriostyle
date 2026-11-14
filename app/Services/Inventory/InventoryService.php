@@ -2,6 +2,7 @@
 
 namespace App\Services\Inventory;
 
+use App\Models\Category;
 use App\Models\DamageLog;
 use App\Models\InventoryMovement;
 use App\Models\Product;
@@ -80,8 +81,15 @@ class InventoryService
             }
         }
 
-        if (!empty($filters['category_id']) && $filters['category_id'] !== 'all') {
-            $query->where('category_id', $filters['category_id']);
+        if (!empty($filters['category_id']) && $filters['category_id'] !== 'all' && is_numeric($filters['category_id'])) {
+            $catId = (int) $filters['category_id'];
+            $selectedCategory = Category::find($catId);
+            if ($selectedCategory) {
+                $categoryIds = array_merge([$selectedCategory->id], $selectedCategory->getAllDescendantIds());
+                $query->whereIn('category_id', $categoryIds);
+            } else {
+                $query->where('category_id', $catId);
+            }
         }
 
         return $query->orderBy('stock_quantity', 'asc')->paginate($perPage)->withQueryString();

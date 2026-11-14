@@ -126,7 +126,7 @@ export default function ProductIndex({
 
     const categoryOptions = [
         { label: 'All Categories', value: 'all' },
-        ...categories.map((c) => ({ label: c.name, value: String(c.id) })),
+        ...categories.map((c) => ({ label: c.label || c.name, value: String(c.id) })),
     ];
 
     const brandOptions = [
@@ -451,7 +451,7 @@ export default function ProductIndex({
                                     setCategoryFilter(e.target.value);
                                     applyFilters(searchQuery, e.target.value, brandFilter, statusFilter);
                                 }}
-                                containerClassName="w-full sm:w-44"
+                                containerClassName="w-full sm:w-56"
                                 options={categoryOptions}
                                 placeholder={null}
                             />

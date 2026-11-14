@@ -371,4 +371,93 @@ class Phase6BrandsAndProductsTest extends TestCase
             ->get(route('admin.products.index'))
             ->assertStatus(403);
     }
+
+    public function test_filtering_by_parent_category_includes_products_from_all_descendant_subcategories(): void
+    {
+        $parentCategory = Category::create([
+            'name' => "Men's Fashion",
+            'slug' => 'mens-fashion',
+            'is_active' => true,
+        ]);
+
+        $subCategory1 = Category::create([
+            'name' => 'Formal Shirts',
+            'slug' => 'formal-shirts',
+            'parent_id' => $parentCategory->id,
+            'is_active' => true,
+        ]);
+
+        $subCategory2 = Category::create([
+            'name' => 'Denim Pants',
+            'slug' => 'denim-pants',
+            'parent_id' => $parentCategory->id,
+            'is_active' => true,
+        ]);
+
+        $unrelatedCategory = Category::create([
+            'name' => "Women's Sarees",
+            'slug' => 'womens-sarees',
+            'is_active' => true,
+        ]);
+
+        // Product in parent directly
+        $prodParent = Product::create([
+            'category_id' => $parentCategory->id,
+            'name' => 'Men Signature Tee',
+            'slug' => 'men-signature-tee',
+            'sku' => 'M-001',
+            'base_price' => 1200.00,
+            'stock_quantity' => 10,
+            'is_active' => true,
+        ]);
+
+        // Product in subcategory 1
+        $prodSub1 = Product::create([
+            'category_id' => $subCategory1->id,
+            'name' => 'Royal Oxford Shirt',
+            'slug' => 'royal-oxford-shirt',
+            'sku' => 'M-002',
+            'base_price' => 2200.00,
+            'stock_quantity' => 15,
+            'is_active' => true,
+        ]);
+
+        // Product in subcategory 2
+        $prodSub2 = Product::create([
+            'category_id' => $subCategory2->id,
+            'name' => 'Selvedge Denim',
+            'slug' => 'selvedge-denim',
+            'sku' => 'M-003',
+            'base_price' => 3200.00,
+            'stock_quantity' => 20,
+            'is_active' => true,
+        ]);
+
+        // Unrelated product
+        $prodOther = Product::create([
+            'category_id' => $unrelatedCategory->id,
+            'name' => 'Jamdani Saree',
+            'slug' => 'jamdani-saree',
+            'sku' => 'W-001',
+            'base_price' => 15000.00,
+            'stock_quantity' => 5,
+            'is_active' => true,
+        ]);
+
+        // Filter by parent category ID
+        $response = $this->actingAs($this->adminUser)
+            ->get(route('admin.products.index', ['category' => $parentCategory->id]));
+
+        $response->assertOk();
+        $response->assertInertia(fn ($page) =>
+            $page->component('Admin/Products/Index')
+                ->has('products.data', 3)
+                ->where('products.data.0.id', fn ($id) => in_array($id, [$prodParent->id, $prodSub1->id, $prodSub2->id]))
+                ->where('products.data.1.id', fn ($id) => in_array($id, [$prodParent->id, $prodSub1->id, $prodSub2->id]))
+                ->where('products.data.2.id', fn ($id) => in_array($id, [$prodParent->id, $prodSub1->id, $prodSub2->id]))
+                ->has('categories', 4)
+                ->where('categories.0.name', "Men's Fashion")
+                ->where('categories.0.depth', 0)
+        );
+    }
 }

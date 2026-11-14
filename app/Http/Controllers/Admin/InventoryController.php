@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\Catalog\CategoryService;
 use App\Services\Inventory\InventoryService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -14,7 +15,8 @@ use Inertia\Response;
 class InventoryController extends Controller
 {
     public function __construct(
-        protected InventoryService $inventoryService
+        protected InventoryService $inventoryService,
+        protected CategoryService $categoryService
     ) {}
 
     /**
@@ -36,10 +38,7 @@ class InventoryController extends Controller
             15
         );
 
-        $categories = Category::query()
-            ->select('id', 'name')
-            ->orderBy('name')
-            ->get();
+        $categories = $this->categoryService->getParentDropdownOptions();
 
         $products = Product::query()
             ->select('id', 'name', 'sku', 'stock_quantity', 'cost_price', 'low_stock_threshold')

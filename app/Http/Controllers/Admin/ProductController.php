@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\Catalog\CategoryService;
 use App\Services\Catalog\ProductService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,7 +16,8 @@ use Inertia\Response;
 class ProductController extends Controller
 {
     public function __construct(
-        protected ProductService $productService
+        protected ProductService $productService,
+        protected CategoryService $categoryService
     ) {}
 
     /**
@@ -30,7 +32,7 @@ class ProductController extends Controller
 
         $products = $this->productService->getAdminProductsList($search, $category, $brand, $status, 12);
 
-        $categories = Category::query()->orderBy('name')->get(['id', 'name', 'parent_id']);
+        $categories = $this->categoryService->getParentDropdownOptions();
         $brands = Brand::query()->orderBy('name')->get(['id', 'name']);
 
         $stats = [
@@ -61,7 +63,7 @@ class ProductController extends Controller
      */
     public function create(): Response
     {
-        $categories = Category::query()->orderBy('name')->get(['id', 'name', 'parent_id']);
+        $categories = $this->categoryService->getParentDropdownOptions();
         $brands = Brand::query()->orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Admin/Products/Form', [
@@ -116,7 +118,7 @@ class ProductController extends Controller
     public function edit(Product $product): Response
     {
         $product->load(['category', 'brand', 'primaryImage', 'images', 'variants']);
-        $categories = Category::query()->orderBy('name')->get(['id', 'name', 'parent_id']);
+        $categories = $this->categoryService->getParentDropdownOptions();
         $brands = Brand::query()->orderBy('name')->get(['id', 'name']);
 
         return Inertia::render('Admin/Products/Form', [
