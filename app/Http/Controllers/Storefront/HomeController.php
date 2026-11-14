@@ -82,12 +82,24 @@ class HomeController extends Controller
                 ->get();
         }
 
+        // 1. New Arrivals: Prioritize active products marked as is_new_arrival,
+        // or fallback to newest active products so the homepage is always fresh.
         $newArrivals = Product::query()
             ->active()
+            ->where('is_new_arrival', true)
             ->with(['category:id,name,slug', 'brand:id,name,slug', 'primaryImage', 'images'])
             ->orderBy('created_at', 'desc')
             ->take(8)
             ->get();
+
+        if ($newArrivals->isEmpty()) {
+            $newArrivals = Product::query()
+                ->active()
+                ->with(['category:id,name,slug', 'brand:id,name,slug', 'primaryImage', 'images'])
+                ->orderBy('created_at', 'desc')
+                ->take(8)
+                ->get();
+        }
 
         $brands = Brand::query()
             ->active()
@@ -111,19 +123,34 @@ class HomeController extends Controller
         $promoBanners = $bannersGrouped->get('promo', collect())->values();
         $bentoSlots = $this->bentoService->getActiveSlotsForStorefront();
 
-        // Fetch categories with banners for promotional showcase collections
+        // 2. Fetch categories with banners for promotional showcase collections.
+        // Strictly dynamic: Categories with an uploaded wide showcase banner and active products.
         $categoryShowcases = Category::query()
             ->active()
-            ->where(function ($q) {
-                $q->whereNotNull('banner')
-                  ->orWhereIn('slug', ['thobe', 'visor-cap']);
-            })
+            ->whereNotNull('banner')
+            ->where('banner', '!=', '')
+            ->whereHas('products', fn($q) => $q->active())
             ->with(['products' => function ($q) {
-                $q->active()->with(['category:id,name,slug', 'brand:id,name,slug', 'primaryImage'])->take(6);
+                $q->active()->with(['category:id,name,slug', 'brand:id,name,slug', 'primaryImage', 'images'])->take(6);
             }])
             ->orderBy('display_order')
             ->take(6)
             ->get();
+
+        // If no category has a showcase banner uploaded yet, fallback to featured categories with products
+        // so the homepage can showcase real catalog collections until the admin uploads dedicated banners.
+        if ($categoryShowcases->isEmpty()) {
+            $categoryShowcases = Category::query()
+                ->active()
+                ->featured()
+                ->whereHas('products', fn($q) => $q->active())
+                ->with(['products' => function ($q) {
+                    $q->active()->with(['category:id,name,slug', 'brand:id,name,slug', 'primaryImage', 'images'])->take(6);
+                }])
+                ->orderBy('display_order')
+                ->take(2)
+                ->get();
+        }
 
         return Inertia::render('Storefront/Index', [
             'navCategories' => $navCategories,

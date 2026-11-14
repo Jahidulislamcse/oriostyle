@@ -13,15 +13,15 @@ const DEFAULT_SLIDES = [
     {
         id: 2,
         title: "ORIO STYLE Signature Edition",
-        subtitle: 'Elevate your wardrobe with bespoke shirts, thobes and panjabis',
-        link_url: '#featured-products',
+        subtitle: 'Elevate your wardrobe with bespoke shirts, panjabis and contemporary essentials',
+        link_url: '/shop',
         image_url: '/storefront/img/hero/1.jpg',
     },
     {
         id: 3,
-        title: "Signature Accessories & Caps",
-        subtitle: 'Handcrafted leather goods, visor caps and timeless essentials',
-        link_url: '#featured-products',
+        title: "Signature Accessories & Essentials",
+        subtitle: 'Handcrafted leather goods, timepieces and timeless essentials',
+        link_url: '/shop',
         image_url: '/storefront/img/hero/3.jpg',
     },
 ];

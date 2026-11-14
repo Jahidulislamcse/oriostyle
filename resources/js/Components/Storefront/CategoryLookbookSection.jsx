@@ -5,80 +5,80 @@ import { sanitizeImageUrl } from '@/Utils/image';
 const DEFAULT_SLOTS = {
     top_left_tall: {
         slotKey: 'top_left_tall',
-        title: 'THOBE',
-        slug: 'thobe',
+        title: 'FORMAL SHIRTS',
+        slug: '',
         fallbackImg: '/storefront/img/category/1.jpg',
         hasArrow: false,
         darkBadge: false,
     },
     top_mid_upper_half: {
         slotKey: 'top_mid_upper_half',
-        title: 'PREMIUM T-SHIRT',
-        slug: 'premium-t-shirt',
+        title: 'SAREES & TRADITIONAL',
+        slug: '',
         fallbackImg: '/storefront/img/category/2.jpg',
         hasArrow: false,
         darkBadge: false,
     },
     top_mid_lower_half: {
         slotKey: 'top_mid_lower_half',
-        title: 'VISOR CAP',
-        slug: 'visor-cap',
+        title: 'LUXURY TIMEPIECES',
+        slug: '',
         fallbackImg: '/storefront/img/category/4.jpg',
         hasArrow: false,
         darkBadge: false,
     },
     top_right_tall: {
         slotKey: 'top_right_tall',
-        title: 'DROP SHOULDER T-SHIRT',
-        slug: 'drop-shoulder-t-shirt',
+        title: 'DENIM & TROUSERS',
+        slug: '',
         fallbackImg: '/storefront/img/category/3.jpg',
         hasArrow: true,
         darkBadge: false,
     },
     mid_wide_left: {
         slotKey: 'mid_wide_left',
-        title: 'REGULAR T-SHIRT (PREMIUM)',
-        slug: 'regular-t-shirt',
+        title: 'KURTIS & TUNICS',
+        slug: '',
         fallbackImg: '/storefront/img/category/5.jpg',
         hasArrow: false,
         darkBadge: false,
     },
     mid_wide_right: {
         slotKey: 'mid_wide_right',
-        title: 'PERFUME OIL (ATTAR)',
-        slug: 'perfume-oil',
+        title: 'HANDBAGS & CLUTCHES',
+        slug: '',
         fallbackImg: '/storefront/img/category/7.jpg',
         hasArrow: false,
         darkBadge: false,
     },
     bot_left_tall: {
         slotKey: 'bot_left_tall',
-        title: 'PAJAMA',
-        slug: 'pajama',
+        title: 'PLATINUM PANJABI',
+        slug: '',
         fallbackImg: '/storefront/img/category/6.jpg',
         hasArrow: false,
         darkBadge: false,
     },
     bot_mid_upper_half: {
         slotKey: 'bot_mid_upper_half',
-        title: 'SIGNATURE EDITION POLO',
-        slug: 'polo',
+        title: 'SIGNATURE POLO',
+        slug: '',
         fallbackImg: '/storefront/img/category/8.jpg',
         hasArrow: false,
         darkBadge: false,
     },
     bot_mid_lower_half: {
         slotKey: 'bot_mid_lower_half',
-        title: 'PLATINUM PANJABI',
-        slug: 'platinum-panjabi',
+        title: "MEN'S FORMAL SHOES",
+        slug: '',
         fallbackImg: '/storefront/img/category/9.jpg',
         hasArrow: true,
         darkBadge: true,
     },
     bot_right_tall: {
         slotKey: 'bot_right_tall',
-        title: 'DOCKER CAP',
-        slug: 'docker-cap',
+        title: 'CASUAL SNEAKERS',
+        slug: '',
         fallbackImg: '/storefront/img/category/10.jpg',
         hasArrow: false,
         darkBadge: false,
@@ -117,9 +117,9 @@ export default function CategoryLookbookSection({ bentoSlots = {}, categories = 
         );
 
         if (slot) {
-            const slug = slot.category_slug || slot.category?.slug || defaultDef.slug || '';
+            const slug = slot.category_slug || slot.category?.slug || '';
             const title = slot.display_title || slot.title || slot.category?.name || defaultDef.title;
-            const rawImage = slot.image_url || slot.image_path || defaultDef.fallbackImg;
+            const rawImage = slot.image_url || slot.image_path || (slot.category?.banner_url || slot.category?.image_url || defaultDef.fallbackImg);
             const image = sanitizeImageUrl(rawImage, defaultDef.fallbackImg);
             const hasArrow = slot.has_arrow !== undefined ? Boolean(slot.has_arrow) : defaultDef.hasArrow;
             const darkBadge = slot.dark_badge !== undefined ? Boolean(slot.dark_badge) : defaultDef.darkBadge;
@@ -149,26 +149,25 @@ export default function CategoryLookbookSection({ bentoSlots = {}, categories = 
             }
 
             const image = sanitizeImageUrl(catImg, defaultDef.fallbackImg);
+            const slug = cat.slug || '';
 
-            const slug = cat.slug || defaultDef.slug || '';
             return {
                 key: slotKey,
                 title: cat.name || cat.title || defaultDef.title,
                 slug,
                 href: slug ? `/shop?category=${encodeURIComponent(slug)}` : '/shop',
-                image: catImg || defaultDef.fallbackImg,
+                image,
                 hasArrow: defaultDef.hasArrow,
                 darkBadge: defaultDef.darkBadge,
             };
         }
 
         // 3. Static default fallback
-        const slug = defaultDef.slug || '';
         return {
             key: slotKey,
             title: defaultDef.title,
-            slug,
-            href: slug ? `/shop?category=${encodeURIComponent(slug)}` : '/shop',
+            slug: '',
+            href: '/shop',
             image: defaultDef.fallbackImg,
             hasArrow: defaultDef.hasArrow,
             darkBadge: defaultDef.darkBadge,

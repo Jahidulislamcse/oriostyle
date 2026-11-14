@@ -10,15 +10,6 @@ import FaqAndSupportSection from '@/Components/Storefront/FaqAndSupportSection';
 import BrandStorySection from '@/Components/Storefront/BrandStorySection';
 import { sanitizeImageUrl } from '@/Utils/image';
 
-const DEFAULT_LOOKBOOK_CATEGORIES = [
-    { id: 1, title: 'THOBE', slug: 'thobe', images: ['/storefront/img/category/1.jpg'] },
-    { id: 2, title: 'PREMIUM T-SHIRT', slug: 'premium-t-shirt', images: ['/storefront/img/category/2.jpg'] },
-    { id: 3, title: 'DROP SHOULDER T-SHIRT', slug: 'drop-shoulder-t-shirt', images: ['/storefront/img/category/3.jpg'] },
-    { id: 4, title: 'VISOR CAP', slug: 'visor-cap', images: ['/storefront/img/category/4.jpg'] },
-    { id: 5, title: 'REGULAR T-SHIRT (PREMIUM)', slug: 'regular-t-shirt', images: ['/storefront/img/category/5.jpg'] },
-    { id: 6, title: 'PAJAMA', slug: 'pajama', images: ['/storefront/img/category/6.jpg'] },
-];
-
 export default function Index({
     navCategories = [],
     featuredCategories = [],
@@ -39,61 +30,26 @@ export default function Index({
     // Map dynamic categories to lookbook format
     const lookbookCategories = featuredCategories && featuredCategories.length > 0
         ? featuredCategories.map((cat, index) => {
-            const fallback = DEFAULT_LOOKBOOK_CATEGORIES[index % DEFAULT_LOOKBOOK_CATEGORIES.length];
             let rawImg = null;
             if (cat.images && cat.images.length > 0) {
                 rawImg = cat.images[0].image_url || cat.images[0].image_path;
             } else if (cat.image_url) {
                 rawImg = cat.image_url;
-            } else {
-                rawImg = `/storefront/img/category/${(index % 18) + 1}.jpg`;
+            } else if (cat.banner_url || cat.banner) {
+                rawImg = cat.banner_url || cat.banner;
             }
 
-            const dynamicImg = sanitizeImageUrl(rawImg, `/storefront/img/category/${(index % 18) + 1}.jpg`);
+            const dynamicImg = sanitizeImageUrl(rawImg, `/storefront/img/category/${(index % 10) + 1}.jpg`);
 
             return {
                 id: cat.id,
                 title: cat.name,
-                slug: cat.slug || fallback.slug,
+                slug: cat.slug || '',
                 images: [dynamicImg],
                 image_url: dynamicImg,
             };
         })
-        : DEFAULT_LOOKBOOK_CATEGORIES;
-
-    // Display items for new arrivals section
-    const displayNewArrivals = newArrivals && newArrivals.length > 0
-        ? newArrivals
-        : [
-            { id: 101, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 1600, primary_image: { image_path: '/storefront/img/product/1.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 102, name: 'MENS DROPSHOULDER T-SHIRT', base_price: 1650, primary_image: { image_path: '/storefront/img/product/2.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 103, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 2150, primary_image: { image_path: '/storefront/img/product/3.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 104, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 2150, primary_image: { image_path: '/storefront/img/product/5.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 105, name: 'MENS PATCHWORK DROPSHOULDER T-SHIRT', base_price: 2150, primary_image: { image_path: '/storefront/img/product/6.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 106, name: 'MENS PATCHWORK T-SHIRT', base_price: 1050, primary_image: { image_path: '/storefront/img/product/9.jpg' }, brand: { name: 'ORIO STYLE' } },
-        ];
-
-    // Display items for Visor Cap / Accessories collection
-    const visorCapProducts = [
-        { id: 201, name: 'SPECIAL SUEDE VISOR CAP – SABR', base_price: 550, primary_image: { image_path: '/storefront/img/product/10.jpg' }, brand: { name: 'ORIO STYLE' } },
-        { id: 202, name: 'SPECIAL SUEDE VISOR CAP SOLID', base_price: 550, primary_image: { image_path: '/storefront/img/product/11.jpg' }, brand: { name: 'ORIO STYLE' } },
-        { id: 203, name: 'SPECIAL CORDUROY VISOR CAP – INSAF', base_price: 550, sale_price: 440, primary_image: { image_path: '/storefront/img/product/12.jpg' }, brand: { name: 'ORIO STYLE' } },
-        { id: 204, name: 'SPECIAL SUEDE VISOR CAP RIDE TO HEAL', base_price: 550, primary_image: { image_path: '/storefront/img/product/13.jpg' }, brand: { name: 'ORIO STYLE' } },
-        { id: 205, name: 'SPECIAL SUEDE VISOR CAP ZUHD', base_price: 550, primary_image: { image_path: '/storefront/img/product/14.jpg' }, brand: { name: 'ORIO STYLE' } },
-        { id: 206, name: 'SPECIAL TWILL VISOR CAP – HOPE', base_price: 550, primary_image: { image_path: '/storefront/img/product/15.jpg' }, brand: { name: 'ORIO STYLE' } },
-    ];
-
-    // Display items for Thobe / Panjabi collection
-    const thobeProducts = featuredProducts && featuredProducts.length > 0
-        ? featuredProducts
-        : [
-            { id: 301, name: 'PREMIUM EMBROIDERED THOBE', base_price: 3450, primary_image: { image_path: '/storefront/img/product/16.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 302, name: 'CLASSIC SHORT SLEEVE THOBE', base_price: 2950, primary_image: { image_path: '/storefront/img/product/17.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 303, name: 'EXCLUSIVE ARABIAN THOBE', base_price: 3850, sale_price: 3250, primary_image: { image_path: '/storefront/img/product/18.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 304, name: 'CASUAL COTTON THOBE', base_price: 2650, primary_image: { image_path: '/storefront/img/product/21.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 305, name: 'MENS EXECUTIVE THOBE', base_price: 3200, primary_image: { image_path: '/storefront/img/product/23.jpg' }, brand: { name: 'ORIO STYLE' } },
-            { id: 306, name: 'ROYAL EMBROIDERED THOBE', base_price: 4100, primary_image: { image_path: '/storefront/img/product/24.jpg' }, brand: { name: 'ORIO STYLE' } },
-        ];
+        : [];
 
     return (
         <StorefrontLayout navCategories={navCategories}>
@@ -106,51 +62,35 @@ export default function Index({
             <CategoryLookbookSection bentoSlots={bentoSlots} categories={lookbookCategories} />
 
             {/* 3. New Arrivals Product Grid Section (6-col desktop, 2-col mobile) */}
-            <section id="new-arrivals" className="oubd-products-section">
-                <div className="oubd-product-grid">
-                    {displayNewArrivals.slice(0, 6).map((product) => (
-                        <ProductCard
-                            key={product.id}
-                            product={product}
-                            currencySymbol={currencySymbol}
-                            isNew={true}
-                        />
-                    ))}
-                </div>
+            {newArrivals && newArrivals.length > 0 && (
+                <section id="new-arrivals" className="oubd-products-section">
+                    <h2 className="oubd-collection-title">NEW ARRIVALS</h2>
 
-                <div className="oubd-btn-container">
-                    <Link href="/#featured-products" className="oubd-outline-btn">
-                        VIEW ALL NEW ARRIVAL
-                    </Link>
-                </div>
-            </section>
+                    <div className="oubd-product-grid">
+                        {newArrivals.slice(0, 6).map((product) => (
+                            <ProductCard
+                                key={product.id}
+                                product={product}
+                                currencySymbol={currencySymbol}
+                                isNew={true}
+                            />
+                        ))}
+                    </div>
+
+                    <div className="oubd-btn-container">
+                        <Link href="/shop?sort=newest" className="oubd-outline-btn">
+                            VIEW ALL NEW ARRIVAL
+                        </Link>
+                    </div>
+                </section>
+            )}
 
             {/* 4 & 5. Promotional Collection Showcases with Dynamic Category Banners */}
-            {((categoryShowcases && categoryShowcases.length > 0)
-                ? categoryShowcases
-                : [
-                    {
-                        id: 1,
-                        name: 'Half Sleeve Thobe',
-                        slug: 'thobe',
-                        banner: '/storefront/img/banner/1.jpg',
-                        banner_url: '/storefront/img/banner/1.jpg',
-                        products: thobeProducts,
-                    },
-                    {
-                        id: 2,
-                        name: 'Visor Cap',
-                        slug: 'visor-cap',
-                        banner: '/storefront/img/banner/2.jpg',
-                        banner_url: '/storefront/img/banner/2.jpg',
-                        products: visorCapProducts,
-                    },
-                ]
-            ).map((catItem, idx) => {
-                const bannerSrc = catItem.banner_url || catItem.banner || (idx % 2 === 0 ? '/storefront/img/banner/1.jpg' : '/storefront/img/banner/2.jpg');
-                const catProducts = (catItem.products && catItem.products.length > 0)
-                    ? catItem.products
-                    : (catItem.slug === 'visor-cap' ? visorCapProducts : thobeProducts);
+            {categoryShowcases && categoryShowcases.length > 0 && categoryShowcases.map((catItem, idx) => {
+                const bannerSrc = catItem.banner_url || catItem.banner || null;
+                const catProducts = (catItem.products && catItem.products.length > 0) ? catItem.products : [];
+
+                if (catProducts.length === 0) return null;
 
                 return (
                     <section key={catItem.id || idx} className="oubd-collection-section">
@@ -174,7 +114,7 @@ export default function Index({
                                     key={product.id}
                                     product={product}
                                     currencySymbol={currencySymbol}
-                                    isNew={false}
+                                    isNew={Boolean(product.is_new_arrival)}
                                 />
                             ))}
                         </div>

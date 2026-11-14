@@ -56,6 +56,9 @@ class ShopController extends Controller
 
                 if (!empty($allCategoryIds)) {
                     $query->whereIn('category_id', $allCategoryIds);
+                } else {
+                    // Category slug was provided but does not match any category in catalog -> 0 matches
+                    $query->whereRaw('0 = 1');
                 }
 
                 if ($matchedCategories->count() === 1) {
@@ -72,7 +75,13 @@ class ShopController extends Controller
                 : array_filter(explode(',', (string) $brandParam));
 
             if (!empty($brandSlugs)) {
-                $query->whereHas('brand', fn($q) => $q->whereIn('slug', $brandSlugs));
+                $matchedBrandCount = Brand::whereIn('slug', $brandSlugs)->count();
+                if ($matchedBrandCount > 0) {
+                    $query->whereHas('brand', fn($q) => $q->whereIn('slug', $brandSlugs));
+                } else {
+                    // Brand slug was provided but does not match any brand -> 0 matches
+                    $query->whereRaw('0 = 1');
+                }
             }
         }
 
