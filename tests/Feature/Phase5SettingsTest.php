@@ -244,6 +244,34 @@ class Phase5SettingsTest extends TestCase
         $this->assertEquals('WEEKEND25', $this->settingService->get('popup_coupon_code'));
     }
 
+    public function test_admin_can_turn_off_popup_and_frequency_restriction(): void
+    {
+        // First set to true
+        $this->settingService->set('popup_show_once_per_session', true, 'popup');
+        $this->settingService->set('popup_enabled', true, 'popup');
+
+        // Now post false as string '0' (mimicking FormData submission from browser)
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.settings.update'), [
+                'popup_enabled' => '0',
+                'popup_show_once_per_session' => '0',
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $this->assertFalse($this->settingService->get('popup_show_once_per_session'));
+        $this->assertFalse($this->settingService->get('popup_enabled'));
+
+        // Verify the Inertia settings object returned to admin has boolean false
+        $adminPage = $this->actingAs($this->admin)->get(route('admin.settings.index'));
+        $adminPage->assertInertia(fn (\Inertia\Testing\AssertableInertia $page) => $page
+            ->component('Admin/Settings/Index')
+            ->where('settings.popup_show_once_per_session', false)
+            ->where('settings.popup_enabled', false)
+        );
+    }
+
     public function test_storefront_shares_offer_popup_when_enabled(): void
     {
         $category = \App\Models\Category::create([

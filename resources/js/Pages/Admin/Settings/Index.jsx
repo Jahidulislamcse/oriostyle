@@ -32,6 +32,18 @@ import {
     Check
 } from 'lucide-react';
 
+function parseBoolean(val, defaultVal = false) {
+    if (val === undefined || val === null || val === '') return defaultVal;
+    if (typeof val === 'boolean') return val;
+    if (typeof val === 'number') return val === 1;
+    if (typeof val === 'string') {
+        const lower = val.trim().toLowerCase();
+        if (lower === 'true' || lower === '1' || lower === 'on') return true;
+        if (lower === 'false' || lower === '0' || lower === 'off') return false;
+    }
+    return Boolean(val);
+}
+
 export default function SettingsIndex({ settings = {}, products = [], system = {} }) {
     const [activeTab, setActiveTab] = useState('general');
     const [logoPreview, setLogoPreview] = useState(null);
@@ -112,7 +124,7 @@ export default function SettingsIndex({ settings = {}, products = [], system = {
         tiktok_url: settings.tiktok_url || '',
         twitter_url: settings.twitter_url || '',
         linkedin_url: settings.linkedin_url || '',
-        whatsapp_chat_enabled: settings.whatsapp_chat_enabled !== false,
+        whatsapp_chat_enabled: parseBoolean(settings.whatsapp_chat_enabled, true),
 
         // SEO & Scripts
         meta_title: settings.meta_title || '',
@@ -155,7 +167,7 @@ export default function SettingsIndex({ settings = {}, products = [], system = {
         refund_content: settings.refund_content || '',
 
         // Dynamic Offer Popup
-        popup_enabled: Boolean(settings.popup_enabled),
+        popup_enabled: parseBoolean(settings.popup_enabled, false),
         popup_product_id: settings.popup_product_id ? String(settings.popup_product_id) : '',
         popup_title: settings.popup_title || 'EXCLUSIVE SPECIAL OFFER',
         popup_subtitle: settings.popup_subtitle || 'Unlock a limited-time luxury discount on our handcrafted signature piece!',
@@ -163,7 +175,7 @@ export default function SettingsIndex({ settings = {}, products = [], system = {
         popup_coupon_code: settings.popup_coupon_code || '',
         popup_button_text: settings.popup_button_text || 'Claim Offer Now',
         popup_delay_seconds: settings.popup_delay_seconds ?? 3,
-        popup_show_once_per_session: settings.popup_show_once_per_session !== false,
+        popup_show_once_per_session: parseBoolean(settings.popup_show_once_per_session, true),
     });
 
     const handleFileChange = (field, e, setPreview) => {

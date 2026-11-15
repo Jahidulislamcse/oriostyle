@@ -11,14 +11,16 @@ export default function OfferPopupModal({ offerPopup = null, currencySymbol = 'à
             return;
         }
 
-        // Check if dismissed previously
-        try {
-            const dismissedUntil = localStorage.getItem('orio_offer_popup_dismissed_until');
-            if (dismissedUntil && Date.now() < parseInt(dismissedUntil, 10)) {
-                return;
+        // Check if dismissed previously (only if show_once frequency limit is enabled)
+        if (offerPopup.show_once) {
+            try {
+                const dismissedUntil = localStorage.getItem('orio_offer_popup_dismissed_until');
+                if (dismissedUntil && Date.now() < parseInt(dismissedUntil, 10)) {
+                    return;
+                }
+            } catch (e) {
+                // LocalStorage might be disabled in private mode
             }
-        } catch (e) {
-            // LocalStorage might be disabled in private mode
         }
 
         const delay = Math.max(1, (offerPopup.delay_seconds || 3)) * 1000;
@@ -37,7 +39,7 @@ export default function OfferPopupModal({ offerPopup = null, currencySymbol = 'à
 
     const handleClose = () => {
         setIsOpen(false);
-        if (dontShowAgain || offerPopup.show_once) {
+        if (offerPopup.show_once && dontShowAgain) {
             try {
                 // Dismiss for 24 hours
                 localStorage.setItem('orio_offer_popup_dismissed_until', String(Date.now() + 24 * 60 * 60 * 1000));

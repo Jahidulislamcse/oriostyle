@@ -43,8 +43,20 @@ class Setting extends Model
             return UrlSanitizer::sanitize($this->value);
         }
 
+        $booleanKeys = [
+            'vat_inclusive',
+            'cash_on_delivery_enabled',
+            'online_payment_enabled',
+            'whatsapp_chat_enabled',
+            'popup_enabled',
+            'popup_show_once_per_session',
+        ];
+
+        if ($this->type === 'boolean' || in_array($this->key, $booleanKeys, true)) {
+            return filter_var($this->value, FILTER_VALIDATE_BOOLEAN);
+        }
+
         return match ($this->type) {
-            'boolean' => filter_var($this->value, FILTER_VALIDATE_BOOLEAN),
             'integer' => (int) $this->value,
             'float' => (float) $this->value,
             'json' => json_decode($this->value, true) ?? [],

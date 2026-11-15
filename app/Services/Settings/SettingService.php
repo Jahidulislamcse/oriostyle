@@ -209,11 +209,22 @@ class SettingService
      */
     public function set(string $key, mixed $value, string $group = 'general', string $type = 'string', bool $isPublic = true): Setting
     {
-        $stringValue = match (true) {
-            is_null($value) || $value === '' => null,
-            is_bool($value) => $value ? '1' : '0',
-            is_array($value) => json_encode($value),
-            default => (string) $value,
+        $inferredType = $this->determineTypeForKey($key, $value);
+        if ($type === 'string' && $inferredType !== 'string') {
+            $type = $inferredType;
+        }
+
+        $stringValue = match ($type) {
+            'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN) ? '1' : '0',
+            'integer' => (is_null($value) || $value === '') ? null : (string) (int) $value,
+            'float' => (is_null($value) || $value === '') ? null : (string) (float) $value,
+            'json' => is_array($value) ? json_encode($value) : (string) $value,
+            default => match (true) {
+                is_null($value) || $value === '' => null,
+                is_bool($value) => $value ? '1' : '0',
+                is_array($value) => json_encode($value),
+                default => (string) $value,
+            },
         };
 
         $setting = Setting::updateOrCreate(
@@ -240,13 +251,19 @@ class SettingService
     {
         foreach ($settings as $key => $value) {
             $group = $this->determineGroupForKey($key, $defaultGroup);
-            $type = $this->determineTypeForValue($value);
+            $type = $this->determineTypeForKey($key, $value);
 
-            $stringValue = match (true) {
-                is_null($value) => null,
-                is_bool($value) => $value ? '1' : '0',
-                is_array($value) => json_encode($value),
-                default => (string) $value,
+            $stringValue = match ($type) {
+                'boolean' => filter_var($value, FILTER_VALIDATE_BOOLEAN) ? '1' : '0',
+                'integer' => (is_null($value) || $value === '') ? null : (string) (int) $value,
+                'float' => (is_null($value) || $value === '') ? null : (string) (float) $value,
+                'json' => is_array($value) ? json_encode($value) : (string) $value,
+                default => match (true) {
+                    is_null($value) || $value === '' => null,
+                    is_bool($value) => $value ? '1' : '0',
+                    is_array($value) => json_encode($value),
+                    default => (string) $value,
+                },
             };
 
             Setting::updateOrCreate(
@@ -261,6 +278,30 @@ class SettingService
         }
 
         $this->clearCache();
+    }
+
+    /**
+     * Determine database type column based on setting key or value.
+     */
+    public function determineTypeForKey(string $key, mixed $value = null): string
+    {
+        if (array_key_exists($key, self::DEFAULTS)) {
+            $default = self::DEFAULTS[$key];
+            if (is_bool($default)) {
+                return 'boolean';
+            }
+            if (is_int($default)) {
+                return 'integer';
+            }
+            if (is_float($default)) {
+                return 'float';
+            }
+            if (is_array($default)) {
+                return 'json';
+            }
+        }
+
+        return $this->determineTypeForValue($value);
     }
 
     /**

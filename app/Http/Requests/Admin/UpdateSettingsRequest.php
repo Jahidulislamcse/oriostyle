@@ -15,6 +15,35 @@ class UpdateSettingsRequest extends FormRequest
     }
 
     /**
+     * Prepare the data for validation.
+     */
+    protected function prepareForValidation(): void
+    {
+        $booleans = [
+            'remove_site_logo',
+            'remove_site_logo_white',
+            'remove_site_favicon',
+            'vat_inclusive',
+            'cash_on_delivery_enabled',
+            'online_payment_enabled',
+            'whatsapp_chat_enabled',
+            'popup_enabled',
+            'popup_show_once_per_session',
+        ];
+
+        $merge = [];
+        foreach ($booleans as $key) {
+            if ($this->has($key)) {
+                $merge[$key] = $this->boolean($key);
+            }
+        }
+
+        if (!empty($merge)) {
+            $this->merge($merge);
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
