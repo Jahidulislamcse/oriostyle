@@ -8,6 +8,7 @@ import FormSelect from '@/Components/Common/FormSelect';
 import Modal from '@/Components/Common/Modal';
 import ConfirmDialog from '@/Components/Common/ConfirmDialog';
 import DataTable from '@/Components/Common/DataTable';
+import Pagination from '@/Components/Common/Pagination';
 import {
     FolderTree,
     Plus,
@@ -36,10 +37,14 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
     const [expandedRoots, setExpandedRoots] = useState(() => {
         const init = {};
         categories.forEach(c => {
-            if (!c.parent_id) init[c.id] = true;
+            init[c.id] = true;
         });
         return init;
     });
+
+    // Table View client-side pagination
+    const [tablePage, setTablePage] = useState(1);
+    const [tablePerPage, setTablePerPage] = useState('15');
 
     // Modals state
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -391,6 +396,72 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         });
     }, [categories, searchQuery, statusFilter, parentFilter]);
 
+    // Table View Client-side Pagination
+    const tablePerPageOptions = [
+        { label: '10 per page', value: '10' },
+        { label: '25 per page', value: '25' },
+        { label: '50 per page', value: '50' },
+        { label: 'Show All', value: 'all' },
+    ];
+
+    const paginatedCategories = useMemo(() => {
+        if (tablePerPage === 'all') return filteredCategories;
+        const perPageNum = Number(tablePerPage);
+        const start = (tablePage - 1) * perPageNum;
+        return filteredCategories.slice(start, start + perPageNum);
+    }, [filteredCategories, tablePage, tablePerPage]);
+
+    const categoryPagination = useMemo(() => {
+        const total = filteredCategories.length;
+        if (tablePerPage === 'all') {
+            return {
+                from: total > 0 ? 1 : 0,
+                to: total,
+                total,
+                links: [],
+            };
+        }
+        const perPageNum = Number(tablePerPage);
+        const lastPage = Math.max(1, Math.ceil(total / perPageNum));
+        const from = total > 0 ? (tablePage - 1) * perPageNum + 1 : 0;
+        const to = Math.min(total, tablePage * perPageNum);
+
+        const links = [
+            {
+                url: tablePage > 1 ? '#' : null,
+                label: '&laquo; Previous',
+                active: false,
+                page: Math.max(1, tablePage - 1),
+            },
+        ];
+
+        for (let p = 1; p <= lastPage; p++) {
+            links.push({
+                url: '#',
+                label: String(p),
+                active: p === tablePage,
+                page: p,
+            });
+        }
+
+        links.push({
+            url: tablePage < lastPage ? '#' : null,
+            label: 'Next &raquo;',
+            active: false,
+            page: Math.min(lastPage, tablePage + 1),
+        });
+
+        return {
+            from,
+            to,
+            total,
+            current_page: tablePage,
+            last_page: lastPage,
+            per_page: perPageNum,
+            links,
+        };
+    }, [filteredCategories.length, tablePage, tablePerPage]);
+
     // Group into Root categories and subcategories map for tree view
     const { rootCategories, subcategoriesMap } = useMemo(() => {
         const roots = [];
@@ -572,6 +643,152 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
         },
     ];
 
+    const renderSubcategoryNode = (sub, depth = 1) => {
+        const subImg = sub.featured_image?.image_url || sub.images?.[0]?.image_url || sub.images?.[0]?.image_path;
+        const subChildren = subcategoriesMap[sub.id] || [];
+        const isSubExpanded = Boolean(expandedRoots[sub.id]);
+
+        return (
+            <div key={sub.id} className="space-y-2">
+                <div
+                    style={{ marginLeft: `${Math.min(depth * 1.25, 4.5)}rem` }}
+                    className="pl-2.5 sm:pl-4 py-2 sm:py-2.5 pr-2.5 sm:pr-3 rounded-xl border-l-2 border-[#D4AF37] bg-[#F4F7FB]/60 dark:bg-[#0E2038]/60 hover:bg-[#FDFBF5]/50 dark:hover:bg-[#142C49]/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-y border-r border-slate-100 dark:border-[#1C3E63]/60"
+                >
+                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
+                        {subChildren.length > 0 ? (
+                            <button
+                                type="button"
+                                onClick={() => toggleRootExpand(sub.id)}
+                                className="p-1 rounded-md text-slate-400 hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-200/80 dark:hover:bg-[#071324] transition cursor-pointer shrink-0"
+                            >
+                                {isSubExpanded ? (
+                                    <ChevronDown className="w-3.5 h-3.5 text-[#D4AF37]" />
+                                ) : (
+                                    <ChevronRight className="w-3.5 h-3.5" />
+                                )}
+                            </button>
+                        ) : (
+                            <div className="w-5 flex items-center justify-center shrink-0">
+                                <CornerDownRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+                            </div>
+                        )}
+
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[#FDFBF5] dark:bg-[#071324] flex items-center justify-center text-[#926F18] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/30 shrink-0 overflow-hidden">
+                            {subImg ? (
+                                <img src={subImg} alt={sub.name} className="w-full h-full object-cover" />
+                            ) : (
+                                <CornerDownRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+                            )}
+                        </div>
+
+                        <div className="min-w-0 flex-1">
+                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                                <span className="font-bold text-[#0E2038] dark:text-white text-xs sm:text-sm break-words">
+                                    {sub.name}
+                                </span>
+                                <span className="font-mono text-[10px] sm:text-[11px] text-slate-400 dark:text-[#5E8CB6] truncate">
+                                    /{sub.slug}
+                                </span>
+                                {subChildren.length > 0 && (
+                                    <span className="text-[10px] px-1.5 py-0.2 rounded-full font-bold bg-amber-500/10 text-amber-500 border border-amber-500/30">
+                                        {subChildren.length} {subChildren.length === 1 ? 'sub' : 'subs'}
+                                    </span>
+                                )}
+                                {sub.is_featured && (
+                                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                        <Star className="w-2.5 h-2.5 mr-0.5 fill-[#D4AF37] text-[#D4AF37]" /> Featured
+                                    </span>
+                                )}
+                                {sub.discount && (
+                                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
+                                        🏷️ {sub.discount}
+                                    </span>
+                                )}
+                                {sub.images && sub.images.length > 0 && (
+                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-slate-100 dark:bg-[#071324] text-slate-500 dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
+                                        <ImageIcon className="w-2.5 h-2.5" /> {sub.images.length} {sub.images.length === 1 ? 'img' : 'imgs'}
+                                    </span>
+                                )}
+                                {sub.banner && (
+                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+                                        🖼️ Banner
+                                    </span>
+                                )}
+                            </div>
+                            {sub.description && (
+                                <p className="text-[11px] text-slate-500 dark:text-[#8EB0CF] line-clamp-1 font-normal">
+                                    {sub.description}
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    {/* Subcategory actions */}
+                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 pl-0 sm:pl-0 w-full sm:w-auto border-t sm:border-t-0 pt-1.5 sm:pt-0 border-slate-200/50 dark:border-[#1C3E63]/30">
+                        <span className="text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-medium border border-transparent dark:border-[#1C3E63]">
+                            #{sub.display_order}
+                        </span>
+
+                        <button
+                            type="button"
+                            onClick={() => toggleActive(sub)}
+                            className={`px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold cursor-pointer transition border ${
+                                sub.is_active
+                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60'
+                                    : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60'
+                            }`}
+                        >
+                            {sub.is_active ? 'Active' : 'Inactive'}
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => toggleFeatured(sub)}
+                            className={`p-1 rounded-md border transition cursor-pointer ${
+                                sub.is_featured
+                                    ? 'text-[#926F18] bg-[#FDFBF5] border-[#F5E7C2] dark:bg-[#071324] dark:text-[#EBD495] dark:border-[#D4AF37]/50'
+                                    : 'text-slate-400 hover:text-[#D4AF37] border-slate-200 dark:border-[#1C3E63]'
+                            }`}
+                        >
+                            <Star className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${sub.is_featured ? 'fill-[#D4AF37] text-[#D4AF37]' : ''}`} />
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => openCreateModal(sub.id)}
+                            title="Add nested subcategory"
+                            className="p-1 sm:p-1.5 rounded-md text-slate-400 hover:text-amber-500 hover:bg-amber-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                        >
+                            <Plus className="w-3.5 h-3.5" />
+                        </button>
+
+                        <button
+                            type="button"
+                            onClick={() => openEditModal(sub)}
+                            className="p-1 sm:p-1.5 rounded-md text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                        >
+                            <Edit3 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => setDeletingCategory(sub)}
+                            className="p-1 sm:p-1.5 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-[#071324] transition cursor-pointer"
+                        >
+                            <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                    </div>
+                </div>
+
+                {/* Recursive deeper children */}
+                {subChildren.length > 0 && isSubExpanded && (
+                    <div className="space-y-2">
+                        {subChildren.map((child) => renderSubcategoryNode(child, depth + 1))}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
     return (
         <AdminLayout title="Categories Taxonomy">
             <div className="space-y-4 sm:space-y-6">
@@ -748,15 +965,50 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                             </button>
                         </div>
                     )}
+
+                    {/* Table View Page Size Controls (if Table view) */}
+                    {viewMode === 'table' && (
+                        <div className="flex items-center gap-2 justify-end text-xs shrink-0">
+                            <span className="text-slate-500 dark:text-[#8EB0CF] font-medium">Per Page:</span>
+                            <select
+                                value={tablePerPage}
+                                onChange={(e) => {
+                                    setTablePerPage(e.target.value);
+                                    setTablePage(1);
+                                }}
+                                className="py-1 px-2.5 bg-[#F4F7FB] dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-lg text-xs font-semibold text-[#0E2038] dark:text-white cursor-pointer"
+                            >
+                                {tablePerPageOptions.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    )}
                 </div>
 
                 {/* Main Content Area */}
                 {viewMode === 'table' ? (
                     <DataTable
                         columns={tableColumns}
-                        data={filteredCategories}
+                        data={paginatedCategories}
                         searchable={false}
                         emptyMessage="No categories match your filter criteria."
+                        pagination={
+                            <Pagination
+                                pagination={categoryPagination}
+                                onPageChange={(page) => {
+                                    if (typeof page === 'number') {
+                                        setTablePage(page);
+                                    } else if (String(page).includes('Previous')) {
+                                        setTablePage((p) => Math.max(1, p - 1));
+                                    } else if (String(page).includes('Next')) {
+                                        setTablePage((p) => Math.min(categoryPagination.last_page, p + 1));
+                                    }
+                                }}
+                            />
+                        }
                     />
                 ) : (
                     /* Tree View Mode */
@@ -925,107 +1177,7 @@ export default function CategoryIndex({ categories = [], parentOptions = [], sta
                                             {isExpanded && (
                                                 <div className="p-2.5 sm:p-3.5 space-y-2 bg-white dark:bg-[#071324]/60">
                                                     {children.length > 0 ? (
-                                                        children.map((sub) => {
-                                                            const subImg = sub.featured_image?.image_url || sub.images?.[0]?.image_url || sub.images?.[0]?.image_path;
-
-                                                            return (
-                                                                <div
-                                                                    key={sub.id}
-                                                                    className="ml-1 sm:ml-7 pl-2.5 sm:pl-4 py-2 sm:py-2.5 pr-2.5 sm:pr-3 rounded-xl border-l-2 border-[#D4AF37] bg-[#F4F7FB]/60 dark:bg-[#0E2038]/60 hover:bg-[#FDFBF5]/50 dark:hover:bg-[#142C49]/60 transition flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-3 border-y border-r border-slate-100 dark:border-[#1C3E63]/60"
-                                                                >
-                                                                    <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
-                                                                        <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-[#FDFBF5] dark:bg-[#071324] flex items-center justify-center text-[#926F18] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/30 shrink-0 overflow-hidden">
-                                                                            {subImg ? (
-                                                                                <img src={subImg} alt={sub.name} className="w-full h-full object-cover" />
-                                                                            ) : (
-                                                                                <CornerDownRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#D4AF37]" />
-                                                                            )}
-                                                                        </div>
-                                                                        <div className="min-w-0 flex-1">
-                                                                            <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
-                                                                                <span className="font-bold text-[#0E2038] dark:text-white text-xs sm:text-sm break-words">
-                                                                                    {sub.name}
-                                                                                </span>
-                                                                                <span className="font-mono text-[10px] sm:text-[11px] text-slate-400 dark:text-[#5E8CB6] truncate">
-                                                                                    /{sub.slug}
-                                                                                </span>
-                                                                                {sub.is_featured && (
-                                                                                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                                                                        <Star className="w-2.5 h-2.5 mr-0.5 fill-[#D4AF37] text-[#D4AF37]" /> Featured
-                                                                                    </span>
-                                                                                )}
-                                                                                {sub.discount && (
-                                                                                    <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-bold bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50">
-                                                                                        🏷️ {sub.discount}
-                                                                                    </span>
-                                                                                )}
-                                                                                {sub.images && sub.images.length > 0 && (
-                                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-slate-100 dark:bg-[#071324] text-slate-500 dark:text-[#8EB0CF] border border-slate-200 dark:border-[#1C3E63]">
-                                                                                        <ImageIcon className="w-2.5 h-2.5" /> {sub.images.length} {sub.images.length === 1 ? 'img' : 'imgs'}
-                                                                                    </span>
-                                                                                )}
-                                                                                {sub.banner && (
-                                                                                    <span className="inline-flex items-center gap-1 px-1.5 py-0.2 rounded text-[9px] sm:text-[10px] font-medium bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
-                                                                                        🖼️ Banner
-                                                                                    </span>
-                                                                                )}
-                                                                            </div>
-                                                                            {sub.description && (
-                                                                                <p className="text-[11px] text-slate-500 dark:text-[#8EB0CF] line-clamp-1 font-normal">
-                                                                                    {sub.description}
-                                                                                </p>
-                                                                            )}
-                                                                        </div>
-                                                                    </div>
-
-                                                                    {/* Subcategory actions */}
-                                                                    <div className="flex flex-wrap items-center justify-between sm:justify-end gap-1.5 pl-0 sm:pl-0 w-full sm:w-auto border-t sm:border-t-0 pt-1.5 sm:pt-0 border-slate-200/50 dark:border-[#1C3E63]/30">
-                                                                        <span className="text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded bg-slate-200/70 dark:bg-[#071324] text-slate-600 dark:text-[#BACDE3] font-medium border border-transparent dark:border-[#1C3E63]">
-                                                                            #{sub.display_order}
-                                                                        </span>
-
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => toggleActive(sub)}
-                                                                            className={`px-2 py-0.5 rounded-full text-[10px] sm:text-[11px] font-semibold cursor-pointer transition border ${
-                                                                                sub.is_active
-                                                                                    ? 'bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-300 dark:border-emerald-800/60'
-                                                                                    : 'bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-300 dark:border-rose-800/60'
-                                                                            }`}
-                                                                        >
-                                                                            {sub.is_active ? 'Active' : 'Inactive'}
-                                                                        </button>
-
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => toggleFeatured(sub)}
-                                                                            className={`p-1 rounded-md border transition cursor-pointer ${
-                                                                                sub.is_featured
-                                                                                    ? 'text-[#926F18] bg-[#FDFBF5] border-[#F5E7C2] dark:bg-[#071324] dark:text-[#EBD495] dark:border-[#D4AF37]/50'
-                                                                                    : 'text-slate-400 hover:text-[#D4AF37] border-slate-200 dark:border-[#1C3E63]'
-                                                                            }`}
-                                                                        >
-                                                                            <Star className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${sub.is_featured ? 'fill-[#D4AF37] text-[#D4AF37]' : ''}`} />
-                                                                        </button>
-
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => openEditModal(sub)}
-                                                                            className="p-1 sm:p-1.5 rounded-md text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-indigo-50 dark:hover:bg-[#071324] transition cursor-pointer"
-                                                                        >
-                                                                            <Edit3 className="w-3.5 h-3.5" />
-                                                                        </button>
-                                                                        <button
-                                                                            type="button"
-                                                                            onClick={() => setDeletingCategory(sub)}
-                                                                            className="p-1 sm:p-1.5 rounded-md text-slate-400 hover:text-rose-600 dark:hover:text-rose-300 hover:bg-rose-50 dark:hover:bg-[#071324] transition cursor-pointer"
-                                                                        >
-                                                                            <Trash2 className="w-3.5 h-3.5" />
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            );
-                                                        })
+                                                        children.map((sub) => renderSubcategoryNode(sub, 1))
                                                     ) : (
                                                         <div className="py-3.5 text-center text-xs text-slate-400 dark:text-[#8EB0CF]">
                                                             No subcategories nested under {root.name} yet.{' '}

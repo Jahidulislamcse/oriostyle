@@ -8,6 +8,7 @@ import FormSelect from '@/Components/Common/FormSelect';
 import Modal from '@/Components/Common/Modal';
 import ConfirmDialog from '@/Components/Common/ConfirmDialog';
 import DataTable from '@/Components/Common/DataTable';
+import Pagination from '@/Components/Common/Pagination';
 import {
     Package,
     Plus,
@@ -40,6 +41,7 @@ export default function ProductIndex({
     const [categoryFilter, setCategoryFilter] = useState(filters.category || 'all');
     const [brandFilter, setBrandFilter] = useState(filters.brand || 'all');
     const [statusFilter, setStatusFilter] = useState(filters.status || 'all');
+    const [perPageFilter, setPerPageFilter] = useState(filters.per_page || 12);
 
     // Modals state
     const [stockModalProduct, setStockModalProduct] = useState(null);
@@ -114,11 +116,12 @@ export default function ProductIndex({
         search = searchQuery,
         cat = categoryFilter,
         br = brandFilter,
-        st = statusFilter
+        st = statusFilter,
+        pp = perPageFilter
     ) => {
         router.get(
             route('admin.products.index'),
-            { search, category: cat, brand: br, status: st },
+            { search, category: cat, brand: br, status: st, per_page: pp },
             { preserveState: true, replace: true }
         );
     };
@@ -207,6 +210,14 @@ export default function ProductIndex({
         { label: 'Low Stock Alert', value: 'low_stock' },
         { label: 'Out of Stock', value: 'out_of_stock' },
         { label: 'Featured Only', value: 'featured' },
+    ];
+
+    const perPageOptions = [
+        { label: '12 per page', value: '12' },
+        { label: '24 per page', value: '24' },
+        { label: '48 per page', value: '48' },
+        { label: '96 per page', value: '96' },
+        { label: '200 per page', value: '200' },
     ];
 
     const getStockBadge = (product) => {
@@ -561,10 +572,21 @@ export default function ProductIndex({
                                 value={statusFilter}
                                 onChange={(e) => {
                                     setStatusFilter(e.target.value);
-                                    applyFilters(searchQuery, categoryFilter, brandFilter, e.target.value);
+                                    applyFilters(searchQuery, categoryFilter, brandFilter, e.target.value, perPageFilter);
                                 }}
                                 containerClassName="w-full sm:w-40"
                                 options={statusOptions}
+                                placeholder={null}
+                            />
+
+                            <FormSelect
+                                value={String(perPageFilter)}
+                                onChange={(e) => {
+                                    setPerPageFilter(Number(e.target.value));
+                                    applyFilters(searchQuery, categoryFilter, brandFilter, statusFilter, Number(e.target.value));
+                                }}
+                                containerClassName="w-full sm:w-32"
+                                options={perPageOptions}
                                 placeholder={null}
                             />
 
@@ -604,10 +626,11 @@ export default function ProductIndex({
                     </div>
                 ) : viewMode === 'table' ? (
                     <div className="bg-navy-900/80 border border-gold-500/20 rounded-xl overflow-hidden">
-                        <DataTable columns={columns} data={productList} searchable={false} />
+                        <DataTable columns={columns} data={productList} pagination={products} searchable={false} />
                     </div>
                 ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                         {productList.map((product) => {
                             const imageUrl =
                                 product.primary_image_url ||
@@ -737,6 +760,14 @@ export default function ProductIndex({
                                 </div>
                             );
                         })}
+                        </div>
+
+                        {/* Grid View Pagination Footer */}
+                        {products?.links && (
+                            <div className="mt-5 p-4 bg-navy-900/80 border border-gold-500/20 rounded-xl">
+                                <Pagination pagination={products} />
+                            </div>
+                        )}
                     </div>
                 )}
             </div>

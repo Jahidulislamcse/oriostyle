@@ -31,8 +31,12 @@ class ProductController extends Controller
         $category = $request->query('category', 'all');
         $brand = $request->query('brand', 'all');
         $status = $request->query('status', 'all');
+        $perPage = (int) $request->query('per_page', 12);
+        if ($perPage <= 0 || $perPage > 500) {
+            $perPage = 12;
+        }
 
-        $products = $this->productService->getAdminProductsList($search, $category, $brand, $status, 12);
+        $products = $this->productService->getAdminProductsList($search, $category, $brand, $status, $perPage);
 
         $categories = $this->categoryService->getParentDropdownOptions();
         $brands = Brand::query()->orderBy('name')->get(['id', 'name']);
@@ -61,6 +65,7 @@ class ProductController extends Controller
                 'category' => $category,
                 'brand' => $brand,
                 'status' => $status,
+                'per_page' => $perPage,
             ],
         ]);
     }

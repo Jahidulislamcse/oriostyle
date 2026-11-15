@@ -1,7 +1,7 @@
 import React from 'react';
 import { router } from '@inertiajs/react';
 
-export default function Pagination({ pagination, className = '' }) {
+export default function Pagination({ pagination, onPageChange = null, className = '' }) {
     if (!pagination) return null;
 
     const links = pagination.links || [];
@@ -40,9 +40,15 @@ export default function Pagination({ pagination, className = '' }) {
                             <button
                                 key={idx}
                                 type="button"
-                                onClick={() => router.visit(link.url, { preserveScroll: true, preserveState: true })}
+                                onClick={() => {
+                                    if (onPageChange) {
+                                        onPageChange(link.page ?? link.label, link);
+                                    } else if (link.url) {
+                                        router.visit(link.url, { preserveScroll: true, preserveState: true });
+                                    }
+                                }}
                                 dangerouslySetInnerHTML={{ __html: link.label }}
-                                className={`px-2.5 py-1.5 text-xs rounded-lg font-medium transition ${
+                                className={`px-2.5 py-1.5 text-xs rounded-lg font-medium transition cursor-pointer ${
                                     link.active
                                         ? 'bg-[#D4AF37] text-[#071324] font-bold shadow-xs'
                                         : 'bg-white dark:bg-[#071324] text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-[#142C49] border border-slate-200 dark:border-[#1C3E63]/70'
