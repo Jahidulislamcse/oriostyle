@@ -127,6 +127,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('guest:admin')->group(function () {
         Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
         Route::post('/login', [AdminAuthController::class, 'login'])->name('login.store');
+        Route::post('/login/store', [AdminAuthController::class, 'login']);
     });
 
     Route::middleware(['auth:admin,web', 'admin'])->group(function () {
