@@ -36,7 +36,20 @@ export default function ProductIndex({
     currentOfferProductId = null,
     popupEnabled = false
 }) {
-    const [viewMode, setViewMode] = useState('table');
+    const [viewMode, setViewMode] = useState(() => {
+        if (typeof window !== 'undefined') {
+            const saved = localStorage.getItem('orio_admin_product_view_mode');
+            if (saved === 'table' || saved === 'grid') return saved;
+        }
+        return 'grid';
+    });
+
+    const handleViewModeChange = (mode) => {
+        setViewMode(mode);
+        try {
+            localStorage.setItem('orio_admin_product_view_mode', mode);
+        } catch (e) {}
+    };
     const [searchQuery, setSearchQuery] = useState(filters.search || '');
     const [categoryFilter, setCategoryFilter] = useState(filters.category || 'all');
     const [brandFilter, setBrandFilter] = useState(filters.brand || 'all');
@@ -592,16 +605,16 @@ export default function ProductIndex({
 
                             <div className="flex items-center bg-navy-950 border border-slate-700/80 rounded-xl p-1 shrink-0">
                                 <button
-                                    onClick={() => setViewMode('table')}
+                                    onClick={() => handleViewModeChange('table')}
                                     className={`p-1.5 rounded-lg transition-colors ${viewMode === 'table' ? 'bg-gold-500/20 text-gold-400' : 'text-slate-400 hover:text-slate-200'}`}
                                     title="Table View"
                                 >
                                     <List className="w-4 h-4" />
                                 </button>
                                 <button
-                                    onClick={() => setViewMode('grid')}
+                                    onClick={() => handleViewModeChange('grid')}
                                     className={`p-1.5 rounded-lg transition-colors ${viewMode === 'grid' ? 'bg-gold-500/20 text-gold-400' : 'text-slate-400 hover:text-slate-200'}`}
-                                    title="Grid View"
+                                    title="Card / Grid View"
                                 >
                                     <Grid className="w-4 h-4" />
                                 </button>
