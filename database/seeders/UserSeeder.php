@@ -17,37 +17,10 @@ class UserSeeder extends Seeder
 
         $users = [
             [
-                'name' => 'Super Administrator',
-                'email' => 'superadmin@orio.com',
-                'phone' => '01711000001',
-                'role' => User::ROLE_SUPER_ADMIN,
-                'is_active' => true,
-                'password' => $defaultPassword,
-                'email_verified_at' => now(),
-            ],
-            [
-                'name' => 'Store Administrator',
-                'email' => 'admin@orio.com',
-                'phone' => '01711000002',
-                'role' => User::ROLE_ADMIN,
-                'is_active' => true,
-                'password' => $defaultPassword,
-                'email_verified_at' => now(),
-            ],
-            [
                 'name' => 'Demo Customer',
                 'email' => 'customer@orio.com',
                 'phone' => '01711000003',
                 'role' => User::ROLE_CUSTOMER,
-                'is_active' => true,
-                'password' => $defaultPassword,
-                'email_verified_at' => now(),
-            ],
-            [
-                'name' => 'Procurement Officer',
-                'email' => 'staff@orio.com',
-                'phone' => '01711000004',
-                'role' => User::ROLE_ADMIN,
                 'is_active' => true,
                 'password' => $defaultPassword,
                 'email_verified_at' => now(),

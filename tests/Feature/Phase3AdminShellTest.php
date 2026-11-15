@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
 use App\Models\User;
 use App\Services\Settings\SettingService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -62,9 +63,9 @@ class Phase3AdminShellTest extends TestCase
     {
         $this->seed();
 
-        $admin = User::where('role', User::ROLE_ADMIN)->first();
+        $admin = Admin::where('role', Admin::ROLE_ADMIN)->first();
 
-        $response = $this->actingAs($admin)->get('/admin/dashboard');
+        $response = $this->actingAs($admin, 'admin')->get('/admin/dashboard');
 
         $response->assertStatus(200);
         $response->assertInertia(fn (Assert $page) => $page
@@ -72,7 +73,7 @@ class Phase3AdminShellTest extends TestCase
             ->has('user')
             ->has('metrics')
             ->where('user.email', $admin->email)
-            ->where('user.role', User::ROLE_ADMIN)
+            ->where('user.role', Admin::ROLE_ADMIN)
             ->has('settings')
         );
     }
@@ -83,9 +84,9 @@ class Phase3AdminShellTest extends TestCase
     public function test_flash_messages_trigger_shared_toast_props(): void
     {
         $this->seed();
-        $admin = User::where('role', User::ROLE_ADMIN)->first();
+        $admin = Admin::where('role', Admin::ROLE_ADMIN)->first();
 
-        $response = $this->actingAs($admin)->withSession([
+        $response = $this->actingAs($admin, 'admin')->withSession([
             'success' => 'System settings updated successfully!',
         ])->get('/admin/dashboard');
 

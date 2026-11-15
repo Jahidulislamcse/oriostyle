@@ -16,6 +16,16 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->trustProxies(at: '*');
 
+        $middleware->redirectGuestsTo(fn (\Illuminate\Http\Request $request) => 
+            $request->is('admin*') ? route('admin.login') : route('login')
+        );
+
+        $middleware->redirectUsersTo(fn (\Illuminate\Http\Request $request) => 
+            \Illuminate\Support\Facades\Auth::guard('admin')->check() || $request->is('admin*') 
+                ? route('admin.dashboard') 
+                : route('home')
+        );
+
         $middleware->web(append: [
             HandleInertiaRequests::class,
         ]);

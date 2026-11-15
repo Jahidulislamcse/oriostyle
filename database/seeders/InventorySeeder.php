@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\DamageLog;
 use App\Models\InventoryMovement;
 use App\Models\Product;
@@ -15,7 +16,7 @@ class InventorySeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::where('role', 'super_admin')->first();
+        $admin = Admin::where('role', 'super_admin')->first() ?? User::where('role', 'super_admin')->first();
         $products = Product::with('variants')->take(5)->get();
 
         if ($products->isEmpty()) {

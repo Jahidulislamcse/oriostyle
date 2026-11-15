@@ -132,7 +132,7 @@ class HomepageBentoTest extends TestCase
 
     public function test_non_admin_cannot_access_bento_manager(): void
     {
-        $this->get('/admin/homepage-bento')->assertRedirect('/login');
+        $this->get('/admin/homepage-bento')->assertRedirect(route('admin.login'));
 
         $this->actingAs($this->customer)->get('/admin/homepage-bento')->assertStatus(403);
     }

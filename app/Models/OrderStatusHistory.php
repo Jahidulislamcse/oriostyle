@@ -38,10 +38,18 @@ class OrderStatusHistory extends Model
     }
 
     /**
-     * Relationship: User (admin or staff who executed the action)
+     * Relationship: User (customer or user who executed the action)
      */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
+    }
+
+    /**
+     * Relationship: Admin (administrator who executed the action)
+     */
+    public function admin(): BelongsTo
+    {
+        return $this->belongsTo(Admin::class, 'user_id');
     }
 }

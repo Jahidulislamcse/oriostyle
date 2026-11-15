@@ -155,7 +155,7 @@ class Phase2AuthenticationTest extends TestCase
     {
         $response = $this->get('/admin/dashboard');
 
-        $response->assertRedirect('/login');
+        $response->assertRedirect('/admin/login');
     }
 
     /**

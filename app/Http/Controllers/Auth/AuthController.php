@@ -106,6 +106,10 @@ class AuthController extends Controller
      */
     public function redirectToGoogle(): RedirectResponse|SymfonyResponse
     {
+        if (!class_exists(Socialite::class)) {
+            return redirect()->route('register')->with('error', 'Google Sign-In package is not installed on the server yet. Please run "composer install" on the server or register with email.');
+        }
+
         $clientId = config('services.google.client_id');
         $clientSecret = config('services.google.client_secret');
 
@@ -122,6 +126,10 @@ class AuthController extends Controller
      */
     public function handleGoogleCallback(Request $request): SymfonyResponse|RedirectResponse
     {
+        if (!class_exists(Socialite::class)) {
+            return redirect()->route('login')->with('error', 'Google Sign-In package is not installed on the server yet. Please run "composer install" on the server.');
+        }
+
         $clientId = config('services.google.client_id');
         $clientSecret = config('services.google.client_secret');
 

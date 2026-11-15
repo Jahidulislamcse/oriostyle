@@ -485,7 +485,7 @@ class Phase17OrderManagementTest extends TestCase
     public function test_non_admin_cannot_access_orders_management(): void
     {
         $guestRes = $this->get(route('admin.orders.index'));
-        $guestRes->assertRedirect(route('login'));
+        $guestRes->assertRedirect(route('admin.login'));
 
         $customerRes = $this->actingAs($this->customerUser)
             ->get(route('admin.orders.index'));

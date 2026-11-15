@@ -236,7 +236,7 @@ class Phase10InventoryTest extends TestCase
 
     public function test_customer_or_guest_cannot_access_inventory(): void
     {
-        $this->get('/admin/inventory')->assertRedirect('/login');
+        $this->get('/admin/inventory')->assertRedirect(route('admin.login'));
 
         $this->actingAs($this->customer)->get('/admin/inventory')->assertStatus(403);
 

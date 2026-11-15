@@ -1,6 +1,6 @@
 import React from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { Lock, Mail, Sparkles, ArrowRight } from 'lucide-react';
+import { Lock, Mail, Sparkles, ArrowRight, Shield } from 'lucide-react';
 import ThemeToggle from '@/Components/Common/ThemeToggle';
 
 export default function Login({ status }) {
@@ -175,6 +175,16 @@ export default function Login({ status }) {
                             </button>
                         </div>
                     </form>
+
+                    <div className="mt-6 pt-5 border-t border-slate-200 dark:border-[#1C3E63]/60 text-center">
+                        <Link
+                            href={route('admin.login')}
+                            className="inline-flex items-center gap-1.5 text-xs font-medium text-slate-500 hover:text-slate-800 dark:text-[#8AA8CD] dark:hover:text-[#D4AF37] transition"
+                        >
+                            <Shield className="w-3.5 h-3.5" />
+                            <span>Staff or Administrator? Sign in to Admin Portal</span>
+                        </Link>
+                    </div>
                 </div>
             </div>
         </div>

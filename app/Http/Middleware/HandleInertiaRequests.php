@@ -43,40 +43,55 @@ class HandleInertiaRequests extends Middleware
         $settingService = app(SettingService::class);
         $settings = $settingService->getAllPublicCached();
 
+        $adminUser = $request->user('admin');
+        $webUser = $request->user('web') ?? $request->user();
+        $currentUser = $adminUser ?? $webUser;
+
+        $customerUser = $webUser instanceof \App\Models\User ? $webUser : null;
+
         return [
             ...parent::share($request),
             'appName' => $settings['site_name'] ?? config('app.name', 'ORIO STYLE'),
             'settings' => $settings,
             'navCategories' => fn () => app(CategoryService::class)->getStorefrontNavTree(),
             'auth' => [
-                'user' => $request->user() ? [
-                    'id' => $request->user()->id,
-                    'name' => $request->user()->name,
-                    'email' => $request->user()->email,
-                    'phone' => $request->user()->phone ?? null,
-                    'role' => $request->user()->role ?? 'customer',
-                    'is_active' => (bool) ($request->user()->is_active ?? true),
+                'user' => $currentUser ? [
+                    'id' => $currentUser->id,
+                    'name' => $currentUser->name,
+                    'email' => $currentUser->email,
+                    'phone' => $currentUser->phone ?? null,
+                    'role' => $currentUser->role ?? 'customer',
+                    'is_active' => (bool) ($currentUser->is_active ?? true),
+                    'is_admin' => $currentUser instanceof \App\Models\Admin || ($currentUser->hasAdminAccess() ?? false),
+                ] : null,
+                'admin' => $adminUser ? [
+                    'id' => $adminUser->id,
+                    'name' => $adminUser->name,
+                    'email' => $adminUser->email,
+                    'phone' => $adminUser->phone ?? null,
+                    'role' => $adminUser->role ?? 'admin',
+                    'is_active' => (bool) ($adminUser->is_active ?? true),
                 ] : null,
             ],
-            'cart' => function () use ($request) {
+            'cart' => function () use ($request, $customerUser) {
                 /** @var \App\Services\Storefront\CartService $cartService */
                 $cartService = app(\App\Services\Storefront\CartService::class);
                 $sessionId = $request->header('X-Cart-Session')
                     ?: ($request->cookie('cart_session') ?: $request->session()->getId());
-                $cart = $cartService->getOrCreateCart($request->user(), $sessionId);
+                $cart = $cartService->getOrCreateCart($customerUser, $sessionId);
                 return $cartService->formatCartPayload($cart);
             },
-            'wishlistCount' => function () use ($request) {
+            'wishlistCount' => function () use ($request, $customerUser) {
                 /** @var \App\Services\Storefront\WishlistService $wishlistService */
                 $wishlistService = app(\App\Services\Storefront\WishlistService::class);
                 $sessionId = $wishlistService->resolveSessionId($request);
-                return $wishlistService->getWishlistCount($request->user(), $sessionId);
+                return $wishlistService->getWishlistCount($customerUser, $sessionId);
             },
-            'wishlistProductIds' => function () use ($request) {
+            'wishlistProductIds' => function () use ($request, $customerUser) {
                 /** @var \App\Services\Storefront\WishlistService $wishlistService */
                 $wishlistService = app(\App\Services\Storefront\WishlistService::class);
                 $sessionId = $wishlistService->resolveSessionId($request);
-                return $wishlistService->getWishlistProductIds($request->user(), $sessionId);
+                return $wishlistService->getWishlistProductIds($customerUser, $sessionId);
             },
             'ziggy' => fn () => [
                 ...(new Ziggy)->toArray(),
@@ -90,8 +105,8 @@ class HandleInertiaRequests extends Middleware
                 'warning' => fn () => $request->session()->get('warning'),
                 'info' => fn () => $request->session()->get('info'),
             ],
-            'adminNotifications' => function () use ($request) {
-                $user = $request->user();
+            'adminNotifications' => function () use ($adminUser, $currentUser) {
+                $user = $adminUser ?? $currentUser;
                 if (!$user || !in_array($user->role, ['super_admin', 'admin', 'manager', 'inventory_staff'], true)) {
                     return null;
                 }

@@ -297,7 +297,11 @@ export default function AdminLayout({ title = '', children }) {
 
     const handleLogout = (e) => {
         e.preventDefault();
-        post(route('logout'));
+        try {
+            post(route('admin.logout'));
+        } catch {
+            post(route('logout'));
+        }
     };
 
     // Save sidebar scroll position continuously

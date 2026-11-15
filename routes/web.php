@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\Auth\AdminAuthController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\CategoryController;
@@ -121,13 +122,17 @@ Route::middleware('auth')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Admin & Backoffice Protected Routes (Requires Auth & Staff Role)
+| Admin Authentication & Backoffice Protected Routes (Separate Admin Login URL)
 |--------------------------------------------------------------------------
 */
-Route::prefix('admin')
-    ->name('admin.')
-    ->middleware(['auth', 'admin'])
-    ->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::middleware('guest:admin')->group(function () {
+        Route::get('/login', [AdminAuthController::class, 'showLoginForm'])->name('login');
+        Route::post('/login', [AdminAuthController::class, 'login'])->name('login.store');
+    });
+
+    Route::middleware(['auth:admin,web', 'admin'])->group(function () {
+        Route::post('/logout', [AdminAuthController::class, 'logout'])->name('logout');
         Route::get('/notifications/poll', [NotificationController::class, 'poll'])->name('notifications.poll');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/analytics', fn () => redirect()->route('admin.dashboard'))->name('analytics.index');
@@ -246,3 +251,4 @@ Route::prefix('admin')
         Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
         Route::post('/settings/clear-cache', [SettingsController::class, 'clearCache'])->name('settings.clear-cache');
     });
+});

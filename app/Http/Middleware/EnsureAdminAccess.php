@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Admin;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
@@ -17,19 +18,21 @@ class EnsureAdminAccess
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $user = $request->user();
+        /** @var Admin|User|null $user */
+        $user = $request->user('admin') ?? $request->user();
 
         if (! $user) {
-            return redirect()->guest(route('login'));
+            return redirect()->guest(route('admin.login'));
         }
 
         // Check active account status
         if (! $user->is_active) {
+            Auth::guard('admin')->logout();
             Auth::guard('web')->logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return redirect()->route('login')->withErrors([
+            return redirect()->route('admin.login')->withErrors([
                 'email' => 'Your account has been deactivated. Please contact support.',
             ]);
         }

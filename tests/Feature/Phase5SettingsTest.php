@@ -187,7 +187,7 @@ class Phase5SettingsTest extends TestCase
     public function test_guest_is_redirected_to_login(): void
     {
         $response = $this->get(route('admin.settings.index'));
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(route('admin.login'));
     }
 
     public function test_settings_are_passed_to_storefront_homepage(): void

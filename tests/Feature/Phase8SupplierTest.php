@@ -246,7 +246,7 @@ class Phase8SupplierTest extends TestCase
     public function test_customer_or_guest_cannot_access_suppliers_management(): void
     {
         // Guest redirect
-        $this->get('/admin/suppliers')->assertRedirect('/login');
+        $this->get('/admin/suppliers')->assertRedirect(route('admin.login'));
 
         // Customer forbidden 403
         $this->actingAs($this->customer)->get('/admin/suppliers')->assertStatus(403);

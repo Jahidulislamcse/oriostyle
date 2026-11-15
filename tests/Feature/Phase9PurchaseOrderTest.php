@@ -356,7 +356,7 @@ class Phase9PurchaseOrderTest extends TestCase
     {
         // Guest
         $guestResponse = $this->get(route('admin.purchase-orders.index'));
-        $guestResponse->assertRedirect(route('login'));
+        $guestResponse->assertRedirect(route('admin.login'));
 
         // Customer
         $customerResponse = $this->actingAs($this->customerUser)

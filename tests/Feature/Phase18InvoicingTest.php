@@ -103,7 +103,7 @@ class Phase18InvoicingTest extends TestCase
     {
         $response = $this->get(route('admin.orders.invoice', $this->order->id));
 
-        $response->assertRedirect(route('login'));
+        $response->assertRedirect(route('admin.login'));
     }
 
     public function test_invoice_returns_404_for_non_existent_order(): void

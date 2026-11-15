@@ -266,7 +266,7 @@ class Phase4CategoryTest extends TestCase
     {
         // Unauthenticated guest
         $guestResponse = $this->get(route('admin.categories.index'));
-        $guestResponse->assertRedirect(route('login'));
+        $guestResponse->assertRedirect(route('admin.login'));
 
         // Customer
         $customerResponse = $this->actingAs($this->customerUser)

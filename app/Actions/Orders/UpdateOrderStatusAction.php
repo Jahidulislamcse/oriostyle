@@ -2,6 +2,7 @@
 
 namespace App\Actions\Orders;
 
+use App\Models\Admin;
 use App\Models\InventoryMovement;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
@@ -54,7 +55,7 @@ class UpdateOrderStatusAction
         Order $order,
         string $newStatus,
         ?string $adminNotes = null,
-        ?User $adminUser = null
+        User|Admin|null $adminUser = null
     ): Order {
         $currentStatus = $order->order_status;
 
@@ -126,7 +127,7 @@ class UpdateOrderStatusAction
     /**
      * Restore product and variant stock upon order cancellation or return.
      */
-    protected function restockOrderItems(Order $order, string $reasonStatus, ?User $adminUser): void
+    protected function restockOrderItems(Order $order, string $reasonStatus, User|Admin|null $adminUser): void
     {
         $order->loadMissing('items.product', 'items.variant');
 

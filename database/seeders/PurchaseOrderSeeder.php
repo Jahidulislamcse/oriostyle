@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\Product;
 use App\Models\PurchaseOrder;
 use App\Models\Supplier;
@@ -16,7 +17,7 @@ class PurchaseOrderSeeder extends Seeder
      */
     public function run(PurchaseOrderService $poService): void
     {
-        $admin = User::whereIn('role', [User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN])->first();
+        $admin = Admin::whereIn('role', [Admin::ROLE_SUPER_ADMIN, Admin::ROLE_ADMIN])->first() ?? User::whereIn('role', [User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN])->first();
         $adminId = $admin?->id;
 
         $suppliers = Supplier::all()->keyBy('email');

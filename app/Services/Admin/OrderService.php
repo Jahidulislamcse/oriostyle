@@ -3,6 +3,7 @@
 namespace App\Services\Admin;
 
 use App\Actions\Orders\UpdateOrderStatusAction;
+use App\Models\Admin;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use App\Models\User;
@@ -79,13 +80,14 @@ class OrderService
             'items.product.primaryImage',
             'items.variant',
             'statusHistories.user:id,name,role',
+            'statusHistories.admin:id,name,role',
         ]);
     }
 
     /**
      * Update order workflow status with transition timestamps and audit history.
      */
-    public function updateOrderStatus(Order $order, string $newStatus, ?string $adminNotes = null, ?User $adminUser = null): Order
+    public function updateOrderStatus(Order $order, string $newStatus, ?string $adminNotes = null, User|Admin|null $adminUser = null): Order
     {
         $this->updateOrderStatusAction->execute($order, $newStatus, $adminNotes, $adminUser);
 
@@ -95,7 +97,7 @@ class OrderService
     /**
      * Update order payment status.
      */
-    public function updatePaymentStatus(Order $order, string $paymentStatus, ?string $adminNotes = null, ?User $adminUser = null): Order
+    public function updatePaymentStatus(Order $order, string $paymentStatus, ?string $adminNotes = null, User|Admin|null $adminUser = null): Order
     {
         $oldPaymentStatus = $order->payment_status;
         $order->payment_status = $paymentStatus;

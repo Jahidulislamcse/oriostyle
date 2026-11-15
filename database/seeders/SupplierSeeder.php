@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\Supplier;
 use App\Models\SupplierLedger;
 use App\Models\User;
@@ -14,7 +15,7 @@ class SupplierSeeder extends Seeder
      */
     public function run(): void
     {
-        $adminUser = User::whereIn('role', [User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN])->first();
+        $adminUser = Admin::whereIn('role', [Admin::ROLE_SUPER_ADMIN, Admin::ROLE_ADMIN])->first() ?? User::whereIn('role', [User::ROLE_SUPER_ADMIN, User::ROLE_ADMIN])->first();
         $adminId = $adminUser?->id;
 
         $suppliersData = [
