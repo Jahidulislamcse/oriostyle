@@ -22,8 +22,20 @@ class SettingsController extends Controller
 
         $products = Product::query()
             ->active()
+            ->with(['primaryImage', 'images'])
             ->orderBy('name')
-            ->get(['id', 'name', 'sku', 'base_price', 'sale_price']);
+            ->get(['id', 'name', 'sku', 'slug', 'base_price', 'sale_price'])
+            ->map(function (Product $p) {
+                return [
+                    'id' => $p->id,
+                    'name' => $p->name,
+                    'sku' => $p->sku,
+                    'slug' => $p->slug,
+                    'base_price' => (float) $p->base_price,
+                    'sale_price' => $p->sale_price !== null ? (float) $p->sale_price : null,
+                    'image_url' => $p->primary_image_url ?: '/storefront/img/category/1.jpg',
+                ];
+            });
 
         $system = [
             'phpVersion' => PHP_VERSION,

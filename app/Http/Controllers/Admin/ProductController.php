@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Services\Catalog\CategoryService;
 use App\Services\Catalog\ProductService;
+use App\Services\Settings\SettingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,7 +18,8 @@ class ProductController extends Controller
 {
     public function __construct(
         protected ProductService $productService,
-        protected CategoryService $categoryService
+        protected CategoryService $categoryService,
+        protected SettingService $settingService
     ) {}
 
     /**
@@ -44,11 +46,16 @@ class ProductController extends Controller
             'featured_count' => Product::where('is_featured', true)->count(),
         ];
 
+        $currentOfferProductId = (int) $this->settingService->get('popup_product_id');
+        $popupEnabled = filter_var($this->settingService->get('popup_enabled'), FILTER_VALIDATE_BOOLEAN);
+
         return Inertia::render('Admin/Products/Index', [
             'products' => $products,
             'categories' => $categories,
             'brands' => $brands,
             'stats' => $stats,
+            'currentOfferProductId' => $currentOfferProductId,
+            'popupEnabled' => $popupEnabled,
             'filters' => [
                 'search' => $search ?? '',
                 'category' => $category,
@@ -197,6 +204,43 @@ class ProductController extends Controller
         $this->productService->flushCache();
 
         return redirect()->back()->with('success', "Product '{$product->name}' featured status updated.");
+    }
+
+    /**
+     * Set a product as the active promotional offer popup item with its discounted price.
+     */
+    public function setOffer(Request $request, Product $product): RedirectResponse
+    {
+        $validated = $request->validate([
+            'discounted_price' => ['required', 'numeric', 'min:0.01', 'lt:' . $product->base_price],
+            'badge_text' => ['nullable', 'string', 'max:100'],
+            'coupon_code' => ['nullable', 'string', 'max:50'],
+            'activate_popup' => ['nullable', 'boolean'],
+        ], [
+            'discounted_price.lt' => 'Discounted offer price must be less than regular base price (৳' . number_format($product->base_price, 2) . ').',
+            'discounted_price.required' => 'Please provide the discounted offer price.',
+        ]);
+
+        $product->update([
+            'sale_price' => $validated['discounted_price'],
+        ]);
+        $this->productService->flushCache();
+
+        $this->settingService->set('popup_product_id', $product->id, 'popup', 'integer');
+        $this->settingService->set('popup_enabled', $request->boolean('activate_popup', true), 'popup', 'boolean');
+
+        if (!empty($validated['badge_text'])) {
+            $this->settingService->set('popup_badge_text', $validated['badge_text'], 'popup');
+        }
+
+        if (array_key_exists('coupon_code', $validated)) {
+            $this->settingService->set('popup_coupon_code', $validated['coupon_code'] ?? '', 'popup');
+        }
+
+        return redirect()->back()->with(
+            'success',
+            "Product '{$product->name}' is now active as the Offer Popup item with discounted price ৳" . number_format($validated['discounted_price'], 2) . '!'
+        );
     }
 
     /**

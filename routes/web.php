@@ -169,6 +169,7 @@ Route::prefix('admin')
         Route::patch('/products/{product}/toggle-active', [ProductController::class, 'toggleActive'])->name('products.toggle-active');
         Route::patch('/products/{product}/toggle-featured', [ProductController::class, 'toggleFeatured'])->name('products.toggle-featured');
         Route::patch('/products/{product}/update-stock', [ProductController::class, 'updateStock'])->name('products.update-stock');
+        Route::post('/products/{product}/set-offer', [ProductController::class, 'setOffer'])->name('products.set-offer');
         Route::patch('/products/toggle-active', fn () => redirect()->route('admin.products.index'));
         Route::patch('/products/toggle-featured', fn () => redirect()->route('admin.products.index'));
         Route::patch('/products/update-stock', fn () => redirect()->route('admin.products.index'));

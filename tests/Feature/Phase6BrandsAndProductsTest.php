@@ -460,4 +460,48 @@ class Phase6BrandsAndProductsTest extends TestCase
                 ->where('categories.0.depth', 0)
         );
     }
+
+    public function test_admin_can_set_offer_product_from_product_index_with_discounted_price(): void
+    {
+        $product = Product::create([
+            'name' => 'Royal Signature Blazer',
+            'slug' => 'royal-signature-blazer',
+            'sku' => 'BLZ-OFFER-1',
+            'base_price' => 5000.00,
+            'sale_price' => null,
+            'stock_quantity' => 10,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->adminUser)
+            ->post(route('admin.products.set-offer', $product->id), [
+                'discounted_price' => 3800.00,
+                'badge_text' => 'FLASH SALE',
+                'coupon_code' => 'ROYAL24',
+                'activate_popup' => true,
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $product->refresh();
+        $this->assertEquals(3800.00, (float) $product->sale_price);
+
+        $settingService = app(\App\Services\Settings\SettingService::class);
+        $this->assertEquals($product->id, (int) $settingService->get('popup_product_id'));
+        $this->assertTrue(filter_var($settingService->get('popup_enabled'), FILTER_VALIDATE_BOOLEAN));
+        $this->assertEquals('FLASH SALE', $settingService->get('popup_badge_text'));
+        $this->assertEquals('ROYAL24', $settingService->get('popup_coupon_code'));
+
+        // Admin Products index should share currentOfferProductId
+        $indexResponse = $this->actingAs($this->adminUser)
+            ->get(route('admin.products.index'));
+
+        $indexResponse->assertOk();
+        $indexResponse->assertInertia(fn ($page) =>
+            $page->component('Admin/Products/Index')
+                ->where('currentOfferProductId', $product->id)
+                ->where('popupEnabled', true)
+        );
+    }
 }

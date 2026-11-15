@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Head, useForm, router } from '@inertiajs/react';
 import AdminLayout from '@/Layouts/AdminLayout';
 import Button from '@/Components/Common/Button';
@@ -27,7 +27,9 @@ import {
     MessageSquare,
     Clock,
     FileText,
-    ExternalLink
+    ExternalLink,
+    ChevronDown,
+    Check
 } from 'lucide-react';
 
 export default function SettingsIndex({ settings = {}, products = [], system = {} }) {
@@ -35,6 +37,20 @@ export default function SettingsIndex({ settings = {}, products = [], system = {
     const [logoPreview, setLogoPreview] = useState(null);
     const [logoWhitePreview, setLogoWhitePreview] = useState(null);
     const [faviconPreview, setFaviconPreview] = useState(null);
+
+    const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
+    const [productSearchTerm, setProductSearchTerm] = useState('');
+    const productDropdownRef = useRef(null);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (productDropdownRef.current && !productDropdownRef.current.contains(event.target)) {
+                setIsProductDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
 
     const {
         data,
@@ -1463,25 +1479,182 @@ export default function SettingsIndex({ settings = {}, products = [], system = {
                                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
                                     {/* Form Fields: 7 cols */}
                                     <div className="lg:col-span-7 space-y-4">
-                                        {/* Product Selector */}
-                                        <div>
+                                        {/* Product Selector with Images */}
+                                        <div className="relative" ref={productDropdownRef}>
                                             <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider mb-1.5">
                                                 Select Featured Offer Product
                                             </label>
-                                            <select
-                                                value={data.popup_product_id}
-                                                onChange={(e) => setData('popup_product_id', e.target.value)}
-                                                className="text-xs sm:text-sm block w-full py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
-                                            >
-                                                <option value="">-- Auto-select latest discounted product --</option>
-                                                {products && products.map((prod) => (
-                                                    <option key={prod.id} value={prod.id}>
-                                                        {prod.name} (SKU: {prod.sku || 'N/A'}) - {prod.sale_price ? `৳${prod.sale_price} (was ৳${prod.base_price})` : `৳${prod.base_price}`}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                            <p className="text-[11px] text-slate-400 mt-1">
-                                                Select the exact product to feature in the modal. If none is selected, the system will highlight the newest active sale item.
+
+                                            {/* Custom Trigger */}
+                                            {(() => {
+                                                const selectedPopupProduct = products.find((p) => String(p.id) === String(data.popup_product_id)) || null;
+                                                const filteredPopupProducts = products.filter((p) => {
+                                                    if (!productSearchTerm.trim()) return true;
+                                                    const term = productSearchTerm.toLowerCase();
+                                                    return (p.name && p.name.toLowerCase().includes(term)) || (p.sku && p.sku.toLowerCase().includes(term));
+                                                });
+
+                                                return (
+                                                    <>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setIsProductDropdownOpen(!isProductDropdownOpen)}
+                                                            className="w-full flex items-center justify-between p-2.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white hover:border-[#D4AF37] focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 transition text-left"
+                                                        >
+                                                            {selectedPopupProduct ? (
+                                                                <div className="flex items-center gap-3 truncate min-w-0">
+                                                                    <img
+                                                                        src={selectedPopupProduct.image_url || '/storefront/img/category/1.jpg'}
+                                                                        alt={selectedPopupProduct.name}
+                                                                        className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-200 dark:border-slate-700 bg-slate-100"
+                                                                        onError={(e) => { e.currentTarget.src = '/storefront/img/category/1.jpg'; }}
+                                                                    />
+                                                                    <div className="truncate">
+                                                                        <div className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white truncate">
+                                                                            {selectedPopupProduct.name}
+                                                                        </div>
+                                                                        <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
+                                                                            <span className="font-mono bg-slate-100 dark:bg-slate-800 px-1.5 py-0.2 rounded text-[10px]">
+                                                                                SKU: {selectedPopupProduct.sku || 'N/A'}
+                                                                            </span>
+                                                                            <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                                                                                ৳{selectedPopupProduct.sale_price ? Number(selectedPopupProduct.sale_price).toFixed(2) : Number(selectedPopupProduct.base_price).toFixed(2)}
+                                                                            </span>
+                                                                            {selectedPopupProduct.sale_price && selectedPopupProduct.sale_price < selectedPopupProduct.base_price && (
+                                                                                <span className="line-through text-slate-400">
+                                                                                    ৳{Number(selectedPopupProduct.base_price).toFixed(2)}
+                                                                                </span>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            ) : (
+                                                                <div className="flex items-center gap-3 truncate min-w-0">
+                                                                    <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-amber-950/40 border border-amber-200/60 dark:border-amber-800/40 flex items-center justify-center text-[#D4AF37] shrink-0">
+                                                                        <Sparkles className="w-5 h-5" />
+                                                                    </div>
+                                                                    <div className="truncate">
+                                                                        <div className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white">
+                                                                            Auto-select latest discounted sale item
+                                                                        </div>
+                                                                        <div className="text-[11px] text-slate-400">
+                                                                            Picks newest active product with discounted sale price
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                            <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform shrink-0 ml-2 ${isProductDropdownOpen ? 'rotate-180 text-[#D4AF37]' : ''}`} />
+                                                        </button>
+
+                                                        {/* Custom Dropdown Menu with Images */}
+                                                        {isProductDropdownOpen && (
+                                                            <div className="absolute z-50 left-0 right-0 mt-2 bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63] rounded-2xl shadow-2xl overflow-hidden">
+                                                                {/* Search filter input */}
+                                                                <div className="p-2.5 border-b border-slate-100 dark:border-[#1C3E63]/60 bg-slate-50 dark:bg-[#071324]/50">
+                                                                    <div className="relative">
+                                                                        <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
+                                                                        <input
+                                                                            type="text"
+                                                                            value={productSearchTerm}
+                                                                            onChange={(e) => setProductSearchTerm(e.target.value)}
+                                                                            placeholder="Search product by title or SKU..."
+                                                                            className="w-full pl-9 pr-3 py-1.5 text-xs bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30"
+                                                                            autoFocus
+                                                                        />
+                                                                    </div>
+                                                                </div>
+
+                                                                {/* Options List */}
+                                                                <div className="max-h-64 overflow-y-auto p-1.5 space-y-1 divide-y divide-slate-100 dark:divide-slate-800/50">
+                                                                    {/* Auto select fallback option */}
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setData('popup_product_id', '');
+                                                                            setIsProductDropdownOpen(false);
+                                                                            setProductSearchTerm('');
+                                                                        }}
+                                                                        className={`w-full flex items-center justify-between p-2 rounded-xl transition text-left gap-3 ${
+                                                                            !data.popup_product_id
+                                                                                ? 'bg-[#D4AF37]/10 text-[#D4AF37] font-bold'
+                                                                                : 'hover:bg-slate-50 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-200'
+                                                                        }`}
+                                                                    >
+                                                                        <div className="flex items-center gap-3 truncate">
+                                                                            <div className="w-10 h-10 rounded-lg bg-amber-50 dark:bg-amber-950/40 flex items-center justify-center text-[#D4AF37] shrink-0 border border-amber-200/60 dark:border-amber-800/40">
+                                                                                <Sparkles className="w-4 h-4" />
+                                                                            </div>
+                                                                            <div>
+                                                                                <div className="text-xs font-bold">Auto-select latest discounted product</div>
+                                                                                <div className="text-[10px] text-slate-400 font-normal">Features newest active discounted item</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        {!data.popup_product_id && <Check className="w-4 h-4 text-[#D4AF37] shrink-0" />}
+                                                                    </button>
+
+                                                                    {/* Filtered Products with Images */}
+                                                                    {filteredPopupProducts.map((prod) => {
+                                                                        const isSelected = String(data.popup_product_id) === String(prod.id);
+                                                                        return (
+                                                                            <button
+                                                                                type="button"
+                                                                                key={prod.id}
+                                                                                onClick={() => {
+                                                                                    setData('popup_product_id', String(prod.id));
+                                                                                    setIsProductDropdownOpen(false);
+                                                                                    setProductSearchTerm('');
+                                                                                }}
+                                                                                className={`w-full flex items-center justify-between p-2 rounded-xl transition text-left gap-3 ${
+                                                                                    isSelected
+                                                                                        ? 'bg-[#D4AF37]/15 border border-[#D4AF37]/40'
+                                                                                        : 'hover:bg-slate-50 dark:hover:bg-slate-800/60'
+                                                                                }`}
+                                                                            >
+                                                                                <div className="flex items-center gap-3 truncate min-w-0">
+                                                                                    <img
+                                                                                        src={prod.image_url || '/storefront/img/category/1.jpg'}
+                                                                                        alt={prod.name}
+                                                                                        className="w-11 h-11 rounded-lg object-cover shrink-0 border border-slate-200 dark:border-slate-700 bg-white shadow-xs"
+                                                                                        onError={(e) => { e.currentTarget.src = '/storefront/img/category/1.jpg'; }}
+                                                                                    />
+                                                                                    <div className="truncate">
+                                                                                        <div className="text-xs font-bold text-[#0E2038] dark:text-white truncate">
+                                                                                            {prod.name}
+                                                                                        </div>
+                                                                                        <div className="flex items-center gap-2 text-[11px] text-slate-400 mt-0.5">
+                                                                                            <span className="font-mono bg-slate-100 dark:bg-slate-800 px-1 rounded text-[10px]">
+                                                                                                SKU: {prod.sku || 'N/A'}
+                                                                                            </span>
+                                                                                            <span className="text-emerald-600 dark:text-emerald-400 font-bold">
+                                                                                                ৳{prod.sale_price ? Number(prod.sale_price).toFixed(2) : Number(prod.base_price).toFixed(2)}
+                                                                                            </span>
+                                                                                            {prod.sale_price && prod.sale_price < prod.base_price && (
+                                                                                                <span className="line-through text-slate-400 text-[10px]">
+                                                                                                    ৳{Number(prod.base_price).toFixed(2)}
+                                                                                                </span>
+                                                                                            )}
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                {isSelected && <Check className="w-4 h-4 text-[#D4AF37] shrink-0" />}
+                                                                            </button>
+                                                                        );
+                                                                    })}
+
+                                                                    {filteredPopupProducts.length === 0 && (
+                                                                        <div className="p-4 text-center text-xs text-slate-400">
+                                                                            No products match "{productSearchTerm}"
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                );
+                                            })()}
+
+                                            <p className="text-[11px] text-slate-400 mt-1.5">
+                                                Select the exact product to feature in the modal. The popup will automatically display its discounted price.
                                             </p>
                                         </div>
 

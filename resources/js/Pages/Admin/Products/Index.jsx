@@ -22,7 +22,8 @@ import {
     Award,
     Grid,
     List,
-    Box
+    Box,
+    Sparkles
 } from 'lucide-react';
 
 export default function ProductIndex({
@@ -30,7 +31,9 @@ export default function ProductIndex({
     categories = [],
     brands = [],
     stats = {},
-    filters = {}
+    filters = {},
+    currentOfferProductId = null,
+    popupEnabled = false
 }) {
     const [viewMode, setViewMode] = useState('table');
     const [searchQuery, setSearchQuery] = useState(filters.search || '');
@@ -43,6 +46,63 @@ export default function ProductIndex({
     const [newStockQty, setNewStockQty] = useState(0);
     const [stockUpdating, setStockUpdating] = useState(false);
     const [deletingProduct, setDeletingProduct] = useState(null);
+
+    // Offer Popup modal state
+    const [offerModalProduct, setOfferModalProduct] = useState(null);
+    const [offerDiscountedPrice, setOfferDiscountedPrice] = useState('');
+    const [offerBadgeText, setOfferBadgeText] = useState('FLASH DEAL');
+    const [offerCouponCode, setOfferCouponCode] = useState('');
+    const [offerActivatePopup, setOfferActivatePopup] = useState(true);
+    const [isSavingOffer, setIsSavingOffer] = useState(false);
+
+    const openOfferModal = (product) => {
+        setOfferModalProduct(product);
+        const base = parseFloat(product.base_price) || 0;
+        const currentSale = product.sale_price !== null ? parseFloat(product.sale_price) : null;
+        const suggested = (currentSale && currentSale > 0 && currentSale < base)
+            ? currentSale
+            : Math.max(1, Math.round(base * 0.8 * 100) / 100);
+        setOfferDiscountedPrice(String(suggested));
+        setOfferBadgeText('FLASH DEAL');
+        setOfferCouponCode('');
+        setOfferActivatePopup(true);
+    };
+
+    const submitOfferUpdate = (e) => {
+        e.preventDefault();
+        if (!offerModalProduct) return;
+
+        const price = parseFloat(offerDiscountedPrice);
+        const base = parseFloat(offerModalProduct.base_price) || 0;
+        if (isNaN(price) || price <= 0) {
+            alert('Please enter a valid discounted price.');
+            return;
+        }
+        if (price >= base) {
+            alert(`The discounted price ($${price}) must be less than the regular base price ($${base}).`);
+            return;
+        }
+
+        setIsSavingOffer(true);
+        router.post(
+            route('admin.products.set-offer', offerModalProduct.id),
+            {
+                discounted_price: price,
+                badge_text: offerBadgeText,
+                coupon_code: offerCouponCode,
+                activate_popup: offerActivatePopup,
+            },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setOfferModalProduct(null);
+                },
+                onFinish: () => {
+                    setIsSavingOffer(false);
+                },
+            }
+        );
+    };
 
     const applyFilters = (
         search = searchQuery,
@@ -292,6 +352,18 @@ export default function ProductIndex({
                                 {row.is_active ? 'Active' : 'Draft'}
                             </Badge>
                         </button>
+                        {row.id === currentOfferProductId && (
+                            <button
+                                type="button"
+                                onClick={() => openOfferModal(row)}
+                                title="Active Storefront Offer Popup Product (Click to edit offer price)"
+                            >
+                                <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40 shadow-xs cursor-pointer hover:bg-amber-500/30">
+                                    <Sparkles className="w-3 h-3 text-gold-400" />
+                                    Offer Active
+                                </span>
+                            </button>
+                        )}
                         {row.is_featured && (
                             <button
                                 onClick={() => handleToggleFeatured(row)}
@@ -310,13 +382,25 @@ export default function ProductIndex({
         {
             key: 'actions',
             label: 'Actions',
-            cellClassName: 'min-w-[90px]',
+            cellClassName: 'min-w-[120px]',
             render: (val, item) => {
                 const row = (item && typeof item === 'object' && item.id) ? item : (val && typeof val === 'object' && val.id) ? val : (item || val || {});
                 const productId = row.id;
 
                 return (
                     <div className="flex items-center gap-2">
+                        <button
+                            type="button"
+                            onClick={() => openOfferModal(row)}
+                            className={`p-1.5 rounded-lg transition-colors ${
+                                row.id === currentOfferProductId
+                                    ? 'text-gold-400 bg-gold-500/20 ring-1 ring-gold-400/50 hover:bg-gold-500/30'
+                                    : 'text-slate-400 hover:text-gold-400 hover:bg-navy-800'
+                            }`}
+                            title={row.id === currentOfferProductId ? 'Edit Active Offer Price' : 'Set as Storefront Offer Product'}
+                        >
+                            <Sparkles className="w-4 h-4" />
+                        </button>
                         {productId ? (
                             <Link
                                 href={`/admin/products/${productId}/edit`}
@@ -546,6 +630,11 @@ export default function ProductIndex({
                                             )}
 
                                             <div className="absolute top-2 right-2 flex flex-col gap-1 items-end">
+                                                {product.id === currentOfferProductId && (
+                                                    <span className="bg-gradient-to-r from-amber-500 to-yellow-500 text-navy-950 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 shadow">
+                                                        <Sparkles className="w-3 h-3 fill-navy-950" /> Offer Active
+                                                    </span>
+                                                )}
                                                 {product.is_featured && (
                                                     <span className="bg-amber-500/90 text-navy-950 font-bold text-[10px] px-2 py-0.5 rounded-full flex items-center gap-1 shadow">
                                                         <Star className="w-3 h-3 fill-navy-950" /> Featured
@@ -610,6 +699,18 @@ export default function ProductIndex({
                                         </button>
 
                                         <div className="flex items-center gap-1">
+                                            <button
+                                                type="button"
+                                                onClick={() => openOfferModal(product)}
+                                                className={`p-1.5 rounded-lg transition-colors ${
+                                                    product.id === currentOfferProductId
+                                                        ? 'text-gold-400 bg-gold-500/20 ring-1 ring-gold-400/50 hover:bg-gold-500/30'
+                                                        : 'text-slate-400 hover:text-gold-400 hover:bg-navy-800'
+                                                }`}
+                                                title={product.id === currentOfferProductId ? 'Edit Active Offer Price' : 'Set as Storefront Offer Product'}
+                                            >
+                                                <Sparkles className="w-4 h-4" />
+                                            </button>
                                             {product?.id ? (
                                                 <Link
                                                     href={`/admin/products/${product.id}/edit`}
@@ -633,6 +734,144 @@ export default function ProductIndex({
                     </div>
                 )}
             </div>
+
+            {/* Set Offer Popup Modal */}
+            {offerModalProduct && (
+                <Modal
+                    isOpen={Boolean(offerModalProduct)}
+                    onClose={() => setOfferModalProduct(null)}
+                    title="Set Product for Storefront Offer Popup"
+                    maxWidth="md"
+                >
+                    <form onSubmit={submitOfferUpdate} className="space-y-4">
+                        {/* Product Summary Header */}
+                        <div className="flex items-center gap-3 p-3 rounded-xl bg-navy-950/80 border border-slate-800">
+                            <div className="w-12 h-12 rounded-lg bg-navy-900 border border-slate-700 overflow-hidden shrink-0">
+                                <img
+                                    src={
+                                        offerModalProduct.primary_image_url ||
+                                        offerModalProduct.primary_image?.image_url ||
+                                        offerModalProduct.primary_image?.image_path ||
+                                        offerModalProduct.images?.[0]?.image_url ||
+                                        '/storefront/img/category/1.jpg'
+                                    }
+                                    alt={offerModalProduct.name}
+                                    className="w-full h-full object-cover"
+                                />
+                            </div>
+                            <div className="truncate min-w-0">
+                                <h4 className="text-sm font-bold text-white truncate">{offerModalProduct.name}</h4>
+                                <div className="flex items-center gap-2 text-xs text-slate-400 mt-0.5">
+                                    <span>SKU: {offerModalProduct.sku || 'N/A'}</span>
+                                    <span>•</span>
+                                    <span>Regular Price: <strong className="text-slate-200">${Number(offerModalProduct.base_price).toFixed(2)}</strong></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Discounted Offer Price Input */}
+                        <div>
+                            <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1">
+                                Discounted Offer Price ($) <span className="text-red-400">*</span>
+                            </label>
+                            <input
+                                type="number"
+                                step="0.01"
+                                min="0.01"
+                                max={Number(offerModalProduct.base_price) - 0.01}
+                                value={offerDiscountedPrice}
+                                onChange={(e) => setOfferDiscountedPrice(e.target.value)}
+                                required
+                                className="w-full py-2.5 px-3.5 bg-navy-950 border border-slate-700 rounded-xl text-white font-mono text-sm focus:border-gold-400 focus:outline-none"
+                                placeholder="e.g. 299.00"
+                            />
+                            {(() => {
+                                const price = parseFloat(offerDiscountedPrice);
+                                const base = parseFloat(offerModalProduct.base_price) || 0;
+                                if (!isNaN(price) && price > 0 && price < base) {
+                                    const savings = (base - price).toFixed(2);
+                                    const pct = Math.round(((base - price) / base) * 100);
+                                    return (
+                                        <p className="text-xs text-emerald-400 mt-1.5 flex items-center gap-1 font-medium">
+                                            <CheckCircle2 className="w-3.5 h-3.5 shrink-0" />
+                                            Customer saves ${savings} ({pct}% OFF regular price of ${base.toFixed(2)})
+                                        </p>
+                                    );
+                                }
+                                if (!isNaN(price) && price >= base) {
+                                    return (
+                                        <p className="text-xs text-red-400 mt-1.5 font-medium">
+                                            Discounted offer price must be less than regular base price (${base.toFixed(2)}).
+                                        </p>
+                                    );
+                                }
+                                return null;
+                            })()}
+                        </div>
+
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                            <div>
+                                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1">
+                                    Offer Badge Tag
+                                </label>
+                                <input
+                                    type="text"
+                                    value={offerBadgeText}
+                                    onChange={(e) => setOfferBadgeText(e.target.value)}
+                                    className="w-full py-2 px-3 bg-navy-950 border border-slate-700 rounded-xl text-white text-xs focus:border-gold-400 focus:outline-none"
+                                    placeholder="FLASH DEAL"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-xs font-bold text-slate-200 uppercase tracking-wider mb-1">
+                                    Coupon Code (Optional)
+                                </label>
+                                <input
+                                    type="text"
+                                    value={offerCouponCode}
+                                    onChange={(e) => setOfferCouponCode(e.target.value)}
+                                    className="w-full py-2 px-3 bg-navy-950 border border-slate-700 rounded-xl text-white text-xs font-mono focus:border-gold-400 focus:outline-none"
+                                    placeholder="ORIO10"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Immediate Activation Checkbox */}
+                        <label className="flex items-center gap-2.5 cursor-pointer pt-1 select-none">
+                            <input
+                                type="checkbox"
+                                checked={offerActivatePopup}
+                                onChange={(e) => setOfferActivatePopup(e.target.checked)}
+                                className="w-4 h-4 rounded text-gold-400 border-slate-700 bg-navy-950 focus:ring-gold-400"
+                            />
+                            <span className="text-xs text-slate-300">
+                                Activate Offer Popup immediately on storefront
+                            </span>
+                        </label>
+
+                        {/* Modal Actions */}
+                        <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800">
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => setOfferModalProduct(null)}
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                variant="primary"
+                                size="sm"
+                                icon={<Sparkles className="w-4 h-4" />}
+                                disabled={isSavingOffer}
+                            >
+                                {isSavingOffer ? 'Activating...' : 'Set as Active Offer'}
+                            </Button>
+                        </div>
+                    </form>
+                </Modal>
+            )}
 
             {/* Quick Stock Modal */}
             <Modal
