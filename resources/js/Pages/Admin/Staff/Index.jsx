@@ -278,99 +278,99 @@ export default function StaffIndex({
 
             <div className="space-y-6">
                 {/* Header Banner */}
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-[#0E2038] p-6 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
-                    <div>
-                        <div className="flex items-center gap-2.5">
-                            <div className="p-2.5 rounded-xl bg-amber-500/10 dark:bg-[#D4AF37]/15 text-[#926F18] dark:text-[#EBD495] border border-[#D4AF37]/30">
-                                <Shield className="w-6 h-6" />
-                            </div>
-                            <div>
-                                <h1 className="text-xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">
-                                    Staff & Access Control
-                                </h1>
-                                <p className="text-xs text-slate-500 dark:text-[#8EB0CF]">
-                                    Create executive administrator accounts, assign roles, and grant fine-grained module access.
-                                </p>
-                            </div>
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-[#0E2038] p-5 sm:p-6 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
+                    <div className="flex items-center gap-3.5">
+                        <div className="p-3 rounded-2xl bg-[#FDFBF5] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/50 shrink-0 shadow-xs">
+                            <Shield className="w-6 h-6 text-[#D4AF37]" />
+                        </div>
+                        <div>
+                            <h1 className="text-xl sm:text-2xl font-extrabold text-[#0E2038] dark:text-white tracking-tight">
+                                Staff & Access Control
+                            </h1>
+                            <p className="text-xs sm:text-sm text-slate-500 dark:text-[#8EB0CF] mt-0.5">
+                                Create executive administrator accounts, assign roles, and grant fine-grained module access.
+                            </p>
                         </div>
                     </div>
-                    <Button
-                        variant="primary"
-                        onClick={openCreateModal}
-                        className="inline-flex items-center gap-2 shadow-md shadow-[#D4AF37]/20"
-                    >
-                        <Plus className="w-4 h-4" />
-                        <span>Add Staff Member</span>
-                    </Button>
+                    <div className="flex items-center gap-3 shrink-0">
+                        <Button
+                            variant="primary"
+                            icon={Plus}
+                            onClick={openCreateModal}
+                            className="shadow-md shadow-[#D4AF37]/20 font-bold px-4.5 py-2.5"
+                        >
+                            Add Staff Member
+                        </Button>
+                    </div>
                 </div>
 
                 {/* Metrics Stats Cards */}
                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                    <div className="bg-white dark:bg-[#0E2038] p-4.5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] p-5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs hover:border-slate-300 dark:hover:border-[#1C3E63] transition">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-[#8EB0CF]">
                                 Total Administrators
                             </span>
-                            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-[#071324] flex items-center justify-center text-slate-700 dark:text-slate-300">
-                                <Users className="w-4 h-4" />
+                            <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] flex items-center justify-center text-slate-700 dark:text-slate-300 shrink-0">
+                                <Users className="w-4.5 h-4.5" />
                             </div>
                         </div>
-                        <p className="mt-2 text-2xl font-black text-[#0E2038] dark:text-white">
+                        <p className="mt-2 text-3xl font-black text-[#0E2038] dark:text-white tracking-tight">
                             {stats?.total ?? 0}
                         </p>
-                        <span className="text-xs text-slate-400 dark:text-[#5E8CB6]">
-                            {stats?.active ?? 0} active &middot; {stats?.inactive ?? 0} inactive
+                        <span className="text-xs text-slate-500 dark:text-[#8EB0CF] mt-1 block">
+                            {stats?.active ?? 0} active &middot; {stats?.inactive ?? 0} suspended
                         </span>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] p-4.5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] p-5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs hover:border-[#D4AF37]/40 dark:hover:border-[#D4AF37]/40 transition">
                         <div className="flex items-center justify-between">
-                            <span className="text-xs font-bold uppercase tracking-wider text-amber-700 dark:text-amber-400">
+                            <span className="text-xs font-bold uppercase tracking-wider text-[#926F18] dark:text-[#EBD495]">
                                 Super Admins
                             </span>
-                            <div className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center text-amber-600 dark:text-amber-400">
-                                <Shield className="w-4 h-4" />
+                            <div className="w-9 h-9 rounded-xl bg-[#D4AF37]/15 border border-[#D4AF37]/40 flex items-center justify-center text-[#926F18] dark:text-[#EBD495] shrink-0">
+                                <Shield className="w-4.5 h-4.5" />
                             </div>
                         </div>
-                        <p className="mt-2 text-2xl font-black text-[#0E2038] dark:text-white">
+                        <p className="mt-2 text-3xl font-black text-[#0E2038] dark:text-white tracking-tight">
                             {stats?.super_admin ?? 0}
                         </p>
-                        <span className="text-xs text-amber-600/80 dark:text-amber-400/80">
-                            Unrestricted root sovereignty
+                        <span className="text-xs text-[#926F18]/80 dark:text-[#EBD495]/80 mt-1 block font-medium">
+                            Unrestricted sovereign access
                         </span>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] p-4.5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] p-5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs hover:border-blue-500/40 dark:hover:border-blue-500/40 transition">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-blue-700 dark:text-blue-400">
                                 Store Admins
                             </span>
-                            <div className="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-blue-600 dark:text-blue-400">
-                                <ShieldCheck className="w-4 h-4" />
+                            <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                                <ShieldCheck className="w-4.5 h-4.5" />
                             </div>
                         </div>
-                        <p className="mt-2 text-2xl font-black text-[#0E2038] dark:text-white">
+                        <p className="mt-2 text-3xl font-black text-[#0E2038] dark:text-white tracking-tight">
                             {stats?.admin ?? 0}
                         </p>
-                        <span className="text-xs text-blue-600/80 dark:text-blue-400/80">
+                        <span className="text-xs text-slate-500 dark:text-[#8EB0CF] mt-1 block">
                             Full operational management
                         </span>
                     </div>
 
-                    <div className="bg-white dark:bg-[#0E2038] p-4.5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs">
+                    <div className="bg-white dark:bg-[#0E2038] p-5 rounded-2xl border border-slate-200 dark:border-[#1C3E63]/70 shadow-xs hover:border-teal-500/40 dark:hover:border-teal-500/40 transition">
                         <div className="flex items-center justify-between">
                             <span className="text-xs font-bold uppercase tracking-wider text-teal-700 dark:text-teal-400">
-                                Managers & Inventory
+                                Managers & Staff
                             </span>
-                            <div className="w-8 h-8 rounded-lg bg-teal-500/10 flex items-center justify-center text-teal-600 dark:text-teal-400">
-                                <UserCheck className="w-4 h-4" />
+                            <div className="w-9 h-9 rounded-xl bg-teal-500/10 border border-teal-500/30 flex items-center justify-center text-teal-600 dark:text-teal-400 shrink-0">
+                                <UserCheck className="w-4.5 h-4.5" />
                             </div>
                         </div>
-                        <p className="mt-2 text-2xl font-black text-[#0E2038] dark:text-white">
+                        <p className="mt-2 text-3xl font-black text-[#0E2038] dark:text-white tracking-tight">
                             {(stats?.manager ?? 0) + (stats?.inventory_staff ?? 0)}
                         </p>
-                        <span className="text-xs text-teal-600/80 dark:text-teal-400/80">
-                            {stats?.manager ?? 0} managers &middot; {stats?.inventory_staff ?? 0} stock staff
+                        <span className="text-xs text-slate-500 dark:text-[#8EB0CF] mt-1 block">
+                            {stats?.manager ?? 0} managers &middot; {stats?.inventory_staff ?? 0} inventory
                         </span>
                     </div>
                 </div>
@@ -474,7 +474,7 @@ export default function StaffIndex({
                                                 {/* Staff details */}
                                                 <td className="py-3.5 px-4">
                                                     <div className="flex items-center gap-3">
-                                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-slate-100 to-slate-200 dark:from-[#1C3E63] dark:to-[#0c1f38] border border-slate-200 dark:border-[#1C3E63] flex items-center justify-center font-black text-sm text-[#0E2038] dark:text-[#EBD495] shrink-0">
+                                                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/15 via-[#D4AF37]/20 to-amber-600/10 dark:from-[#D4AF37]/20 dark:to-[#071324] border border-[#D4AF37]/35 flex items-center justify-center font-black text-sm text-[#926F18] dark:text-[#EBD495] shrink-0 shadow-2xs">
                                                             {staff.name?.slice(0, 2).toUpperCase() || 'AD'}
                                                         </div>
                                                         <div className="min-w-0">

@@ -25,7 +25,9 @@ import {
     LayoutGrid,
     Ticket,
     Bell,
-    AlertTriangle
+    AlertTriangle,
+    ChevronDown,
+    User
 } from 'lucide-react';
 import ToastContainer from '@/Components/Common/ToastContainer';
 import Badge from '@/Components/Common/Badge';
@@ -46,6 +48,23 @@ export default function AdminLayout({ title = '', children }) {
     const [mobileOpen, setMobileOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
+    const userMenuRef = useRef(null);
+
+    // Auto-close user menu on outside click
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (userMenuRef.current && !userMenuRef.current.contains(e.target)) {
+                setUserMenuOpen(false);
+            }
+        };
+
+        if (userMenuOpen) {
+            document.addEventListener('mousedown', handleClickOutside);
+        }
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [userMenuOpen]);
 
     // Live notifications state & real-time popup toast
     const [liveAlerts, setLiveAlerts] = useState(initialAlerts);
@@ -814,47 +833,79 @@ export default function AdminLayout({ title = '', children }) {
                         </a>
 
                         {/* User Profile & Actions Dropdown */}
-                        <div className="relative">
+                        <div className="relative" ref={userMenuRef}>
                             <button
-                                onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                className="flex items-center gap-3 p-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#142C49] transition text-left cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-[#1C3E63]"
+                                onClick={() => setUserMenuOpen((prev) => !prev)}
+                                aria-expanded={userMenuOpen}
+                                className="flex items-center gap-2.5 p-1.5 sm:px-2.5 sm:py-1.5 rounded-xl hover:bg-slate-100 dark:hover:bg-[#142C49] transition text-left cursor-pointer border border-transparent hover:border-slate-200 dark:hover:border-[#1C3E63]"
                             >
-                                <div className="w-9 h-9 lg:w-10 lg:h-10 rounded-xl bg-[#FBF5E6] text-[#926F18] dark:bg-[#071324] dark:text-[#EBD495] border border-[#F5E7C2] dark:border-[#D4AF37]/40 flex items-center justify-center font-bold text-sm shadow-2xs">
+                                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#F5D77F] via-[#D4AF37] to-[#926F18] text-[#071324] font-black text-sm flex items-center justify-center shadow-xs">
                                     {user?.name?.charAt(0) || 'A'}
                                 </div>
-                                <div className="hidden md:flex flex-col pr-1">
-                                    <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white leading-tight">{user?.name}</span>
+                                <div className="hidden md:flex flex-col pr-0.5">
+                                    <span className="text-xs sm:text-sm font-bold text-[#0E2038] dark:text-white leading-tight truncate max-w-[140px]">{user?.name}</span>
                                     <span className="text-[11px] font-semibold text-[#926F18] dark:text-[#DFC068] capitalize">{user?.role?.replace('_', ' ')}</span>
                                 </div>
+                                <ChevronDown className={`w-3.5 h-3.5 text-slate-400 dark:text-[#5E8CB6] transition-transform duration-200 ${userMenuOpen ? 'rotate-180 text-[#D4AF37]' : ''}`} />
                             </button>
 
                             {/* Dropdown Menu */}
                             {userMenuOpen && (
-                                <>
-                                    <div className="fixed inset-0 z-30" onClick={() => setUserMenuOpen(false)} />
-                                    <div className="absolute right-0 mt-2 w-60 bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63] rounded-2xl shadow-xl py-2 z-40">
-                                        <div className="px-4.5 py-3 border-b border-slate-100 dark:border-[#1C3E63]/70 mb-1">
-                                            <p className="text-sm font-bold text-[#0E2038] dark:text-white truncate">{user?.name}</p>
-                                            <p className="text-xs text-slate-500 dark:text-[#8EB0CF] truncate">{user?.email}</p>
-                                            <div className="mt-2">
-                                                <Badge
-                                                    variant={user?.role === 'super_admin' ? 'purple' : 'gold'}
-                                                    size="sm"
-                                                >
-                                                    {user?.role?.replace('_', ' ')}
-                                                </Badge>
-                                            </div>
+                                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#D4AF37]/35 rounded-2xl shadow-2xl py-2 z-50 animate-in fade-in zoom-in-95 duration-100 ring-1 ring-black/10 dark:ring-white/5">
+                                    <div className="px-4 py-3 border-b border-slate-100 dark:border-[#1C3E63]/70">
+                                        <p className="text-sm font-bold text-[#0E2038] dark:text-white truncate">{user?.name}</p>
+                                        <p className="text-xs text-slate-500 dark:text-[#8EB0CF] truncate mt-0.5">{user?.email}</p>
+                                        <div className="mt-2.5">
+                                            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-[#D4AF37]/15 text-[#926F18] dark:text-[#EBD495] border border-[#D4AF37]/40 capitalize">
+                                                <Shield className="w-3 h-3 text-[#D4AF37]" />
+                                                {user?.role?.replace('_', ' ')}
+                                            </span>
                                         </div>
+                                    </div>
 
+                                    <div className="py-1">
+                                        {user?.role === 'super_admin' && (
+                                            <Link
+                                                href="/admin/staff"
+                                                onClick={() => setUserMenuOpen(false)}
+                                                className="w-full px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-[#BACDE3] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#142C49] flex items-center gap-2.5 transition"
+                                            >
+                                                <Shield className="w-4 h-4 text-[#D4AF37]" />
+                                                <span>Staff & Access Control</span>
+                                            </Link>
+                                        )}
+
+                                        <Link
+                                            href="/admin/settings"
+                                            onClick={() => setUserMenuOpen(false)}
+                                            className="w-full px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-[#BACDE3] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#142C49] flex items-center gap-2.5 transition"
+                                        >
+                                            <Settings className="w-4 h-4 text-slate-400 dark:text-[#5E8CB6]" />
+                                            <span>Store Settings</span>
+                                        </Link>
+
+                                        <a
+                                            href="/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            onClick={() => setUserMenuOpen(false)}
+                                            className="w-full px-4 py-2 text-xs sm:text-sm font-semibold text-slate-700 dark:text-[#BACDE3] hover:text-[#0E2038] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-[#142C49] flex items-center gap-2.5 transition"
+                                        >
+                                            <Store className="w-4 h-4 text-slate-400 dark:text-[#5E8CB6]" />
+                                            <span>Visit Storefront</span>
+                                        </a>
+                                    </div>
+
+                                    <div className="pt-1 border-t border-slate-100 dark:border-[#1C3E63]/70">
                                         <button
                                             onClick={handleLogout}
-                                            className="w-full px-4.5 py-2.5 text-xs sm:text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 flex items-center gap-2 transition cursor-pointer text-left"
+                                            className="w-full px-4 py-2.5 text-xs sm:text-sm font-semibold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 flex items-center gap-2.5 transition cursor-pointer text-left"
                                         >
                                             <LogOut className="w-4 h-4" />
                                             <span>Sign Out</span>
                                         </button>
                                     </div>
-                                </>
+                                </div>
                             )}
                         </div>
                     </div>
