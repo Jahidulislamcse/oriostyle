@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import axios from 'axios';
 import { sanitizeImageUrl } from '../Utils/image';
@@ -56,6 +56,14 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
+    const [isMobileAccountOpen, setIsMobileAccountOpen] = useState(false);
+    const accountMenuRef = useRef(null);
+
+    const currentUser = auth?.user;
+    const userFirstName = currentUser?.name ? currentUser.name.trim().split(' ')[0] : '';
+    const userInitial = currentUser?.name ? currentUser.name.trim().charAt(0).toUpperCase() : 'U';
+
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState({ products: [], categories: [] });
     const [isSearching, setIsSearching] = useState(false);
@@ -142,6 +150,13 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                 setIsCartOpen(false);
                 setIsMobileMenuOpen(false);
                 setIsSearchOpen(false);
+                setIsAccountMenuOpen(false);
+                setIsMobileAccountOpen(false);
+            }
+        };
+        const handleClickOutside = (e) => {
+            if (accountMenuRef.current && !accountMenuRef.current.contains(e.target)) {
+                setIsAccountMenuOpen(false);
             }
         };
         const handleScroll = () => {
@@ -157,13 +172,21 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
         window.addEventListener('open-cart', handleOpenCart);
 
         window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('mousedown', handleClickOutside);
         window.addEventListener('scroll', handleScroll);
         return () => {
             window.removeEventListener('open-cart', handleOpenCart);
             window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('mousedown', handleClickOutside);
             window.removeEventListener('scroll', handleScroll);
         };
     }, []);
+
+    useEffect(() => {
+        setIsAccountMenuOpen(false);
+        setIsMobileMenuOpen(false);
+        setIsMobileAccountOpen(false);
+    }, [url]);
 
     const handleUpdateQuantity = (cartItemId, newQty) => {
         router.patch(
@@ -334,48 +357,165 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             <i className="ri-search-line" />
                         </button>
 
-                        <div className="position-relative dropdown">
-                            <a
-                                href="javascript:void(0)"
-                                className="oubd-action-btn"
-                                title="Account"
-                                data-bs-toggle="dropdown"
+                        {/* User Account Button with Profile Indicator & React Dropdown */}
+                        <div className="position-relative" ref={accountMenuRef}>
+                            <button
+                                type="button"
+                                className="oubd-action-btn d-inline-flex align-items-center gap-1.5 border-0 bg-transparent p-1"
+                                onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
+                                title={currentUser ? `Logged in as ${currentUser.name}` : 'My Account'}
+                                aria-label="Account"
                             >
-                                <i className="ri-user-line" />
-                            </a>
-                            <ul className="dropdown-menu dropdown-menu-end shadow-sm border-0 py-2" style={{ minWidth: '180px' }}>
-                                {auth?.user ? (
-                                    <>
-                                        <li className="px-3 py-1 fw-bold text-muted font-size-12">
-                                            {auth.user.name}
-                                        </li>
-                                        {auth.user.role === 'admin' || auth.user.role === 'staff' ? (
-                                            <li>
-                                                <a href="/admin/dashboard" className="dropdown-item py-2">Admin Dashboard</a>
-                                            </li>
-                                        ) : null}
-                                        <li>
-                                            <Link href="/track-order" className="dropdown-item py-2 d-flex align-items-center gap-2">
-                                                <i className="ri-map-pin-2-line text-warning" /> Track Orders
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link href="/logout" method="post" as="button" className="dropdown-item py-2 text-danger">Logout</Link>
-                                        </li>
-                                    </>
+                                {currentUser ? (
+                                    <div className="position-relative d-inline-flex align-items-center">
+                                        {currentUser.avatar ? (
+                                            <img
+                                                src={currentUser.avatar}
+                                                alt={currentUser.name}
+                                                className="rounded-circle"
+                                                style={{ width: '28px', height: '28px', objectFit: 'cover', border: '1.5px solid #D4AF37' }}
+                                            />
+                                        ) : (
+                                            <div
+                                                className="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold shadow-xs"
+                                                style={{
+                                                    width: '28px',
+                                                    height: '28px',
+                                                    backgroundColor: '#D4AF37',
+                                                    color: '#071324',
+                                                    fontSize: '12px',
+                                                    border: '1px solid #B89226'
+                                                }}
+                                            >
+                                                {userInitial}
+                                            </div>
+                                        )}
+                                        {/* Green Online / Authenticated Status Dot */}
+                                        <span
+                                            className="position-absolute bg-success rounded-circle border border-white"
+                                            style={{ width: '8px', height: '8px', bottom: '-1px', right: '-1px' }}
+                                            title="Active session"
+                                        />
+                                    </div>
                                 ) : (
-                                    <>
-                                        <li><a href="/login" className="dropdown-item py-2">Login</a></li>
-                                        <li><a href="/register" className="dropdown-item py-2">Register</a></li>
-                                        <li><hr className="dropdown-divider my-1" /></li>
-                                        <li>
-                                            <Link href="/track-order" className="dropdown-item py-2 d-flex align-items-center gap-2">
-                                                <i className="ri-map-pin-2-line text-warning" /> Track Order
-                                            </Link>
-                                        </li>
-                                    </>
+                                    <i className="ri-user-line" />
                                 )}
-                            </ul>
+
+                                {currentUser && (
+                                    <span className="d-none d-md-inline-block fw-bold font-size-12 text-dark text-truncate" style={{ maxWidth: '85px' }}>
+                                        {userFirstName}
+                                    </span>
+                                )}
+                            </button>
+
+                            {isAccountMenuOpen && (
+                                <div
+                                    className="position-absolute end-0 mt-2 bg-white rounded-3 shadow-lg border-0 py-2 animate-fadeIn"
+                                    style={{
+                                        minWidth: '220px',
+                                        zIndex: 1050,
+                                        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)',
+                                        border: '1px solid rgba(0, 0, 0, 0.08)'
+                                    }}
+                                >
+                                    {currentUser ? (
+                                        <>
+                                            <div className="px-3 py-2 border-bottom mb-1 bg-light bg-opacity-50">
+                                                <div className="d-flex align-items-center gap-2">
+                                                    {currentUser.avatar ? (
+                                                        <img
+                                                            src={currentUser.avatar}
+                                                            alt={currentUser.name}
+                                                            className="rounded-circle"
+                                                            style={{ width: '36px', height: '36px', objectFit: 'cover' }}
+                                                        />
+                                                    ) : (
+                                                        <div
+                                                            className="rounded-circle d-flex align-items-center justify-content-center fw-bold text-dark"
+                                                            style={{ width: '36px', height: '36px', backgroundColor: '#D4AF37', fontSize: '14px' }}
+                                                        >
+                                                            {userInitial}
+                                                        </div>
+                                                    )}
+                                                    <div className="overflow-hidden flex-grow-1">
+                                                        <div className="fw-bold text-dark text-truncate font-size-13">{currentUser.name}</div>
+                                                        <div className="text-muted text-truncate font-size-11">{currentUser.email}</div>
+                                                    </div>
+                                                </div>
+                                                {currentUser.role && currentUser.role !== 'customer' && (
+                                                    <div className="mt-1.5">
+                                                        <span className="badge bg-warning text-dark font-size-10 text-uppercase">
+                                                            {currentUser.role.replace('_', ' ')}
+                                                        </span>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                            {(currentUser.is_admin || currentUser.role === 'admin' || currentUser.role === 'super_admin') && (
+                                                <a href="/admin/dashboard" className="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-dark font-size-13 fw-semibold">
+                                                    <i className="ri-dashboard-line text-warning font-size-15" /> Admin Dashboard
+                                                </a>
+                                            )}
+
+                                            <Link
+                                                href="/track-order"
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-dark font-size-13"
+                                                onClick={() => setIsAccountMenuOpen(false)}
+                                            >
+                                                <i className="ri-map-pin-2-line text-warning font-size-15" /> Track Orders
+                                            </Link>
+
+                                            <Link
+                                                href="/wishlist"
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-dark font-size-13"
+                                                onClick={() => setIsAccountMenuOpen(false)}
+                                            >
+                                                <i className="ri-heart-line text-danger font-size-15" /> My Wishlist
+                                            </Link>
+
+                                            <div className="dropdown-divider my-1" />
+
+                                            <Link
+                                                href="/logout"
+                                                method="post"
+                                                as="button"
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-danger font-size-13 fw-semibold w-100 text-start border-0 bg-transparent"
+                                                onClick={() => setIsAccountMenuOpen(false)}
+                                            >
+                                                <i className="ri-logout-box-r-line font-size-15" /> Sign Out
+                                            </Link>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <div className="px-3 py-1 text-uppercase text-muted fw-bold font-size-11 tracking-wider">
+                                                My Account
+                                            </div>
+                                            <Link
+                                                href="/login"
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-dark font-size-13 fw-semibold"
+                                                onClick={() => setIsAccountMenuOpen(false)}
+                                            >
+                                                <i className="ri-login-box-line text-warning font-size-15" /> Sign In
+                                            </Link>
+                                            <Link
+                                                href="/register"
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-dark font-size-13"
+                                                onClick={() => setIsAccountMenuOpen(false)}
+                                            >
+                                                <i className="ri-user-add-line text-muted font-size-15" /> Register
+                                            </Link>
+                                            <div className="dropdown-divider my-1" />
+                                            <Link
+                                                href="/track-order"
+                                                className="dropdown-item py-2 px-3 d-flex align-items-center gap-2 text-dark font-size-13"
+                                                onClick={() => setIsAccountMenuOpen(false)}
+                                            >
+                                                <i className="ri-map-pin-2-line text-warning font-size-15" /> Track Order
+                                            </Link>
+                                        </>
+                                    )}
+                                </div>
+                            )}
                         </div>
 
                         <Link
@@ -478,6 +618,73 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     />
                 </div>
                 <div className="overflow-y-auto p-3 flex-grow-1">
+                    {/* User Profile Card inside mobile drawer */}
+                    {currentUser ? (
+                        <div className="p-3 bg-light rounded-3 mb-3 border">
+                            <div className="d-flex align-items-center gap-2.5">
+                                {currentUser.avatar ? (
+                                    <img
+                                        src={currentUser.avatar}
+                                        alt={currentUser.name}
+                                        className="rounded-circle shadow-xs"
+                                        style={{ width: '40px', height: '40px', objectFit: 'cover', border: '2px solid #D4AF37' }}
+                                    />
+                                ) : (
+                                    <div
+                                        className="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold shadow-xs"
+                                        style={{ width: '40px', height: '40px', backgroundColor: '#D4AF37', color: '#071324', fontSize: '15px' }}
+                                    >
+                                        {userInitial}
+                                    </div>
+                                )}
+                                <div className="overflow-hidden flex-grow-1">
+                                    <div className="fw-bold text-dark text-truncate font-size-14">{currentUser.name}</div>
+                                    <div className="text-muted text-truncate font-size-11">{currentUser.email}</div>
+                                    <div className="d-flex align-items-center gap-1 mt-0.5">
+                                        <span className="badge bg-success bg-opacity-10 text-success font-size-10 px-1.5 py-0.5">
+                                            ● Logged In
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="d-flex gap-2 mt-2.5 pt-2 border-top">
+                                <Link
+                                    href="/track-order"
+                                    className="btn btn-sm btn-outline-dark flex-grow-1 font-size-12 py-1 d-flex align-items-center justify-content-center gap-1"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    <i className="ri-map-pin-2-line text-warning" /> Orders
+                                </Link>
+                                <Link
+                                    href="/logout"
+                                    method="post"
+                                    as="button"
+                                    className="btn btn-sm btn-outline-danger flex-grow-1 font-size-12 py-1 d-flex align-items-center justify-content-center gap-1"
+                                    onClick={() => setIsMobileMenuOpen(false)}
+                                >
+                                    <i className="ri-logout-box-r-line" /> Sign Out
+                                </Link>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className="p-2.5 bg-light rounded-3 mb-3 border d-flex gap-2">
+                            <Link
+                                href="/login"
+                                className="btn btn-sm btn-dark flex-grow-1 font-size-12 fw-bold"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                <i className="ri-login-box-line me-1" /> Sign In
+                            </Link>
+                            <Link
+                                href="/register"
+                                className="btn btn-sm btn-outline-dark flex-grow-1 font-size-12"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Register
+                            </Link>
+                        </div>
+                    )}
+
                     <ul className="list-unstyled mb-0">
                         <li className="mb-2">
                             <Link href="/" className="d-block py-2 fw-bold text-dark text-decoration-none" onClick={() => setIsMobileMenuOpen(false)}>
@@ -1184,15 +1391,141 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     <span className="oubd-bottom-nav-label">Track Order</span>
                 </Link>
 
-                <a
-                    href="/login"
-                    className="oubd-bottom-nav-item"
-                    title="Account"
-                >
-                    <i className="ri-user-line" />
-                    <span className="oubd-bottom-nav-label">Account</span>
-                </a>
+                {currentUser ? (
+                    <button
+                        type="button"
+                        className="oubd-bottom-nav-item border-0 bg-transparent p-0 position-relative"
+                        onClick={() => setIsMobileAccountOpen(true)}
+                        title={`Account (${currentUser.name})`}
+                    >
+                        <div className="position-relative d-inline-flex align-items-center justify-content-center">
+                            {currentUser.avatar ? (
+                                <img
+                                    src={currentUser.avatar}
+                                    alt={currentUser.name}
+                                    className="rounded-circle"
+                                    style={{ width: '22px', height: '22px', objectFit: 'cover', border: '1.5px solid #D4AF37' }}
+                                />
+                            ) : (
+                                <div
+                                    className="rounded-circle d-inline-flex align-items-center justify-content-center fw-bold"
+                                    style={{ width: '22px', height: '22px', backgroundColor: '#D4AF37', color: '#071324', fontSize: '10px' }}
+                                >
+                                    {userInitial}
+                                </div>
+                            )}
+                            <span
+                                className="position-absolute bg-success rounded-circle border border-white"
+                                style={{ width: '7px', height: '7px', bottom: '-1px', right: '-1px' }}
+                            />
+                        </div>
+                        <span className="oubd-bottom-nav-label text-truncate" style={{ maxWidth: '65px' }}>
+                            {userFirstName || 'Profile'}
+                        </span>
+                    </button>
+                ) : (
+                    <Link
+                        href="/login"
+                        className={`oubd-bottom-nav-item ${currentPath === '/login' || currentPath === '/register' ? 'active' : ''}`}
+                        title="Sign In"
+                    >
+                        <i className="ri-user-line" />
+                        <span className="oubd-bottom-nav-label">Sign In</span>
+                    </Link>
+                )}
             </div>
+
+            {/* --- Mobile Account Bottom Sheet Modal --- */}
+            {isMobileAccountOpen && (
+                <div
+                    className="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex flex-column justify-content-end animate-fadeIn"
+                    style={{ zIndex: 1200 }}
+                    onClick={() => setIsMobileAccountOpen(false)}
+                >
+                    <div
+                        className="bg-white rounded-top-4 p-4 shadow-lg"
+                        style={{ maxWidth: '500px', width: '100%', margin: '0 auto' }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <div className="d-flex justify-content-between align-items-center pb-3 border-bottom mb-3">
+                            <h6 className="fw-bold mb-0 text-dark">My Account</h6>
+                            <button
+                                type="button"
+                                className="btn-close"
+                                aria-label="Close"
+                                onClick={() => setIsMobileAccountOpen(false)}
+                            />
+                        </div>
+
+                        {currentUser && (
+                            <>
+                                <div className="d-flex align-items-center gap-3 p-3 bg-light rounded-3 mb-3 border">
+                                    {currentUser.avatar ? (
+                                        <img
+                                            src={currentUser.avatar}
+                                            alt={currentUser.name}
+                                            className="rounded-circle shadow-xs"
+                                            style={{ width: '48px', height: '48px', objectFit: 'cover', border: '2px solid #D4AF37' }}
+                                        />
+                                    ) : (
+                                        <div
+                                            className="rounded-circle d-flex align-items-center justify-content-center fw-bold text-dark shadow-xs"
+                                            style={{ width: '48px', height: '48px', backgroundColor: '#D4AF37', fontSize: '18px' }}
+                                        >
+                                            {userInitial}
+                                        </div>
+                                    )}
+                                    <div className="overflow-hidden flex-grow-1">
+                                        <div className="fw-bold text-dark text-truncate font-size-15">{currentUser.name}</div>
+                                        <div className="text-muted text-truncate font-size-12">{currentUser.email}</div>
+                                        {currentUser.phone && (
+                                            <div className="text-muted font-size-11">{currentUser.phone}</div>
+                                        )}
+                                        <span className="badge bg-success bg-opacity-10 text-success font-size-10 mt-1">
+                                            ● Logged In
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="list-group list-group-flush mb-3">
+                                    {(currentUser.is_admin || currentUser.role === 'admin' || currentUser.role === 'super_admin') && (
+                                        <a
+                                            href="/admin/dashboard"
+                                            className="list-group-item list-group-item-action d-flex align-items-center gap-2.5 py-2.5 text-dark font-size-14 fw-semibold"
+                                        >
+                                            <i className="ri-dashboard-line text-warning font-size-18" /> Admin Dashboard
+                                        </a>
+                                    )}
+                                    <Link
+                                        href="/track-order"
+                                        className="list-group-item list-group-item-action d-flex align-items-center gap-2.5 py-2.5 text-dark font-size-14"
+                                        onClick={() => setIsMobileAccountOpen(false)}
+                                    >
+                                        <i className="ri-map-pin-2-line text-warning font-size-18" /> Track My Orders
+                                    </Link>
+                                    <Link
+                                        href="/wishlist"
+                                        className="list-group-item list-group-item-action d-flex align-items-center gap-2.5 py-2.5 text-dark font-size-14"
+                                        onClick={() => setIsMobileAccountOpen(false)}
+                                    >
+                                        <i className="ri-heart-line text-danger font-size-18" /> My Wishlist
+                                    </Link>
+                                </div>
+
+                                <Link
+                                    href="/logout"
+                                    method="post"
+                                    as="button"
+                                    className="btn btn-outline-danger w-100 py-2 d-flex align-items-center justify-content-center gap-2 fw-semibold"
+                                    onClick={() => setIsMobileAccountOpen(false)}
+                                >
+                                    <i className="ri-logout-box-r-line" /> Sign Out
+                                </Link>
+                            </>
+                        )}
+                    </div>
+                </div>
+            )}
 
             {/* --- Floating WhatsApp Chat Widget --- */}
             {isWhatsAppChatEnabled && whatsappUrl && (
