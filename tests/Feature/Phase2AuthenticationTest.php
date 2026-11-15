@@ -206,4 +206,103 @@ class Phase2AuthenticationTest extends TestCase
         $this->assertGuest();
         $response->assertRedirect('/');
     }
+
+    /**
+     * Test that Google OAuth redirect flashes an error if credentials are not configured.
+     */
+    public function test_google_redirect_returns_error_if_not_configured(): void
+    {
+        config(['services.google.client_id' => '']);
+        config(['services.google.client_secret' => '']);
+
+        $response = $this->get(route('auth.google'));
+
+        $response->assertRedirect(route('register'));
+        $response->assertSessionHas('error');
+    }
+
+    /**
+     * Test that Google OAuth redirect redirects to Google consent endpoint when configured.
+     */
+    public function test_google_redirect_works_when_configured(): void
+    {
+        config(['services.google.client_id' => 'test-client-id']);
+        config(['services.google.client_secret' => 'test-client-secret']);
+
+        $response = $this->get(route('auth.google'));
+
+        $response->assertStatus(302);
+        $this->assertStringContainsString('accounts.google.com', $response->getTargetUrl());
+    }
+
+    /**
+     * Test that Google OAuth callback creates a new customer user and logs them in.
+     */
+    public function test_google_callback_creates_and_authenticates_customer(): void
+    {
+        config(['services.google.client_id' => 'test-client-id']);
+        config(['services.google.client_secret' => 'test-client-secret']);
+
+        $abstractUser = \Mockery::mock(\Laravel\Socialite\Two\User::class);
+        $abstractUser->shouldReceive('getId')->andReturn('google-unique-id-12345');
+        $abstractUser->shouldReceive('getName')->andReturn('Google Customer');
+        $abstractUser->shouldReceive('getEmail')->andReturn('google_customer@example.com');
+        $abstractUser->shouldReceive('getAvatar')->andReturn('https://lh3.googleusercontent.com/avatar.jpg');
+
+        $provider = \Mockery::mock(\Laravel\Socialite\Two\GoogleProvider::class);
+        $provider->shouldReceive('user')->andReturn($abstractUser);
+
+        \Laravel\Socialite\Facades\Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
+
+        $response = $this->get(route('auth.google.callback'));
+
+        $this->assertAuthenticated();
+
+        /** @var User $user */
+        $user = auth()->user();
+        $this->assertEquals('Google Customer', $user->name);
+        $this->assertEquals('google_customer@example.com', $user->email);
+        $this->assertEquals('google-unique-id-12345', $user->google_id);
+        $this->assertEquals('google', $user->auth_provider);
+        $this->assertEquals(User::ROLE_CUSTOMER, $user->role);
+        $this->assertNotNull($user->email_verified_at);
+
+        $response->assertRedirect(route('home'));
+    }
+
+    /**
+     * Test that Google OAuth callback links to an existing customer account by email.
+     */
+    public function test_google_callback_links_to_existing_customer(): void
+    {
+        config(['services.google.client_id' => 'test-client-id']);
+        config(['services.google.client_secret' => 'test-client-secret']);
+
+        $existing = User::factory()->customer()->create([
+            'email' => 'existing_customer@example.com',
+            'google_id' => null,
+            'auth_provider' => 'local',
+        ]);
+
+        $abstractUser = \Mockery::mock(\Laravel\Socialite\Two\User::class);
+        $abstractUser->shouldReceive('getId')->andReturn('google-linked-id-999');
+        $abstractUser->shouldReceive('getName')->andReturn('Existing Customer');
+        $abstractUser->shouldReceive('getEmail')->andReturn('existing_customer@example.com');
+        $abstractUser->shouldReceive('getAvatar')->andReturn('https://lh3.googleusercontent.com/avatar2.jpg');
+
+        $provider = \Mockery::mock(\Laravel\Socialite\Two\GoogleProvider::class);
+        $provider->shouldReceive('user')->andReturn($abstractUser);
+
+        \Laravel\Socialite\Facades\Socialite::shouldReceive('driver')->with('google')->andReturn($provider);
+
+        $response = $this->get(route('auth.google.callback'));
+
+        $this->assertAuthenticatedAs($existing);
+
+        $existing->refresh();
+        $this->assertEquals('google-linked-id-999', $existing->google_id);
+        $this->assertEquals('google', $existing->auth_provider);
+
+        $response->assertRedirect(route('home'));
+    }
 }
