@@ -16,10 +16,10 @@ class EnsureRole
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
-        $user = $request->user();
+        $user = $request->user('admin') ?? $request->user();
 
         if (! $user) {
-            return redirect()->guest(route('login'));
+            return redirect()->guest($request->is('admin*') ? route('admin.login') : route('login'));
         }
 
         if (! in_array($user->role, $roles, true)) {

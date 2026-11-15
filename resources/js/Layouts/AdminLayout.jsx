@@ -402,6 +402,9 @@ export default function AdminLayout({ title = '', children }) {
             items: [
                 { name: 'Analytics & Profit BI', href: '/admin/analytics', icon: BarChart3, current: isItemActive('/admin/analytics') },
                 { name: 'Dynamic Settings', href: '/admin/settings', icon: Settings, current: isItemActive('/admin/settings') },
+                ...(user?.role === 'super_admin' ? [
+                    { name: 'Staff & Access Control', href: '/admin/staff', icon: Shield, current: isItemActive('/admin/staff') },
+                ] : []),
             ],
         },
     ];

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\PurchaseOrderController;
 use App\Http\Controllers\Admin\SettingsController;
+use App\Http\Controllers\Admin\StaffController;
 use App\Http\Controllers\Admin\SupplierController;
 use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Database\Eloquent\Model;
@@ -109,6 +110,7 @@ Route::middleware('guest')->group(function () {
     // Google OAuth Routes
     Route::get('/auth/google/redirect', [AuthController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/auth/google/callback', [AuthController::class, 'handleGoogleCallback'])->name('auth.google.callback');
+    Route::get('/auth/google/callbac', [AuthController::class, 'handleGoogleCallback']);
 });
 
 /*
@@ -249,5 +251,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SettingsController::class, 'update'])->name('settings.update');
         Route::post('/settings/clear-cache', [SettingsController::class, 'clearCache'])->name('settings.clear-cache');
+
+        // Staff & Role-Based Access Control (Super Admin Exclusive)
+        Route::middleware('role:super_admin')->group(function () {
+            Route::get('/staff', [StaffController::class, 'index'])->name('staff.index');
+            Route::post('/staff', [StaffController::class, 'store'])->name('staff.store');
+            Route::put('/staff/{admin}', [StaffController::class, 'update'])->name('staff.update');
+            Route::patch('/staff/{admin}/toggle-active', [StaffController::class, 'toggleActive'])->name('staff.toggle-active');
+            Route::delete('/staff/{admin}', [StaffController::class, 'destroy'])->name('staff.destroy');
+        });
     });
 });

@@ -64,6 +64,7 @@ class HandleInertiaRequests extends Middleware
                     'avatar' => $currentUser->avatar ?? null,
                     'is_active' => (bool) ($currentUser->is_active ?? true),
                     'is_admin' => $currentUser instanceof \App\Models\Admin || ($currentUser->hasAdminAccess() ?? false),
+                    'permissions' => $currentUser instanceof \App\Models\Admin ? ($currentUser->permissions ?? []) : [],
                 ] : null,
                 'admin' => $adminUser ? [
                     'id' => $adminUser->id,
@@ -73,6 +74,7 @@ class HandleInertiaRequests extends Middleware
                     'role' => $adminUser->role ?? 'admin',
                     'avatar' => $adminUser->avatar ?? null,
                     'is_active' => (bool) ($adminUser->is_active ?? true),
+                    'permissions' => $adminUser->permissions ?? [],
                 ] : null,
             ],
             'cart' => function () use ($request, $customerUser) {
