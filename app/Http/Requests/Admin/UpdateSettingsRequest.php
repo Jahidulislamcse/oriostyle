@@ -81,6 +81,39 @@ class UpdateSettingsRequest extends FormRequest
             'meta_keywords' => ['nullable', 'string', 'max:500'],
             'custom_header_scripts' => ['nullable', 'string', 'max:10000'],
             'custom_footer_scripts' => ['nullable', 'string', 'max:10000'],
+
+            // Quick Links URLs & Dynamic Public Pages
+            'link_track_order' => ['nullable', 'string', 'max:255'],
+            'link_store_locator' => ['nullable', 'string', 'max:255'],
+            'link_about_us' => ['nullable', 'string', 'max:255'],
+            'link_blogs' => ['nullable', 'string', 'max:255'],
+            'link_terms' => ['nullable', 'string', 'max:255'],
+            'link_privacy' => ['nullable', 'string', 'max:255'],
+            'link_refund' => ['nullable', 'string', 'max:255'],
+
+            'about_title' => ['nullable', 'string', 'max:255'],
+            'about_subtitle' => ['nullable', 'string', 'max:500'],
+            'about_content' => ['nullable', 'string', 'max:20000'],
+            'about_mission' => ['nullable', 'string', 'max:5000'],
+            'about_vision' => ['nullable', 'string', 'max:5000'],
+
+            'store_locator_title' => ['nullable', 'string', 'max:255'],
+            'store_locator_subtitle' => ['nullable', 'string', 'max:500'],
+            'store_locator_map_embed' => ['nullable', 'string', 'max:5000'],
+            'store_locations' => ['nullable', 'string', 'max:20000'],
+
+            'blogs_title' => ['nullable', 'string', 'max:255'],
+            'blogs_subtitle' => ['nullable', 'string', 'max:500'],
+            'blog_posts' => ['nullable', 'string', 'max:50000'],
+
+            'terms_title' => ['nullable', 'string', 'max:255'],
+            'terms_content' => ['nullable', 'string', 'max:30000'],
+
+            'privacy_title' => ['nullable', 'string', 'max:255'],
+            'privacy_content' => ['nullable', 'string', 'max:30000'],
+
+            'refund_title' => ['nullable', 'string', 'max:255'],
+            'refund_content' => ['nullable', 'string', 'max:30000'],
         ];
     }
 }

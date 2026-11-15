@@ -104,6 +104,39 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
         meta_keywords: settings.meta_keywords || '',
         custom_header_scripts: settings.custom_header_scripts || '',
         custom_footer_scripts: settings.custom_footer_scripts || '',
+
+        // Quick Links & Public Page Content
+        link_track_order: settings.link_track_order || '/track-order',
+        link_store_locator: settings.link_store_locator || '/store-locator',
+        link_about_us: settings.link_about_us || '/about-us',
+        link_blogs: settings.link_blogs || '/blogs',
+        link_terms: settings.link_terms || '/terms-of-service',
+        link_privacy: settings.link_privacy || '/privacy-policy',
+        link_refund: settings.link_refund || '/refund-policy',
+
+        about_title: settings.about_title || '',
+        about_subtitle: settings.about_subtitle || '',
+        about_content: settings.about_content || '',
+        about_mission: settings.about_mission || '',
+        about_vision: settings.about_vision || '',
+
+        store_locator_title: settings.store_locator_title || '',
+        store_locator_subtitle: settings.store_locator_subtitle || '',
+        store_locator_map_embed: settings.store_locator_map_embed || '',
+        store_locations: settings.store_locations || '',
+
+        blogs_title: settings.blogs_title || '',
+        blogs_subtitle: settings.blogs_subtitle || '',
+        blog_posts: settings.blog_posts || '',
+
+        terms_title: settings.terms_title || '',
+        terms_content: settings.terms_content || '',
+
+        privacy_title: settings.privacy_title || '',
+        privacy_content: settings.privacy_content || '',
+
+        refund_title: settings.refund_title || '',
+        refund_content: settings.refund_content || '',
     });
 
     const handleFileChange = (field, e, setPreview) => {
@@ -162,6 +195,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
         { id: 'invoicing', label: 'Invoicing & Tax', icon: Receipt, count: null },
         { id: 'social', label: 'Social & Chat', icon: Share2, count: null },
         { id: 'seo', label: 'SEO & Scripts', icon: Search, count: null },
+        { id: 'pages', label: 'Quick Links & Pages', icon: FileText, count: null },
         { id: 'system', label: 'System & Cache', icon: Server, count: null },
     ];
 
@@ -1018,6 +1052,364 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                     <span className="text-[11px] text-slate-400 dark:text-[#5E8CB6] mt-1 block">
                                         Injected right before the closing &lt;/body&gt; tag.
                                     </span>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* TAB: Quick Links & Public Pages Content */}
+                    {activeTab === 'pages' && (
+                        <div className="space-y-4 sm:space-y-6">
+                            {/* 1. Quick Links & Footer Navigation Targets */}
+                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4 sm:space-y-6">
+                                <div className="flex items-center gap-2.5 pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
+                                    <FileText className="w-5 h-5 text-[#D4AF37]" />
+                                    <div>
+                                        <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
+                                            Footer Quick Links & Routing Destinations
+                                        </h3>
+                                        <p className="text-xs text-slate-500 dark:text-[#8EB0CF]">
+                                            Configure the exact URL destinations for all Quick Links and Terms of Use in your storefront footer.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+                                    <FormInput
+                                        label="Track Your Order URL"
+                                        name="link_track_order"
+                                        value={data.link_track_order}
+                                        onChange={(e) => setData('link_track_order', e.target.value)}
+                                        error={errors.link_track_order}
+                                        placeholder="/track-order"
+                                        hint="Default: /track-order"
+                                    />
+                                    <FormInput
+                                        label="Store Locator URL"
+                                        name="link_store_locator"
+                                        value={data.link_store_locator}
+                                        onChange={(e) => setData('link_store_locator', e.target.value)}
+                                        error={errors.link_store_locator}
+                                        placeholder="/store-locator"
+                                        hint="Default: /store-locator"
+                                    />
+                                    <FormInput
+                                        label="About ORIO STYLE URL"
+                                        name="link_about_us"
+                                        value={data.link_about_us}
+                                        onChange={(e) => setData('link_about_us', e.target.value)}
+                                        error={errors.link_about_us}
+                                        placeholder="/about-us"
+                                        hint="Default: /about-us"
+                                    />
+                                    <FormInput
+                                        label="Blogs & Editorial URL"
+                                        name="link_blogs"
+                                        value={data.link_blogs}
+                                        onChange={(e) => setData('link_blogs', e.target.value)}
+                                        error={errors.link_blogs}
+                                        placeholder="/blogs"
+                                        hint="Default: /blogs"
+                                    />
+                                    <FormInput
+                                        label="Terms of Service URL"
+                                        name="link_terms"
+                                        value={data.link_terms}
+                                        onChange={(e) => setData('link_terms', e.target.value)}
+                                        error={errors.link_terms}
+                                        placeholder="/terms-of-service"
+                                        hint="Default: /terms-of-service"
+                                    />
+                                    <FormInput
+                                        label="Privacy Policy URL"
+                                        name="link_privacy"
+                                        value={data.link_privacy}
+                                        onChange={(e) => setData('link_privacy', e.target.value)}
+                                        error={errors.link_privacy}
+                                        placeholder="/privacy-policy"
+                                        hint="Default: /privacy-policy"
+                                    />
+                                    <FormInput
+                                        label="Refund Policy URL"
+                                        name="link_refund"
+                                        value={data.link_refund}
+                                        onChange={(e) => setData('link_refund', e.target.value)}
+                                        error={errors.link_refund}
+                                        placeholder="/refund-policy"
+                                        hint="Default: /refund-policy"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* 2. About ORIO STYLE Page Content */}
+                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4">
+                                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
+                                    <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
+                                        About Us Page Content (/about-us)
+                                    </h3>
+                                    <a href="/about-us" target="_blank" rel="noopener noreferrer" className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-bold">
+                                        View Live Page <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <FormInput
+                                        label="Page Title"
+                                        name="about_title"
+                                        value={data.about_title}
+                                        onChange={(e) => setData('about_title', e.target.value)}
+                                        error={errors.about_title}
+                                        placeholder="About ORIO STYLE"
+                                    />
+                                    <FormInput
+                                        label="Subtitle / Headline"
+                                        name="about_subtitle"
+                                        value={data.about_subtitle}
+                                        onChange={(e) => setData('about_subtitle', e.target.value)}
+                                        error={errors.about_subtitle}
+                                        placeholder="Crafting Contemporary Elegance & Everyday Luxury"
+                                    />
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider">
+                                        Brand Story & Narrative (Paragraphs separated by blank line)
+                                    </label>
+                                    <textarea
+                                        rows={6}
+                                        value={data.about_content}
+                                        onChange={(e) => setData('about_content', e.target.value)}
+                                        placeholder="Enter the full brand history, philosophy, and tailoring craftsmanship story..."
+                                        className="text-xs sm:text-sm block w-full py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                    />
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <div className="space-y-1.5">
+                                        <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider">
+                                            Mission Statement
+                                        </label>
+                                        <textarea
+                                            rows={3}
+                                            value={data.about_mission}
+                                            onChange={(e) => setData('about_mission', e.target.value)}
+                                            placeholder="Our mission statement..."
+                                            className="text-xs sm:text-sm block w-full py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                        />
+                                    </div>
+
+                                    <div className="space-y-1.5">
+                                        <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider">
+                                            Vision Statement
+                                        </label>
+                                        <textarea
+                                            rows={3}
+                                            value={data.about_vision}
+                                            onChange={(e) => setData('about_vision', e.target.value)}
+                                            placeholder="Our vision statement..."
+                                            className="text-xs sm:text-sm block w-full py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                        />
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* 3. Store Locator Page Content */}
+                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4">
+                                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
+                                    <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
+                                        Store Locator Page Content (/store-locator)
+                                    </h3>
+                                    <a href="/store-locator" target="_blank" rel="noopener noreferrer" className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-bold">
+                                        View Live Page <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <FormInput
+                                        label="Page Title"
+                                        name="store_locator_title"
+                                        value={data.store_locator_title}
+                                        onChange={(e) => setData('store_locator_title', e.target.value)}
+                                        error={errors.store_locator_title}
+                                        placeholder="Flagship Stores & Studios"
+                                    />
+                                    <FormInput
+                                        label="Subtitle"
+                                        name="store_locator_subtitle"
+                                        value={data.store_locator_subtitle}
+                                        onChange={(e) => setData('store_locator_subtitle', e.target.value)}
+                                        error={errors.store_locator_subtitle}
+                                        placeholder="Experience ORIO STYLE collections in person"
+                                    />
+                                </div>
+
+                                <FormInput
+                                    label="Google Maps Embed URL (iframe src)"
+                                    name="store_locator_map_embed"
+                                    value={data.store_locator_map_embed}
+                                    onChange={(e) => setData('store_locator_map_embed', e.target.value)}
+                                    error={errors.store_locator_map_embed}
+                                    placeholder="https://www.google.com/maps/embed?pb=..."
+                                    hint="Paste standard Google Maps embed URL"
+                                />
+
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider">
+                                        Store Locations (JSON Array: name, address, phone, hours, status)
+                                    </label>
+                                    <textarea
+                                        rows={4}
+                                        value={data.store_locations}
+                                        onChange={(e) => setData('store_locations', e.target.value)}
+                                        placeholder='[{"name":"Banani Flagship Studio","address":"House #12, Road #04, Block-B, Banani, Dhaka-1213","phone":"+880 1700-000001","hours":"Sat - Thu: 10:00 AM - 10:00 PM","status":"Open Today"}]'
+                                        className="font-mono text-xs block w-full py-2 px-3 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* 4. Blogs & Editorial Page Content */}
+                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4">
+                                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
+                                    <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
+                                        Blogs & Editorial Journal (/blogs)
+                                    </h3>
+                                    <a href="/blogs" target="_blank" rel="noopener noreferrer" className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-bold">
+                                        View Live Page <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                </div>
+
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                    <FormInput
+                                        label="Journal Title"
+                                        name="blogs_title"
+                                        value={data.blogs_title}
+                                        onChange={(e) => setData('blogs_title', e.target.value)}
+                                        error={errors.blogs_title}
+                                        placeholder="ORIO Journal & Style Editorial"
+                                    />
+                                    <FormInput
+                                        label="Journal Subtitle"
+                                        name="blogs_subtitle"
+                                        value={data.blogs_subtitle}
+                                        onChange={(e) => setData('blogs_subtitle', e.target.value)}
+                                        error={errors.blogs_subtitle}
+                                        placeholder="Curated narratives on luxury tailoring and craftsmanship"
+                                    />
+                                </div>
+
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider">
+                                        Editorial Articles (JSON Array: id, title, category, read_time, date, image, excerpt, content)
+                                    </label>
+                                    <textarea
+                                        rows={4}
+                                        value={data.blog_posts}
+                                        onChange={(e) => setData('blog_posts', e.target.value)}
+                                        placeholder='[{"id":1,"title":"The Architecture of the Perfect Shirt","category":"Tailoring & Craft","date":"Nov 12, 2026","excerpt":"...","content":"..."}]'
+                                        className="font-mono text-xs block w-full py-2 px-3 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* 5. Terms of Service Content */}
+                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4">
+                                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
+                                    <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
+                                        Terms of Service Page Content (/terms-of-service)
+                                    </h3>
+                                    <a href="/terms-of-service" target="_blank" rel="noopener noreferrer" className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-bold">
+                                        View Live Page <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                </div>
+
+                                <FormInput
+                                    label="Document Title"
+                                    name="terms_title"
+                                    value={data.terms_title}
+                                    onChange={(e) => setData('terms_title', e.target.value)}
+                                    error={errors.terms_title}
+                                    placeholder="Terms of Service"
+                                />
+
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider">
+                                        Terms & Conditions Content (Clauses separated by blank lines)
+                                    </label>
+                                    <textarea
+                                        rows={8}
+                                        value={data.terms_content}
+                                        onChange={(e) => setData('terms_content', e.target.value)}
+                                        placeholder="Enter the full terms of service agreement..."
+                                        className="text-xs sm:text-sm block w-full py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* 6. Privacy Policy Content */}
+                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4">
+                                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
+                                    <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
+                                        Privacy Policy Page Content (/privacy-policy)
+                                    </h3>
+                                    <a href="/privacy-policy" target="_blank" rel="noopener noreferrer" className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-bold">
+                                        View Live Page <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                </div>
+
+                                <FormInput
+                                    label="Document Title"
+                                    name="privacy_title"
+                                    value={data.privacy_title}
+                                    onChange={(e) => setData('privacy_title', e.target.value)}
+                                    error={errors.privacy_title}
+                                    placeholder="Privacy Policy"
+                                />
+
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider">
+                                        Privacy Policy Content (Clauses separated by blank lines)
+                                    </label>
+                                    <textarea
+                                        rows={8}
+                                        value={data.privacy_content}
+                                        onChange={(e) => setData('privacy_content', e.target.value)}
+                                        placeholder="Enter the full privacy policy..."
+                                        className="text-xs sm:text-sm block w-full py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* 7. Refund Policy Content */}
+                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-4">
+                                <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-[#1C3E63]/60">
+                                    <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
+                                        Refund & Exchange Policy Content (/refund-policy)
+                                    </h3>
+                                    <a href="/refund-policy" target="_blank" rel="noopener noreferrer" className="text-xs text-[#D4AF37] hover:underline flex items-center gap-1 font-bold">
+                                        View Live Page <ExternalLink className="w-3.5 h-3.5" />
+                                    </a>
+                                </div>
+
+                                <FormInput
+                                    label="Document Title"
+                                    name="refund_title"
+                                    value={data.refund_title}
+                                    onChange={(e) => setData('refund_title', e.target.value)}
+                                    error={errors.refund_title}
+                                    placeholder="Refund, Return & Exchange Policy"
+                                />
+
+                                <div className="space-y-1.5">
+                                    <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider">
+                                        Refund Policy Content (Clauses separated by blank lines)
+                                    </label>
+                                    <textarea
+                                        rows={8}
+                                        value={data.refund_content}
+                                        onChange={(e) => setData('refund_content', e.target.value)}
+                                        placeholder="Enter the full refund and exchange terms..."
+                                        className="text-xs sm:text-sm block w-full py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                    />
                                 </div>
                             </div>
                         </div>

@@ -732,10 +732,34 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             </div>
                             <div className={`d-md-block ${mobileFooterOpen.quickLinks ? 'd-block' : 'd-none'}`}>
                                 <ul className="list-unstyled font-size-13">
-                                    <li className="mb-2"><Link href="/track-order" className="text-muted text-decoration-none">Track Your Order</Link></li>
-                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Store Locator</Link></li>
-                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">About ORIO STYLE</Link></li>
-                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Blogs & Editorial</Link></li>
+                                    <li className="mb-2">
+                                        {(settings.link_track_order || '/track-order').startsWith('http') ? (
+                                            <a href={settings.link_track_order || '/track-order'} target="_blank" rel="noopener noreferrer" className="text-muted text-decoration-none">Track Your Order</a>
+                                        ) : (
+                                            <Link href={settings.link_track_order || '/track-order'} className="text-muted text-decoration-none">Track Your Order</Link>
+                                        )}
+                                    </li>
+                                    <li className="mb-2">
+                                        {(settings.link_store_locator || '/store-locator').startsWith('http') ? (
+                                            <a href={settings.link_store_locator || '/store-locator'} target="_blank" rel="noopener noreferrer" className="text-muted text-decoration-none">Store Locator</a>
+                                        ) : (
+                                            <Link href={settings.link_store_locator || '/store-locator'} className="text-muted text-decoration-none">Store Locator</Link>
+                                        )}
+                                    </li>
+                                    <li className="mb-2">
+                                        {(settings.link_about_us || '/about-us').startsWith('http') ? (
+                                            <a href={settings.link_about_us || '/about-us'} target="_blank" rel="noopener noreferrer" className="text-muted text-decoration-none">About ORIO STYLE</a>
+                                        ) : (
+                                            <Link href={settings.link_about_us || '/about-us'} className="text-muted text-decoration-none">About ORIO STYLE</Link>
+                                        )}
+                                    </li>
+                                    <li className="mb-2">
+                                        {(settings.link_blogs || '/blogs').startsWith('http') ? (
+                                            <a href={settings.link_blogs || '/blogs'} target="_blank" rel="noopener noreferrer" className="text-muted text-decoration-none">Blogs & Editorial</a>
+                                        ) : (
+                                            <Link href={settings.link_blogs || '/blogs'} className="text-muted text-decoration-none">Blogs & Editorial</Link>
+                                        )}
+                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -754,9 +778,27 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                             </div>
                             <div className={`d-md-block ${mobileFooterOpen.terms ? 'd-block' : 'd-none'}`}>
                                 <ul className="list-unstyled font-size-13">
-                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Terms of Service</Link></li>
-                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Privacy Policy</Link></li>
-                                    <li className="mb-2"><Link href="/" className="text-muted text-decoration-none">Refund Policy</Link></li>
+                                    <li className="mb-2">
+                                        {(settings.link_terms || '/terms-of-service').startsWith('http') ? (
+                                            <a href={settings.link_terms || '/terms-of-service'} target="_blank" rel="noopener noreferrer" className="text-muted text-decoration-none">Terms of Service</a>
+                                        ) : (
+                                            <Link href={settings.link_terms || '/terms-of-service'} className="text-muted text-decoration-none">Terms of Service</Link>
+                                        )}
+                                    </li>
+                                    <li className="mb-2">
+                                        {(settings.link_privacy || '/privacy-policy').startsWith('http') ? (
+                                            <a href={settings.link_privacy || '/privacy-policy'} target="_blank" rel="noopener noreferrer" className="text-muted text-decoration-none">Privacy Policy</a>
+                                        ) : (
+                                            <Link href={settings.link_privacy || '/privacy-policy'} className="text-muted text-decoration-none">Privacy Policy</Link>
+                                        )}
+                                    </li>
+                                    <li className="mb-2">
+                                        {(settings.link_refund || '/refund-policy').startsWith('http') ? (
+                                            <a href={settings.link_refund || '/refund-policy'} target="_blank" rel="noopener noreferrer" className="text-muted text-decoration-none">Refund Policy</a>
+                                        ) : (
+                                            <Link href={settings.link_refund || '/refund-policy'} className="text-muted text-decoration-none">Refund Policy</Link>
+                                        )}
+                                    </li>
                                 </ul>
                             </div>
                         </div>

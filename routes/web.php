@@ -22,6 +22,7 @@ use App\Http\Controllers\Storefront\CartController;
 use App\Http\Controllers\Storefront\CheckoutController;
 use App\Http\Controllers\Storefront\HomeController;
 use App\Http\Controllers\Storefront\OrderTrackingController;
+use App\Http\Controllers\Storefront\PageController;
 use App\Http\Controllers\Storefront\ProductDetailController;
 use App\Http\Controllers\Storefront\ShopController;
 use App\Http\Controllers\Storefront\WishlistController;
@@ -74,6 +75,24 @@ Route::get('/order-success/{orderNumber}', [CheckoutController::class, 'success'
 Route::get('/track-order', [OrderTrackingController::class, 'index'])->name('orders.track');
 Route::post('/track-order', [OrderTrackingController::class, 'track'])->name('orders.track.post');
 Route::get('/orders/{orderNumber}/track', [OrderTrackingController::class, 'show'])->name('orders.track.show');
+
+// Public Dynamic Pages & Quick Links
+Route::get('/about-us', [PageController::class, 'about'])->name('pages.about');
+Route::get('/about', fn() => redirect()->route('pages.about'));
+
+Route::get('/store-locator', [PageController::class, 'storeLocator'])->name('pages.store_locator');
+
+Route::get('/blogs', [PageController::class, 'blogs'])->name('pages.blogs');
+Route::get('/blog', fn() => redirect()->route('pages.blogs'));
+
+Route::get('/terms-of-service', [PageController::class, 'terms'])->name('pages.terms');
+Route::get('/terms', fn() => redirect()->route('pages.terms'));
+
+Route::get('/privacy-policy', [PageController::class, 'privacy'])->name('pages.privacy');
+Route::get('/privacy', fn() => redirect()->route('pages.privacy'));
+
+Route::get('/refund-policy', [PageController::class, 'refund'])->name('pages.refund');
+Route::get('/refund', fn() => redirect()->route('pages.refund'));
 
 /*
 |--------------------------------------------------------------------------
