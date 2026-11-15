@@ -84,9 +84,15 @@ export default function ProductIndex({
         }
 
         setIsSavingOffer(true);
+        const targetUrl = typeof route === 'function' && route().has('admin.products.set-offer')
+            ? route('admin.products.set-offer', offerModalProduct.id)
+            : `/admin/products/${offerModalProduct.id}/set-offer`;
+
         router.post(
-            route('admin.products.set-offer', offerModalProduct.id),
+            targetUrl,
             {
+                id: offerModalProduct.id,
+                product_id: offerModalProduct.id,
                 discounted_price: price,
                 badge_text: offerBadgeText,
                 coupon_code: offerCouponCode,

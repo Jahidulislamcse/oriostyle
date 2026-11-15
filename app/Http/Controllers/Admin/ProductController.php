@@ -209,8 +209,17 @@ class ProductController extends Controller
     /**
      * Set a product as the active promotional offer popup item with its discounted price.
      */
-    public function setOffer(Request $request, Product $product): RedirectResponse
+    public function setOffer(Request $request, Product|string|null $product = null): RedirectResponse
     {
+        if (!($product instanceof Product)) {
+            $productId = $request->input('product_id') ?? $request->input('id') ?? ($product !== 'set-offer' ? $product : null) ?? $request->route('product');
+            $product = $productId ? Product::find($productId) : null;
+        }
+
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found or not specified.');
+        }
+
         $validated = $request->validate([
             'discounted_price' => ['required', 'numeric', 'min:0.01', 'lt:' . $product->base_price],
             'badge_text' => ['nullable', 'string', 'max:100'],

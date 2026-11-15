@@ -81,13 +81,17 @@ class InventoryService
             }
         }
 
-        if (!empty($filters['category_id']) && $filters['category_id'] !== 'all' && is_numeric($filters['category_id'])) {
-            $catId = (int) $filters['category_id'];
-            $selectedCategory = Category::find($catId);
+        if (!empty($filters['category_id']) && $filters['category_id'] !== 'all') {
+            $cat = $filters['category_id'];
+            $catId = is_numeric($cat) ? (int) $cat : null;
+            $selectedCategory = $catId
+                ? Category::find($catId)
+                : Category::where('slug', $cat)->orWhere('name', $cat)->first();
+
             if ($selectedCategory) {
                 $categoryIds = array_merge([$selectedCategory->id], $selectedCategory->getAllDescendantIds());
                 $query->whereIn('category_id', $categoryIds);
-            } else {
+            } elseif ($catId) {
                 $query->where('category_id', $catId);
             }
         }

@@ -46,14 +46,17 @@ class ProductService
             });
         }
 
-        if (is_numeric($category)) {
-            $catId = (int) $category;
-            $selectedCategory = Category::find($catId);
+        if ($category && $category !== 'all') {
+            $catId = is_numeric($category) ? (int) $category : null;
+            $selectedCategory = $catId
+                ? Category::find($catId)
+                : Category::where('slug', $category)->orWhere('name', $category)->first();
+
             if ($selectedCategory) {
                 // Hierarchical inclusion: include parent category and all its descendant subcategories
                 $categoryIds = array_merge([$selectedCategory->id], $selectedCategory->getAllDescendantIds());
                 $query->whereIn('category_id', $categoryIds);
-            } else {
+            } elseif ($catId) {
                 $query->where('category_id', $catId);
             }
         }

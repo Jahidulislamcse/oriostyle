@@ -233,26 +233,39 @@ class Category extends Model
     {
         $ids = [];
 
-        // Eager-loaded children traversal to prevent N+1 queries
+        // 1. Eager-loaded children traversal to prevent DB queries when relations are already loaded
         if ($this->relationLoaded('allChildren')) {
             $traverse = function ($category) use (&$traverse, &$ids) {
-                foreach ($category->allChildren as $child) {
-                    $ids[] = $child->id;
-                    $traverse($child);
+                if ($category->relationLoaded('allChildren') && $category->allChildren) {
+                    foreach ($category->allChildren as $child) {
+                        $ids[] = (int) $child->id;
+                        $traverse($child);
+                    }
+                } elseif ($category->relationLoaded('children') && $category->children) {
+                    foreach ($category->children as $child) {
+                        $ids[] = (int) $child->id;
+                        $traverse($child);
+                    }
                 }
             };
             $traverse($this);
-            return $ids;
+            if (!empty($ids)) {
+                return array_values(array_unique($ids));
+            }
         }
 
-        // Direct DB query fallback
-        $directChildren = self::where('parent_id', $this->id)->get();
-        foreach ($directChildren as $child) {
-            $ids[] = $child->id;
-            $ids = array_merge($ids, $child->getAllDescendantIds());
-        }
+        // 2. Direct database query fallback - fetch flat parent/id pairs in a single query to traverse all nested levels in memory
+        $all = self::select('id', 'parent_id')->get();
+        $gather = function ($parentId) use (&$gather, &$ids, $all) {
+            $children = $all->where('parent_id', $parentId);
+            foreach ($children as $c) {
+                $ids[] = (int) $c->id;
+                $gather($c->id);
+            }
+        };
+        $gather($this->id);
 
-        return array_unique($ids);
+        return array_values(array_unique($ids));
     }
 
     /**

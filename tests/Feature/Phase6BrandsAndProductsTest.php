@@ -504,4 +504,35 @@ class Phase6BrandsAndProductsTest extends TestCase
                 ->where('popupEnabled', true)
         );
     }
+
+    public function test_admin_can_set_offer_via_standalone_post_endpoint(): void
+    {
+        $product = Product::create([
+            'name' => 'Italian Silk Kurta',
+            'slug' => 'italian-silk-kurta',
+            'sku' => 'KURTA-001',
+            'base_price' => 4500.00,
+            'sale_price' => null,
+            'stock_quantity' => 12,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->adminUser)
+            ->post('/admin/products/set-offer', [
+                'product_id' => $product->id,
+                'discounted_price' => 3200.00,
+                'badge_text' => 'SPECIAL',
+                'coupon_code' => 'KURTA20',
+                'activate_popup' => true,
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $product->refresh();
+        $this->assertEquals(3200.00, (float) $product->sale_price);
+
+        $settingService = app(\App\Services\Settings\SettingService::class);
+        $this->assertEquals($product->id, (int) $settingService->get('popup_product_id'));
+    }
 }

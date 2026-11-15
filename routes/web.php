@@ -160,6 +160,7 @@ Route::prefix('admin')
         Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
         Route::post('/products', [ProductController::class, 'store'])->name('products.store');
         Route::post('/products/store', [ProductController::class, 'store']);
+        Route::post('/products/set-offer', [ProductController::class, 'setOffer'])->name('products.set-offer.standalone');
         Route::delete('/products/destroy', [ProductController::class, 'destroy']);
         Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
         Route::get('/products/edit/{product}', [ProductController::class, 'edit']);
