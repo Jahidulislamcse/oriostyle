@@ -114,6 +114,17 @@ class UpdateSettingsRequest extends FormRequest
 
             'refund_title' => ['nullable', 'string', 'max:255'],
             'refund_content' => ['nullable', 'string', 'max:30000'],
+
+            // Dynamic Offer Popup
+            'popup_enabled' => ['nullable', 'boolean'],
+            'popup_product_id' => ['nullable', 'integer', 'exists:products,id'],
+            'popup_title' => ['nullable', 'string', 'max:255'],
+            'popup_subtitle' => ['nullable', 'string', 'max:500'],
+            'popup_badge_text' => ['nullable', 'string', 'max:100'],
+            'popup_coupon_code' => ['nullable', 'string', 'max:50'],
+            'popup_button_text' => ['nullable', 'string', 'max:100'],
+            'popup_delay_seconds' => ['nullable', 'integer', 'min:0', 'max:60'],
+            'popup_show_once_per_session' => ['nullable', 'boolean'],
         ];
     }
 }

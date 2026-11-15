@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, usePage, router } from '@inertiajs/react';
 import axios from 'axios';
 import { sanitizeImageUrl } from '../Utils/image';
+import OfferPopupModal from '@/Components/Storefront/OfferPopupModal';
 
 function getValidImageUrl(c) {
     const raw = c?.image_url || (c?.images && c?.images[0]?.image_url) || c?.image || (c?.images && c?.images[0]?.image_path) || null;
@@ -49,7 +50,7 @@ function formatWhatsAppUrl(phone, siteName = 'ORIO STYLE') {
 
 export default function StorefrontLayout({ children, navCategories: directNavCategories, headerSolid = false }) {
     const { url = '', props = {} } = usePage();
-    const { settings = {}, auth = {}, navCategories: sharedNavCategories = [], cart = {}, wishlistCount = 0 } = props;
+    const { settings = {}, auth = {}, navCategories: sharedNavCategories = [], cart = {}, wishlistCount = 0, offerPopup = null } = props;
     const currentPath = (url || '').split('?')[0].replace(/\/+$/, '') || '/';
     const isHome = currentPath === '/';
     const [isCartOpen, setIsCartOpen] = useState(false);
@@ -1215,6 +1216,9 @@ export default function StorefrontLayout({ children, navCategories: directNavCat
                     </a>
                 </aside>
             )}
+
+            {/* --- Dynamic Promotional Offer Popup Modal --- */}
+            <OfferPopupModal offerPopup={offerPopup} currencySymbol={settings.currency_symbol || '৳'} />
 
             {/* --- Floating Back to Top Button --- */}
             {showBackToTop && (

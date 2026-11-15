@@ -30,7 +30,7 @@ import {
     ExternalLink
 } from 'lucide-react';
 
-export default function SettingsIndex({ settings = {}, system = {} }) {
+export default function SettingsIndex({ settings = {}, products = [], system = {} }) {
     const [activeTab, setActiveTab] = useState('general');
     const [logoPreview, setLogoPreview] = useState(null);
     const [logoWhitePreview, setLogoWhitePreview] = useState(null);
@@ -137,6 +137,17 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
 
         refund_title: settings.refund_title || '',
         refund_content: settings.refund_content || '',
+
+        // Dynamic Offer Popup
+        popup_enabled: Boolean(settings.popup_enabled),
+        popup_product_id: settings.popup_product_id ? String(settings.popup_product_id) : '',
+        popup_title: settings.popup_title || 'EXCLUSIVE SPECIAL OFFER',
+        popup_subtitle: settings.popup_subtitle || 'Unlock a limited-time luxury discount on our handcrafted signature piece!',
+        popup_badge_text: settings.popup_badge_text || 'FLASH DEAL',
+        popup_coupon_code: settings.popup_coupon_code || '',
+        popup_button_text: settings.popup_button_text || 'Claim Offer Now',
+        popup_delay_seconds: settings.popup_delay_seconds ?? 3,
+        popup_show_once_per_session: settings.popup_show_once_per_session !== false,
     });
 
     const handleFileChange = (field, e, setPreview) => {
@@ -196,6 +207,7 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
         { id: 'social', label: 'Social & Chat', icon: Share2, count: null },
         { id: 'seo', label: 'SEO & Scripts', icon: Search, count: null },
         { id: 'pages', label: 'Quick Links & Pages', icon: FileText, count: null },
+        { id: 'popup', label: 'Offer Popup', icon: Sparkles, count: null },
         { id: 'system', label: 'System & Cache', icon: Server, count: null },
     ];
 
@@ -1410,6 +1422,213 @@ export default function SettingsIndex({ settings = {}, system = {} }) {
                                         placeholder="Enter the full refund and exchange terms..."
                                         className="text-xs sm:text-sm block w-full py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
                                     />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* TAB: Promotional Offer Popup */}
+                    {activeTab === 'popup' && (
+                        <div className="space-y-4 sm:space-y-6">
+                            {/* Offer Popup Settings Card */}
+                            <div className="bg-white dark:bg-[#0E2038] border border-slate-200 dark:border-[#1C3E63]/70 rounded-2xl p-4 sm:p-6 shadow-xs space-y-5">
+                                <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 dark:border-[#1C3E63]/60 gap-3">
+                                    <div className="flex items-center gap-2.5">
+                                        <Sparkles className="w-5 h-5 text-[#D4AF37]" />
+                                        <div>
+                                            <h3 className="text-base font-extrabold text-[#0E2038] dark:text-white">
+                                                Promotional Offer Modal Popup
+                                            </h3>
+                                            <p className="text-xs text-slate-500 dark:text-[#8EB0CF]">
+                                                Display a high-converting promotional popup with a featured catalog item, discount, and optional coupon code.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {/* Enable/Disable Toggle */}
+                                    <label className="inline-flex items-center gap-3 cursor-pointer select-none bg-[#F4F7FB] dark:bg-[#071324] px-3.5 py-2 rounded-xl border border-slate-200 dark:border-[#1C3E63]">
+                                        <span className="text-xs font-bold text-[#0E2038] dark:text-white">
+                                            {data.popup_enabled ? 'Popup Active' : 'Popup Disabled'}
+                                        </span>
+                                        <input
+                                            type="checkbox"
+                                            checked={Boolean(data.popup_enabled)}
+                                            onChange={(e) => setData('popup_enabled', e.target.checked)}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="relative w-11 h-6 bg-slate-300 dark:bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#D4AF37]"></div>
+                                    </label>
+                                </div>
+
+                                <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+                                    {/* Form Fields: 7 cols */}
+                                    <div className="lg:col-span-7 space-y-4">
+                                        {/* Product Selector */}
+                                        <div>
+                                            <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider mb-1.5">
+                                                Select Featured Offer Product
+                                            </label>
+                                            <select
+                                                value={data.popup_product_id}
+                                                onChange={(e) => setData('popup_product_id', e.target.value)}
+                                                className="text-xs sm:text-sm block w-full py-2.5 px-3.5 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                            >
+                                                <option value="">-- Auto-select latest discounted product --</option>
+                                                {products && products.map((prod) => (
+                                                    <option key={prod.id} value={prod.id}>
+                                                        {prod.name} (SKU: {prod.sku || 'N/A'}) - {prod.sale_price ? `৳${prod.sale_price} (was ৳${prod.base_price})` : `৳${prod.base_price}`}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                            <p className="text-[11px] text-slate-400 mt-1">
+                                                Select the exact product to feature in the modal. If none is selected, the system will highlight the newest active sale item.
+                                            </p>
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <FormInput
+                                                label="Offer Badge Tag"
+                                                name="popup_badge_text"
+                                                value={data.popup_badge_text}
+                                                onChange={(e) => setData('popup_badge_text', e.target.value)}
+                                                placeholder="e.g. FLASH DEAL, SPECIAL OFFER"
+                                                error={errors.popup_badge_text}
+                                            />
+                                            <FormInput
+                                                label="Discount Coupon Code (Optional)"
+                                                name="popup_coupon_code"
+                                                value={data.popup_coupon_code}
+                                                onChange={(e) => setData('popup_coupon_code', e.target.value)}
+                                                placeholder="e.g. ORIO10"
+                                                error={errors.popup_coupon_code}
+                                            />
+                                        </div>
+
+                                        <FormInput
+                                            label="Offer Headline Title"
+                                            name="popup_title"
+                                            value={data.popup_title}
+                                            onChange={(e) => setData('popup_title', e.target.value)}
+                                            placeholder="EXCLUSIVE SPECIAL OFFER"
+                                            error={errors.popup_title}
+                                        />
+
+                                        <div>
+                                            <label className="block text-xs font-bold text-[#0E2038] dark:text-white uppercase tracking-wider mb-1.5">
+                                                Subtitle & Teaser Text
+                                            </label>
+                                            <textarea
+                                                rows={2}
+                                                value={data.popup_subtitle}
+                                                onChange={(e) => setData('popup_subtitle', e.target.value)}
+                                                placeholder="Unlock a limited-time luxury discount on our handcrafted signature piece!"
+                                                className="text-xs sm:text-sm block w-full py-2 px-3 bg-white dark:bg-[#071324] border border-slate-200 dark:border-[#1C3E63] rounded-xl text-[#0E2038] dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#D4AF37]/30 focus:border-[#D4AF37] transition font-medium"
+                                            />
+                                        </div>
+
+                                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                            <FormInput
+                                                label="CTA Button Text"
+                                                name="popup_button_text"
+                                                value={data.popup_button_text}
+                                                onChange={(e) => setData('popup_button_text', e.target.value)}
+                                                placeholder="Claim Offer Now"
+                                                error={errors.popup_button_text}
+                                            />
+                                            <FormInput
+                                                label="Popup Display Delay (Seconds)"
+                                                name="popup_delay_seconds"
+                                                type="number"
+                                                min="0"
+                                                max="60"
+                                                value={data.popup_delay_seconds}
+                                                onChange={(e) => setData('popup_delay_seconds', e.target.value)}
+                                                placeholder="3"
+                                                error={errors.popup_delay_seconds}
+                                            />
+                                        </div>
+
+                                        {/* Frequency Control */}
+                                        <div className="pt-2">
+                                            <label className="flex items-center gap-2.5 cursor-pointer select-none">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={Boolean(data.popup_show_once_per_session)}
+                                                    onChange={(e) => setData('popup_show_once_per_session', e.target.checked)}
+                                                    className="w-4 h-4 rounded text-[#D4AF37] border-slate-300 dark:border-[#1C3E63] focus:ring-[#D4AF37]"
+                                                />
+                                                <span className="text-xs text-slate-700 dark:text-[#8EB0CF]">
+                                                    Show once every 24 hours per visitor (does not re-open after visitor closes it).
+                                                </span>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    {/* Live Visual Preview: 5 cols */}
+                                    <div className="lg:col-span-5">
+                                        <div className="rounded-2xl border border-slate-200 dark:border-[#1C3E63] bg-[#F8FAFC] dark:bg-[#071324] p-4 space-y-3">
+                                            <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-[#1C3E63]/60">
+                                                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                                                    Live Modal Preview
+                                                </span>
+                                                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${data.popup_enabled ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-950 dark:text-emerald-400' : 'bg-rose-100 text-rose-700 dark:bg-rose-950 dark:text-rose-400'}`}>
+                                                    {data.popup_enabled ? 'Active on Storefront' : 'Inactive'}
+                                                </span>
+                                            </div>
+
+                                            {/* Preview Card */}
+                                            <div className="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden text-slate-900">
+                                                <div className="p-3 bg-gradient-to-r from-slate-900 to-slate-800 text-white flex items-center justify-between">
+                                                    <span className="text-[10px] font-bold bg-[#D4AF37] text-slate-950 px-2 py-0.5 rounded-md uppercase tracking-wide">
+                                                        {data.popup_badge_text || 'FLASH DEAL'}
+                                                    </span>
+                                                    <span className="text-slate-400 text-xs">✕</span>
+                                                </div>
+                                                <div className="p-4 space-y-2.5">
+                                                    <h4 className="text-sm font-extrabold uppercase tracking-wide text-slate-900">
+                                                        {data.popup_title || 'EXCLUSIVE SPECIAL OFFER'}
+                                                    </h4>
+                                                    <p className="text-xs text-slate-500 leading-snug">
+                                                        {data.popup_subtitle || 'Unlock a limited-time luxury discount on our handcrafted signature piece!'}
+                                                    </p>
+                                                    {(() => {
+                                                        const p = products.find((prod) => String(prod.id) === String(data.popup_product_id)) || products[0];
+                                                        return p ? (
+                                                            <div className="p-2.5 bg-slate-50 rounded-lg border border-slate-100 flex items-center justify-between gap-2 mt-2">
+                                                                <div className="truncate">
+                                                                    <div className="text-xs font-bold truncate text-slate-800">{p.name}</div>
+                                                                    <div className="text-[11px] text-slate-400">SKU: {p.sku || 'N/A'}</div>
+                                                                </div>
+                                                                <div className="text-right shrink-0">
+                                                                    <div className="text-xs font-bold text-amber-600">
+                                                                        ৳{p.sale_price || p.base_price}
+                                                                    </div>
+                                                                    {p.sale_price && (
+                                                                        <div className="text-[10px] text-slate-400 line-through">
+                                                                            ৳{p.base_price}
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        ) : null;
+                                                    })()}
+                                                    {data.popup_coupon_code && (
+                                                        <div className="p-2 rounded bg-amber-50 border border-amber-200/60 text-center">
+                                                            <span className="text-[11px] text-amber-800 font-mono font-bold">
+                                                                Coupon: {data.popup_coupon_code}
+                                                            </span>
+                                                        </div>
+                                                    )}
+                                                    <button
+                                                        type="button"
+                                                        className="w-full py-2 bg-slate-900 text-white rounded-lg text-xs font-bold uppercase tracking-wider text-center"
+                                                    >
+                                                        {data.popup_button_text || 'Claim Offer Now'}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

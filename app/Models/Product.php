@@ -175,6 +175,21 @@ class Product extends Model
     }
 
     /**
+     * Accessor: Calculate discount percentage if product is on sale.
+     */
+    public function getDiscountPercentageAttribute(): int
+    {
+        $base = array_key_exists('base_price', $this->attributes) ? (float) $this->attributes['base_price'] : 0.0;
+        $sale = array_key_exists('sale_price', $this->attributes) && $this->attributes['sale_price'] !== null ? (float) $this->attributes['sale_price'] : null;
+
+        if ($sale !== null && $sale > 0 && $sale < $base && $base > 0) {
+            return (int) round((($base - $sale) / $base) * 100);
+        }
+
+        return 0;
+    }
+
+    /**
      * Accessor: Get compare at price for storefront display
      */
     public function getComparePriceAttribute(): ?float

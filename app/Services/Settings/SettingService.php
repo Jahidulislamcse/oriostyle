@@ -110,6 +110,17 @@ class SettingService
 
         'refund_title' => 'Refund, Return & Exchange Policy',
         'refund_content' => "At ORIO STYLE, we take immense pride in the craftsmanship and quality of our garments. If an item does not meet your expectations, we offer a hassle-free 7-day exchange and refund policy.\n\n1. 7-Day Exchange Window\nYou may request an exchange for size, color, or a different style within 7 calendar days of receiving your parcel. The garment must be unworn, unwashed, unaltered, and accompanied by original tags and invoice.\n\n2. Eligibility for Returns & Refunds\nReturns are accepted for:\n• Size or fitting mismatch\n• Defective or damaged items upon arrival\n• Incorrect product dispatched\nCustom-tailored or altered garments and intimate undergarments are non-refundable unless verified defective upon delivery.\n\n3. Refund Processing Timeline\nOnce your return is received and inspected at our Dhaka Quality Centre:\n• Mobile Financial Services (bKash/Nagad): 24 to 48 hours\n• Debit / Credit Card refunds: 5 to 10 working days (depending on your issuing bank)\n• Cash on Delivery orders: Refunded via bKash, bank transfer, or store credit voucher per your preference.\n\n4. Doorstep Exchange & Support\nFor instant exchange assistance within Dhaka metro, our courier can deliver your replacement size while picking up the returned item. Contact our support team via WhatsApp or call +880 1700-000000.",
+
+        // 13. Dynamic Offer Popup
+        'popup_enabled' => false,
+        'popup_product_id' => null,
+        'popup_title' => 'EXCLUSIVE SPECIAL OFFER',
+        'popup_subtitle' => 'Unlock a limited-time luxury discount on our handcrafted signature piece!',
+        'popup_badge_text' => 'FLASH DEAL',
+        'popup_coupon_code' => 'ORIO10',
+        'popup_button_text' => 'Claim Offer Now',
+        'popup_delay_seconds' => 3,
+        'popup_show_once_per_session' => true,
     ];
 
     /**
@@ -145,6 +156,11 @@ class SettingService
             'terms_title', 'terms_content',
             'privacy_title', 'privacy_content',
             'refund_title', 'refund_content',
+        ],
+        'popup' => [
+            'popup_enabled', 'popup_product_id', 'popup_title', 'popup_subtitle',
+            'popup_badge_text', 'popup_coupon_code', 'popup_button_text',
+            'popup_delay_seconds', 'popup_show_once_per_session',
         ],
     ];
 

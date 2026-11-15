@@ -97,6 +97,76 @@ class HandleInertiaRequests extends Middleware
                 }
                 return app(AdminNotificationService::class)->getHeaderAlerts();
             },
+            'offerPopup' => function () use ($settings) {
+                if (empty($settings['popup_enabled']) || !filter_var($settings['popup_enabled'], FILTER_VALIDATE_BOOLEAN)) {
+                    return null;
+                }
+
+                $productId = $settings['popup_product_id'] ?? null;
+                $product = null;
+
+                if ($productId) {
+                    $product = \App\Models\Product::query()
+                        ->active()
+                        ->with(['primaryImage', 'images', 'category:id,name,slug', 'brand:id,name,slug'])
+                        ->find($productId);
+                }
+
+                if (!$product) {
+                    $product = \App\Models\Product::query()
+                        ->active()
+                        ->whereNotNull('sale_price')
+                        ->where('sale_price', '>', 0)
+                        ->with(['primaryImage', 'images', 'category:id,name,slug', 'brand:id,name,slug'])
+                        ->orderBy('id', 'desc')
+                        ->first();
+                }
+
+                if (!$product) {
+                    $product = \App\Models\Product::query()
+                        ->active()
+                        ->with(['primaryImage', 'images', 'category:id,name,slug', 'brand:id,name,slug'])
+                        ->orderBy('id', 'desc')
+                        ->first();
+                }
+
+                if (!$product) {
+                    return null;
+                }
+
+                $rawImg = $product->primaryImage?->image_path ?: ($product->images->first()?->image_path ?? null);
+                $imageUrl = \App\Support\UrlSanitizer::sanitize($rawImg);
+
+                $basePrice = (float) ($product->base_price ?? 0);
+                $salePrice = $product->sale_price !== null ? (float) $product->sale_price : null;
+                $discountPercentage = ($salePrice !== null && $salePrice > 0 && $salePrice < $basePrice && $basePrice > 0)
+                    ? (int) round((($basePrice - $salePrice) / $basePrice) * 100)
+                    : 0;
+
+                return [
+                    'enabled' => true,
+                    'title' => $settings['popup_title'] ?: 'EXCLUSIVE SPECIAL OFFER',
+                    'subtitle' => $settings['popup_subtitle'] ?: 'Unlock a limited-time luxury discount on our handcrafted signature piece!',
+                    'badge_text' => $settings['popup_badge_text'] ?: 'FLASH DEAL',
+                    'coupon_code' => $settings['popup_coupon_code'] ?: '',
+                    'button_text' => $settings['popup_button_text'] ?: 'Claim Offer Now',
+                    'delay_seconds' => (int) ($settings['popup_delay_seconds'] ?? 3),
+                    'show_once' => (bool) ($settings['popup_show_once_per_session'] ?? true),
+                    'product' => [
+                        'id' => $product->id,
+                        'name' => $product->name,
+                        'slug' => $product->slug,
+                        'sku' => $product->sku,
+                        'base_price' => $basePrice,
+                        'sale_price' => $salePrice,
+                        'discount_percentage' => $discountPercentage,
+                        'category_name' => $product->category?->name,
+                        'brand_name' => $product->brand?->name,
+                        'image_url' => $imageUrl,
+                        'url' => route('products.show', $product->slug, false),
+                    ],
+                ];
+            },
         ];
     }
 }

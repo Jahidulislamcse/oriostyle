@@ -15,8 +15,18 @@ export default function ShopFilterSidebar({
     const [maxPriceInput, setMaxPriceInput] = useState(filters.max_price || '');
     const [brandSearch, setBrandSearch] = useState('');
 
-    // Accordion collapse state
-    const [expandedCategories, setExpandedCategories] = useState({});
+    // Accordion collapse state: initialized with root categories expanded so subcategories are easily discovered
+    const [expandedCategories, setExpandedCategories] = useState(() => {
+        const initial = {};
+        if (Array.isArray(categoriesTree)) {
+            categoriesTree.forEach((cat) => {
+                if (cat.children && cat.children.length > 0) {
+                    initial[cat.id] = true;
+                }
+            });
+        }
+        return initial;
+    });
 
     const toggleCategoryExpand = (catId, e) => {
         e.stopPropagation();

@@ -158,14 +158,47 @@ class ShopController extends Controller
         $products = $query->paginate($perPage)->withQueryString();
 
         // 8. Facet Data for Sidebar Filtering
+        // Hierarchical product counts: parent categories reflect total products across all descendant subcategories
+        $allActiveCategories = Category::active()->get(['id', 'parent_id']);
+        $descendantsMap = [];
+        foreach ($allActiveCategories as $cat) {
+            $descendantsMap[$cat->id] = array_merge([$cat->id], $cat->getAllDescendantIds());
+        }
+
+        $rawProductCounts = Product::active()
+            ->whereNotNull('category_id')
+            ->select('category_id', DB::raw('count(*) as aggregate_count'))
+            ->groupBy('category_id')
+            ->pluck('aggregate_count', 'category_id');
+
         $categoriesTree = Category::whereNull('parent_id')
             ->active()
             ->orderBy('display_order')
             ->with([
-                'children' => fn($q) => $q->active()->orderBy('display_order')->withCount(['products' => fn($pq) => $pq->active()]),
+                'children' => fn($q) => $q->active()->orderBy('display_order'),
             ])
-            ->withCount(['products' => fn($pq) => $pq->active()])
-            ->get();
+            ->get()
+            ->map(function (Category $root) use ($descendantsMap, $rawProductCounts) {
+                $rootIds = $descendantsMap[$root->id] ?? [$root->id];
+                $rootTotal = 0;
+                foreach ($rootIds as $id) {
+                    $rootTotal += $rawProductCounts[$id] ?? 0;
+                }
+                $root->products_count = $rootTotal;
+
+                if ($root->children) {
+                    $root->children->each(function (Category $child) use ($descendantsMap, $rawProductCounts) {
+                        $childIds = $descendantsMap[$child->id] ?? [$child->id];
+                        $childTotal = 0;
+                        foreach ($childIds as $cid) {
+                            $childTotal += $rawProductCounts[$cid] ?? 0;
+                        }
+                        $child->products_count = $childTotal;
+                    });
+                }
+
+                return $root;
+            });
 
         $brands = Brand::active()
             ->orderBy('name')

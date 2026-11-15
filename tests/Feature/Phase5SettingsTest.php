@@ -202,4 +202,94 @@ class Phase5SettingsTest extends TestCase
             ->where('settings.site_name', 'ORIO COUTURE')
         );
     }
+
+    public function test_admin_can_update_offer_popup_settings(): void
+    {
+        $category = \App\Models\Category::create([
+            'name' => 'Suits',
+            'slug' => 'suits',
+            'is_active' => true,
+        ]);
+
+        $product = \App\Models\Product::create([
+            'category_id' => $category->id,
+            'name' => 'Italian Wool Tuxedo',
+            'slug' => 'italian-wool-tuxedo',
+            'sku' => 'TUX-001',
+            'base_price' => 12000,
+            'sale_price' => 9500,
+            'stock_quantity' => 15,
+            'is_active' => true,
+        ]);
+
+        $response = $this->actingAs($this->admin)
+            ->post(route('admin.settings.update'), [
+                'popup_enabled' => true,
+                'popup_product_id' => $product->id,
+                'popup_title' => 'WEEKEND FLASH SALE',
+                'popup_subtitle' => 'Get up to 25% off on tailored luxury!',
+                'popup_badge_text' => 'HOT DEAL',
+                'popup_coupon_code' => 'WEEKEND25',
+                'popup_button_text' => 'Get Deal',
+                'popup_delay_seconds' => 5,
+                'popup_show_once_per_session' => true,
+            ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+
+        $this->assertTrue(filter_var($this->settingService->get('popup_enabled'), FILTER_VALIDATE_BOOLEAN));
+        $this->assertEquals($product->id, (int) $this->settingService->get('popup_product_id'));
+        $this->assertEquals('WEEKEND FLASH SALE', $this->settingService->get('popup_title'));
+        $this->assertEquals('WEEKEND25', $this->settingService->get('popup_coupon_code'));
+    }
+
+    public function test_storefront_shares_offer_popup_when_enabled(): void
+    {
+        $category = \App\Models\Category::create([
+            'name' => 'Blazers',
+            'slug' => 'blazers',
+            'is_active' => true,
+        ]);
+
+        $product = \App\Models\Product::create([
+            'category_id' => $category->id,
+            'name' => 'Navy Velvet Blazer',
+            'slug' => 'navy-velvet-blazer',
+            'sku' => 'BLZ-999',
+            'base_price' => 8500,
+            'sale_price' => 6900,
+            'stock_quantity' => 10,
+            'is_active' => true,
+        ]);
+
+        $this->settingService->set('popup_enabled', true, 'popup');
+        $this->settingService->set('popup_product_id', $product->id, 'popup');
+        $this->settingService->set('popup_title', 'VIP SPECIAL', 'popup');
+        $this->settingService->set('popup_coupon_code', 'VIP10', 'popup');
+
+        $response = $this->get(route('home'));
+
+        $response->assertOk();
+        $response->assertInertia(fn (Assert $page) => $page
+            ->has('offerPopup')
+            ->where('offerPopup.enabled', true)
+            ->where('offerPopup.title', 'VIP SPECIAL')
+            ->where('offerPopup.coupon_code', 'VIP10')
+            ->where('offerPopup.product.name', 'Navy Velvet Blazer')
+            ->where('offerPopup.product.slug', 'navy-velvet-blazer')
+        );
+    }
+
+    public function test_storefront_shares_null_offer_popup_when_disabled(): void
+    {
+        $this->settingService->set('popup_enabled', false, 'popup');
+
+        $response = $this->get(route('home'));
+
+        $response->assertOk();
+        $response->assertInertia(fn (Assert $page) => $page
+            ->where('offerPopup', null)
+        );
+    }
 }

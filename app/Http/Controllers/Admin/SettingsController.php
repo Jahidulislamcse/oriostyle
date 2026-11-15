@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateSettingsRequest;
+use App\Models\Product;
 use App\Services\Settings\SettingService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\File;
@@ -19,6 +20,11 @@ class SettingsController extends Controller
     {
         $settings = $settingService->getAllPublicCached();
 
+        $products = Product::query()
+            ->active()
+            ->orderBy('name')
+            ->get(['id', 'name', 'sku', 'base_price', 'sale_price']);
+
         $system = [
             'phpVersion' => PHP_VERSION,
             'laravelVersion' => app()->version(),
@@ -30,6 +36,7 @@ class SettingsController extends Controller
 
         return Inertia::render('Admin/Settings/Index', [
             'settings' => $settings,
+            'products' => $products,
             'system' => $system,
         ]);
     }
